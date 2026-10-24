@@ -9,6 +9,7 @@ from src.collector.fialda_scanner import FialdaCandidate, FialdaScanner
 def generate_terminal_html(
     output_path: str = "exports/vn_stock_terminal.html",
     fialda_candidates: Optional[List[FialdaCandidate]] = None,
+    top_n: int = 20,
 ) -> str:
     """Sinh ma nguon giao dien Web Terminal Plotly tuong tac doc lap."""
     basis = analyze_vn30_basis(1312.20, 1315.50)
@@ -17,11 +18,11 @@ def generate_terminal_html(
     if fialda_candidates is None:
         if scanner.username and scanner.password:
             try:
-                fialda_candidates = scanner.scan_top_5_rockets()
+                fialda_candidates = scanner.scan_top_rockets(top_n=top_n)
             except Exception:
-                fialda_candidates = scanner._fallback_mock_top_5()
+                fialda_candidates = scanner._fallback_mock_top_20()[:top_n]
         else:
-            fialda_candidates = scanner._fallback_mock_top_5()
+            fialda_candidates = scanner._fallback_mock_top_20()[:top_n]
 
     # Lay du lieu co ban that 100% tu Fialda TechnicalAnalysis & GetStockInfos
     try:
@@ -29,7 +30,7 @@ def generate_terminal_html(
     except Exception:
         fund_data = scanner._fallback_mock_fundamental()
 
-    # Chuan bi bang du lieu Fialda Top 5
+    # Chuan bi bang du lieu Fialda Top N
     fialda_rows_html = ""
     for idx, c in enumerate(fialda_candidates, 1):
         sig_badge = (
@@ -229,7 +230,7 @@ def generate_terminal_html(
     </div>
 
     <div class="section-header">
-        <div class="section-title">TOP 5 SIÊU CỔ PHIẾU CHÂN SÓNG (1 THÁNG | MỤC TIÊU +20% - +35%)</div>
+        <div class="section-title">TOP {len(fialda_candidates)} SIÊU CỔ PHIẾU CHÂN SÓNG & ĐỘT BIẾN DÒNG TIỀN (1 THÁNG | MỤC TIÊU +20% - +35%)</div>
         <span style="font-size:11px;color:#78909c;">Nguồn: Fialda VIP Expert & Tích Lũy Khối Lượng Order Flow</span>
     </div>
     <div class="table-container">
@@ -303,7 +304,8 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Sinh Terminal HTML cho Neiro-Stock-VN")
     parser.add_argument("--output", default="exports/vn_stock_terminal.html", help="Duong dan file HTML dau ra")
+    parser.add_argument("--top", type=int, default=20, help="So luong sieu co phieu hien thi (mac dinh 20)")
     args = parser.parse_args()
 
-    path = generate_terminal_html(args.output)
+    path = generate_terminal_html(args.output, top_n=args.top)
     print(f"Generated terminal at {path}")

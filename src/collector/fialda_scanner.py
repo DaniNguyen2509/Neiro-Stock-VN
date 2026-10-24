@@ -267,23 +267,32 @@ class FialdaScanner:
             {"symbol": "CTS", "company_name": "Chứng khoán VietinBank", "sector": "Dịch vụ tài chính", "price": 21.95, "f_score": 4.0, "f_score_str": "4/9", "cfo_ni": 0.95, "pe": 49.9, "pb": 1.9, "is_institutional": False},
         ]
 
-    def scan_top_5_rockets(self) -> List[FialdaCandidate]:
-        """Quet va tong hop chon ra dung Top 5 Sieu Co Phieu cho chu ky 1 thang."""
+    def scan_top_rockets(self, top_n: int = 20) -> List[FialdaCandidate]:
+        """Quet va tong hop chon ra Top N Sieu Co Phieu cho chu ky 1 thang (mac dinh top 20)."""
         if not self.token:
             if not self.login():
-                return self._fallback_mock_top_5()
+                return self._fallback_mock_top_20()[:top_n]
 
         # 1. Thu thap du lieu dong tien
         cho_mua_dict = self.get_expert_buy_signals()
         dot_bien_list = self.get_expert_value_surge()
         rrg_all = self.get_rrg_data()
-        top_symbols = self.get_market_top_symbols(vn_exchange=1, page_size=50)
+        top_symbols_hose = self.get_market_top_symbols(vn_exchange=1, page_size=50)
+        top_symbols_hnx = self.get_market_top_symbols(vn_exchange=2, page_size=25)
 
         # Tao danh sach ung vien so bo (Candidates pool)
         pool = set(cho_mua_dict.keys()) | set(dot_bien_list)
-        market_sym_map = {item.get("symbol"): item for item in top_symbols if item.get("symbol")}
+        market_sym_map = {}
+        for item in top_symbols_hose:
+            sym = item.get("symbol")
+            if sym:
+                market_sym_map[sym] = item
+        for item in top_symbols_hnx:
+            sym = item.get("symbol")
+            if sym and sym not in market_sym_map:
+                market_sym_map[sym] = item
 
-        for sym in list(market_sym_map.keys())[:15]:
+        for sym in list(market_sym_map.keys())[:35]:
             pool.add(sym)
 
         clean_pool = [s for s in pool if s and len(s) == 3]
@@ -380,50 +389,167 @@ class FialdaScanner:
                 )
             )
 
-        # Sap xep va lay dung Top 5 co diem so cao nhat
+        # Sap xep va lay Top N co diem so cao nhat
         candidates.sort(key=lambda x: x.ranking_score, reverse=True)
-        return candidates[:5]
+        return candidates[:top_n]
+
+    def scan_top_5_rockets(self) -> List[FialdaCandidate]:
+        """Tien ich backward compatibility: quet va lay Top 5 co phieu."""
+        return self.scan_top_rockets(top_n=5)
+
+    @staticmethod
+    def _fallback_mock_top_20() -> List[FialdaCandidate]:
+        """Cung cap Top 20 chuan du phong khi offline hoac moi truong kiem thu."""
+        base_5 = [
+            FialdaCandidate(
+                symbol="DBC", price=16.45, signal_type="CHO_MUA_CHAN_SONG",
+                entry_low=16.07, entry_high=16.42, stop_loss=15.19, target_1m=20.56,
+                rs_1m=84, composite_rating=79, acc_diss_rating="D",
+                rrg_r=101.7, rrg_m=100.8, foreign_net_value_billion=4.4, ranking_score=90.5,
+                catalyst="AI Expert Cho Mua nen gia, RRG Leading, Nhom Thit lon tang truong quy 4"
+            ),
+            FialdaCandidate(
+                symbol="CTS", price=21.95, signal_type="DOT_BIEN_GIA_TRI",
+                entry_low=21.51, entry_high=22.17, stop_loss=20.33, target_1m=27.44,
+                rs_1m=86, composite_rating=93, acc_diss_rating="E",
+                rrg_r=101.9, rrg_m=102.1, foreign_net_value_billion=1.8, ranking_score=87.5,
+                catalyst="Dot bien dong tien Nhom Chung khoan, Huong loi tu KRX va nang hang"
+            ),
+            FialdaCandidate(
+                symbol="EIB", price=17.85, signal_type="CHO_MUA_CHAN_SONG",
+                entry_low=16.87, entry_high=17.23, stop_loss=15.94, target_1m=22.31,
+                rs_1m=78, composite_rating=61, acc_diss_rating="E",
+                rrg_r=101.4, rrg_m=100.5, foreign_net_value_billion=28.4, ranking_score=83.5,
+                catalyst="Nen gia tich luy Fialda Expert, Khoi ngoai mua rong dot bien"
+            ),
+            FialdaCandidate(
+                symbol="PTB", price=30.90, signal_type="CHO_MUA_CHAN_SONG",
+                entry_low=30.89, entry_high=31.57, stop_loss=29.20, target_1m=38.62,
+                rs_1m=75, composite_rating=72, acc_diss_rating="E",
+                rrg_r=102.1, rrg_m=100.2, foreign_net_value_billion=0.4, ranking_score=81.8,
+                catalyst="Xuat khau go va da phuc hoi, Dinh gia P/E 7.2 re hiem co"
+            ),
+            FialdaCandidate(
+                symbol="GEX", price=24.10, signal_type="DOT_BIEN_GIA_TRI",
+                entry_low=23.62, entry_high=24.34, stop_loss=22.32, target_1m=30.12,
+                rs_1m=74, composite_rating=78, acc_diss_rating="E",
+                rrg_r=100.4, rrg_m=100.9, foreign_net_value_billion=-9.4, ranking_score=81.7,
+                catalyst="Dot bien gia tri gom ca map, Nang luong tai tao & KCN thoai von"
+            ),
+        ]
+        more_15 = [
+            FialdaCandidate(
+                symbol="HPG", price=20.95, signal_type="DOT_BIEN_GIA_TRI",
+                entry_low=20.50, entry_high=21.20, stop_loss=19.37, target_1m=26.19,
+                rs_1m=79, composite_rating=85, acc_diss_rating="B",
+                rrg_r=101.5, rrg_m=101.2, foreign_net_value_billion=52.0, ranking_score=80.5,
+                catalyst="F-Score 9/9, Dung Quat 2 van hanh, Dau tu cong va thep tang truong"
+            ),
+            FialdaCandidate(
+                symbol="VHM", price=64.30, signal_type="CHO_MUA_CHAN_SONG",
+                entry_low=63.00, entry_high=65.00, stop_loss=59.54, target_1m=80.38,
+                rs_1m=77, composite_rating=81, acc_diss_rating="A",
+                rrg_r=102.0, rrg_m=101.5, foreign_net_value_billion=115.0, ranking_score=80.0,
+                catalyst="Ban giao dai du an, Dong tien hoat dong CFO/NI 2.26 cuc manh"
+            ),
+            FialdaCandidate(
+                symbol="FPT", price=57.00, signal_type="CHO_MUA_CHAN_SONG",
+                entry_low=56.00, entry_high=57.50, stop_loss=52.92, target_1m=71.25,
+                rs_1m=82, composite_rating=88, acc_diss_rating="A",
+                rrg_r=102.5, rrg_m=101.0, foreign_net_value_billion=35.0, ranking_score=79.5,
+                catalyst="Don hang AI va ban dan toan cau, Xu huong tang truong 20% deu dan"
+            ),
+            FialdaCandidate(
+                symbol="SSI", price=19.95, signal_type="DOT_BIEN_GIA_TRI",
+                entry_low=19.50, entry_high=20.20, stop_loss=18.43, target_1m=24.94,
+                rs_1m=76, composite_rating=80, acc_diss_rating="B",
+                rrg_r=101.2, rrg_m=101.8, foreign_net_value_billion=12.0, ranking_score=78.5,
+                catalyst="Thanh khoan thi truong phuc hoi, Tich luy nen gia chung khoan"
+            ),
+            FialdaCandidate(
+                symbol="VCB", price=56.80, signal_type="CHO_MUA_CHAN_SONG",
+                entry_low=55.50, entry_high=57.20, stop_loss=52.45, target_1m=71.00,
+                rs_1m=75, composite_rating=82, acc_diss_rating="A",
+                rrg_r=100.8, rrg_m=100.5, foreign_net_value_billion=48.0, ranking_score=78.0,
+                catalyst="Tru vung vang VN-Index, Ty le bao phu no xau cao nhat toan nganh"
+            ),
+            FialdaCandidate(
+                symbol="ACB", price=21.30, signal_type="CHO_MUA_CHAN_SONG",
+                entry_low=20.80, entry_high=21.50, stop_loss=19.66, target_1m=26.63,
+                rs_1m=74, composite_rating=83, acc_diss_rating="A",
+                rrg_r=101.0, rrg_m=100.8, foreign_net_value_billion=15.0, ranking_score=77.5,
+                catalyst="Ngan hang chat luong tai san hang dau, Tang truong tin dung on dinh"
+            ),
+            FialdaCandidate(
+                symbol="MWG", price=48.50, signal_type="DOT_BIEN_GIA_TRI",
+                entry_low=47.50, entry_high=49.00, stop_loss=44.89, target_1m=60.63,
+                rs_1m=79, composite_rating=78, acc_diss_rating="B",
+                rrg_r=101.6, rrg_m=101.3, foreign_net_value_billion=25.0, ranking_score=77.0,
+                catalyst="Bach Hoa Xanh co lai ro ret, Doanh thu tieu dung phuc hoi cuoi nam"
+            ),
+            FialdaCandidate(
+                symbol="DGC", price=85.20, signal_type="CHO_MUA_CHAN_SONG",
+                entry_low=83.50, entry_high=86.00, stop_loss=78.91, target_1m=106.50,
+                rs_1m=80, composite_rating=84, acc_diss_rating="A",
+                rrg_r=102.1, rrg_m=101.0, foreign_net_value_billion=18.0, ranking_score=76.5,
+                catalyst="Gia Photpho vang the gioi tang, Huong loi chuoi cung ung ban dan"
+            ),
+            FialdaCandidate(
+                symbol="KBC", price=27.50, signal_type="DOT_BIEN_GIA_TRI",
+                entry_low=26.80, entry_high=27.80, stop_loss=25.33, target_1m=34.38,
+                rs_1m=72, composite_rating=75, acc_diss_rating="B",
+                rrg_r=100.9, rrg_m=101.5, foreign_net_value_billion=14.0, ranking_score=76.0,
+                catalyst="Bat dong san KCN hut von FDI, Tien do du an Trang Due 3"
+            ),
+            FialdaCandidate(
+                symbol="PVD", price=22.40, signal_type="DOT_BIEN_GIA_TRI",
+                entry_low=21.80, entry_high=22.60, stop_loss=20.60, target_1m=28.00,
+                rs_1m=71, composite_rating=76, acc_diss_rating="B",
+                rrg_r=101.1, rrg_m=100.7, foreign_net_value_billion=8.5, ranking_score=75.5,
+                catalyst="Hieu suat gian khoan full cong suat, Don gia cho thue gian tang manh"
+            ),
+            FialdaCandidate(
+                symbol="VCI", price=34.20, signal_type="CHO_MUA_CHAN_SONG",
+                entry_low=33.50, entry_high=34.80, stop_loss=31.66, target_1m=42.75,
+                rs_1m=77, composite_rating=81, acc_diss_rating="B",
+                rrg_r=101.5, rrg_m=101.2, foreign_net_value_billion=11.2, ranking_score=75.0,
+                catalyst="Mang IB thuong vu lon, Huong loi nang hang thi truong FTSE"
+            ),
+            FialdaCandidate(
+                symbol="ANV", price=31.50, signal_type="CHO_MUA_CHAN_SONG",
+                entry_low=30.80, entry_high=32.00, stop_loss=29.11, target_1m=39.38,
+                rs_1m=73, composite_rating=74, acc_diss_rating="B",
+                rrg_r=101.0, rrg_m=100.9, foreign_net_value_billion=6.0, ranking_score=74.5,
+                catalyst="Xuat khau ca tra sang My va Trung Quoc phuc hoi ve gia ban"
+            ),
+            FialdaCandidate(
+                symbol="SZC", price=38.00, signal_type="CHO_MUA_CHAN_SONG",
+                entry_low=37.20, entry_high=38.50, stop_loss=35.15, target_1m=47.50,
+                rs_1m=76, composite_rating=77, acc_diss_rating="A",
+                rrg_r=101.3, rrg_m=101.1, foreign_net_value_billion=9.0, ranking_score=74.0,
+                catalyst="Quy dat Chau Duc san sang cho thue, Huong loi cao toc Bien Hoa - Vung Tau"
+            ),
+            FialdaCandidate(
+                symbol="PNJ", price=92.50, signal_type="CHO_MUA_CHAN_SONG",
+                entry_low=90.50, entry_high=93.00, stop_loss=85.52, target_1m=115.63,
+                rs_1m=78, composite_rating=83, acc_diss_rating="A",
+                rrg_r=101.4, rrg_m=100.6, foreign_net_value_billion=22.0, ranking_score=73.5,
+                catalyst="Cao diem mua sắm cuoi nam, Bien loi nhuan ban le trang suc cao"
+            ),
+            FialdaCandidate(
+                symbol="REE", price=62.00, signal_type="CHO_MUA_CHAN_SONG",
+                entry_low=60.50, entry_high=62.50, stop_loss=57.17, target_1m=77.50,
+                rs_1m=72, composite_rating=79, acc_diss_rating="A",
+                rrg_r=100.8, rrg_m=100.7, foreign_net_value_billion=16.5, ranking_score=73.0,
+                catalyst="Nang luong tai tao va cho thue van phong Etown 6 tao dong tien on dinh"
+            ),
+        ]
+        return base_5 + more_15
 
     @staticmethod
     def _fallback_mock_top_5() -> List[FialdaCandidate]:
         """Cung cap Top 5 chuan du phong khi khong co mang ngoai."""
-        return [
-            FialdaCandidate(
-                symbol="DBC", price=16.2, signal_type="CHO_MUA_CHAN_SONG",
-                entry_low=16.05, entry_high=16.42, stop_loss=15.20, target_1m=20.50,
-                rs_1m=84, composite_rating=82, acc_diss_rating="A",
-                rrg_r=103.5, rrg_m=104.2, foreign_net_value_billion=18.5, ranking_score=94.5,
-                catalyst="AI Expert Cho Mua nen gia, RRG Leading, Thit lon tang gia quy 4"
-            ),
-            FialdaCandidate(
-                symbol="GEX", price=24.8, signal_type="DOT_BIEN_GIA_TRI",
-                entry_low=24.2, entry_high=25.0, stop_loss=23.40, target_1m=31.50,
-                rs_1m=74, composite_rating=78, acc_diss_rating="B",
-                rrg_r=101.8, rrg_m=103.0, foreign_net_value_billion=45.2, ranking_score=88.0,
-                catalyst="Dot bien gia tri gom ca map, Nang luong tai tao & KCN thoai von"
-            ),
-            FialdaCandidate(
-                symbol="ACB", price=21.3, signal_type="CHO_MUA_CHAN_SONG",
-                entry_low=20.5, entry_high=20.95, stop_loss=19.80, target_1m=26.00,
-                rs_1m=81, composite_rating=85, acc_diss_rating="A",
-                rrg_r=102.4, rrg_m=101.9, foreign_net_value_billion=-12.5, ranking_score=87.5,
-                catalyst="Nen gia tich luy Fialda Expert, NIM ngan hang tang truong on dinh"
-            ),
-            FialdaCandidate(
-                symbol="CTS", price=38.5, signal_type="DOT_BIEN_GIA_TRI",
-                entry_low=37.5, entry_high=39.0, stop_loss=35.80, target_1m=48.50,
-                rs_1m=86, composite_rating=80, acc_diss_rating="A",
-                rrg_r=104.1, rrg_m=105.8, foreign_net_value_billion=22.8, ranking_score=86.2,
-                catalyst="Dot bien dong tien Nhom Chung khoan, Huong loi tu KRX va nang hang"
-            ),
-            FialdaCandidate(
-                symbol="VGC", price=52.0, signal_type="DOT_BIEN_GIA_TRI",
-                entry_low=51.0, entry_high=52.5, stop_loss=48.80, target_1m=65.00,
-                rs_1m=79, composite_rating=76, acc_diss_rating="B",
-                rrg_r=102.1, rrg_m=102.7, foreign_net_value_billion=15.4, ranking_score=83.5,
-                catalyst="Bat dong san KCN hut von FDI quy 4, Quy dat lon cho thue"
-            ),
-        ]
+        return FialdaScanner._fallback_mock_top_20()[:5]
 
 
 def format_top_5_report(candidates: List[FialdaCandidate], breadth: Optional[Dict[str, Any]] = None) -> str:
@@ -435,7 +561,7 @@ def format_top_5_report(candidates: List[FialdaCandidate], breadth: Optional[Dic
 
     lines = [
         "=" * 88,
-        "   NEIRO-STOCK-VN | BÁO CÁO TOP 5 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)   ",
+        f"   NEIRO-STOCK-VN | BÁO CÁO TOP {len(candidates)} SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)   ",
         "=" * 88,
         f" [Trạng thái Thị trường] VN-Index: Tăng {adv} / Giảm {dec} | GTGD: {val} | P/E: {pe:.2f}" if isinstance(pe, (int, float)) else f" [Trạng thái Thị trường] VN-Index: Tăng {adv} / Giảm {dec} | GTGD: {val}",
         "-" * 88,
@@ -469,14 +595,14 @@ def format_top_5_markdown(
     breadth: Optional[Dict[str, Any]] = None,
     fund_data: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
-    """Xuat ban bao cao Top 5 va Dinh luong co ban dinh dang GitHub Markdown cho GitHub Actions Summary / Web."""
+    """Xuat ban bao cao Top N va Dinh luong co ban dinh dang GitHub Markdown cho GitHub Actions Summary / Web."""
     adv = breadth.get("advances", "N/A") if breadth else "N/A"
     dec = breadth.get("declines", "N/A") if breadth else "N/A"
     pe = f"{breadth.get('pe'):.2f}" if breadth and isinstance(breadth.get("pe"), (int, float)) else "N/A"
     val = f"{(breadth.get('totalValue') or 0)/1e9:,.0f} tỷ VND" if breadth and breadth.get("totalValue") else "N/A"
 
     md = [
-        "## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 5 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)",
+        f"## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP {len(candidates)} SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)",
         f"> **Trạng thái Thị trường:** VN-Index Tăng **{adv}** / Giảm **{dec}** | Giá trị GD: **{val}** | P/E: **{pe}**",
         "",
         "| STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua An Toàn | Cắt Lỗ (-5.5%) | Mục Tiêu 1T (+25%) | RRG (r/m) | IBD Comp | Khối Ngoại | Điểm |",
@@ -529,21 +655,22 @@ def format_top_5_markdown(
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Chay Fialda VIP Expert Scanner")
+    parser.add_argument("--top", type=int, default=20, help="So luong co phieu top de quet (mac dinh 20)")
     parser.add_argument("--save-report", default="", help="Duong dan luu file Markdown report")
     parser.add_argument("--generate-terminal", action="store_true", help="Tu dong sinh HTML Terminal")
     args = parser.parse_args()
 
     scanner = FialdaScanner()
-    top5 = scanner.scan_top_5_rockets()
+    top_candidates = scanner.scan_top_rockets(top_n=args.top)
     breadth_info = scanner.get_market_breadth() if scanner.token else None
     fund_data = scanner.get_fundamental_screener_data() if scanner.token else scanner._fallback_mock_fundamental()
 
     # In ra terminal
-    report_text = format_top_5_report(top5, breadth_info)
+    report_text = format_top_5_report(top_candidates, breadth_info)
     print(report_text)
 
     # Ghi vao GITHUB_STEP_SUMMARY neu dang chay trong GitHub Actions
-    md_report = format_top_5_markdown(top5, breadth_info, fund_data)
+    md_report = format_top_5_markdown(top_candidates, breadth_info, fund_data)
     summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary_path:
         try:
@@ -563,7 +690,7 @@ if __name__ == "__main__":
     if args.generate_terminal:
         try:
             from src.hud.terminal import generate_terminal_html
-            out_html = generate_terminal_html("exports/index.html", fialda_candidates=top5)
+            out_html = generate_terminal_html("exports/index.html", fialda_candidates=top_candidates, top_n=args.top)
             print(f"Da sinh HTML Terminal tai: {out_html}")
         except Exception as e:
             print(f"Warning: Khong the sinh HTML Terminal: {e}")
