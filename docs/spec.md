@@ -290,6 +290,15 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
    - **Bản Địa Hóa 100% Tiếng Việt:** Toàn bộ bảng điều khiển chiến thuật (`src/hud/terminal.py`) và báo cáo quét thị trường (`reports/latest_scan.md`) sử dụng tiếng Việt chuẩn mực, giữ nguyên các ký hiệu định lượng quốc tế chuẩn (Piotroski F-Score, P/E, P/B, RRG, Basis, Stop Loss, Target, NAV, T+2.5).
    - **Triển Khai Tự Động:** Nhánh `gh-pages` được tự động cập nhật qua GitHub Actions, cung cấp giao diện trực quan 24/7 xem được trên mọi thiết bị di động tại URL: `https://daninguyen2509.github.io/Neiro-Stock-VN/`.
 
+3. **Thống Kê Tiến Trình Báo Cáo Tài Chính 1 Cổ Phiếu / 1 Dòng (Single-Row BCTC Progression):**
+   - Bảng BCTC tổng hợp kết quả kinh doanh được định dạng tinh gọn chuẩn xác: mỗi cổ phiếu biểu diễn trên đúng 1 dòng duy nhất để người dùng nắm bắt trọn vẹn gia tốc tài chính không cần cuộn trang.
+   - Trục ngang thể hiện tiến trình động lượng 3 quý liên tiếp theo chiều thời gian (Cũ ➔ Mới):
+     - **Tiến trình Doanh thu thuần:** $Q_{-2} \rightarrow Q_{-1} \rightarrow Q_{\text{gần nhất}}$ (đơn vị: tỷ VNĐ).
+     - **Tiến trình Lợi nhuận sau thuế (LNST):** $Q_{-2} \rightarrow Q_{-1} \rightarrow Q_{\text{gần nhất}}$ (đơn vị: tỷ VNĐ).
+     - **Tăng trưởng LNST QoQ:** $\frac{LNST_0 - LNST_{-1}}{|LNST_{-1}|} \times 100\%$.
+     - **Biên lãi gộp quý gần nhất:** $\frac{\text{Lợi Nhuận Gộp}_0}{\text{Doanh Thu}_0} \times 100\%$.
+     - **Huy hiệu động lượng trực quan:** `🚀 TĂNG TỐC 3 QUÝ`, `🔥 BÙNG NỔ LNST`, `↗ TĂNG TRƯỞNG DƯƠNG`, `↘ CHẬM LẠI`, `⚠️ LỖ RÒNG`.
+
 ---
 
 ### Tier 8: Walk-Forward Backtesting Engine T+2.5 & Phòng Vệ Thiên Lệch Định Lượng
