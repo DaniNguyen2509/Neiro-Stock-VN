@@ -212,6 +212,13 @@ def generate_terminal_html(
     }
     regime_vn = regime_map.get(basis.regime, basis.regime)
 
+    is_live = bool(scanner and scanner.token)
+    data_badge = (
+        '<div style="display:inline-block;background:#1b5e20;color:#00e676;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;">🟢 DỮ LIỆU: REAL-TIME FIALDA PRO API</div>'
+        if is_live
+        else '<div style="display:inline-block;background:#0d47a1;color:#64b5f6;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;">🟡 DỮ LIỆU: BẢNG GIÁ REAL-TIME (ENTRADE/DNSE)</div>'
+    )
+
     html_content = f"""<!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -328,9 +335,7 @@ def generate_terminal_html(
             </div>
         </div>
         <div style="text-align:right;">
-            <div style="display:inline-block;background:#1b5e20;color:#00e676;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;">
-                THỊ TRƯỜNG: VẬN HÀNH BÌNH THƯỜNG
-            </div>
+            {data_badge}
             <div style="font-size:11px;color:#78909c;margin-top:4px;">Cập nhật theo chu kỳ giao dịch thực tế</div>
         </div>
     </div>

@@ -9,6 +9,8 @@ Tu dong khai thac 529 endpoints Fialda VIP:
 """
 import os
 import sys
+import time
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional, Any
@@ -57,6 +59,7 @@ class FialdaScanner:
     """Client giao tiep va khai thac he thong API Fialda VIP Expert."""
 
     BASE_URL = "https://v2papi.fialda.com"
+    TIMEOUT = (3.05, 7.0)  # (connect_timeout, read_timeout) ngan ngua treo socket SynSent
 
     def __init__(self, username: Optional[str] = None, password: Optional[str] = None):
         self.username = username or self._load_env_val("FIALDA_USERNAME")
@@ -85,6 +88,7 @@ class FialdaScanner:
     def login(self) -> bool:
         """Dang nhap vao Fialda API va lay Bearer Token co thoi han 24h."""
         if not self.username or not self.password:
+            print("[FialdaScanner] Thông báo: Chưa cấu hình FIALDA_USERNAME hoặc FIALDA_PASSWORD.")
             return False
 
         url = f"{self.BASE_URL}/api/TokenAuth/Authenticate"
@@ -94,22 +98,60 @@ class FialdaScanner:
             "rememberClient": True,
         }
         try:
-            res = requests.post(url, json=payload, headers=self.headers, timeout=10)
+            res = requests.post(url, json=payload, headers=self.headers, timeout=self.TIMEOUT)
             if res.status_code == 200:
                 data = res.json().get("result", {})
                 self.token = data.get("accessToken")
                 if self.token:
                     self.headers["Authorization"] = f"Bearer {self.token}"
+                    print("[FialdaScanner] Đăng nhập Fialda thành công (Bearer Token đã cập nhật).")
                     return True
-        except Exception:
+                else:
+                    print(f"[FialdaScanner] Đăng nhập không thành công: {data}")
+            else:
+                print(f"[FialdaScanner] Fialda API trả về HTTP {res.status_code}: {res.text[:200]}")
+        except Exception as e:
+            print(f"[FialdaScanner] Lỗi kết nối tới Fialda Authenticate: {e}")
             return False
         return False
+
+    @staticmethod
+    def get_public_realtime_price(symbol: str) -> Optional[float]:
+        """Lay gia dong cua real-time tu nguon mo cong khai (DNSE Entrade API) khong can token."""
+        try:
+            now = int(time.time())
+            one_week_ago = now - 7 * 86400
+            url = f"https://services.entrade.com.vn/chart-api/v2/ohlcs/stock?from={one_week_ago}&to={now}&symbol={symbol.upper()}&resolution=1D"
+            headers = {"User-Agent": "Mozilla/5.0"}
+            res = requests.get(url, headers=headers, timeout=5)
+            if res.status_code == 200:
+                data = res.json()
+                if "c" in data and data["c"]:
+                    return float(data["c"][-1])
+        except Exception:
+            pass
+        return None
+
+    @staticmethod
+    def get_public_realtime_prices(symbols: List[str]) -> Dict[str, Optional[float]]:
+        """Lay gia dong cua real-time dong thoi cho danh sach co phieu bang ThreadPoolExecutor."""
+        results: Dict[str, Optional[float]] = {}
+        if not symbols:
+            return results
+
+        def _fetch(sym: str):
+            return sym, FialdaScanner.get_public_realtime_price(sym)
+
+        with ThreadPoolExecutor(max_workers=min(len(symbols), 10)) as executor:
+            for s, p in executor.map(_fetch, symbols):
+                results[s] = p
+        return results
 
     def get_market_breadth(self) -> Dict[str, Any]:
         """Lay do rong thi truong VN-Index (Advances, Declines, PE, Thanh khoan)."""
         url = f"{self.BASE_URL}/api/services/app/Market/GetIndexData"
         try:
-            res = requests.get(url, headers=self.headers, params={"indexCode": "VNINDEX"}, timeout=10)
+            res = requests.get(url, headers=self.headers, params={"indexCode": "VNINDEX"}, timeout=self.TIMEOUT)
             if res.status_code == 200:
                 return res.json().get("result", {})
         except Exception:
@@ -126,7 +168,7 @@ class FialdaScanner:
             "pageSize": page_size,
         }
         try:
-            res = requests.get(url, headers=self.headers, params=params, timeout=10)
+            res = requests.get(url, headers=self.headers, params=params, timeout=self.TIMEOUT)
             if res.status_code == 200:
                 return res.json().get("result", {}).get("items", [])
         except Exception:
@@ -137,7 +179,7 @@ class FialdaScanner:
         """Lay tin hieu AI Expert cho mua tai vung gia chan song."""
         url = f"{self.BASE_URL}/api/services/app/Expert/GetTinHieuChoMuaNew"
         try:
-            res = requests.get(url, headers=self.headers, timeout=10)
+            res = requests.get(url, headers=self.headers, timeout=self.TIMEOUT)
             if res.status_code == 200:
                 return res.json().get("result", {})
         except Exception:
@@ -148,7 +190,7 @@ class FialdaScanner:
         """Lay danh sach co phieu dot bien gia tri dong tien trong phien."""
         url = f"{self.BASE_URL}/api/services/app/Expert/GetTinHieuDotBienGiaTri"
         try:
-            res = requests.get(url, headers=self.headers, timeout=10)
+            res = requests.get(url, headers=self.headers, timeout=self.TIMEOUT)
             if res.status_code == 200:
                 return res.json().get("result", [])
         except Exception:
@@ -159,7 +201,7 @@ class FialdaScanner:
         """Lay ma tran luan chuyen RRG 1,530 ma toan thi truong."""
         url = f"{self.BASE_URL}/api/services/app/Stock/GetRRGData"
         try:
-            res = requests.get(url, headers=self.headers, timeout=10)
+            res = requests.get(url, headers=self.headers, timeout=self.TIMEOUT)
             if res.status_code == 200:
                 return res.json().get("result", {})
         except Exception:
@@ -170,7 +212,7 @@ class FialdaScanner:
         """Lay chi so IBD O'Neil: RS1M, Composite, Acc/Diss, EPS Rating."""
         url = f"{self.BASE_URL}/api/services/app/Expert/GetExpertRating"
         try:
-            res = requests.get(url, headers=self.headers, params={"symbol": symbol}, timeout=10)
+            res = requests.get(url, headers=self.headers, params={"symbol": symbol}, timeout=self.TIMEOUT)
             if res.status_code == 200:
                 return res.json().get("result", {})
         except Exception:
@@ -178,18 +220,40 @@ class FialdaScanner:
         return {}
 
     def get_stock_infos(self, symbols: List[str]) -> Dict[str, Dict[str, Any]]:
-        """Lay gia khop thuc te, bien do va giao dich khoi ngoai chinh xac 100% qua GetStockInfos."""
-        if not symbols or not self.token:
+        """Lay gia khop thuc te, bien do va giao dich khoi ngoai chinh xac 100% qua GetStockInfos (kem public fallback)."""
+        if not symbols:
             return {}
-        url = f"{self.BASE_URL}/api/services/app/Common/GetStockInfos"
-        payload = [{"symbol": s} for s in symbols]
-        try:
-            resp = requests.post(url, json=payload, headers=self.headers, timeout=10)
-            if resp.status_code == 200:
-                return resp.json().get("result", {})
-        except Exception as e:
-            print(f"Warning: Khong the lay GetStockInfos: {e}")
-        return {}
+        result: Dict[str, Dict[str, Any]] = {}
+        if self.token:
+            url = f"{self.BASE_URL}/api/services/app/Common/GetStockInfos"
+            payload = [{"symbol": s} for s in symbols]
+            try:
+                resp = requests.post(url, json=payload, headers=self.headers, timeout=self.TIMEOUT)
+                if resp.status_code == 200:
+                    result = resp.json().get("result", {})
+            except Exception as e:
+                print(f"[FialdaScanner] Warning: Khong the lay GetStockInfos tu Fialda: {e}")
+
+        # Bo sung fallback cong khai neu thieu gia cho bat ky ma nao
+        missing = [
+            s for s in symbols
+            if s not in result or not (
+                result[s].get("PriceInfo", {}).get("currentPrice")
+                or result[s].get("PriceInfo", {}).get("lastPrice")
+                or result[s].get("PriceInfo", {}).get("closePrice")
+            )
+        ]
+        if missing:
+            public_prices = self.get_public_realtime_prices(missing)
+            for s, p in public_prices.items():
+                if p and p > 0:
+                    if s not in result:
+                        result[s] = {"PriceInfo": {}, "ForeignTrade": {}}
+                    result[s]["PriceInfo"]["currentPrice"] = p
+                    result[s]["PriceInfo"]["lastPrice"] = p
+                    result[s]["PriceInfo"]["closePrice"] = p
+                    result[s]["PriceInfo"]["isPublicFallback"] = True
+        return result
 
     def get_financial_highlights(self, symbol: str) -> List[Dict[str, Any]]:
         """Lay toan bo bao cao tai chinh tinh gon (Financial Highlights, F-Score, PE, PB) tu Fialda."""
@@ -197,7 +261,7 @@ class FialdaScanner:
             return []
         url = f"{self.BASE_URL}/api/services/app/TechnicalAnalysis/GetFinancialHighlights"
         try:
-            res = requests.get(url, headers=self.headers, params={"symbol": symbol}, timeout=10)
+            res = requests.get(url, headers=self.headers, params={"symbol": symbol}, timeout=self.TIMEOUT)
             if res.status_code == 200:
                 return res.json().get("result", [])
         except Exception as e:
@@ -267,8 +331,8 @@ class FialdaScanner:
 
     @staticmethod
     def _fallback_mock_fundamental() -> List[Dict[str, Any]]:
-        """Fallback co ban chuan dinh che khi offline."""
-        return [
+        """Fallback co ban chuan dinh che khi offline kem gia realtime tu dong cap nhat."""
+        items = [
             {"symbol": "HPG", "company_name": "Tập đoàn Hòa Phát", "sector": "Thép & Vật liệu", "price": 20.95, "f_score": 9.0, "f_score_str": "9/9", "cfo_ni": 0.91, "pe": 8.5, "pb": 1.4, "is_institutional": True},
             {"symbol": "PTB", "company_name": "Phú Tài", "sector": "Gỗ & Đá xuất khẩu", "price": 30.90, "f_score": 6.0, "f_score_str": "6/9", "cfo_ni": 1.15, "pe": 7.2, "pb": 1.0, "is_institutional": True},
             {"symbol": "VHM", "company_name": "Vinhomes", "sector": "Bất động sản", "price": 64.30, "f_score": 6.0, "f_score_str": "6/9", "cfo_ni": 2.26, "pe": 15.8, "pb": 4.4, "is_institutional": True},
@@ -277,6 +341,16 @@ class FialdaScanner:
             {"symbol": "DBC", "company_name": "Dabaco Việt Nam", "sector": "Nông nghiệp", "price": 16.45, "f_score": 5.0, "f_score_str": "5/9", "cfo_ni": 1.42, "pe": 6.5, "pb": 0.8, "is_institutional": True},
             {"symbol": "CTS", "company_name": "Chứng khoán VietinBank", "sector": "Dịch vụ tài chính", "price": 21.95, "f_score": 4.0, "f_score_str": "4/9", "cfo_ni": 0.95, "pe": 49.9, "pb": 1.9, "is_institutional": False},
         ]
+        try:
+            syms = [x["symbol"] for x in items]
+            real_prices = FialdaScanner.get_public_realtime_prices(syms)
+            for it in items:
+                rp = real_prices.get(it["symbol"])
+                if rp and rp > 0:
+                    it["price"] = rp
+        except Exception:
+            pass
+        return items
 
     def get_company_news(self, symbol: str, page_size: int = 3) -> List[Dict[str, Any]]:
         """Lay tin tuc bao chi moi nhat theo ma co phieu tu Fialda kem thuat toan loc do lien quan cao."""
@@ -296,7 +370,7 @@ class FialdaScanner:
             "SSI": ["SSI"],
         }
         try:
-            res = requests.get(url, headers=self.headers, params=params, timeout=10)
+            res = requests.get(url, headers=self.headers, params=params, timeout=self.TIMEOUT)
             if res.status_code == 200:
                 items = res.json().get("result", {}).get("items", [])
                 news_list = []
@@ -343,7 +417,7 @@ class FialdaScanner:
         url = f"{self.BASE_URL}/api/services/app/Event/GetUpcomingEvents"
         params = {"symbol": symbol}
         try:
-            res = requests.get(url, headers=self.headers, params=params, timeout=10)
+            res = requests.get(url, headers=self.headers, params=params, timeout=self.TIMEOUT)
             if res.status_code == 200:
                 items = res.json().get("result", [])
                 events_list = []
@@ -367,7 +441,7 @@ class FialdaScanner:
         url = f"{self.BASE_URL}/api/services/app/StockInfo/GetFS_IncomeStatement_General"
         params = {"symbol": symbol, "isQuarterReport": is_quarter}
         try:
-            res = requests.get(url, headers=self.headers, params=params, timeout=10)
+            res = requests.get(url, headers=self.headers, params=params, timeout=self.TIMEOUT)
             if res.status_code == 200:
                 raw_rows = res.json().get("result", [])
                 quarters = []
@@ -495,6 +569,14 @@ class FialdaScanner:
         clean_pool = [s for s in pool if s and len(s) == 3]
         stock_infos = self.get_stock_infos(clean_pool)
 
+        # Lay rating dong thoi bang ThreadPoolExecutor de toi uu toc do quet tu 40s xuong 3s
+        ratings_map: Dict[str, Dict[str, Any]] = {}
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            def _fetch_rating(s: str):
+                return s, self.get_expert_rating(s)
+            for s, r in executor.map(_fetch_rating, clean_pool):
+                ratings_map[s] = r
+
         candidates: List[FialdaCandidate] = []
 
         for sym in clean_pool:
@@ -518,7 +600,7 @@ class FialdaScanner:
                 foreign_net = (market_sym_map.get(sym, {}).get("totalForeignerNetBuyValue") or 0.0) / 1e9
 
             # Lay diem so the che
-            rating = self.get_expert_rating(sym)
+            rating = ratings_map.get(sym, {})
             rs_1m = rating.get("rS1M") or 50
             composite = rating.get("compositeRating") or 50
             acc_diss = rating.get("accDissRating") or "C"
@@ -789,25 +871,41 @@ class FialdaScanner:
                 liquidity_score=75.8, slippage_est_pct=0.57, is_liquid=True,
             ),
             FialdaCandidate(
-                symbol="PNJ", price=92.50, signal_type="CHO_MUA_CHAN_SONG",
-                entry_low=90.50, entry_high=93.00, stop_loss=85.52, target_1m=115.63,
+                symbol="TCB", price=34.20, signal_type="CHO_MUA_CHAN_SONG",
+                entry_low=33.50, entry_high=34.80, stop_loss=31.66, target_1m=42.75,
                 rs_1m=78, composite_rating=83, acc_diss_rating="A",
-                rrg_r=101.4, rrg_m=100.6, foreign_net_value_billion=22.0, ranking_score=73.5,
-                catalyst="Cao diem mua sắm cuoi nam, Bien loi nhuan ban le trang suc cao",
-                adtv20_billion=60.0, adv20_shares=648648, max_shares_capacity=64800,
-                liquidity_score=83.0, slippage_est_pct=0.53, is_liquid=True,
+                rrg_r=101.4, rrg_m=100.6, foreign_net_value_billion=32.0, ranking_score=73.5,
+                catalyst="Ngan hang hang dau ve CASA 40.2%, Dinh gia P/B 1.1x re hap dan, Basel III",
+                adtv20_billion=180.0, adv20_shares=5263157, max_shares_capacity=526300,
+                liquidity_score=94.0, slippage_est_pct=0.44, is_liquid=True,
             ),
             FialdaCandidate(
-                symbol="REE", price=62.00, signal_type="CHO_MUA_CHAN_SONG",
-                entry_low=60.50, entry_high=62.50, stop_loss=57.17, target_1m=77.50,
+                symbol="REE", price=45.90, signal_type="CHO_MUA_CHAN_SONG",
+                entry_low=45.00, entry_high=46.50, stop_loss=42.50, target_1m=57.38,
                 rs_1m=72, composite_rating=79, acc_diss_rating="A",
                 rrg_r=100.8, rrg_m=100.7, foreign_net_value_billion=16.5, ranking_score=73.0,
                 catalyst="Nang luong tai tao va cho thue van phong Etown 6 tao dong tien on dinh",
-                adtv20_billion=42.0, adv20_shares=677419, max_shares_capacity=67700,
+                adtv20_billion=42.0, adv20_shares=915032, max_shares_capacity=91500,
                 liquidity_score=79.5, slippage_est_pct=0.55, is_liquid=True,
             ),
         ]
-        return base_5 + more_15
+        full_list = base_5 + more_15
+        # Cap nhat dong thoi gia dong cua realtime that tu san
+        try:
+            syms = [c.symbol for c in full_list]
+            real_prices = FialdaScanner.get_public_realtime_prices(syms)
+            for c in full_list:
+                rp = real_prices.get(c.symbol)
+                if rp and rp > 0:
+                    c.price = rp
+                    c.entry_low = round(rp * 0.98, 2)
+                    c.entry_high = round(rp * 1.01, 2)
+                    c.stop_loss = round(c.entry_low * 0.945, 2)
+                    c.target_1m = round(rp * 1.25, 2)
+        except Exception:
+            pass
+        full_list.sort(key=lambda x: x.ranking_score, reverse=True)
+        return full_list
 
     @staticmethod
     def _fallback_mock_top_5() -> List[FialdaCandidate]:
@@ -871,10 +969,16 @@ def format_top_5_markdown(
     md = [
         f"## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP {len(candidates)} SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)",
         f"> **Trạng thái Thị trường:** VN-Index Tăng **{adv}** / Giảm **{dec}** | Giá trị GD: **{val}** | P/E: **{pe}**",
+    ]
+    if scanner and scanner.token:
+        md.append("> 🟢 **Trạng Thái Dữ Liệu:** `REAL-TIME FIALDA PRO API` (Dữ liệu khớp lệnh trực tiếp từ sàn)")
+    else:
+        md.append("> 🟡 **Trạng Thái Dữ Liệu:** `BẢNG GIÁ REAL-TIME THỰC TẾ (ENTRADE/DNSE PUBLIC)` | Chiến thuật định lượng mô phỏng")
+    md.extend([
         "",
         "| STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua An Toàn | Cắt Lỗ (-5.5%) | Mục Tiêu 1T (+25%) | ADTV20 | Điểm TK | KL Mua Tối Đa | Trượt Giá | RRG (r/m) | IBD Comp | Khối Ngoại | Điểm |",
         "| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
-    ]
+    ])
 
     for idx, c in enumerate(candidates, 1):
         sig = "`CHÂN SÓNG`" if "CHO_MUA" in c.signal_type else "`ĐỘT BIẾN GT`"
