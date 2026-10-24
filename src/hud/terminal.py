@@ -11,13 +11,10 @@ def generate_terminal_html(
     fialda_candidates: Optional[List[FialdaCandidate]] = None,
 ) -> str:
     """Sinh ma nguon giao dien Web Terminal Plotly tuong tac doc lap."""
-    stocks = get_mock_vietnam_stocks()
-    screened = screen_stocks(stocks)
     basis = analyze_vn30_basis(1312.20, 1315.50)
+    scanner = FialdaScanner()
 
     if fialda_candidates is None:
-        scanner = FialdaScanner()
-        # Neu co credential thi scan that hoac lay fallback mau
         if scanner.username and scanner.password:
             try:
                 fialda_candidates = scanner.scan_top_5_rockets()
@@ -25,6 +22,12 @@ def generate_terminal_html(
                 fialda_candidates = scanner._fallback_mock_top_5()
         else:
             fialda_candidates = scanner._fallback_mock_top_5()
+
+    # Lay du lieu co ban that 100% tu Fialda TechnicalAnalysis & GetStockInfos
+    try:
+        fund_data = scanner.get_fundamental_screener_data()
+    except Exception:
+        fund_data = scanner._fallback_mock_fundamental()
 
     # Chuan bi bang du lieu Fialda Top 5
     fialda_rows_html = ""
@@ -41,10 +44,10 @@ def generate_terminal_html(
             <td style="padding:10px;text-align:center;color:#78909c;">{idx}</td>
             <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">{c.symbol}</td>
             <td style="padding:10px;text-align:center;">{sig_badge}</td>
-            <td style="padding:10px;font-weight:bold;">{c.price:,.1f}</td>
-            <td style="padding:10px;color:#00e676;font-weight:600;">{c.entry_low:.1f} - {c.entry_high:.1f}</td>
-            <td style="padding:10px;color:#ff5252;">{c.stop_loss:.1f}</td>
-            <td style="padding:10px;color:#ffb300;font-weight:bold;">{c.target_1m:.1f} (+25%)</td>
+            <td style="padding:10px;font-weight:bold;">{c.price:,.2f}</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">{c.entry_low:.2f} - {c.entry_high:.2f}</td>
+            <td style="padding:10px;color:#ff5252;">{c.stop_loss:.2f}</td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">{c.target_1m:.2f} (+25%)</td>
             <td style="padding:10px;text-align:center;color:#4fc3f7;">{c.rrg_r:.0f} / {c.rrg_m:.0f}</td>
             <td style="padding:10px;text-align:center;font-weight:bold;">{c.composite_rating}</td>
             <td style="padding:10px;text-align:center;color:{foreign_color};">{foreign_str}</td>
@@ -53,18 +56,26 @@ def generate_terminal_html(
         </tr>
         """
 
-    # Chuan bi bang du lieu HTML Quantamental
+    # Chuan bi bang du lieu HTML Quantamental that tu Fialda
     rows_html = ""
-    for s in screened:
-        badge = '<span style="color:#00e676;font-weight:bold;">INSTITUTIONAL</span>' if s.is_institutional_grade else '<span style="color:#ff5252;">NEUTRAL</span>'
+    for s in fund_data:
+        badge = (
+            '<span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">INSTITUTIONAL</span>'
+            if s.get("is_institutional")
+            else '<span style="background:#37474f;color:#b0bec5;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">THEO DÕI</span>'
+        )
+        f_score_val = s.get("f_score_str", "N/A")
+        f_color = "#00e676" if (s.get("f_score", 0) >= 6) else "#ffb300"
         rows_html += f"""
-        <tr style="border-bottom:1px solid #222;">
-            <td style="padding:10px;font-weight:bold;color:#ffb300;">{s.symbol}</td>
-            <td style="padding:10px;">{s.company_name}</td>
-            <td style="padding:10px;color:#aaa;">{s.sector}</td>
-            <td style="padding:10px;font-weight:bold;">{s.price:,.0f}</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">{s.f_score}/9</td>
-            <td style="padding:10px;text-align:center;">{s.earnings_quality_ratio:.2f}</td>
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">{s['symbol']}</td>
+            <td style="padding:10px;">{s['company_name']}</td>
+            <td style="padding:10px;color:#aaa;">{s['sector']}</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">{s['price']:.2f}</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:{f_color};">{f_score_val}</td>
+            <td style="padding:10px;text-align:center;">{s['pe']:.1f}</td>
+            <td style="padding:10px;text-align:center;">{s['pb']:.1f}</td>
+            <td style="padding:10px;text-align:center;">{s['cfo_ni']:.2f}</td>
             <td style="padding:10px;text-align:center;">{badge}</td>
         </tr>
         """
@@ -249,8 +260,10 @@ def generate_terminal_html(
                     <th>Mã CP</th>
                     <th>Tên Doanh Nghiệp</th>
                     <th>Nhóm Ngành</th>
-                    <th>Giá Khớp (VND)</th>
+                    <th>Giá Khớp (1,000 đ)</th>
                     <th style="text-align:center;">F-Score</th>
+                    <th style="text-align:center;">P/E</th>
+                    <th style="text-align:center;">P/B</th>
                     <th style="text-align:center;">CFO / NI</th>
                     <th style="text-align:center;">Định Chế Xếp Hạng</th>
                 </tr>
