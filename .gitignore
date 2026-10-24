@@ -6,8 +6,10 @@ __pycache__/
 data/*.tmp
 data/*.cache
 !data/.gitkeep
-exports/*.html
+exports/*.tmp
+exports/vn_stock_terminal.html
 !exports/.gitkeep
+!exports/index.html
 scratch/
 .env
 *.log

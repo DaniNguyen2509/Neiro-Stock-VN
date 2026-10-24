@@ -27,7 +27,7 @@ jobs:
 
       - name: Run Test Suite (Pytest)
         run: |
-          python -m pytest tests/ -v --tb=short
+          PYTHONPATH=. python -m pytest tests/ -v --tb=short
 
       - name: Verify Project Size (< 15MB Zero-Waste)
         run: |

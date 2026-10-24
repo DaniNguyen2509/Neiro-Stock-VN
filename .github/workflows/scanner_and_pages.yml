@@ -69,7 +69,9 @@ jobs:
 
       - name: Copy 404 and nojekyll for GitHub Pages
         run: |
-          cp exports/index.html exports/404.html || true
+          if [ -f exports/index.html ]; then
+            cp exports/index.html exports/404.html
+          fi
           touch exports/.nojekyll
 
       - name: Deploy to gh-pages branch
