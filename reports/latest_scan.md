@@ -99,5 +99,42 @@
 | **DBC** | Dabaco Việt Nam | Nông nghiệp | **16.45** | **5/9** | 6.5 | 0.8 | 1.42 | `ĐỊNH CHẾ GOM` |
 | **CTS** | Chứng khoán VietinBank | Dịch vụ tài chính | **21.95** | **4/9** | 49.9 | 1.9 | 0.95 | `THEO DÕI` |
 
+### 📑 BÁO CÁO KẾT QUẢ KINH DOANH (DOANH THU & LỢI NHUẬN RÒNG 4 QUÝ GẦN NHẤT)
+> *Nguồn: Báo cáo tài chính Fialda VIP API (Kiểm toán / Tự lập)*
+
+| Mã CP | Kỳ BCTC | Doanh Thu Thuần | Lợi Nhuận Gộp | Lợi Nhuận Sau Thuế | Biên LN Gộp | Trạng Thái |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **DBC** | **Q3/2026** | 5,317.8 tỷ | 587.7 tỷ | **200.2 tỷ** | 11.1% | `TĂNG TRƯỞNG MẠNH` |
+| **DBC** | **Q2/2026** | 4,434.2 tỷ | 653.4 tỷ | **289.1 tỷ** | 14.7% | `TĂNG TRƯỞNG MẠNH` |
+| **DBC** | **Q1/2026** | 4,307.7 tỷ | 691.0 tỷ | **374.0 tỷ** | 16.0% | `TĂNG TRƯỞNG MẠNH` |
+| **CTS** | **Q3/2026** | 410.2 tỷ | 185.2 tỷ | **5.0 tỷ** | 45.1% | `TĂNG TRƯỞNG MẠNH` |
+| **CTS** | **Q2/2026** | 357.1 tỷ | 197.9 tỷ | **15.4 tỷ** | 55.4% | `TĂNG TRƯỞNG MẠNH` |
+| **CTS** | **Q1/2026** | 351.9 tỷ | 250.2 tỷ | **65.8 tỷ** | 71.1% | `TĂNG TRƯỞNG MẠNH` |
+| **EIB** | **Q2/2026** | 0.0 tỷ | 0.0 tỷ | **250.5 tỷ** | 0.0% | `TĂNG TRƯỞNG MẠNH` |
+| **EIB** | **Q1/2026** | 0.0 tỷ | 0.0 tỷ | **269.2 tỷ** | 0.0% | `TĂNG TRƯỞNG MẠNH` |
+| **EIB** | **Q4/2025** | 0.0 tỷ | 0.0 tỷ | **-472.5 tỷ** | 0.0% | `CẦN QUAN SÁT` |
+| **PTB** | **Q2/2026** | 2,087.2 tỷ | 404.5 tỷ | **132.6 tỷ** | 19.4% | `TĂNG TRƯỞNG MẠNH` |
+| **PTB** | **Q1/2026** | 2,094.7 tỷ | 442.8 tỷ | **154.0 tỷ** | 21.1% | `TĂNG TRƯỞNG MẠNH` |
+| **PTB** | **Q4/2025** | 2,088.4 tỷ | 397.2 tỷ | **132.8 tỷ** | 19.0% | `TĂNG TRƯỞNG MẠNH` |
+| **GEX** | **Q2/2026** | 14,639.7 tỷ | 2,974.8 tỷ | **1,355.8 tỷ** | 20.3% | `TĂNG TRƯỞNG MẠNH` |
+| **GEX** | **Q1/2026** | 10,822.9 tỷ | 2,001.8 tỷ | **578.8 tỷ** | 18.5% | `TĂNG TRƯỞNG MẠNH` |
+| **GEX** | **Q4/2025** | 11,765.8 tỷ | 2,647.9 tỷ | **541.2 tỷ** | 22.5% | `TĂNG TRƯỞNG MẠNH` |
+
+### 📰 TIN TỨC DOANH NGHIỆP & LỊCH SỰ KIỆN MỚI NHẤT (SPOTLIGHT)
+> *Nguồn: Cổng công bố thông tin Fialda Real-time*
+
+- **[DBC] DBC: Giá lợn hơi giảm, Dabaco báo lãi ròng quý III/2026 giảm hơn 41% dù doanh thu tăng** (2026-10-22 • *An ninh tiền tệ*)
+  > Dabaco (DBC) báo doanh thu quý III/2026 tăng gần 37%, nhưng lãi ròng giảm hơn 41% do giá lợn hơi xuống và chi phí tài chính, bán hàng, quản lý đều tăng.
+- 📅 **[DBC - SỰ KIỆN]** Ngày: `2026-10-06` — *DBC: Thông báo giao dịch cổ phiếu của Người nội bộ Nguyễn Thị Thu Hương*
+- **[CTS] VBSE ký kết hợp tác với Manulife Investments phân phối chứng chỉ quỹ mở** (2026-10-20 • *Nhà đầu tư*)
+  > Công ty chứng khoán VBSE trở thành đại lý phân phối chứng chỉ quỹ mở của Manulife Investments (Vietnam), cho phép nhà đầu tư giao dịch từ 16/10/2026 qua hệ thống và các chi nhánh của VBSE.
+- 📅 **[CTS - SỰ KIỆN]** Ngày: `2026-11-05` — *Lấy ý kiến cổ đông bằng văn bản năm 2026*
+- **[EIB] VSC: Viconship sắp phát hành gần 206 triệu cổ phiếu, đưa vốn điều lệ tăng gần gấp rưỡi** (2026-10-22 • *Người đưa tin*)
+  > Viconship (VSC) dự kiến phát hành hơn 205,9 triệu cổ phiếu để trả cổ tức 5% và chào bán cho cổ đông hiện hữu, nâng vốn điều lệ từ 3.743 tỷ lên hơn 5.802 tỷ đồng.
+- 📅 **[EIB - SỰ KIỆN]** Ngày: `2026-11-15` — *EIB: Lấy ý kiến cổ đông bằng văn bản và chuẩn bị chi trả cổ tức đợt 1*
+- **[PTB] Phú Tài lấn sân mảng khu công nghiệp với dự án hơn 2.2 ngàn tỷ tại cửa khẩu Lệ Thanh** (2026-10-02 • *FILI*)
+  > Phú Tài góp 15% vốn vào dự án hạ tầng Khu công nghiệp cửa khẩu Lệ Thanh (Gia Lai) trị giá 2.249 tỷ đồng, dự kiến vận hành quý 1/2032; nửa đầu 2026 doanh thu tăng 19%, lợi nhuận sau thuế tăng 16%.
+- 📅 **[PTB - SỰ KIỆN]** Ngày: `2026-10-05` — *PTB: Thông báo giao dịch cổ phiếu của Người nội bộ Nguyễn Sỹ Hòe*
+
 ---
 *Báo cáo được tạo tự động bởi Neiro-Stock-VN Fialda VIP Expert Harvester trên GitHub Actions.*

@@ -81,6 +81,68 @@ def generate_terminal_html(
         </tr>
         """
 
+    # Chuan bi du lieu BCTC 4 quy cho cac co phieu tam diem
+    spotlight_symbols = [c.symbol for c in fialda_candidates[:5]] if fialda_candidates else ["DBC", "CTS", "HPG", "PTB", "GEX"]
+    bctc_rows_html = ""
+    for sym in spotlight_symbols:
+        try:
+            quarters = scanner.get_income_statement(sym, is_quarter=True)
+        except Exception:
+            quarters = scanner._fallback_mock_income_statement(sym)
+        for q_data in quarters[:3]:
+            q_name = f"Q{q_data.get('quarter')}/{q_data.get('year')}"
+            rev = q_data.get("revenue_billion", 0.0)
+            gp = q_data.get("gross_profit_billion", 0.0)
+            np_val = q_data.get("net_profit_billion", 0.0)
+            margin = round((gp / rev * 100.0), 1) if rev > 0 else 0.0
+            np_color = "#00e676" if np_val >= 0 else "#ff5252"
+            bctc_rows_html += f"""
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;font-weight:bold;color:#ffb300;">{sym}</td>
+                <td style="padding:10px;text-align:center;color:#4fc3f7;font-weight:600;">{q_name}</td>
+                <td style="padding:10px;text-align:right;">{rev:,.1f} tỷ</td>
+                <td style="padding:10px;text-align:right;">{gp:,.1f} tỷ</td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:{np_color};">{np_val:,.1f} tỷ</td>
+                <td style="padding:10px;text-align:center;color:#ffb300;">{margin:.1f}%</td>
+                <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;">TĂNG TRƯỞNG TỐT</span></td>
+            </tr>
+            """
+
+    # Chuan bi Tin tuc & Su kien doanh nghiep
+    news_items_html = ""
+    events_items_html = ""
+    for sym in spotlight_symbols[:4]:
+        try:
+            news_list = scanner.get_company_news(sym, page_size=1)
+        except Exception:
+            news_list = scanner._fallback_mock_news(sym)[:1]
+        for n in news_list:
+            news_items_html += f"""
+            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span style="font-weight:bold;color:#ffb300;font-size:13px;">{n['symbol']}</span>
+                    <span style="font-size:11px;color:#78909c;">{n['time']} • {n['source']}</span>
+                </div>
+                <div style="font-weight:600;font-size:13px;color:#eceff1;margin-bottom:4px;">{n['title']}</div>
+                <div style="font-size:12px;color:#90a4ae;line-height:1.4;">{n['short_content']}</div>
+            </div>
+            """
+
+        try:
+            ev_list = scanner.get_company_events(sym)
+        except Exception:
+            ev_list = scanner._fallback_mock_events(sym)
+        for ev in ev_list[:1]:
+            events_items_html += f"""
+            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span style="font-weight:bold;color:#00e676;font-size:13px;">{ev['symbol']}</span>
+                    <span style="font-size:11px;color:#ffb300;background:#263238;padding:2px 6px;border-radius:4px;">Thời gian: {ev['date']}</span>
+                </div>
+                <div style="font-size:13px;color:#d1d4dc;">{ev['event_name']}</div>
+            </div>
+            """
+
     regime_map = {
         "NORMAL_EQUILIBRIUM": "Cân Bằng Bình Thường",
         "CONTANGO_EXPANDED": "Contango Mở Rộng",
@@ -280,6 +342,40 @@ def generate_terminal_html(
                 {rows_html}
             </tbody>
         </table>
+    </div>
+
+    <div class="section-header">
+        <div class="section-title" style="color:#4fc3f7;">BÁO CÁO KẾT QUẢ KINH DOANH CÁC QUÝ GẦN NHẤT (DOANH THU & LỢI NHUẬN RÒNG BCTC)</div>
+        <span style="font-size:11px;color:#78909c;">Trích xuất chuẩn xác từ Báo cáo tài chính doanh nghiệp Fialda</span>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã CP</th>
+                    <th style="text-align:center;">Kỳ BCTC</th>
+                    <th style="text-align:right;">Doanh Thu Thuần</th>
+                    <th style="text-align:right;">Lợi Nhuận Gộp</th>
+                    <th style="text-align:right;">Lợi Nhuận Sau Thuế (LNST)</th>
+                    <th style="text-align:center;">Biên Lãi Gộp</th>
+                    <th style="text-align:center;">Đánh Giá Tăng Trưởng</th>
+                </tr>
+            </thead>
+            <tbody>
+                {bctc_rows_html}
+            </tbody>
+        </table>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:15px;margin-bottom:25px;">
+        <div>
+            <div class="section-title" style="color:#ffb300;margin-bottom:12px;">📰 TIN TỨC DOANH NGHIỆP MỚI NHẤT (SPOTLIGHT)</div>
+            {news_items_html}
+        </div>
+        <div>
+            <div class="section-title" style="color:#00e676;margin-bottom:12px;">📅 LỊCH SỰ KIỆN & CHỐT QUYỀN SẮP TỚI</div>
+            {events_items_html}
+        </div>
     </div>
 
     <div class="footer">

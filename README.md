@@ -103,11 +103,11 @@ python -m src.microstructure_engine.volume_profile --symbol HPG
 # 3. Phân tích luân chuyển dòng tiền ngành (RRG Rotation)
 python -m src.sector_engine.rrg_rotation
 
-# 4. Quét tự động Top 5 Siêu cổ phiếu chân sóng (Fialda VIP Expert Scanner)
-python -m src.collector.fialda_scanner
+# 4. Quét tự động Top 20 Siêu cổ phiếu chân sóng, BCTC 4 quý & Tin tức (Fialda VIP Expert Scanner)
+python -m src.collector.fialda_scanner --top 20 --save-report reports/latest_scan.md --generate-terminal
 
-# 5. Xuất bản Tactical Terminal Web (Dark Theme) với Top 5 Siêu Cổ Phiếu
-python -m src.hud.terminal --output exports/vn_stock_terminal.html
+# 5. Xuất bản Tactical Terminal Web (Dark Theme) với Top 20 Siêu Cổ Phiếu, BCTC & Tin tức
+python -m src.hud.terminal --output exports/index.html
 ```
 
 ### 4.4. Cấu hình Tài khoản VIP Fialda (Tùy chọn cục bộ)
@@ -130,8 +130,8 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
   - **15:05 PM:** Quét chốt dữ liệu phiên ATC và toàn bộ biến động trong ngày.
 - **Kích hoạt thủ công bất kỳ lúc nào:** Vào tab **Actions** trên GitHub (trên máy tính hoặc ứng dụng di động GitHub Mobile) -> Chọn workflow **Fialda VIP Expert Scanner & GitHub Pages Deploy** -> Bấm **Run workflow**.
 - **Địa chỉ truy cập Dashboard trực tiếp trên Mobile/Web:**
-  - **GitHub Pages:** `https://daninguyen2509.github.io/Neiro-Stock-VN/` (Giao diện Dark Mode tương tác mượt mà trên iPhone/Android).
-  - **GitHub Mobile App:** Mở lượt chạy Action bất kỳ, bảng xếp hạng Top 5 hiển thị rực rỡ ngay trong tab **Summary**.
+  - **GitHub Pages:** `https://daninguyen2509.github.io/Neiro-Stock-VN/` (Giao diện Dark Mode tương tác mượt mà trên iPhone/Android với Top 20 cổ phiếu, BCTC 4 quý, Tin tức & Sự kiện).
+  - **GitHub Mobile App:** Mở lượt chạy Action bất kỳ, bảng xếp hạng Top 20 hiển thị rực rỡ ngay trong tab **Summary**.
 - **Cấu hình GitHub Secrets:**
   Vào repository: **Settings** -> **Secrets and variables** -> **Actions** -> Thêm 2 Secrets:
   - `FIALDA_USERNAME`: Email tài khoản Fialda VIP.
