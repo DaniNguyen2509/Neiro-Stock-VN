@@ -39,9 +39,11 @@ Tại Thị trường Chứng khoán Việt Nam, nhà đầu tư cổ phiếu c�
   - 🟡 **MODERATE:** Basis phân kỳ nhẹ $\rightarrow$ Chỉ giải ngân đợt 1 (50% vị thế tại nền).
   - 🔴 **CRITICAL:** Basis âm sâu $< -10$ điểm hoặc phái sinh bán tháo $\rightarrow$ Tạm dừng mở mua mới, kích hoạt lệnh bán hạ tỷ trọng trên các mã hàng sẵn có để nâng tiền mặt $\ge 50\% - 60\%$.
 
-### 2.3. Lưu Trữ Lịch Sử Xếp Hạng Siêu Nhẹ (`src/collector/ranking_history.py`)
+### 2.3. Lưu Trữ Lịch Sử Xếp Hạng Siêu Nhẹ & Ổn Định Phiên (`src/collector/ranking_history.py`)
 - Lưu trữ chuỗi snapshot vào `data/ranking_history.jsonl`.
 - Áp dụng cơ chế **Rolling Window** tự động cắt tỉa chỉ duy trì tối đa 500 bản ghi ($\sim 35\text{ KB}$), bảo đảm tuyệt đối tôn trọng **Zero-Waste Mandate (< 15MB)**.
+- **Cơ chế Chống Rung Nhiễu Phiên (Session Debounce 30 phút):** Tự động phát hiện các lần quét liên tiếp trong vòng 30 phút, cập nhật batch của phiên hiện tại và luôn đối chiếu "Kỳ trước" với phiên giao dịch trước đó thực sự, loại bỏ hoàn toàn hiện tượng nhảy hạng khi quét lại.
+- **Khiên chắn cách ly kiểm thử (Test Pollution Guard):** Tự động chặn ghi vào file dữ liệu chính thức khi đang chạy test (`PYTEST_CURRENT_TEST`), ngăn ngừa dữ liệu mock làm bẩn chuỗi lịch sử.
 - Tự động so sánh phiên hiện tại với phiên liền kề để tính toán:
   - `↗ +N`: Thăng hạng
   - `↘ -N`: Tụt hạng
@@ -52,6 +54,7 @@ Tại Thị trường Chứng khoán Việt Nam, nhà đầu tư cổ phiếu c�
 
 ## 3. Hệ quả & Đánh giá (Consequences & Verification)
 
-- **Kiểm thử toán học:** Đạt 100% pass với 72 unit tests tự động (`tests/test_trailing_stop.py`, `tests/test_ranking_history.py`).
-- **Giao diện Web Terminal:** Bảng Top 20 hiển thị đầy đủ: STT kèm Huy hiệu $\Delta Rank$, Cắt lỗ (SL), Chốt lời 1 (TP1), Chốt lời 2 (TP2), Tỷ lệ R:R ($1:2.5$), Vùng T+2.5, và Widget lịch sử phiên quét.
-- **Dung lượng Repository:** Duy trì ở mức siêu nhẹ **1.69 MB** (tiêu chuẩn $< 15\text{ MB}$).
+- **Kiểm thử toán học:** Đạt 100% pass với 72 unit tests tự động (`tests/test_trailing_stop.py`, `tests/test_ranking_history.py`, `tests/test_fialda_scanner.py`).
+- **Giao diện Web Terminal:** Bảng Top 20 hiển thị chuẩn 15 cột tinh gọn, vừa vặn 100% màn hình: tách riêng Thanh Khoản (ADTV), Chuẩn Quỹ (Lô Max/Trượt), Điểm IBD Composite, Tích Luỹ (A-E), Cắt lỗ (SL), Chốt lời (TP1/TP2), và Cột Kỳ Trước ổn định `#cũ (+N)`.
+- **Dung lượng Repository:** Duy trì ở mức siêu nhẹ **1.58 MB** (tiêu chuẩn $< 15\text{ MB}$).
+

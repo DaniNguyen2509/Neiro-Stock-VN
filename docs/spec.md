@@ -353,8 +353,11 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 
 5. **Theo Vết & Lưu Trữ Lịch Sử Xếp Hạng (Ranking History Tracker):**
    - Tự động lưu trữ chuỗi thời gian các phiên quét vào `data/ranking_history.jsonl` (áp dụng Rolling Window giữ tối đa 500 records $\sim 35\text{ KB}$, bảo đảm tiêu chuẩn Zero-Waste $< 15\text{ MB}$).
-   - So sánh với phiên liền trước để tính biến động thứ hạng: $\Delta Rank = \text{Rank}_{\text{cũ}} - \text{Rank}_{\text{mới}}$ (`↗ +N` thăng hạng, `↘ -N` tụt hạng, `=` giữ hạng, `🆕 MỚI` bứt phá vào Top).
-   - Hiển thị trực quan cột `Kỳ Trước` (`#cũ +N` / `MỚI`) ở cột cuối cùng trên bảng Top 20; phân tách mạch lạc các cột Thanh Khoản (ADTV), Chuẩn Quỹ, Điểm IBD Composite và Tích Luỹ (A-E) để hiển thị trực quan, vừa vặn 100% màn hình, không cần cuộn ngang.
+   - **Cơ chế Chống Rung Nhiễu Phiên (Session Debounce 30 phút):** Tự động phát hiện các lần quét lặp lại trong vòng 30 phút, cập nhật batch của phiên hiện tại và giữ nguyên mốc so sánh là phiên giao dịch trước đó thực sự (không bị so sánh với lần bấm nút cách đó vài chục giây), bảo đảm cột Kỳ Trước luôn ổn định và nhất quán tuyệt đối.
+   - **Khiên chắn cách ly kiểm thử (Test Pollution Guard):** Tự động chặn mọi thao tác ghi dữ liệu của `pytest` thông qua cờ `PYTEST_CURRENT_TEST` đối với file dữ liệu chính thức, triệt tiêu 100% rủi ro dữ liệu mock làm sai lệch thứ hạng thật.
+   - **Tính toán Biến động Thứ hạng ($\Delta Rank$):** So sánh với phiên liền trước để tính: $\Delta Rank = \text{Rank}_{\text{cũ}} - \text{Rank}_{\text{mới}}$ (`↗ +N` thăng hạng, `↘ -N` tụt hạng, `=` giữ hạng, `🆕 MỚI` bứt phá vào Top).
+   - **Bố cục 15 cột tinh gọn trên Dashboard & Báo cáo:** Hiển thị trực quan cột `Kỳ Trước` (`#cũ +N` / `MỚI`) ở cột cuối cùng trên bảng Top 20; phân tách mạch lạc các cột `Thanh Khoản (ADTV)`, `Chuẩn Quỹ (Lô Max/Trượt)`, `Điểm IBD Composite`, và `Tích Luỹ (A-E)` để hiển thị trực quan, vừa vặn 100% màn hình, không cần cuộn ngang.
+
 
 
 

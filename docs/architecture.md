@@ -52,7 +52,12 @@ flowchart TD
   - Thu thập tín hiệu AI Expert: Chờ Mua Chân Sóng (`GetTinHieuChoMuaNew`), Đột biến Giá trị giao dịch (`GetTinHieuDotBienGiaTri`).
   - Trích xuất bộ chỉ số định chế IBD O'Neil: Sức mạnh giá RS 1 tháng (`rS1M`), Điểm tổng hợp (`compositeRating`), Hệ số Tích lũy/Phân phối (`accDissRating`).
   - Nạp toàn bộ ma trận luân chuyển dòng tiền RRG 1,530 mã toàn thị trường (`GetRRGData`).
-  - Lọc đa biến chọn lọc **Top 5 Siêu cổ phiếu bứt phá chân sóng** (khung 1 tháng, biên lợi nhuận kỳ vọng $+20\% - +35\%$, cắt lỗ chặt chẽ $-5.5\%$).
+  - Lọc đa biến chọn lọc **Top 20 Siêu cổ phiếu bứt phá chân sóng** (khung 1 tháng, biên lợi nhuận kỳ vọng $+20\% - +35\%$, cắt lỗ chặt chẽ $-5.5\%$).
+- **`ranking_history.py`:** Bộ theo dõi và lưu trữ lịch sử xếp hạng chuỗi thời gian (Ranking History Tracker):
+  - Ghi nhận snapshot Top N vào `data/ranking_history.jsonl` với cơ chế Rolling Window tự động cắt tỉa (tối đa 500 bản ghi $\sim 35\text{ KB}$, Zero-Waste $< 15\text{MB}$).
+  - Cơ chế **Session Debounce 30 phút**: tự động nhận diện các lần quét liên tiếp trong cùng phiên để tránh làm nhiễu dữ liệu, duy trì mốc so sánh với phiên giao dịch liền trước thực tế.
+  - Khiên chắn cách ly kiểm thử (`PYTEST_CURRENT_TEST`): Ngăn ngừa 100% dữ liệu mock từ unit tests làm sai lệch lịch sử xếp hạng thực tế.
+  - Tính toán biến động thứ hạng ($\Delta Rank$): thăng hạng `↗ +N`, tụt hạng `↘ -N`, giữ hạng `=`, hoặc bứt phá mới `🆕 MỚI`.
 
 ### 2.2. Tầng Định Lượng Cơ Bản (`src/fundamental_engine/`)
 - **`screener.py`:** Bộ lọc đa biến lọc ra Top $10\% - 15\%$ doanh nghiệp chất lượng cao nhất toàn sàn:
@@ -80,6 +85,12 @@ flowchart TD
   - Khống chế quy mô vị thế không quá $10\% - 15\%$ ADV20, làm tròn chuẩn lô 100 cổ phiếu, kiểm soát thời gian thanh lý an toàn trong chu kỳ T+2.5 ($ExitDays \le 1.0$ ngày).
   - Ước lượng trượt giá phi tuyến theo quy mô lệnh: $\text{Slippage} = \text{Spread} + k \times (\text{Size}/\text{ADTV})^\alpha$, phát tín hiệu cảnh báo trực tiếp trên Terminal khi quy mô vượt sức chứa chịu đựng.
   - Chấm điểm thanh khoản đa biến (0 - 100 điểm) phân cấp độ an toàn dòng tiền.
+- **`trailing_stop.py`:** Quản trị rủi ro động, chốt lời cơ học & cảnh báo phơi nhiễm T+2.5:
+  - Initial Stop Loss chuẩn Swing Low và ATR(14) khống chế rủi ro $[-3\%, -7\%]$. Đơn vị rủi ro chuẩn: $1R = \text{Entry} - \text{Stop Loss}$.
+  - Break-Even Ratchet: Nâng Stop Loss lên giá vốn hòa vốn khi lợi nhuận đạt $\ge 1.5R$.
+  - Chandelier Trailing Exit: Bám sát đỉnh $\max(\text{Current Stop}, \text{Peak} - 2.0 \times \text{ATR}_{14})$.
+  - Tỷ lệ Vàng Risk/Reward: TP1 chốt 50% tại $+1.5R$, TP2 gồng 50% tại $+2.5R$ ($R:R \ge 1:2.5$).
+  - Radar cảnh báo rủi ro "Vùng Đóng Băng T+0 đến T+2" cho cổ phiếu cơ sở dựa trên Basis VN30F1M và Độ rộng thị trường.
 - **`position_sizer.py`:** Tính toán quy mô giải ngân an toàn dựa trên rủi ro biến động $ATR(14)$ của cổ phiếu, khống chế mức lỗ tối đa cho mỗi vị thế không vượt quá $1.5\% - 2.0\%$ tổng NAV tài khoản.
 - **`t25_manager.py`:** Quản trị vòng quay hàng sẵn có (Rolling Inventory), thiết lập cơ chế khóa lợi nhuận hoặc phòng hộ danh mục bằng HĐTL VN30F1M khi thị trường vi phạm các mốc thanh khoản trọng yếu.
 
@@ -96,7 +107,7 @@ flowchart TD
 
 ### 2.7. Tầng Giao Diện Tác Chiến (`src/hud/`)
 - **`terminal.py`:** Sinh mã nguồn HTML tương tác đa tab hoàn chỉnh, hỗ trợ Dark Mode hiện đại, bao gồm:
-  - Tab 1: Top 20 Siêu Cổ Phiếu Chân Sóng & Bảng Xếp Hạng Định Lượng Cơ Bản (Piotroski F-Score).
+  - Tab 1: Top 20 Siêu Cổ Phiếu Chân Sóng với thiết kế 15 cột trực quan vừa vặn 100% màn hình không cần cuộn ngang: tách biệt hoàn toàn giữa `Thanh Khoản (ADTV20)`, `Chuẩn Quỹ (Lô Max/Trượt)`, `Điểm IBD`, và `Tích Luỹ (A-E)`; Cột `Kỳ Trước` hiển thị ổn định `#cũ (+N)` dựa trên cơ chế Session Debounce 30 phút. Bảng Xếp Hạng Định Lượng Cơ Bản (Piotroski F-Score).
   - Tab 2: Kiểm Định Lịch Sử T+2.5 Walk-Forward (Biểu đồ đường cong vốn SVG siêu nét Strategy vs VN-Index Benchmark, Bảng so sánh In-Sample vs Out-of-Sample, Nhật ký giao dịch thực chiến).
   - Tab 3: Bảng Định Lượng Ngân Hàng Thương Mại CAMEL & Basel II/III.
   - Tab 4: Báo Cáo Kết Quả Kinh Doanh BCTC & Tin Tức Doanh Nghiệp Spotlight.
