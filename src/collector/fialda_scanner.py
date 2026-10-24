@@ -268,29 +268,64 @@ class FialdaScanner:
         ]
 
     def get_company_news(self, symbol: str, page_size: int = 3) -> List[Dict[str, Any]]:
-        """Lay tin tuc bao chi moi nhat theo ma co phieu tu Fialda."""
+        """Lay tin tuc bao chi moi nhat theo ma co phieu tu Fialda kem thuat toan loc do lien quan cao."""
         url = f"{self.BASE_URL}/api/services/app/StockInfo/GetCompanyNews"
-        params = {"symbol": symbol, "pageNumber": 1, "pageSize": page_size}
+        fetch_size = max(page_size * 2, 8)
+        params = {"symbol": symbol, "pageNumber": 1, "pageSize": fetch_size}
+        aliases = {
+            "EIB": ["EXIMBANK"],
+            "DBC": ["DABACO"],
+            "CTS": ["VIETINBANK", "VBSE"],
+            "HPG": ["HÒA PHÁT", "HOA PHAT"],
+            "VHM": ["VINHOMES"],
+            "PTB": ["PHÚ TÀI", "PHU TAI"],
+            "GEX": ["GELEX"],
+            "VCB": ["VIETCOMBANK"],
+            "FPT": ["FPT"],
+            "SSI": ["SSI"],
+        }
         try:
             res = requests.get(url, headers=self.headers, params=params, timeout=10)
             if res.status_code == 200:
                 items = res.json().get("result", {}).get("items", [])
                 news_list = []
+                sym_upper = symbol.upper()
+                sym_aliases = aliases.get(sym_upper, [])
                 for it in items:
                     t_str = it.get("publishedTime") or it.get("publishDate") or it.get("createdDate") or ""
                     date_clean = t_str[:10] if len(t_str) >= 10 else "Gần đây"
+                    title = it.get("title", "")
+                    content = it.get("shortContent") or title
+
+                    # Tinh diem do lien quan (Relevance Scoring)
+                    relevance = 0
+                    t_up = title.upper()
+                    c_up = content.upper()
+                    if sym_upper in t_up:
+                        relevance += 10
+                    if sym_upper in c_up:
+                        relevance += 5
+                    for a in sym_aliases:
+                        if a in t_up:
+                            relevance += 8
+                        if a in c_up:
+                            relevance += 4
+
                     news_list.append({
                         "symbol": symbol,
-                        "title": it.get("title", ""),
+                        "title": title,
                         "source": it.get("source") or "Fialda Finance",
                         "time": date_clean,
-                        "short_content": it.get("shortContent") or it.get("title", ""),
+                        "short_content": content,
+                        "relevance": relevance,
                     })
                 if news_list:
-                    return news_list
+                    # Uu tien tin co chua truc tiep ten/ma co phieu, sau do den ngay xuat ban
+                    news_list.sort(key=lambda x: (x["relevance"], x["time"]), reverse=True)
+                    return [{k: v for k, v in n.items() if k != "relevance"} for n in news_list[:page_size]]
         except Exception:
             pass
-        return self._fallback_mock_news(symbol)
+        return self._fallback_mock_news(symbol)[:page_size]
 
     def get_company_events(self, symbol: str) -> List[Dict[str, Any]]:
         """Lay lich su kien sap dien ra (co tuc, DHCĐ, giao dich noi bo)."""
