@@ -82,7 +82,7 @@ def test_fialda_scanner_ranking_logic():
          patch.object(scanner, "get_market_top_symbols", return_value=mock_top_symbols), \
          patch.object(scanner, "get_expert_rating", return_value={"rS1M": 85, "compositeRating": 88, "accDissRating": "A"}):
 
-        result = scanner.scan_top_5_rockets()
+        result = scanner.scan_top_5_rockets(record_history=False)
         assert len(result) == 4
         # DBC va ACB phai co tin hieu CHO_MUA_CHAN_SONG
         dbc_item = next(x for x in result if x.symbol == "DBC")

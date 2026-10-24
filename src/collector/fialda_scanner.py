@@ -615,7 +615,7 @@ class FialdaScanner:
             return screen_banks_camel(updated)
         return screen_banks_camel(banks)
 
-    def scan_top_rockets(self, top_n: int = 20) -> List[FialdaCandidate]:
+    def scan_top_rockets(self, top_n: int = 20, record_history: bool = True) -> List[FialdaCandidate]:
         """Quet va tong hop chon ra Top N Sieu Co Phieu cho chu ky 1 thang (mac dinh top 20)."""
         if not self.token:
             if not self.login():
@@ -774,11 +774,11 @@ class FialdaScanner:
         # Sap xep va lay Top N co diem so cao nhat
         candidates.sort(key=lambda x: x.ranking_score, reverse=True)
         top_list = candidates[:top_n]
-        return enrich_candidates_with_trailing_stop_and_history(top_list)
+        return enrich_candidates_with_trailing_stop_and_history(top_list, record_history=record_history)
 
-    def scan_top_5_rockets(self) -> List[FialdaCandidate]:
+    def scan_top_5_rockets(self, record_history: bool = True) -> List[FialdaCandidate]:
         """Tien ich backward compatibility: quet va lay Top 5 co phieu."""
-        return self.scan_top_rockets(top_n=5)
+        return self.scan_top_rockets(top_n=5, record_history=record_history)
 
     @staticmethod
     def _fallback_mock_top_20() -> List[FialdaCandidate]:
@@ -983,7 +983,7 @@ class FialdaScanner:
         except Exception:
             pass
         full_list.sort(key=lambda x: x.ranking_score, reverse=True)
-        return enrich_candidates_with_trailing_stop_and_history(full_list)
+        return enrich_candidates_with_trailing_stop_and_history(full_list, record_history=False)
 
     @staticmethod
     def _fallback_mock_top_5() -> List[FialdaCandidate]:

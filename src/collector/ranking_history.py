@@ -65,6 +65,11 @@ class RankingHistoryTracker:
         if not candidates:
             return 0
 
+        # Tuyệt đối không ghi đè dữ liệu lịch sử production khi đang chạy kiểm thử (pytest)
+        import os
+        if "PYTEST_CURRENT_TEST" in os.environ and self.file_path == self.DEFAULT_PATH:
+            return 0
+
         ts = timestamp or self.current_vn_time_str()
         self.file_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -87,6 +92,16 @@ class RankingHistoryTracker:
 
         # Đọc các bản ghi hiện có
         existing_records = self.load_all_records()
+
+        # Kiểm tra nếu bản ghi cuối cùng trong file thuộc phiên quét gần đây (< 30 phút)
+        # thì thay thế batch đó thay vì tạo batch mới dày đặc trong cùng 1 phiên
+        cur_dt = self.parse_time(ts)
+        if existing_records and cur_dt:
+            last_ts = existing_records[-1].get("timestamp")
+            last_dt = self.parse_time(last_ts) if last_ts else None
+            if last_dt and abs((cur_dt - last_dt).total_seconds()) < 1800:
+                existing_records = [r for r in existing_records if r.get("timestamp") != last_ts]
+
         combined = existing_records + new_records
 
         # Cắt tỉa (Rolling Window) nếu vượt quá max_records
@@ -98,6 +113,16 @@ class RankingHistoryTracker:
                 f.write(json.dumps(item, ensure_ascii=False) + "\n")
 
         return len(new_records)
+
+    @staticmethod
+    def parse_time(ts_str: str) -> Optional[datetime]:
+        """Chuyển đổi chuỗi timestamp thành datetime."""
+        for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d"):
+            try:
+                return datetime.strptime(ts_str, fmt)
+            except Exception:
+                pass
+        return None
 
     def load_all_records(self) -> List[Dict[str, Any]]:
         """Đọc toàn bộ các bản ghi lịch sử từ file JSONL."""
@@ -115,8 +140,15 @@ class RankingHistoryTracker:
             return []
         return records
 
-    def get_last_scan_ranks(self) -> Dict[str, int]:
+    def get_last_scan_ranks(
+        self,
+        current_time: Optional[datetime] = None,
+        session_gap_seconds: float = 1800.0,
+    ) -> Dict[str, int]:
         """Lấy thứ hạng của các cổ phiếu trong phiên quét gần nhất trước đó.
+
+        Nếu phiên gần nhất trong file quá gần (< 30 phút) so với hiện tại (cùng phiên đang chạy),
+        sẽ lấy phiên trước đó nữa để làm mốc so sánh chuẩn mực ổn định.
 
         Returns:
             Dictionary {symbol: rank}.
@@ -125,20 +157,32 @@ class RankingHistoryTracker:
         if not records:
             return {}
 
-        # Tìm các mốc timestamp duy nhất theo thứ tự xuất hiện
-        timestamps = []
+        # Gom nhóm bản ghi theo từng timestamp duy nhất
+        from collections import defaultdict
+        session_batches = defaultdict(list)
         for r in records:
             ts = r.get("timestamp")
-            if ts and (not timestamps or timestamps[-1] != ts):
-                timestamps.append(ts)
+            if ts:
+                session_batches[ts].append(r)
 
-        if not timestamps:
+        # Lọc ra các session hợp lệ (có ít nhất 3 mã cổ phiếu)
+        valid_timestamps = [ts for ts, items in session_batches.items() if len(items) >= 3]
+        if not valid_timestamps:
             return {}
 
-        # Phiên quét gần nhất là mốc timestamp cuối cùng
-        last_ts = timestamps[-1]
-        last_batch = [r for r in records if r.get("timestamp") == last_ts]
-        return {r["symbol"]: int(r["rank"]) for r in last_batch if "symbol" in r and "rank" in r}
+        ref_time = current_time or datetime.now()
+        last_ts = valid_timestamps[-1]
+        last_dt = self.parse_time(last_ts)
+
+        # Nếu mốc cuối quá gần hiện tại (< 30 phút) và có từ 2 mốc trở lên,
+        # mốc kỳ trước chuẩn mực phải là session trước đó nữa
+        if len(valid_timestamps) >= 2 and last_dt and abs((ref_time - last_dt).total_seconds()) < session_gap_seconds:
+            target_ts = valid_timestamps[-2]
+        else:
+            target_ts = last_ts
+
+        target_batch = session_batches[target_ts]
+        return {r["symbol"]: int(r["rank"]) for r in target_batch if "symbol" in r and "rank" in r}
 
     def calculate_rank_changes(
         self,
