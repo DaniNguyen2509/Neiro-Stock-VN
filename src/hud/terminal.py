@@ -4,7 +4,6 @@ from src.collector.data_loader import get_mock_vietnam_stocks
 from src.fundamental_engine.screener import screen_stocks
 from src.microstructure_engine.basis_tracker import analyze_vn30_basis
 from src.collector.fialda_scanner import FialdaCandidate, FialdaScanner
-from src.collector.ranking_history import RankingHistoryTracker
 
 
 def generate_terminal_html(
@@ -54,36 +53,25 @@ def generate_terminal_html(
 
         slip_color = "#00e676" if c.slippage_est_pct < 0.60 else ("#ffb300" if c.slippage_est_pct < 1.50 else "#ff5252")
 
-        # Delta rank badge
-        change_badge = getattr(c, "rank_change_badge", "🆕 MỚI")
-        if change_badge.startswith("↗"):
-            delta_badge = f'<span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;margin-left:3px;">{change_badge}</span>'
-        elif change_badge.startswith("↘"):
-            delta_badge = f'<span style="background:#b71c1c;color:#ff8a80;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;margin-left:3px;">{change_badge}</span>'
-        elif "MỚI" in change_badge or "NEW" in change_badge:
-            delta_badge = '<span style="background:#e65100;color:#ffe0b2;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;margin-left:3px;">NEW</span>'
-        else:
-            delta_badge = '<span style="color:#78909c;font-size:10px;margin-left:3px;">=</span>'
-
         tp1_val = getattr(c, "tp1", c.price * 1.08)
         tp2_val = getattr(c, "tp2", c.target_1m)
-        rr_val = getattr(c, "rr_ratio", 2.5)
 
-        t25_status = getattr(c, "t25_status_badge", "T+0 (SAFE)")
-        if "CRITICAL" in t25_status or "HIGH" in t25_status:
-            t25_bg = "#b71c1c"
-            t25_fg = "#ff8a80"
-        elif "MODERATE" in t25_status:
-            t25_bg = "#ff6f00"
-            t25_fg = "#fff"
+        # Xep hang ky truoc va bien dong (+ / - hang)
+        prev_rank = getattr(c, "prev_rank", None)
+        delta_rank = getattr(c, "rank_change_delta", None)
+        if prev_rank is not None:
+            if delta_rank is not None and delta_rank > 0:
+                prev_rank_html = f'<span style="font-weight:bold;color:#eceff1;">#{prev_rank}</span> <span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">+{delta_rank}</span>'
+            elif delta_rank is not None and delta_rank < 0:
+                prev_rank_html = f'<span style="font-weight:bold;color:#eceff1;">#{prev_rank}</span> <span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">{delta_rank}</span>'
+            else:
+                prev_rank_html = f'<span style="font-weight:bold;color:#eceff1;">#{prev_rank}</span> <span style="color:#78909c;font-size:11px;font-weight:bold;">(=)</span>'
         else:
-            t25_bg = "#1b5e20"
-            t25_fg = "#00e676"
-        t25_badge = f'<span style="background:{t25_bg};color:{t25_fg};padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">{t25_status}</span>'
+            prev_rank_html = '<span style="background:#e65100;color:#ffe0b2;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">MỚI</span>'
 
         fialda_rows_html += f"""
         <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">{idx} {delta_badge}</td>
+            <td style="padding:10px;text-align:center;color:#78909c;font-weight:bold;">{idx}</td>
             <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">{c.symbol}</td>
             <td style="padding:10px;text-align:center;">{sig_badge}</td>
             <td style="padding:10px;font-weight:bold;">{c.price:,.2f}</td>
@@ -91,10 +79,6 @@ def generate_terminal_html(
             <td style="padding:10px;color:#ff5252;font-weight:bold;">{c.stop_loss:.2f}</td>
             <td style="padding:10px;color:#4fc3f7;font-weight:bold;">{tp1_val:.2f} <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
             <td style="padding:10px;color:#ffb300;font-weight:bold;">{tp2_val:.2f} <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
-            <td style="padding:10px;text-align:center;">
-                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:{rr_val:.1f}</span>
-            </td>
-            <td style="padding:10px;text-align:center;">{t25_badge}</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">{c.adtv20_billion:.1f} tỷ</td>
             <td style="padding:10px;text-align:center;">
                 <div style="font-weight:bold;color:{liq_color};">{c.liquidity_score:.0f}/100</div>
@@ -107,6 +91,7 @@ def generate_terminal_html(
             <td style="padding:10px;text-align:center;color:{foreign_color};">{foreign_str}</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">{c.ranking_score:.1f}</td>
             <td style="padding:10px;font-size:12px;color:#b0bec5;">{c.catalyst}</td>
+            <td style="padding:10px;text-align:center;white-space:nowrap;">{prev_rank_html}</td>
         </tr>
         """
 
@@ -319,46 +304,6 @@ def generate_terminal_html(
         if is_live
         else '<div style="display:inline-block;background:#0d47a1;color:#64b5f6;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;">🟡 DỮ LIỆU: BẢNG GIÁ REAL-TIME (ENTRADE/DNSE)</div>'
     )
-
-    # Chuan bi Widget Lich Su Xep Hang & Bien Dong Thu Hang (Ranking History)
-    history_tracker = RankingHistoryTracker()
-    all_history = history_tracker.load_all_records()
-
-    history_by_ts: Dict[str, List[Dict[str, Any]]] = {}
-    for r in all_history:
-        ts = r.get("timestamp", "N/A")
-        history_by_ts.setdefault(ts, []).append(r)
-
-    recent_ts_keys = list(history_by_ts.keys())[-4:]
-    history_cards_html = ""
-    if recent_ts_keys:
-        for ts_key in reversed(recent_ts_keys):
-            batch = history_by_ts[ts_key]
-            batch_sorted = sorted(batch, key=lambda x: x.get("rank", 999))[:5]
-            stocks_badges = " ".join(
-                [
-                    f'<span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#{item.get("rank")} {item.get("symbol")} ({item.get("score"):.1f}đ)</span>'
-                    for item in batch_sorted
-                ]
-            )
-            history_cards_html += f"""
-            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:8px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                    <span style="font-weight:bold;color:#4fc3f7;font-size:13px;">🕒 Phiên Quét: {ts_key}</span>
-                    <span style="font-size:11px;color:#78909c;">Theo dõi: {len(batch)} Cổ phiếu</span>
-                </div>
-                <div style="font-size:12px;color:#b0bec5;margin-top:4px;">
-                    Top 5 Dẫn Đầu: {stocks_badges}
-                </div>
-            </div>
-            """
-    else:
-        history_cards_html = """
-        <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:15px;color:#78909c;text-align:center;">
-            Lịch sử xếp hạng đang được lưu tự động sau mỗi chu kỳ quét Fialda Scanner.
-        </div>
-        """
-
     html_content = f"""<!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -521,8 +466,6 @@ def generate_terminal_html(
                     <th>Cắt Lỗ (Stop Loss)</th>
                     <th>Chốt Lời 1 (1.5R)</th>
                     <th>Chốt Lời 2 (2.5R)</th>
-                    <th style="text-align:center;">Tỷ Lệ R:R</th>
-                    <th style="text-align:center;">Vùng T+2.5</th>
                     <th style="text-align:center;">Sức Chứa ADTV20</th>
                     <th style="text-align:center;">Điểm TK</th>
                     <th style="text-align:right;">KL Mua Max (Lô 100)</th>
@@ -532,21 +475,13 @@ def generate_terminal_html(
                     <th style="text-align:center;">Khối Ngoại</th>
                     <th style="text-align:center;">Điểm Đánh Giá</th>
                     <th>Động Lực Tăng Trưởng</th>
+                    <th style="text-align:center;">Hạng Kỳ Trước</th>
                 </tr>
             </thead>
             <tbody>
                 {fialda_rows_html}
             </tbody>
         </table>
-    </div>
-
-    <!-- PHẦN 1.5: THEO VẾT LỊCH SỬ XẾP HẠNG & BIẾN ĐỘNG THỨ HẠNG -->
-    <div class="section-header">
-        <div class="section-title" style="color:#00e676;">📈 LỊCH SỬ XẾP HẠNG & THEO VẾT BIẾN ĐỘNG THỨ HẠNG (RANKING HISTORY TRACKER)</div>
-        <span style="font-size:11px;color:#78909c;">Tự động lưu trữ chuỗi thời gian & nhận diện cổ phiếu bứt phá / thăng hạng qua các phiên quét</span>
-    </div>
-    <div style="margin-bottom:25px;">
-        {history_cards_html}
     </div>
 
     <!-- PHẦN 2: BẢNG XẾP HẠNG ĐỊNH LƯỢNG CƠ BẢN -->

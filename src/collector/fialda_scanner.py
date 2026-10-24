@@ -64,6 +64,7 @@ class FialdaCandidate:
     rr_ratio: float = 2.5                # Ty le Risk/Reward (>= 1:2.5)
     rank_change_badge: str = "🆕 MỚI"   # Huy hieu bien dong thu hang (vi du "↗ +2", "↘ -1", "=")
     rank_change_delta: Optional[int] = None
+    prev_rank: Optional[int] = None      # Thu hang o ky quet truoc do
     t25_exposure_level: str = "SAFE"     # SAFE, MODERATE, HIGH, CRITICAL
     t25_status_badge: str = "T+0 (Vùng gom)"
 
@@ -105,6 +106,7 @@ def enrich_candidates_with_trailing_stop_and_history(
         ch = rank_changes.get(c.symbol, {})
         c.rank_change_badge = ch.get("badge", "🆕 MỚI")
         c.rank_change_delta = ch.get("delta_rank")
+        c.prev_rank = ch.get("prev_rank")
 
         # Danh gia rui ro Vung Dong Bang T+2.5
         try:
@@ -1054,16 +1056,26 @@ def format_top_5_markdown(
         md.append("> 🟡 **Trạng Thái Dữ Liệu:** `BẢNG GIÁ REAL-TIME THỰC TẾ (ENTRADE/DNSE PUBLIC)` | Chiến thuật định lượng mô phỏng")
     md.extend([
         "",
-        "| STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua | Cắt Lỗ (SL) | TP1 (1.5R) | TP2 (2.5R) | Tỷ Lệ R:R | ADTV20 | Điểm TK | KL Mua Max | Trượt Giá | RRG | Comp | Ngoại | Điểm |",
+        "| STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua | Cắt Lỗ (SL) | TP1 (1.5R) | TP2 (2.5R) | ADTV20 | Điểm TK | KL Mua Max | Trượt Giá | RRG | Comp | Ngoại | Điểm | Hạng Kỳ Trước |",
         "| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
     ])
 
     for idx, c in enumerate(candidates, 1):
         sig = "`CHÂN SÓNG`" if "CHO_MUA" in c.signal_type else "`ĐỘT BIẾN GT`"
         fn = f"{c.foreign_net_value_billion:+.1f} tỷ"
-        rr_str = f"1:{c.rr_ratio:.1f}"
+        if getattr(c, "prev_rank", None) is not None:
+            delta = getattr(c, "rank_change_delta", None)
+            if delta is not None and delta > 0:
+                prev_str = f"#{c.prev_rank} (+{delta})"
+            elif delta is not None and delta < 0:
+                prev_str = f"#{c.prev_rank} ({delta})"
+            else:
+                prev_str = f"#{c.prev_rank} (=)"
+        else:
+            prev_str = "Mới"
+
         md.append(
-            f"| **{idx}** {c.rank_change_badge} | **{c.symbol}** | {sig} | **{c.price:.2f}** | `{c.entry_low:.2f} - {c.entry_high:.2f}` | **{c.stop_loss:.2f}** | {c.tp1:.2f} | **{c.tp2:.2f}** | `{rr_str}` | **{c.adtv20_billion:.1f} tỷ** | `{c.liquidity_score:.0f}/100` | **{c.max_shares_capacity:,.0f}** | `{c.slippage_est_pct:.2f}%` | {c.rrg_r:.0f}/{c.rrg_m:.0f} | {c.composite_rating} | {fn} | **{c.ranking_score:.1f}** |"
+            f"| **{idx}** | **{c.symbol}** | {sig} | **{c.price:.2f}** | `{c.entry_low:.2f} - {c.entry_high:.2f}` | **{c.stop_loss:.2f}** | {c.tp1:.2f} | **{c.tp2:.2f}** | **{c.adtv20_billion:.1f} tỷ** | `{c.liquidity_score:.0f}/100` | **{c.max_shares_capacity:,.0f}** | `{c.slippage_est_pct:.2f}%` | {c.rrg_r:.0f}/{c.rrg_m:.0f} | {c.composite_rating} | {fn} | **{c.ranking_score:.1f}** | {prev_str} |"
         )
 
     md.extend([
