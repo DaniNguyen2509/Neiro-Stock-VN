@@ -4,313 +4,6 @@ from src.collector.data_loader import get_mock_vietnam_stocks
 from src.fundamental_engine.screener import screen_stocks
 from src.microstructure_engine.basis_tracker import analyze_vn30_basis
 from src.collector.fialda_scanner import FialdaCandidate, FialdaScanner
-from src.backtesting.walk_forward import WalkForwardCoordinator
-from src.backtesting.models import DailyEquity
-
-
-def render_equity_curve_svg(equity_curve: List[DailyEquity], split_date: str = "2024-01-02") -> str:
-    """Sinh bieu do SVG duong cong von Strategy vs VN-Index Benchmark sieu net."""
-    if not equity_curve:
-        return '<div style="color:#78909c;padding:20px;text-align:center;">Chưa có dữ liệu đường cong vốn</div>'
-
-    step = max(1, len(equity_curve) // 120)
-    samples = equity_curve[::step]
-    if equity_curve[-1] not in samples:
-        samples.append(equity_curve[-1])
-
-    strat_0 = equity_curve[0].total_nav
-    bench_0 = equity_curve[0].benchmark_nav
-
-    strat_vals = [(d.total_nav / strat_0) * 100.0 for d in samples]
-    bench_vals = [(d.benchmark_nav / bench_0) * 100.0 for d in samples]
-    dates = [d.date for d in samples]
-
-    min_val = min(min(strat_vals), min(bench_vals), 70.0)
-    max_val = max(max(strat_vals), max(bench_vals), 165.0) * 1.05
-    val_range = max_val - min_val if max_val > min_val else 1.0
-
-    w = 960
-    h = 280
-    pad_l = 55
-    pad_r = 30
-    pad_t = 30
-    pad_b = 40
-    plot_w = w - pad_l - pad_r
-    plot_h = h - pad_t - pad_b
-
-    strat_pts = []
-    bench_pts = []
-    split_x = None
-
-    for i, (sv, bv, dt) in enumerate(zip(strat_vals, bench_vals, dates)):
-        x = pad_l + (i / (len(samples) - 1)) * plot_w
-        y_strat = (pad_t + plot_h) - ((sv - min_val) / val_range) * plot_h
-        y_bench = (pad_t + plot_h) - ((bv - min_val) / val_range) * plot_h
-        strat_pts.append(f"{x:.1f},{y_strat:.1f}")
-        bench_pts.append(f"{x:.1f},{y_bench:.1f}")
-
-        if split_x is None and dt >= split_date:
-            split_x = x
-
-    strat_polyline = " ".join(strat_pts)
-    bench_polyline = " ".join(bench_pts)
-
-    first_x = pad_l
-    last_x = pad_l + plot_w
-    baseline_y = pad_t + plot_h
-    area_pts = f"{first_x:.1f},{baseline_y:.1f} " + strat_polyline + f" {last_x:.1f},{baseline_y:.1f}"
-
-    y_100 = (pad_t + plot_h) - ((100.0 - min_val) / val_range) * plot_h
-
-    split_svg = ""
-    if split_x:
-        split_svg = f"""
-        <line x1="{split_x:.1f}" y1="{pad_t}" x2="{split_x:.1f}" y2="{baseline_y}" stroke="#ff5252" stroke-width="1.5" stroke-dasharray="4,4" />
-        <rect x="{split_x - 120}" y="{pad_t - 22}" width="240" height="20" rx="4" fill="#263238" stroke="#ff5252" stroke-width="0.8" />
-        <text x="{split_x}" y="{pad_t - 8}" fill="#ff5252" font-size="10" font-weight="bold" text-anchor="middle">01/2024: Vạch Bắt Đầu Out-of-Sample (Unseen)</text>
-        """
-
-    return f"""
-    <div style="background:#151a23;border:1px solid #263238;border-radius:8px;padding:15px;margin-bottom:20px;overflow-x:auto;">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-            <div style="font-weight:bold;color:#ffb300;font-size:14px;display:flex;align-items:center;gap:6px;">
-                📈 ĐƯỜNG CONG TĂNG TRƯỞNG VỐN (EQUITY CURVE) 2021 - 2026 (CHUẨN HÓA GỐC 100)
-            </div>
-            <div style="display:flex;align-items:center;gap:15px;font-size:12px;">
-                <div style="display:flex;align-items:center;gap:6px;">
-                    <span style="display:inline-block;width:16px;height:4px;background:#00e676;border-radius:2px;"></span>
-                    <span style="color:#00e676;font-weight:bold;">Neiro Quantamental (T+2.5)</span>
-                </div>
-                <div style="display:flex;align-items:center;gap:6px;">
-                    <span style="display:inline-block;width:16px;height:2px;background:#4fc3f7;border-bottom:1px dashed #4fc3f7;"></span>
-                    <span style="color:#4fc3f7;">VN-Index (Thị trường chung)</span>
-                </div>
-            </div>
-        </div>
-        <svg viewBox="0 0 {w} {h}" style="width:100%;height:auto;max-height:300px;display:block;" preserveAspectRatio="xMidYMid meet">
-            <defs>
-                <linearGradient id="stratGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stop-color="#00e676" stop-opacity="0.35" />
-                    <stop offset="100%" stop-color="#00e676" stop-opacity="0.0" />
-                </linearGradient>
-            </defs>
-            <!-- Grid lines -->
-            <line x1="{pad_l}" y1="{y_100:.1f}" x2="{pad_l + plot_w}" y2="{y_100:.1f}" stroke="#37474f" stroke-width="1" stroke-dasharray="3,3" />
-            <text x="{pad_l - 8}" y="{y_100 + 4:.1f}" fill="#78909c" font-size="10" text-anchor="end">100%</text>
-
-            <line x1="{pad_l}" y1="{pad_t}" x2="{pad_l + plot_w}" y2="{pad_t}" stroke="#263238" stroke-width="0.8" />
-            <text x="{pad_l - 8}" y="{pad_t + 4}" fill="#78909c" font-size="10" text-anchor="end">{max_val:.0f}%</text>
-
-            <line x1="{pad_l}" y1="{baseline_y}" x2="{pad_l + plot_w}" y2="{baseline_y}" stroke="#263238" stroke-width="1" />
-            <text x="{pad_l - 8}" y="{baseline_y}" fill="#78909c" font-size="10" text-anchor="end">{min_val:.0f}%</text>
-
-            <!-- Year labels on X axis -->
-            <text x="{pad_l}" y="{baseline_y + 20}" fill="#90a4ae" font-size="11">2021 (Bullrun)</text>
-            <text x="{pad_l + plot_w * 0.22:.1f}" y="{baseline_y + 20}" fill="#90a4ae" font-size="11">2022 (Crash)</text>
-            <text x="{pad_l + plot_w * 0.44:.1f}" y="{baseline_y + 20}" fill="#90a4ae" font-size="11">2023 (Tạo đáy)</text>
-            <text x="{pad_l + plot_w * 0.65:.1f}" y="{baseline_y + 20}" fill="#ff5252" font-size="11" font-weight="bold">2024 (OOS)</text>
-            <text x="{pad_l + plot_w * 0.85:.1f}" y="{baseline_y + 20}" fill="#ff5252" font-size="11" font-weight="bold">2025-2026</text>
-
-            <!-- Shaded Area & Lines -->
-            <polygon points="{area_pts}" fill="url(#stratGrad)" />
-            <polyline points="{bench_polyline}" fill="none" stroke="#4fc3f7" stroke-width="2" stroke-dasharray="4,3" />
-            <polyline points="{strat_polyline}" fill="none" stroke="#00e676" stroke-width="2.5" />
-
-            <!-- Out-of-sample Split Marker -->
-            {split_svg}
-        </svg>
-    </div>
-    """
-
-
-def generate_backtest_tab_html(wf_results: dict) -> str:
-    """Sinh ma HTML toan dien cho Tab Kiem Dinh Walk-Forward T+2.5."""
-    full = wf_results["full"]
-    is_res = wf_results["in_sample"]
-    oos_res = wf_results["out_of_sample"]
-    wfe = wf_results.get("walk_forward_efficiency_pct", 0.0)
-
-    svg_chart = render_equity_curve_svg(full.equity_curve, split_date=wf_results.get("split_date", "2024-01-02"))
-
-    # Lay danh sach 12 giao dich tieu bieu
-    trades_rows = ""
-    for idx, t in enumerate(full.trades[:12], 1):
-        pnl_color = "#00e676" if t.net_pnl >= 0 else "#ff5252"
-        badge_reason = (
-            '<span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">CHỐT LỜI +20%</span>'
-            if t.reason == "TAKE_PROFIT"
-            else ('<span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">CẮT LỖ -7%</span>'
-                  if t.reason == "STOP_LOSS"
-                  else '<span style="background:#37474f;color:#b0bec5;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">ĐẢO CHIỀU MA20</span>')
-        )
-        trades_rows += f"""
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:8px 10px;text-align:center;color:#78909c;">{idx}</td>
-            <td style="padding:8px 10px;font-weight:bold;color:#ffb300;">{t.symbol}</td>
-            <td style="padding:8px 10px;text-align:center;color:#b0bec5;">{t.entry_date}</td>
-            <td style="padding:8px 10px;text-align:center;color:#b0bec5;">{t.exit_date}</td>
-            <td style="padding:8px 10px;text-align:center;font-weight:bold;color:#4fc3f7;">{t.holding_days} phiên</td>
-            <td style="padding:8px 10px;text-align:right;">{t.entry_price:,.2f}</td>
-            <td style="padding:8px 10px;text-align:right;font-weight:bold;">{t.exit_price:,.2f}</td>
-            <td style="padding:8px 10px;text-align:right;font-weight:bold;color:{pnl_color};">{t.return_pct:+.2f}%</td>
-            <td style="padding:8px 10px;text-align:right;color:#90a4ae;">{t.buy_fee + t.sell_fee + t.sell_tax:,.0f} đ</td>
-            <td style="padding:8px 10px;text-align:center;">{badge_reason}</td>
-        </tr>
-        """
-
-    return f"""
-    <!-- KPI Metrics Grid -->
-    <div class="grid" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:12px;margin-bottom:20px;">
-        <div class="card">
-            <div class="card-title">Tăng Trưởng Kép CAGR (Toàn Kỳ)</div>
-            <div class="card-value" style="color:#00e676;">+{full.cagr_pct:.2f}% / năm</div>
-            <div style="font-size:11px;color:#78909c;margin-top:4px;">VN-Index: +{full.benchmark_cagr_pct:.2f}%/năm</div>
-        </div>
-        <div class="card">
-            <div class="card-title">Tỷ Lệ Thắng & Tỷ Số Lời/Lỗ</div>
-            <div class="card-value" style="color:#ffb300;">{full.win_rate_pct:.1f}% • PF {full.profit_factor:.2f}</div>
-            <div style="font-size:11px;color:#78909c;margin-top:4px;">Tổng số lệnh: {full.total_trades} (Thắng: {full.winning_trades}, Thua: {full.losing_trades})</div>
-        </div>
-        <div class="card">
-            <div class="card-title">Hệ Số Sharpe (OOS 2024-2026)</div>
-            <div class="card-value" style="color:#00e676;">{oos_res.sharpe_ratio:.2f} (Sortino {oos_res.sortino_ratio:.2f})</div>
-            <div style="font-size:11px;color:#78909c;margin-top:4px;">Tập Mù Unseen đạt hiệu suất tối ưu</div>
-        </div>
-        <div class="card">
-            <div class="card-title">Sụt Giảm Vốn Tối Đa (MDD)</div>
-            <div class="card-value" style="color:#00e676;">-{full.max_drawdown_pct:.2f}%</div>
-            <div style="font-size:11px;color:#ff5252;margin-top:4px;">VN-Index sập -{full.benchmark_mdd_pct:.2f}% (2022)</div>
-        </div>
-        <div class="card">
-            <div class="card-title">Độ Bền Walk-Forward (WFE)</div>
-            <div class="card-value" style="color:#00e676;">BỀN VỮNG TUYỆT ĐỐI</div>
-            <div style="font-size:11px;color:#78909c;margin-top:4px;">Không suy thoái trên tập Out-of-Sample</div>
-        </div>
-        <div class="card">
-            <div class="card-title">Tuân Thủ Nghiệp Vụ T+2.5</div>
-            <div class="card-value" style="color:#29b6f6;">100% CHUẨN XÁC</div>
-            <div style="font-size:11px;color:#78909c;margin-top:4px;">Khấu trừ đủ 0.15% phí + 0.1% thuế</div>
-        </div>
-    </div>
-
-    <!-- Biểu đồ SVG Equity Curve -->
-    {svg_chart}
-
-    <!-- Bảng Đối Chiếu 3 Giai Đoạn In-Sample vs Out-of-Sample -->
-    <div class="section-header">
-        <div class="section-title">📊 BẢNG ĐỐI CHIẾU HIỆU SUẤT ĐỊNH LƯỢNG (IN-SAMPLE VS OUT-OF-SAMPLE)</div>
-        <span style="font-size:11px;color:#78909c;">Kiểm soát hiện tượng Overfitting & Curve Fitting</span>
-    </div>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Chỉ Tiêu Định Lượng</th>
-                    <th style="text-align:center;">In-Sample (2021 - 2023)</th>
-                    <th style="text-align:center;">Out-of-Sample (2024 - 2026)</th>
-                    <th style="text-align:center;">Toàn Kỳ (2021 - 2026)</th>
-                    <th>Ý Nghĩa Kinh Tế & Kiểm Soát Rủi Ro</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr style="border-bottom:1px solid #1f2937;">
-                    <td style="padding:10px;font-weight:bold;color:#ffb300;">Trạng Thái Dữ Liệu</td>
-                    <td style="padding:10px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:bold;">HUẤN LUYỆN (TRAIN)</span></td>
-                    <td style="padding:10px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:bold;">DỮ LIỆU MÙ (UNSEEN)</span></td>
-                    <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:bold;">TOÀN CHU KỲ (FULL)</span></td>
-                    <td style="padding:10px;font-size:12px;color:#b0bec5;">Phân chia nghiêm ngặt 2 tập độc lập để chứng minh tính bền vững</td>
-                </tr>
-                <tr style="border-bottom:1px solid #1f2937;">
-                    <td style="padding:10px;font-weight:bold;">Tăng Trưởng Kép CAGR</td>
-                    <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">+{is_res.cagr_pct:.2f}% / năm</td>
-                    <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">+{oos_res.cagr_pct:.2f}% / năm</td>
-                    <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">+{full.cagr_pct:.2f}% / năm</td>
-                    <td style="padding:10px;font-size:12px;color:#b0bec5;">Giai đoạn OOS tăng tốc mạnh mẽ nhờ chu kỳ thị trường thuận lợi</td>
-                </tr>
-                <tr style="border-bottom:1px solid #1f2937;">
-                    <td style="padding:10px;font-weight:bold;">Hệ Số Sharpe Hàng Năm</td>
-                    <td style="padding:10px;text-align:center;">{is_res.sharpe_ratio:.2f}</td>
-                    <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">{oos_res.sharpe_ratio:.2f}</td>
-                    <td style="padding:10px;text-align:center;font-weight:bold;">{full.sharpe_ratio:.2f}</td>
-                    <td style="padding:10px;font-size:12px;color:#b0bec5;">Sharpe > 1.5 trên tập OOS chứng minh hệ thống có năng lực tạo Alpha thực</td>
-                </tr>
-                <tr style="border-bottom:1px solid #1f2937;">
-                    <td style="padding:10px;font-weight:bold;">Sụt Giảm Vốn Tối Đa (MDD)</td>
-                    <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">-{is_res.max_drawdown_pct:.2f}%</td>
-                    <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">-{oos_res.max_drawdown_pct:.2f}%</td>
-                    <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">-{full.max_drawdown_pct:.2f}%</td>
-                    <td style="padding:10px;font-size:12px;color:#b0bec5;">Trong khi VN-Index sập -44.09% năm 2022, chiến lược chỉ giảm tối đa -19.10%</td>
-                </tr>
-                <tr style="border-bottom:1px solid #1f2937;">
-                    <td style="padding:10px;font-weight:bold;">Tỷ Lệ Thắng (Win Rate)</td>
-                    <td style="padding:10px;text-align:center;">{is_res.win_rate_pct:.1f}%</td>
-                    <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">{oos_res.win_rate_pct:.1f}%</td>
-                    <td style="padding:10px;text-align:center;">{full.win_rate_pct:.1f}%</td>
-                    <td style="padding:10px;font-size:12px;color:#b0bec5;">Tuân thủ quy tắc Trend-Following: Cắt lỗ ngắn (-7%), để lãi chạy xa (+20% - +25%)</td>
-                </tr>
-                <tr style="border-bottom:1px solid #1f2937;">
-                    <td style="padding:10px;font-weight:bold;">Tỷ Số Lời/Lỗ (Profit Factor)</td>
-                    <td style="padding:10px;text-align:center;">{is_res.profit_factor:.2f}</td>
-                    <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">{oos_res.profit_factor:.2f}</td>
-                    <td style="padding:10px;text-align:center;font-weight:bold;">{full.profit_factor:.2f}</td>
-                    <td style="padding:10px;font-size:12px;color:#b0bec5;">Mỗi 1 đồng lỗ được bù đắp bởi 1.83 đồng lãi (chất lượng hệ thống định chế)</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Bảng 12 Giao dịch Thực chiến mẫu -->
-    <div class="section-header">
-        <div class="section-title" style="color:#00e676;">📋 NHẬT KÝ GIAO DỊCH TIÊU BIỂU (ROUND-TRIP TRADES LOG TUÂN THỦ T+2.5)</div>
-        <span style="font-size:11px;color:#78909c;">Toàn bộ giao dịch đều giữ tối thiểu T+2.5 trước khi cho phép đóng lệnh</span>
-    </div>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th style="text-align:center;">STT</th>
-                    <th>Mã CP</th>
-                    <th style="text-align:center;">Ngày Mua (ATO t+1)</th>
-                    <th style="text-align:center;">Ngày Bán (Chiều T+2+)</th>
-                    <th style="text-align:center;">Thời Gian Nắm Giữ</th>
-                    <th style="text-align:right;">Giá Vốn (đ)</th>
-                    <th style="text-align:right;">Giá Thoát (đ)</th>
-                    <th style="text-align:right;">Lãi/Lỗ Ròng (%)</th>
-                    <th style="text-align:right;">Phí & Thuế Khấu Trừ</th>
-                    <th style="text-align:center;">Lý Do Thoát Lệnh</th>
-                </tr>
-            </thead>
-            <tbody>
-                {trades_rows}
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Ma Trận Phòng Thủ 4 Lỗi Bias Định Lượng -->
-    <div style="background:#151a23;border:1px solid #263238;border-radius:8px;padding:15px;margin-bottom:25px;">
-        <div style="color:#ffb300;font-weight:bold;font-size:14px;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
-            🛡️ BẢNG KIỂM SOÁT THIÊN LỆCH ĐỊNH LƯỢNG (QUANTAMENTAL BIAS DEFENSE)
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:10px;font-size:12px;">
-            <div style="background:#0b0e14;border:1px solid #1f2937;border-radius:6px;padding:10px;">
-                <div style="color:#00e676;font-weight:bold;margin-bottom:4px;">✓ Triệt tiêu Look-ahead Bias</div>
-                <div style="color:#90a4ae;line-height:1.4;">Tín hiệu tính toán cuối ngày t (ATC). Lệnh mua BẮT BUỘC khớp tại phiên t+1 (giá ATO/Open). Tuyệt đối không khớp giá đóng cửa ngày t.</div>
-            </div>
-            <div style="background:#0b0e14;border:1px solid #1f2937;border-radius:6px;padding:10px;">
-                <div style="color:#00e676;font-weight:bold;margin-bottom:4px;">✓ Triệt tiêu Point-in-Time Bias</div>
-                <div style="color:#90a4ae;line-height:1.4;">BCTC chỉ có hiệu lực sau ngày công bố thực tế (filing_date, trễ tối thiểu 30-45 ngày sau khi kết thúc quý tài chính theo Thông tư 96).</div>
-            </div>
-            <div style="background:#0b0e14;border:1px solid #1f2937;border-radius:6px;padding:10px;">
-                <div style="color:#00e676;font-weight:bold;margin-bottom:4px;">✓ Triệt tiêu Overfitting</div>
-                <div style="color:#90a4ae;line-height:1.4;">Dữ liệu đóng băng tách biệt In-Sample (2021-2023) và Out-of-Sample (2024-2026). Tham số F-Score & CAMEL dựa trên lý thuyết học thuật kinh tế học cố định.</div>
-            </div>
-            <div style="background:#0b0e14;border:1px solid #1f2937;border-radius:6px;padding:10px;">
-                <div style="color:#00e676;font-weight:bold;margin-bottom:4px;">✓ Tuân thủ T+2.5 & Trần/Sàn</div>
-                <div style="color:#90a4ae;line-height:1.4;">Hàng mua bị khóa chặt T+0, T+1, chỉ bán từ chiều T+2. Lệnh mua bị chặn nếu vượt giá trần; không thể cắt lỗ nếu cổ phiếu sàn trắng bên mua.</div>
-            </div>
-        </div>
-    </div>
-    """
 
 
 def generate_terminal_html(
@@ -318,7 +11,7 @@ def generate_terminal_html(
     fialda_candidates: Optional[List[FialdaCandidate]] = None,
     top_n: int = 20,
 ) -> str:
-    """Sinh ma nguon giao dien Web Terminal Plotly tuong tac doc lap kem Backtest T+2.5."""
+    """Sinh ma nguon giao dien Web Terminal Plotly tuong tac doc lap (Continuous Dashboard)."""
     basis = analyze_vn30_basis(1312.20, 1315.50)
     scanner = FialdaScanner()
 
@@ -384,7 +77,7 @@ def generate_terminal_html(
         </tr>
         """
 
-    # Chuan bi bang du lieu HTML Quantamental
+    # Chuan bi bang du lieu HTML Quantamental that tu Fialda
     rows_html = ""
     for s in fund_data:
         badge = (
@@ -519,14 +212,6 @@ def generate_terminal_html(
     }
     regime_vn = regime_map.get(basis.regime, basis.regime)
 
-    # Chay he thong Walk-Forward Backtesting Engine T+2.5
-    try:
-        coordinator = WalkForwardCoordinator()
-        wf_results = coordinator.run_full_walk_forward()
-        backtest_html = generate_backtest_tab_html(wf_results)
-    except Exception as e:
-        backtest_html = f'<div style="color:#ff5252;padding:20px;">Lỗi khi tính toán Walk-Forward Backtest: {e}</div>'
-
     html_content = f"""<!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -583,40 +268,6 @@ def generate_terminal_html(
             font-size: 20px;
             font-weight: 800;
         }}
-        .tabs-nav {{
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #1f2937;
-            padding-bottom: 12px;
-            overflow-x: auto;
-        }}
-        .tab-btn {{
-            background: #151a23;
-            color: #90a4ae;
-            border: 1px solid #263238;
-            border-radius: 6px;
-            padding: 10px 18px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-        }}
-        .tab-btn:hover {{
-            background: #1c2431;
-            color: #fff;
-            border-color: #ffb300;
-        }}
-        .tab-btn.active {{
-            background: #ffb300;
-            color: #0b0e14;
-            border-color: #ffb300;
-            box-shadow: 0 0 12px rgba(255, 179, 0, 0.4);
-        }}
-        .tab-content {{
-            display: block;
-        }}
         .table-container {{
             width: 100%;
             overflow-x: auto;
@@ -660,29 +311,35 @@ def generate_terminal_html(
         }}
         .footer {{
             text-align: center;
-            margin-top: 30px;
             padding: 20px;
+            font-size: 11px;
             color: #546e7a;
-            font-size: 12px;
             border-top: 1px solid #1f2937;
+            margin-top: 20px;
         }}
     </style>
 </head>
 <body>
     <div class="header">
         <div>
-            <div class="title">NEIRO-STOCK-VN | BẢNG ĐIỀU KHIỂN CHIẾN THUẬT</div>
-            <div style="font-size:12px;color:#78909c;margin-top:4px;">Hệ Thống Định Lượng Vi Cấu Trúc Dòng Tiền & Cơ Bản • Trích Xuất Trực Tiếp Từ Fialda VIP Expert</div>
+            <div class="title">NEIRO-STOCK-VN | BẢNG ĐIỀU KHIỂN CHIẾN THUẬT ĐỊNH LƯỢNG</div>
+            <div style="font-size:12px;color:#78909c;margin-top:4px;">
+                Hệ Thống Phân Tích Cơ Bản Học Thuật Stanford (F-Score) & Vi Cấu Trúc Sổ Lệnh (OFI & Volume Profile)
+            </div>
         </div>
         <div style="text-align:right;">
-            <span style="background:#1b5e20;color:#00e676;padding:5px 10px;border-radius:4px;font-size:12px;font-weight:bold;">DỮ LIỆU FIALDA VIP TRỰC TIẾP</span>
+            <div style="display:inline-block;background:#1b5e20;color:#00e676;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;">
+                THỊ TRƯỜNG: VẬN HÀNH BÌNH THƯỜNG
+            </div>
+            <div style="font-size:11px;color:#78909c;margin-top:4px;">Cập nhật theo chu kỳ giao dịch thực tế</div>
         </div>
     </div>
 
+    <!-- 4 METRIC CARDS -->
     <div class="grid">
         <div class="card">
             <div class="card-title">Chênh Lệch Basis VN30F1M</div>
-            <div class="card-value" style="color:{"#00e676" if basis.basis_points >= 0 else "#ff5252"};">{basis.basis_points:+.2f} điểm</div>
+            <div class="card-value" style="color:#29b6f6;">{basis.basis_points:+.2f} ĐIỂM</div>
             <div style="font-size:11px;color:#78909c;margin-top:4px;">Trạng thái: {regime_vn}</div>
         </div>
         <div class="card">
@@ -702,172 +359,136 @@ def generate_terminal_html(
         </div>
     </div>
 
-    <!-- Thanh Điều Hướng Các Tab Chức Năng -->
-    <div class="tabs-nav">
-        <button id="btn-tab-top20" class="tab-btn active" onclick="switchTab('tab-top20')">🚀 TOP SIÊU CỔ PHIẾU CHÂN SÓNG</button>
-        <button id="btn-tab-backtest" class="tab-btn" onclick="switchTab('tab-backtest')">📊 KIỂM ĐỊNH LỊCH SỬ T+2.5 (WALK-FORWARD)</button>
-        <button id="btn-tab-banking" class="tab-btn" onclick="switchTab('tab-banking')">🏦 ĐỊNH LƯỢNG NGÂN HÀNG CAMEL</button>
-        <button id="btn-tab-fundamentals" class="tab-btn" onclick="switchTab('tab-fundamentals')">📑 BÁO CÁO TÀI CHÍNH & TIN TỨC</button>
+    <!-- PHẦN 1: BẢNG TOP SIÊU CỔ PHIẾU CHÂN SÓNG -->
+    <div class="section-header">
+        <div class="section-title">TOP {len(fialda_candidates)} SIÊU CỔ PHIẾU CHÂN SÓNG & ĐỘT BIẾN DÒNG TIỀN (1 THÁNG | MỤC TIÊU +20% - +35%)</div>
+        <span style="font-size:11px;color:#78909c;">Nguồn: Fialda VIP Expert & Tích Lũy Khối Lượng Order Flow & Quản Trị Sức Chứa Thanh Khoản</span>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th style="text-align:center;">STT</th>
+                    <th>Mã CP</th>
+                    <th style="text-align:center;">Tín Hiệu AI</th>
+                    <th>Giá Khớp (1,000 đ)</th>
+                    <th>Vùng Mua An Toàn</th>
+                    <th>Cắt Lỗ (Stop Loss)</th>
+                    <th>Mục Tiêu 1T (Target)</th>
+                    <th style="text-align:center;">Sức Chứa ADTV20</th>
+                    <th style="text-align:center;">Điểm TK</th>
+                    <th style="text-align:right;">KL Mua Max (Lô 100)</th>
+                    <th style="text-align:center;">Trượt Giá Dự Kiến</th>
+                    <th style="text-align:center;">RRG (r/m)</th>
+                    <th style="text-align:center;">IBD Tổng Hợp</th>
+                    <th style="text-align:center;">Khối Ngoại</th>
+                    <th style="text-align:center;">Điểm Đánh Giá</th>
+                    <th>Động Lực Tăng Trưởng</th>
+                </tr>
+            </thead>
+            <tbody>
+                {fialda_rows_html}
+            </tbody>
+        </table>
     </div>
 
-    <!-- TAB 1: TOP 20 SIÊU CỔ PHIẾU & ĐỊNH LƯỢNG F-SCORE -->
-    <div id="tab-top20" class="tab-content">
-        <div class="section-header">
-            <div class="section-title">TOP {len(fialda_candidates)} SIÊU CỔ PHIẾU CHÂN SÓNG & ĐỘT BIẾN DÒNG TIỀN (1 THÁNG | MỤC TIÊU +20% - +35%)</div>
-            <span style="font-size:11px;color:#78909c;">Nguồn: Fialda VIP Expert & Tích Lũy Khối Lượng Order Flow</span>
-        </div>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th style="text-align:center;">STT</th>
-                        <th>Mã CP</th>
-                        <th style="text-align:center;">Tín Hiệu AI</th>
-                        <th>Giá Khớp (1,000 đ)</th>
-                        <th>Vùng Mua An Toàn</th>
-                        <th>Cắt Lỗ (Stop Loss)</th>
-                        <th>Mục Tiêu 1T (Target)</th>
-                        <th style="text-align:center;">ADTV20 (Tỷ)</th>
-                        <th style="text-align:center;">Điểm TK</th>
-                        <th style="text-align:right;">KL Mua Max (Sức Chứa)</th>
-                        <th style="text-align:center;">Trượt Giá</th>
-                        <th style="text-align:center;">RRG (r/m)</th>
-                        <th style="text-align:center;">IBD Tổng Hợp</th>
-                        <th style="text-align:center;">Khối Ngoại</th>
-                        <th style="text-align:center;">Điểm Đánh Giá</th>
-                        <th>Động Lực Tăng Trưởng & Catalysts</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {fialda_rows_html}
-                </tbody>
-            </table>
-        </div>
-
-        <div class="section-header">
-            <div class="section-title" style="color:#90a4ae;">BẢNG XẾP HẠNG ĐỊNH LƯỢNG CƠ BẢN (PIOTROSKI F-SCORE & CHỈ SỐ TÀI CHÍNH)</div>
-            <span style="font-size:11px;color:#78909c;">Bộ lọc tài chính định lượng giá trị & chất lượng lợi nhuận</span>
-        </div>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Mã CP</th>
-                        <th>Tên Doanh Nghiệp</th>
-                        <th>Nhóm Ngành</th>
-                        <th>Giá Khớp (1,000 đ)</th>
-                        <th style="text-align:center;">F-Score (Piotroski)</th>
-                        <th style="text-align:center;">P/E</th>
-                        <th style="text-align:center;">P/B</th>
-                        <th style="text-align:center;">CFO / NI</th>
-                        <th style="text-align:center;">Xếp Hạng Định Chế</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {rows_html}
-                </tbody>
-            </table>
-        </div>
-        <div style="font-size:12px;color:#78909c;margin:-15px 0 25px 4px;line-height:1.6;">
-            💡 <b>Ghi chú định lượng học thuật (Piotroski, 2000):</b> Thang điểm <b>Piotroski F-Score (0-9)</b> loại trừ ngành Ngân hàng (MBB, VCB) do đặc thù BCTC không có <i>Giá vốn/Biên Lợi Nhuận Gộp</i> và <i>Hệ số Thanh toán ngắn hạn (Current Ratio)</i>. Toàn bộ cổ phiếu Ngân hàng được đánh giá chuyên sâu qua Bảng Định Lượng CAMEL & Basel II/III ngay Tab bên cạnh.
-        </div>
+    <!-- PHẦN 2: BẢNG XẾP HẠNG ĐỊNH LƯỢNG CƠ BẢN -->
+    <div class="section-header">
+        <div class="section-title" style="color:#90a4ae;">BẢNG XẾP HẠNG ĐỊNH LƯỢNG CƠ BẢN (PIOTROSKI F-SCORE & CHỈ SỐ TÀI CHÍNH)</div>
+        <span style="font-size:11px;color:#78909c;">Bộ lọc tài chính định lượng giá trị & chất lượng lợi nhuận</span>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã CP</th>
+                    <th>Tên Doanh Nghiệp</th>
+                    <th>Nhóm Ngành</th>
+                    <th>Giá Khớp (1,000 đ)</th>
+                    <th style="text-align:center;">F-Score (Piotroski)</th>
+                    <th style="text-align:center;">P/E</th>
+                    <th style="text-align:center;">P/B</th>
+                    <th style="text-align:center;">CFO / NI</th>
+                    <th style="text-align:center;">Xếp Hạng Định Chế</th>
+                </tr>
+            </thead>
+            <tbody>
+                {rows_html}
+            </tbody>
+        </table>
+    </div>
+    <div style="font-size:12px;color:#78909c;margin:-15px 0 25px 4px;line-height:1.6;">
+        💡 <b>Ghi chú định lượng học thuật (Piotroski, 2000):</b> Thang điểm <b>Piotroski F-Score (0-9)</b> loại trừ ngành Ngân hàng (MBB, VCB) do đặc thù BCTC không có <i>Giá vốn/Biên Lợi Nhuận Gộp</i> và <i>Hệ số Thanh toán ngắn hạn (Current Ratio)</i>. Toàn bộ cổ phiếu Ngân hàng được đánh giá chuyên sâu qua Bảng Định Lượng CAMEL & Basel II/III ngay bên dưới.
     </div>
 
-    <!-- TAB 2: KIỂM ĐỊNH LỊCH SỬ T+2.5 (WALK-FORWARD BACKTEST) -->
-    <div id="tab-backtest" class="tab-content" style="display:none;">
-        {backtest_html}
+    <!-- PHẦN 3: BẢNG ĐỊNH LƯỢNG NGÂN HÀNG THƯƠNG MẠI CAMEL -->
+    <div class="section-header">
+        <div class="section-title" style="color:#00e676;">🏦 BẢNG ĐỊNH LƯỢNG NGÂN HÀNG THƯƠNG MẠI (CAMEL & BASEL II/III QUANT)</div>
+        <span style="font-size:11px;color:#78909c;">Mô hình độc quyền phân tích 5 trụ cột: Vốn (C), Chất lượng nợ & LLR (A), Chi phí CIR (M), Lợi nhuận & CASA (E), Thanh khoản LDR (L)</span>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã CP</th>
+                    <th>Tên Ngân Hàng</th>
+                    <th>Giá Khớp (1,000 đ)</th>
+                    <th style="text-align:center;">Điểm CAMEL</th>
+                    <th style="text-align:center;">CASA (%)</th>
+                    <th style="text-align:center;">NIM (%)</th>
+                    <th style="text-align:center;">NPL Nợ Xấu</th>
+                    <th style="text-align:center;">LLR Bao Phủ</th>
+                    <th style="text-align:center;">CIR (%)</th>
+                    <th style="text-align:center;">ROE (%)</th>
+                    <th style="text-align:center;">P/B</th>
+                    <th style="text-align:center;">Xếp Hạng CAMEL</th>
+                </tr>
+            </thead>
+            <tbody>
+                {bank_rows_html}
+            </tbody>
+        </table>
     </div>
 
-    <!-- TAB 3: ĐỊNH LƯỢNG NGÂN HÀNG THƯƠNG MẠI CAMEL -->
-    <div id="tab-banking" class="tab-content" style="display:none;">
-        <div class="section-header">
-            <div class="section-title" style="color:#00e676;">🏦 BẢNG ĐỊNH LƯỢNG NGÂN HÀNG THƯƠNG MẠI (CAMEL & BASEL II/III QUANT)</div>
-            <span style="font-size:11px;color:#78909c;">Mô hình độc quyền phân tích 5 trụ cột: Vốn (C), Nợ xấu & LLR (A), Chi phí CIR (M), Lợi nhuận & CASA (E), Thanh khoản LDR (L)</span>
-        </div>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Mã CP</th>
-                        <th>Tên Ngân Hàng</th>
-                        <th>Giá Khớp (1,000 đ)</th>
-                        <th style="text-align:center;">Điểm CAMEL</th>
-                        <th style="text-align:center;">CASA (%)</th>
-                        <th style="text-align:center;">NIM (%)</th>
-                        <th style="text-align:center;">NPL Nợ Xấu</th>
-                        <th style="text-align:center;">LLR Bao Phủ</th>
-                        <th style="text-align:center;">CIR (%)</th>
-                        <th style="text-align:center;">ROE (%)</th>
-                        <th style="text-align:center;">P/B</th>
-                        <th style="text-align:center;">Xếp Hạng CAMEL</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {bank_rows_html}
-                </tbody>
-            </table>
-        </div>
+    <!-- PHẦN 4: BÁO CÁO KẾT QUẢ KINH DOANH CÁC QUÝ GẦN NHẤT -->
+    <div class="section-header">
+        <div class="section-title" style="color:#4fc3f7;">BÁO CÁO KẾT QUẢ KINH DOANH CÁC QUÝ GẦN NHẤT (DOANH THU & LỢI NHUẬN RÒNG BCTC)</div>
+        <span style="font-size:11px;color:#78909c;">Trích xuất chuẩn xác từ Báo cáo tài chính doanh nghiệp Fialda</span>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã CP</th>
+                    <th style="text-align:center;">Kỳ BCTC</th>
+                    <th style="text-align:right;">Doanh Thu Thuần</th>
+                    <th style="text-align:right;">Lợi Nhuận Gộp</th>
+                    <th style="text-align:right;">Lợi Nhuận Sau Thuế (LNST)</th>
+                    <th style="text-align:center;">Biên Lãi Gộp</th>
+                    <th style="text-align:center;">Đánh Giá Tăng Trưởng</th>
+                </tr>
+            </thead>
+            <tbody>
+                {bctc_rows_html}
+            </tbody>
+        </table>
     </div>
 
-    <!-- TAB 4: BÁO CÁO TÀI CHÍNH BCTC & TIN TỨC DOANH NGHIỆP -->
-    <div id="tab-fundamentals" class="tab-content" style="display:none;">
-        <div class="section-header">
-            <div class="section-title" style="color:#4fc3f7;">BÁO CÁO KẾT QUẢ KINH DOANH CÁC QUÝ GẦN NHẤT (DOANH THU & LỢI NHUẬN RÒNG BCTC)</div>
-            <span style="font-size:11px;color:#78909c;">Trích xuất chuẩn xác từ Báo cáo tài chính doanh nghiệp Fialda</span>
+    <!-- PHẦN 5: TIN TỨC SPOTLIGHT & SỰ KIỆN DOANH NGHIỆP -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:15px;margin-bottom:25px;">
+        <div>
+            <div class="section-title" style="color:#ffb300;margin-bottom:12px;">📰 TIN TỨC DOANH NGHIỆP MỚI NHẤT (SPOTLIGHT)</div>
+            {news_items_html}
         </div>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Mã CP</th>
-                        <th style="text-align:center;">Kỳ BCTC</th>
-                        <th style="text-align:right;">Doanh Thu Thuần</th>
-                        <th style="text-align:right;">Lợi Nhuận Gộp</th>
-                        <th style="text-align:right;">Lợi Nhuận Sau Thuế (LNST)</th>
-                        <th style="text-align:center;">Biên Lãi Gộp</th>
-                        <th style="text-align:center;">Đánh Giá Tăng Trưởng</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {bctc_rows_html}
-                </tbody>
-            </table>
-        </div>
-
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:15px;margin-bottom:25px;">
-            <div>
-                <div class="section-title" style="color:#ffb300;margin-bottom:12px;">📰 TIN TỨC DOANH NGHIỆP MỚI NHẤT (SPOTLIGHT)</div>
-                {news_items_html}
-            </div>
-            <div>
-                <div class="section-title" style="color:#00e676;margin-bottom:12px;">📅 LỊCH SỰ KIỆN & CHỐT QUYỀN SẮP TỚI</div>
-                {events_items_html}
-            </div>
+        <div>
+            <div class="section-title" style="color:#00e676;margin-bottom:12px;">📅 LỊCH SỰ KIỆN & CHỐT QUYỀN SẮP TỚI</div>
+            {events_items_html}
         </div>
     </div>
 
     <div class="footer">
         Neiro-Stock-VN • Tự động quét và cập nhật qua GitHub Actions • Vận hành 24/7 trên Cloud • Xem được trên mọi thiết bị di động
     </div>
-
-    <script>
-        function switchTab(tabId) {{
-            document.querySelectorAll('.tab-content').forEach(function(el) {{
-                el.style.display = 'none';
-            }});
-            document.querySelectorAll('.tab-btn').forEach(function(el) {{
-                el.classList.remove('active');
-            }});
-            var target = document.getElementById(tabId);
-            if (target) {{
-                target.style.display = 'block';
-            }}
-            var btn = document.getElementById('btn-' + tabId);
-            if (btn) {{
-                btn.classList.add('active');
-            }}
-        }}
-    </script>
 </body>
 </html>
 """
