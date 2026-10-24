@@ -143,32 +143,100 @@ def generate_terminal_html(
         </tr>
         """
 
-    # Chuan bi du lieu BCTC 4 quy cho cac co phieu tam diem
-    spotlight_symbols = [c.symbol for c in fialda_candidates[:5]] if fialda_candidates else ["DBC", "CTS", "HPG", "PTB", "GEX"]
+    # Chuan bi du lieu BCTC 4 quy cho cac co phieu tam diem (Thong ke 1 CP / 1 dong)
+    spotlight_symbols = [c.symbol for c in fialda_candidates[:5]] if fialda_candidates else ["CTS", "GEX", "VGC", "PDR", "VIX"]
     bctc_rows_html = ""
     for sym in spotlight_symbols:
         try:
             quarters = scanner.get_income_statement(sym, is_quarter=True)
         except Exception:
             quarters = scanner._fallback_mock_income_statement(sym)
-        for q_data in quarters[:3]:
-            q_name = f"Q{q_data.get('quarter')}/{q_data.get('year')}"
-            rev = q_data.get("revenue_billion", 0.0)
-            gp = q_data.get("gross_profit_billion", 0.0)
-            np_val = q_data.get("net_profit_billion", 0.0)
-            margin = round((gp / rev * 100.0), 1) if rev > 0 else 0.0
-            np_color = "#00e676" if np_val >= 0 else "#ff5252"
-            bctc_rows_html += f"""
-            <tr style="border-bottom:1px solid #1f2937;">
-                <td style="padding:10px;font-weight:bold;color:#ffb300;">{sym}</td>
-                <td style="padding:10px;text-align:center;color:#4fc3f7;font-weight:600;">{q_name}</td>
-                <td style="padding:10px;text-align:right;">{rev:,.1f} tỷ</td>
-                <td style="padding:10px;text-align:right;">{gp:,.1f} tỷ</td>
-                <td style="padding:10px;text-align:right;font-weight:bold;color:{np_color};">{np_val:,.1f} tỷ</td>
-                <td style="padding:10px;text-align:center;color:#ffb300;">{margin:.1f}%</td>
-                <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;">TĂNG TRƯỞNG TỐT</span></td>
-            </tr>
-            """
+        if not quarters:
+            continue
+        q_latest = quarters[0]
+        q_name = f"Q{q_latest.get('quarter')}/{q_latest.get('year')}"
+        rev0 = q_latest.get("revenue_billion", 0.0)
+        gp0 = q_latest.get("gross_profit_billion", 0.0)
+        np0 = q_latest.get("net_profit_billion", 0.0)
+        margin0 = round((gp0 / rev0 * 100.0), 1) if rev0 > 0 else 0.0
+
+        rev1 = quarters[1].get("revenue_billion", 0.0) if len(quarters) > 1 else 0.0
+        np1 = quarters[1].get("net_profit_billion", 0.0) if len(quarters) > 1 else 0.0
+
+        rev2 = quarters[2].get("revenue_billion", 0.0) if len(quarters) > 2 else 0.0
+        np2 = quarters[2].get("net_profit_billion", 0.0) if len(quarters) > 2 else 0.0
+
+        if len(quarters) > 1 and np1 != 0:
+            growth_qoq = round(((np0 - np1) / abs(np1)) * 100.0, 1)
+            growth_str = f"{growth_qoq:+.1f}%"
+        else:
+            growth_qoq = 0.0
+            growth_str = "N/A"
+
+        if len(quarters) >= 3 and np0 > np1 > np2 and np0 > 0:
+            eval_tag = "🚀 TĂNG TỐC 3 QUÝ"
+            badge_bg = "#1b5e20"
+            badge_fg = "#00e676"
+        elif growth_qoq >= 50.0:
+            eval_tag = "🔥 BÙNG NỔ LNST"
+            badge_bg = "#1b5e20"
+            badge_fg = "#00e676"
+        elif growth_qoq > 0:
+            eval_tag = "↗ TĂNG TRƯỞNG DƯƠNG"
+            badge_bg = "#004d40"
+            badge_fg = "#4db6ac"
+        elif np0 < 0:
+            eval_tag = "⚠️ LỖ RÒNG"
+            badge_bg = "#b71c1c"
+            badge_fg = "#ff8a80"
+        else:
+            eval_tag = "↘ CHẬM LẠI"
+            badge_bg = "#37474f"
+            badge_fg = "#b0bec5"
+
+        growth_bg = "#1b5e20" if growth_qoq > 0 else ("#b71c1c" if growth_qoq < 0 else "#37474f")
+        growth_fg = "#00e676" if growth_qoq > 0 else ("#ff8a80" if growth_qoq < 0 else "#b0bec5")
+        np0_color = "#00e676" if np0 >= 0 else "#ff5252"
+
+        if len(quarters) >= 3:
+            rev_html = (
+                f'<span style="color:#78909c;">{rev2:,.1f}t</span> <span style="color:#4fc3f7;">➔</span> '
+                f'<span style="color:#90a4ae;">{rev1:,.1f}t</span> <span style="color:#4fc3f7;">➔</span> '
+                f'<span style="color:#ffb300;font-weight:700;">{rev0:,.1f} tỷ</span>'
+            )
+            np_html = (
+                f'<span style="color:#78909c;">{np2:,.1f}t</span> <span style="color:#4fc3f7;">➔</span> '
+                f'<span style="color:#90a4ae;">{np1:,.1f}t</span> <span style="color:#4fc3f7;">➔</span> '
+                f'<span style="color:{np0_color};font-weight:700;">{np0:,.1f} tỷ</span>'
+            )
+        elif len(quarters) == 2:
+            rev_html = (
+                f'<span style="color:#90a4ae;">{rev1:,.1f}t</span> <span style="color:#4fc3f7;">➔</span> '
+                f'<span style="color:#ffb300;font-weight:700;">{rev0:,.1f} tỷ</span>'
+            )
+            np_html = (
+                f'<span style="color:#90a4ae;">{np1:,.1f}t</span> <span style="color:#4fc3f7;">➔</span> '
+                f'<span style="color:{np0_color};font-weight:700;">{np0:,.1f} tỷ</span>'
+            )
+        else:
+            rev_html = f'<span style="color:#ffb300;font-weight:700;">{rev0:,.1f} tỷ</span>'
+            np_html = f'<span style="color:{np0_color};font-weight:700;">{np0:,.1f} tỷ</span>'
+
+        bctc_rows_html += f"""
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">{sym}</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#263238;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;">{q_name}</span></td>
+            <td style="padding:10px;font-size:13px;white-space:nowrap;">{rev_html}</td>
+            <td style="padding:10px;font-size:13px;white-space:nowrap;">{np_html}</td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:{growth_bg};color:{growth_fg};padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">{growth_str}</span>
+            </td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">{margin0:.1f}%</td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:{badge_bg};color:{badge_fg};padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">{eval_tag}</span>
+            </td>
+        </tr>
+        """
 
     # Chuan bi Tin tuc & Su kien doanh nghiep
     news_items_html = ""
@@ -457,20 +525,20 @@ def generate_terminal_html(
 
     <!-- PHẦN 4: BÁO CÁO KẾT QUẢ KINH DOANH CÁC QUÝ GẦN NHẤT -->
     <div class="section-header">
-        <div class="section-title" style="color:#4fc3f7;">BÁO CÁO KẾT QUẢ KINH DOANH CÁC QUÝ GẦN NHẤT (DOANH THU & LỢI NHUẬN RÒNG BCTC)</div>
-        <span style="font-size:11px;color:#78909c;">Trích xuất chuẩn xác từ Báo cáo tài chính doanh nghiệp Fialda</span>
+        <div class="section-title" style="color:#4fc3f7;">📑 BÁO CÁO KẾT QUẢ KINH DOANH CÁC QUÝ GẦN NHẤT (DOANH THU & LỢI NHUẬN RÒNG BCTC)</div>
+        <span style="font-size:11px;color:#78909c;">Thống kê xu hướng tăng trưởng 1 CP / 1 dòng duy nhất • Nguồn: BCTC Fialda VIP API</span>
     </div>
     <div class="table-container">
         <table>
             <thead>
                 <tr>
                     <th>Mã CP</th>
-                    <th style="text-align:center;">Kỳ BCTC</th>
-                    <th style="text-align:right;">Doanh Thu Thuần</th>
-                    <th style="text-align:right;">Lợi Nhuận Gộp</th>
-                    <th style="text-align:right;">Lợi Nhuận Sau Thuế (LNST)</th>
+                    <th style="text-align:center;">Kỳ Gần Nhất</th>
+                    <th>Tiến Trình Doanh Thu Thuần (3 Quý Cũ ➔ Mới)</th>
+                    <th>Tiến Trình Lợi Nhuận Sau Thuế (3 Quý Cũ ➔ Mới)</th>
+                    <th style="text-align:center;">Tăng Trưởng LNST (QoQ)</th>
                     <th style="text-align:center;">Biên Lãi Gộp</th>
-                    <th style="text-align:center;">Đánh Giá Tăng Trưởng</th>
+                    <th style="text-align:center;">Xu Hướng Động Lượng</th>
                 </tr>
             </thead>
             <tbody>

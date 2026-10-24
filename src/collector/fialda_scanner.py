@@ -1036,15 +1036,15 @@ def format_top_5_markdown(
                 f"| **{b.symbol}** | {b.bank_name} | **{b.price:.2f}** | **{b.total_score:.0f}/100** | **{m.casa:.1f}%** | {m.nim:.1f}% | {m.npl:.2f}% | **{m.llr:.0f}%** | {m.cir:.1f}% | {m.roe:.1f}% | **{m.pb:.1f}** | `{b.tier}` |"
             )
 
-    # Bo sung Bao cao Tai chinh 4 quy gan nhat (BCTC)
+    # Bo sung Bao cao Tai chinh 4 quy gan nhat (BCTC) - Thong ke 1 CP / 1 dong duy nhat
     if scanner and candidates:
         spotlight = [c.symbol for c in candidates[:5]]
         md.extend([
             "",
-            "### 📑 BÁO CÁO KẾT QUẢ KINH DOANH (DOANH THU & LỢI NHUẬN RÒNG 4 QUÝ GẦN NHẤT)",
-            "> *Nguồn: Báo cáo tài chính Fialda VIP API (Kiểm toán / Tự lập)*",
+            "### 📑 BÁO CÁO KẾT QUẢ KINH DOANH CÁC QUÝ GẦN NHẤT (DOANH THU & LỢI NHUẬN RÒNG BCTC)",
+            "> *Thống kê xu hướng tăng trưởng 1 CP / 1 dòng duy nhất • Nguồn: Báo cáo tài chính Fialda VIP API*",
             "",
-            "| Mã CP | Kỳ BCTC | Doanh Thu Thuần | Lợi Nhuận Gộp | Lợi Nhuận Sau Thuế | Biên LN Gộp | Trạng Thái |",
+            "| Mã CP | Kỳ Gần Nhất | Tiến Trình Doanh Thu (3 Quý Cũ ➔ Mới) | Tiến Trình LNST (3 Quý Cũ ➔ Mới) | Tăng Trưởng QoQ | Biên Lãi Gộp | Xu Hướng Động Lượng |",
             "| :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
         ])
         for sym in spotlight:
@@ -1052,16 +1052,53 @@ def format_top_5_markdown(
                 quarters = scanner.get_income_statement(sym, is_quarter=True)
             except Exception:
                 quarters = scanner._fallback_mock_income_statement(sym)
-            for q_data in quarters[:3]:
-                q_name = f"Q{q_data.get('quarter')}/{q_data.get('year')}"
-                rev = q_data.get("revenue_billion", 0.0)
-                gp = q_data.get("gross_profit_billion", 0.0)
-                np_val = q_data.get("net_profit_billion", 0.0)
-                margin = round((gp / rev * 100.0), 1) if rev > 0 else 0.0
-                eval_tag = "`TĂNG TRƯỞNG MẠNH`" if np_val > 0 else "`CẦN QUAN SÁT`"
-                md.append(
-                    f"| **{sym}** | **{q_name}** | {rev:,.1f} tỷ | {gp:,.1f} tỷ | **{np_val:,.1f} tỷ** | {margin:.1f}% | {eval_tag} |"
-                )
+            if not quarters:
+                continue
+            q_latest = quarters[0]
+            q_name = f"Q{q_latest.get('quarter')}/{q_latest.get('year')}"
+            rev0 = q_latest.get("revenue_billion", 0.0)
+            gp0 = q_latest.get("gross_profit_billion", 0.0)
+            np0 = q_latest.get("net_profit_billion", 0.0)
+            margin0 = round((gp0 / rev0 * 100.0), 1) if rev0 > 0 else 0.0
+
+            rev1 = quarters[1].get("revenue_billion", 0.0) if len(quarters) > 1 else 0.0
+            np1 = quarters[1].get("net_profit_billion", 0.0) if len(quarters) > 1 else 0.0
+
+            rev2 = quarters[2].get("revenue_billion", 0.0) if len(quarters) > 2 else 0.0
+            np2 = quarters[2].get("net_profit_billion", 0.0) if len(quarters) > 2 else 0.0
+
+            if len(quarters) > 1 and np1 != 0:
+                growth_qoq = round(((np0 - np1) / abs(np1)) * 100.0, 1)
+                growth_str = f"{growth_qoq:+.1f}%"
+            else:
+                growth_qoq = 0.0
+                growth_str = "N/A"
+
+            if len(quarters) >= 3 and np0 > np1 > np2 and np0 > 0:
+                eval_tag = "🚀 TĂNG TỐC 3 QUÝ"
+            elif growth_qoq >= 50.0:
+                eval_tag = "🔥 BÙNG NỔ LNST"
+            elif growth_qoq > 0:
+                eval_tag = "↗ TĂNG TRƯỞNG DƯƠNG"
+            elif np0 < 0:
+                eval_tag = "⚠️ LỖ RÒNG"
+            else:
+                eval_tag = "↘ CHẬM LẠI"
+
+            if len(quarters) >= 3:
+                rev_trend = f"{rev2:,.1f}t ➔ {rev1:,.1f}t ➔ **{rev0:,.1f} tỷ**"
+                np_trend = f"{np2:,.1f}t ➔ {np1:,.1f}t ➔ **{np0:,.1f} tỷ**"
+            elif len(quarters) == 2:
+                rev_trend = f"{rev1:,.1f}t ➔ **{rev0:,.1f} tỷ**"
+                np_trend = f"{np1:,.1f}t ➔ **{np0:,.1f} tỷ**"
+            else:
+                rev_trend = f"**{rev0:,.1f} tỷ**"
+                np_trend = f"**{np0:,.1f} tỷ**"
+
+            growth_badge = f"`{growth_str}` ↗" if growth_qoq > 0 else f"`{growth_str}`"
+            md.append(
+                f"| **{sym}** | `{q_name}` | {rev_trend} | {np_trend} | {growth_badge} | {margin0:.1f}% | `{eval_tag}` |"
+            )
 
         # Bo sung Tin tuc & Su kien doanh nghiep
         md.extend([
