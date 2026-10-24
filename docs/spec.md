@@ -58,6 +58,9 @@ python -m src.microstructure_engine.volume_profile --symbol HPG --bins 50
 # Chạy phân tích Luân chuyển dòng tiền ngành (RRG Rotation)
 python -m src.sector_engine.rrg_rotation --benchmark VNINDEX
 
+# Quét tự động Top 5 Siêu cổ phiếu chân sóng (Fialda VIP Expert & Order Flow Harvester)
+python -m src.collector.fialda_scanner
+
 # Xuất bản Dashboard Bảng điều khiển Tác chiến VN-Stock (Plotly Dark Mode)
 python -m src.hud.terminal --output exports/vn_stock_terminal.html
 ```
@@ -75,12 +78,14 @@ Neiro-Stock-VN/
 │   ├── thuat_ngu_quant_vn.md     # Từ điển thuật ngữ Quantamental & Vi cấu trúc TTCK VN
 │   ├── TRADER_PLAYBOOK_VN.md     # Cẩm nang tác chiến thực chiến cho Trader / Quỹ
 │   └── decisions/                # Architecture Decision Records (ADRs)
-│       └── ADR-001-quantamental-foundations-for-vn-equities.md
+│       ├── ADR-001-quantamental-foundations-for-vn-equities.md
+│       └── ADR-002-fialda-vip-expert-automated-scanner.md
 ├── src/
 │   ├── collector/                # Thu thập dữ liệu TTCK Việt Nam
 │   │   ├── __init__.py
 │   │   ├── data_loader.py        # Ingestion, cache & chuẩn hóa dữ liệu OHLCV / BCTC
-│   │   └── vn_market_client.py   # Client kết nối dữ liệu thị trường (Cơ sở, Phái sinh, Khối ngoại)
+│   │   ├── vn_market_client.py   # Client kết nối dữ liệu thị trường (Cơ sở, Phái sinh, Khối ngoại)
+│   │   └── fialda_scanner.py     # Harvester Fialda VIP Expert, AI signals, RRG & Top 5 Rockets
 │   ├── fundamental_engine/       # Lõi lọc cơ bản định lượng
 │   │   ├── __init__.py
 │   │   ├── screener.py           # Bộ lọc CANSLIM, Piotroski F-score, CFO/NI
@@ -100,7 +105,7 @@ Neiro-Stock-VN/
 │   │   └── t25_manager.py        # Quản lý vòng quay hàng sẵn T+0 & Margin Buffer
 │   └── hud/                      # Giao diện Tactical Terminal
 │       ├── __init__.py
-│       └── terminal.py           # Sinh Plotly Dashboard tương tác đa chiều
+│       └── terminal.py           # Sinh Plotly Dashboard tương tác đa chiều & Top 5 Super Stocks
 ├── data/                         # Dữ liệu chuẩn hóa mẫu (benchmark data)
 ├── exports/                      # File HTML Terminal và báo cáo định lượng xuất bản
 ├── tests/                        # 100% Automated Unit Tests cho từng công thức toán

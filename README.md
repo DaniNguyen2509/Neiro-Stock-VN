@@ -103,9 +103,25 @@ python -m src.microstructure_engine.volume_profile --symbol HPG
 # 3. Phân tích luân chuyển dòng tiền ngành (RRG Rotation)
 python -m src.sector_engine.rrg_rotation
 
-# 4. Xuất bản Tactical Terminal Web (Dark Theme)
+# 4. Quét tự động Top 5 Siêu cổ phiếu chân sóng (Fialda VIP Expert Scanner)
+python -m src.collector.fialda_scanner
+
+# 5. Xuất bản Tactical Terminal Web (Dark Theme) với Top 5 Siêu Cổ Phiếu
 python -m src.hud.terminal --output exports/vn_stock_terminal.html
 ```
+
+### 4.4. Cấu hình Tài khoản VIP Fialda (Tùy chọn)
+Tạo file `.env` từ file mẫu `.env.example`:
+```bash
+cp .env.example .env
+```
+Điền thông tin tài khoản VIP:
+```env
+FIALDA_USERNAME=your_vip_email@example.com
+FIALDA_PASSWORD=your_password
+```
+*Lưu ý:* File `.env` được bảo vệ nghiêm ngặt trong `.gitignore` và không bao giờ được commit lên Git. Hệ thống tự động fallback sang bộ dữ liệu mẫu benchmark nếu không có tài khoản.
+
 
 ---
 

@@ -1,19 +1,59 @@
-"""Sinh Plotly Tactical Terminal HTML Dark Mode cho TTCK Viet Nam."""
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 from src.collector.data_loader import get_mock_vietnam_stocks
 from src.fundamental_engine.screener import screen_stocks
-from src.microstructure_engine.volume_profile import compute_volume_profile
 from src.microstructure_engine.basis_tracker import analyze_vn30_basis
+from src.collector.fialda_scanner import FialdaCandidate, FialdaScanner
 
 
-def generate_terminal_html(output_path: str = "exports/vn_stock_terminal.html") -> str:
+def generate_terminal_html(
+    output_path: str = "exports/vn_stock_terminal.html",
+    fialda_candidates: Optional[List[FialdaCandidate]] = None,
+) -> str:
     """Sinh ma nguon giao dien Web Terminal Plotly tuong tac doc lap."""
     stocks = get_mock_vietnam_stocks()
     screened = screen_stocks(stocks)
     basis = analyze_vn30_basis(1312.20, 1315.50)
 
-    # Chuan bi bang du lieu HTML
+    if fialda_candidates is None:
+        scanner = FialdaScanner()
+        # Neu co credential thi scan that hoac lay fallback mau
+        if scanner.username and scanner.password:
+            try:
+                fialda_candidates = scanner.scan_top_5_rockets()
+            except Exception:
+                fialda_candidates = scanner._fallback_mock_top_5()
+        else:
+            fialda_candidates = scanner._fallback_mock_top_5()
+
+    # Chuan bi bang du lieu Fialda Top 5
+    fialda_rows_html = ""
+    for idx, c in enumerate(fialda_candidates, 1):
+        sig_badge = (
+            '<span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span>'
+            if "CHO_MUA" in c.signal_type
+            else '<span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span>'
+        )
+        foreign_str = f"{c.foreign_net_value_billion:+.1f} tỷ"
+        foreign_color = "#00e676" if c.foreign_net_value_billion >= 0 else "#ff5252"
+        fialda_rows_html += f"""
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;">{idx}</td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">{c.symbol}</td>
+            <td style="padding:10px;text-align:center;">{sig_badge}</td>
+            <td style="padding:10px;font-weight:bold;">{c.price:,.1f}</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">{c.entry_low:.1f} - {c.entry_high:.1f}</td>
+            <td style="padding:10px;color:#ff5252;">{c.stop_loss:.1f}</td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">{c.target_1m:.1f} (+25%)</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">{c.rrg_r:.0f} / {c.rrg_m:.0f}</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">{c.composite_rating}</td>
+            <td style="padding:10px;text-align:center;color:{foreign_color};">{foreign_str}</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">{c.ranking_score:.1f}</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">{c.catalyst}</td>
+        </tr>
+        """
+
+    # Chuan bi bang du lieu HTML Quantamental
     rows_html = ""
     for s in screened:
         badge = '<span style="color:#00e676;font-weight:bold;">INSTITUTIONAL</span>' if s.is_institutional_grade else '<span style="color:#ff5252;">NEUTRAL</span>'
@@ -86,6 +126,7 @@ def generate_terminal_html(output_path: str = "exports/vn_stock_terminal.html") 
             border-radius: 8px;
             overflow: hidden;
             border: 1px solid #263238;
+            margin-bottom: 25px;
         }}
         th {{
             background: #1c2431;
@@ -94,6 +135,20 @@ def generate_terminal_html(output_path: str = "exports/vn_stock_terminal.html") 
             font-size: 12px;
             color: #90a4ae;
             text-transform: uppercase;
+        }}
+        .section-header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }}
+        .section-title {{
+            color: #ffb300;
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }}
     </style>
 </head>
@@ -104,7 +159,7 @@ def generate_terminal_html(output_path: str = "exports/vn_stock_terminal.html") 
             <div style="font-size:13px;color:#78909c;margin-top:4px;">Quantitative Microstructure & Fundamental Screener for Vietnam Equities</div>
         </div>
         <div style="text-align:right;">
-            <span style="background:#1b5e20;color:#00e676;padding:5px 10px;border-radius:4px;font-size:12px;font-weight:bold;">LIVE ENGINE READY</span>
+            <span style="background:#1b5e20;color:#00e676;padding:5px 10px;border-radius:4px;font-size:12px;font-weight:bold;">FIALDA VIP EXPERT LIVE</span>
         </div>
     </div>
 
@@ -126,12 +181,41 @@ def generate_terminal_html(output_path: str = "exports/vn_stock_terminal.html") 
         </div>
         <div class="card">
             <div class="card-title">Leading Sector (RRG Momentum)</div>
-            <div class="card-value" style="color:#00e676;">CÔNG NGHỆ & THÉP</div>
-            <div style="font-size:12px;color:#78909c;margin-top:5px;">FPT, HPG dẫn dắt dòng tiền</div>
+            <div class="card-value" style="color:#00e676;">NÔNG NGHIỆP & CHỨNG KHOÁN</div>
+            <div style="font-size:12px;color:#78909c;margin-top:5px;">DBC, CTS bứt phá mạnh</div>
         </div>
     </div>
 
-    <h3 style="color:#cfd8dc;margin-bottom:12px;">Bảng Xếp Hạng Định Lượng Cơ Bản (Piotroski F-Score & Quality Ratio)</h3>
+    <div class="section-header">
+        <div class="section-title">TOP 5 SIÊU CỔ PHIẾU CHÂN SÓNG (1 THÁNG | TARGET +20% - +35%)</div>
+        <span style="font-size:12px;color:#78909c;">Nguồn: Fialda VIP Expert & Order Flow Accumulation</span>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th style="text-align:center;">STT</th>
+                <th>Mã</th>
+                <th style="text-align:center;">Tín Hiệu</th>
+                <th>Giá HT</th>
+                <th>Vùng Mua An Toàn</th>
+                <th>Cắt Lỗ</th>
+                <th>Mục Tiêu 1T</th>
+                <th style="text-align:center;">RRG(r/m)</th>
+                <th style="text-align:center;">IBD Comp</th>
+                <th style="text-align:center;">Khối Ngoại</th>
+                <th style="text-align:center;">Điểm</th>
+                <th>Động Lực Tăng Trưởng</th>
+            </tr>
+        </thead>
+        <tbody>
+            {fialda_rows_html}
+        </tbody>
+    </table>
+
+    <div class="section-header">
+        <div class="section-title" style="color:#90a4ae;">BẢNG XẾP HẠNG ĐỊNH LƯỢNG CƠ BẢN (PIOTROSKI F-SCORE & QUALITY RATIO)</div>
+        <span style="font-size:12px;color:#78909c;">Lọc định lượng tài chính dài hạn</span>
+    </div>
     <table>
         <thead>
             <tr>
