@@ -60,7 +60,7 @@ def generate_terminal_html(
     rows_html = ""
     for s in fund_data:
         badge = (
-            '<span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">INSTITUTIONAL</span>'
+            '<span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỊNH CHẾ GOM</span>'
             if s.get("is_institutional")
             else '<span style="background:#37474f;color:#b0bec5;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">THEO DÕI</span>'
         )
@@ -80,12 +80,19 @@ def generate_terminal_html(
         </tr>
         """
 
+    regime_map = {
+        "NORMAL_EQUILIBRIUM": "Cân Bằng Bình Thường",
+        "CONTANGO_EXPANDED": "Contango Mở Rộng",
+        "BACKWARDATION_EXTREME": "Backwardation Cực Đoan (Cảnh Báo Kéo Trụ)",
+    }
+    regime_vn = regime_map.get(basis.regime, basis.regime)
+
     html_content = f"""<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neiro-Stock-VN | Tactical Quantamental Terminal</title>
+    <title>Neiro-Stock-VN | Bảng Điều Khiển Chiến Thuật Định Lượng</title>
     <style>
         * {{
             box-sizing: border-box;
@@ -190,56 +197,56 @@ def generate_terminal_html(
 <body>
     <div class="header">
         <div>
-            <div class="title">NEIRO-STOCK-VN TACTICAL TERMINAL</div>
-            <div style="font-size:12px;color:#78909c;margin-top:4px;">Quantitative Microstructure & Fundamental Screener • Powered by Fialda VIP Expert</div>
+            <div class="title">NEIRO-STOCK-VN | BẢNG ĐIỀU KHIỂN CHIẾN THUẬT</div>
+            <div style="font-size:12px;color:#78909c;margin-top:4px;">Hệ Thống Định Lượng Vi Cấu Trúc Dòng Tiền & Cơ Bản • Trích Xuất Trực Tiếp Từ Fialda VIP Expert</div>
         </div>
         <div style="text-align:right;">
-            <span style="background:#1b5e20;color:#00e676;padding:5px 10px;border-radius:4px;font-size:12px;font-weight:bold;">FIALDA VIP EXPERT LIVE</span>
+            <span style="background:#1b5e20;color:#00e676;padding:5px 10px;border-radius:4px;font-size:12px;font-weight:bold;">DỮ LIỆU FIALDA VIP TRỰC TIẾP</span>
         </div>
     </div>
 
     <div class="grid">
         <div class="card">
-            <div class="card-title">VN30F1M Basis Spread</div>
-            <div class="card-value" style="color:{"#00e676" if basis.basis_points >= 0 else "#ff5252"};">{basis.basis_points:+.2f} pts</div>
-            <div style="font-size:11px;color:#78909c;margin-top:4px;">Regime: {basis.regime}</div>
+            <div class="card-title">Chênh Lệch Basis VN30F1M</div>
+            <div class="card-value" style="color:{"#00e676" if basis.basis_points >= 0 else "#ff5252"};">{basis.basis_points:+.2f} điểm</div>
+            <div style="font-size:11px;color:#78909c;margin-top:4px;">Trạng thái: {regime_vn}</div>
         </div>
         <div class="card">
-            <div class="card-title">Institutional Smart Money Flow</div>
+            <div class="card-title">Dòng Tiền Cá Mập Định Chế</div>
             <div class="card-value" style="color:#00e676;">+427.5 Tỷ VND</div>
             <div style="font-size:11px;color:#78909c;margin-top:4px;">Khối ngoại + Tự doanh mua ròng</div>
         </div>
         <div class="card">
-            <div class="card-title">Market Breadth (VN30 > MA20)</div>
+            <div class="card-title">Độ Rộng Thị Trường (VN30 > MA20)</div>
             <div class="card-value" style="color:#ffb300;">73.3%</div>
             <div style="font-size:11px;color:#78909c;margin-top:4px;">22/30 Cổ phiếu giữ xu hướng tăng</div>
         </div>
         <div class="card">
-            <div class="card-title">Leading Sector (RRG Momentum)</div>
+            <div class="card-title">Ngành Dẫn Dắt (Động Lượng RRG)</div>
             <div class="card-value" style="color:#00e676;">NÔNG NGHIỆP & CHỨNG KHOÁN</div>
             <div style="font-size:11px;color:#78909c;margin-top:4px;">DBC, CTS bứt phá mạnh</div>
         </div>
     </div>
 
     <div class="section-header">
-        <div class="section-title">TOP 5 SIÊU CỔ PHIẾU CHÂN SÓNG (1 THÁNG | TARGET +20% - +35%)</div>
-        <span style="font-size:11px;color:#78909c;">Nguồn: Fialda VIP Expert & Order Flow Accumulation</span>
+        <div class="section-title">TOP 5 SIÊU CỔ PHIẾU CHÂN SÓNG (1 THÁNG | MỤC TIÊU +20% - +35%)</div>
+        <span style="font-size:11px;color:#78909c;">Nguồn: Fialda VIP Expert & Tích Lũy Khối Lượng Order Flow</span>
     </div>
     <div class="table-container">
         <table>
             <thead>
                 <tr>
                     <th style="text-align:center;">STT</th>
-                    <th>Mã</th>
-                    <th style="text-align:center;">Tín Hiệu</th>
-                    <th>Giá HT</th>
+                    <th>Mã CP</th>
+                    <th style="text-align:center;">Tín Hiệu AI</th>
+                    <th>Giá Khớp (1,000 đ)</th>
                     <th>Vùng Mua An Toàn</th>
-                    <th>Cắt Lỗ</th>
-                    <th>Mục Tiêu 1T</th>
-                    <th style="text-align:center;">RRG(r/m)</th>
-                    <th style="text-align:center;">IBD Comp</th>
+                    <th>Cắt Lỗ (Stop Loss)</th>
+                    <th>Mục Tiêu 1T (Target)</th>
+                    <th style="text-align:center;">RRG (r/m)</th>
+                    <th style="text-align:center;">IBD Tổng Hợp</th>
                     <th style="text-align:center;">Khối Ngoại</th>
-                    <th style="text-align:center;">Điểm</th>
+                    <th style="text-align:center;">Điểm Đánh Giá</th>
                     <th>Động Lực Tăng Trưởng</th>
                 </tr>
             </thead>
@@ -250,8 +257,8 @@ def generate_terminal_html(
     </div>
 
     <div class="section-header">
-        <div class="section-title" style="color:#90a4ae;">BẢNG XẾP HẠNG ĐỊNH LƯỢNG CƠ BẢN (PIOTROSKI F-SCORE & QUALITY RATIO)</div>
-        <span style="font-size:11px;color:#78909c;">Lọc định lượng tài chính dài hạn</span>
+        <div class="section-title" style="color:#90a4ae;">BẢNG XẾP HẠNG ĐỊNH LƯỢNG CƠ BẢN (PIOTROSKI F-SCORE & CHỈ SỐ TÀI CHÍNH)</div>
+        <span style="font-size:11px;color:#78909c;">Bộ lọc tài chính định lượng giá trị & chất lượng lợi nhuận</span>
     </div>
     <div class="table-container">
         <table>
@@ -261,11 +268,11 @@ def generate_terminal_html(
                     <th>Tên Doanh Nghiệp</th>
                     <th>Nhóm Ngành</th>
                     <th>Giá Khớp (1,000 đ)</th>
-                    <th style="text-align:center;">F-Score</th>
+                    <th style="text-align:center;">F-Score (Piotroski)</th>
                     <th style="text-align:center;">P/E</th>
                     <th style="text-align:center;">P/B</th>
                     <th style="text-align:center;">CFO / NI</th>
-                    <th style="text-align:center;">Định Chế Xếp Hạng</th>
+                    <th style="text-align:center;">Xếp Hạng Định Chế</th>
                 </tr>
             </thead>
             <tbody>

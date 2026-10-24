@@ -512,7 +512,7 @@ def format_top_5_markdown(
             "| :---: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |",
         ])
         for s in fund_data:
-            rank_badge = "`INSTITUTIONAL`" if s.get("is_institutional") else "`THEO DÕI`"
+            rank_badge = "`ĐỊNH CHẾ GOM`" if s.get("is_institutional") else "`THEO DÕI`"
             f_score_val = s.get("f_score_str", "N/A")
             md.append(
                 f"| **{s['symbol']}** | {s['company_name']} | {s['sector']} | **{s['price']:.2f}** | **{f_score_val}** | {s['pe']:.1f} | {s['pb']:.1f} | {s['cfo_ni']:.2f} | {rank_badge} |"
