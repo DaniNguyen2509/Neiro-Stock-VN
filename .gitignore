@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+data/*.tmp
+data/*.cache
+!data/.gitkeep
+exports/*.html
+!exports/.gitkeep
+scratch/
+.env
+*.log
