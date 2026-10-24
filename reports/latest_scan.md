@@ -14,8 +14,8 @@
 | **9** | **VTZ** | `CHÂN SÓNG` | **20.30** | **20.20 - 20.64** | 19.09 | **25.38** | 101/100 | 50 | +0.0 tỷ | **67.5** |
 | **10** | **ACB** | `CHÂN SÓNG` | **21.30** | **20.50 - 20.95** | 19.37 | **26.62** | 100/100 | 38 | -469.4 tỷ | **65.7** |
 | **11** | **VAB** | `CHÂN SÓNG` | **9.09** | **9.02 - 9.22** | 8.53 | **11.36** | 101/100 | 56 | +0.3 tỷ | **64.7** |
-| **12** | **VCB** | `CHÂN SÓNG` | **56.80** | **56.62 - 57.86** | 53.50 | **71.00** | 100/100 | 38 | +11.2 tỷ | **59.6** |
-| **13** | **PDR** | `ĐỘT BIẾN GT` | **12.15** | **11.91 - 12.27** | 11.25 | **15.19** | 102/101 | 99 | -0.4 tỷ | **59.6** |
+| **12** | **PDR** | `ĐỘT BIẾN GT` | **12.15** | **11.91 - 12.27** | 11.25 | **15.19** | 102/101 | 99 | -0.4 tỷ | **59.6** |
+| **13** | **VCB** | `CHÂN SÓNG` | **56.80** | **56.62 - 57.86** | 53.50 | **71.00** | 100/100 | 38 | +11.2 tỷ | **59.6** |
 | **14** | **VIX** | `ĐỘT BIẾN GT` | **12.70** | **12.45 - 12.83** | 11.76 | **15.88** | 101/102 | 92 | +1.5 tỷ | **58.0** |
 | **15** | **NKG** | `ĐỘT BIẾN GT` | **12.00** | **11.76 - 12.12** | 11.11 | **15.00** | 106/103 | 87 | +2.5 tỷ | **56.8** |
 | **16** | **MSN** | `ĐỘT BIẾN GT` | **74.20** | **72.72 - 74.94** | 68.72 | **92.75** | 102/99 | 21 | +92.0 tỷ | **55.5** |
@@ -58,11 +58,11 @@
 - **VAB (9.09)**: Vùng gom `9.02 - 9.22` | Stop Loss: `8.53` | Target: `11.36`
   - *Động lực:* RRG(r=100.9, m=99.8), IBD Composite=56, Acc/Diss=E (Khối ngoại: +0.3 tỷ)
   - *Quản trị T+2.5:* Tỷ trọng khuyến nghị 20% NAV. Mua 50% tại nền, gia tăng 50% khi vượt đỉnh.
-- **VCB (56.80)**: Vùng gom `56.62 - 57.86` | Stop Loss: `53.50` | Target: `71.00`
-  - *Động lực:* RRG(r=100.1, m=99.9), IBD Composite=38, Acc/Diss=E (Khối ngoại: +11.2 tỷ)
-  - *Quản trị T+2.5:* Tỷ trọng khuyến nghị 20% NAV. Mua 50% tại nền, gia tăng 50% khi vượt đỉnh.
 - **PDR (12.15)**: Vùng gom `11.91 - 12.27` | Stop Loss: `11.25` | Target: `15.19`
   - *Động lực:* RRG(r=101.7, m=100.9), IBD Composite=99, Acc/Diss=D (Khối ngoại: -0.4 tỷ)
+  - *Quản trị T+2.5:* Tỷ trọng khuyến nghị 20% NAV. Mua 50% tại nền, gia tăng 50% khi vượt đỉnh.
+- **VCB (56.80)**: Vùng gom `56.62 - 57.86` | Stop Loss: `53.50` | Target: `71.00`
+  - *Động lực:* RRG(r=100.1, m=99.9), IBD Composite=38, Acc/Diss=E (Khối ngoại: +11.2 tỷ)
   - *Quản trị T+2.5:* Tỷ trọng khuyến nghị 20% NAV. Mua 50% tại nền, gia tăng 50% khi vượt đỉnh.
 - **VIX (12.70)**: Vùng gom `12.45 - 12.83` | Stop Loss: `11.76` | Target: `15.88`
   - *Động lực:* RRG(r=100.7, m=101.7), IBD Composite=92, Acc/Diss=E (Khối ngoại: +1.5 tỷ)
@@ -99,8 +99,10 @@
 | **SSI** | Chứng khoán SSI | Dịch vụ tài chính & CK | **19.95** | **5/9** | 16.7 | 2.0 | -2.27 | `THEO DÕI` |
 | **GEX** | Tập đoàn GELEX | Thiết bị điện & KCN | **24.10** | **5/9** | 30.0 | 1.2 | 7.30 | `THEO DÕI` |
 | **CTS** | Chứng khoán VietinBank | Dịch vụ tài chính & CK | **21.95** | **4/9** | 49.9 | 1.9 | 76.27 | `THEO DÕI` |
-| **MBB** | Ngân hàng Quân Đội | Ngân hàng thương mại | **19.80** | **N/A** | 8.4 | 1.6 | 1.43 | `ĐỊNH CHẾ GOM` |
-| **VCB** | Vietcombank | Ngân hàng thương mại | **56.80** | **N/A** | 12.5 | 2.1 | 6.57 | `ĐỊNH CHẾ GOM` |
+| **MBB** | Ngân hàng Quân Đội | Ngân hàng thương mại | **19.80** | **N/A (Ngân hàng)** | 8.4 | 1.6 | 1.43 | `ĐỊNH CHẾ GOM` |
+| **VCB** | Vietcombank | Ngân hàng thương mại | **56.80** | **N/A (Ngân hàng)** | 12.5 | 2.1 | 6.57 | `ĐỊNH CHẾ GOM` |
+
+> 💡 **Ghi chú định lượng học thuật (Piotroski, 2000):** Thang điểm *Piotroski F-Score (0-9)* loại trừ các Ngân hàng thương mại (MBB, VCB) do đặc thù BCTC ngành ngân hàng không có *Giá vốn/Biên Lợi Nhuận Gộp* và *Hệ số Thanh toán ngắn hạn (Current Ratio)*. Cổ phiếu Ngân hàng được hệ thống xếp hạng định chế qua P/E, P/B, NIM và chất lượng dòng tiền CFO/NI.
 
 ### 📑 BÁO CÁO KẾT QUẢ KINH DOANH (DOANH THU & LỢI NHUẬN RÒNG 4 QUÝ GẦN NHẤT)
 > *Nguồn: Báo cáo tài chính Fialda VIP API (Kiểm toán / Tự lập)*

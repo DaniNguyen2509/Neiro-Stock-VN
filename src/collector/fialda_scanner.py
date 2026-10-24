@@ -235,7 +235,7 @@ class FialdaScanner:
 
             comp_name, sector = company_info.get(sym, (sym, "Thương mại tổng hợp"))
 
-            display_fscore = f"{fscore:.0f}/9" if fscore is not None else "N/A"
+            display_fscore = f"{fscore:.0f}/9" if fscore is not None else ("N/A (Ngân hàng)" if "Ngân hàng" in sector else "N/A")
             is_inst = (fscore is not None and fscore >= 6) or (pe > 0 and pe < 16 and cfo_ni > 0.8)
 
             results.append({
@@ -794,6 +794,10 @@ def format_top_5_markdown(
             md.append(
                 f"| **{s['symbol']}** | {s['company_name']} | {s['sector']} | **{s['price']:.2f}** | **{f_score_val}** | {s['pe']:.1f} | {s['pb']:.1f} | {s['cfo_ni']:.2f} | {rank_badge} |"
             )
+        md.extend([
+            "",
+            "> 💡 **Ghi chú định lượng học thuật (Piotroski, 2000):** Thang điểm *Piotroski F-Score (0-9)* loại trừ các Ngân hàng thương mại (MBB, VCB) do đặc thù BCTC ngành ngân hàng không có *Giá vốn/Biên Lợi Nhuận Gộp* và *Hệ số Thanh toán ngắn hạn (Current Ratio)*. Cổ phiếu Ngân hàng được hệ thống xếp hạng định chế qua P/E, P/B, NIM và chất lượng dòng tiền CFO/NI.",
+        ])
 
     # Bo sung Bao cao Tai chinh 4 quy gan nhat (BCTC)
     if scanner and candidates:

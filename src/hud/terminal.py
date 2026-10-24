@@ -66,7 +66,12 @@ def generate_terminal_html(
             else '<span style="background:#37474f;color:#b0bec5;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">THEO DÕI</span>'
         )
         f_score_val = s.get("f_score_str", "N/A")
-        f_color = "#00e676" if (s.get("f_score", 0) >= 6) else "#ffb300"
+        if "Ngân hàng" in f_score_val or "N/A" in f_score_val:
+            f_color = "#78909c"
+        elif s.get("f_score", 0) >= 6:
+            f_color = "#00e676"
+        else:
+            f_color = "#ffb300"
         rows_html += f"""
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">{s['symbol']}</td>
@@ -342,6 +347,9 @@ def generate_terminal_html(
                 {rows_html}
             </tbody>
         </table>
+    </div>
+    <div style="font-size:12px;color:#78909c;margin:-15px 0 25px 4px;line-height:1.6;">
+        💡 <b>Ghi chú định lượng học thuật (Piotroski, 2000):</b> Thang điểm <b>Piotroski F-Score (0-9)</b> loại trừ ngành Ngân hàng (MBB, VCB) do đặc thù BCTC không có <i>Giá vốn/Biên Lợi Nhuận Gộp</i> và <i>Hệ số Thanh toán ngắn hạn (Current Ratio)</i>. Cổ phiếu Ngân hàng được hệ thống xếp hạng định chế qua <b>P/E, P/B, NIM</b> và tỷ lệ dòng tiền hoạt động <b>CFO / Net Income</b>.
     </div>
 
     <div class="section-header">
