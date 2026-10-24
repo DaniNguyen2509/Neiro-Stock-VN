@@ -106,10 +106,19 @@ Neiro-Stock-VN/
 │   ├── risk_engine/              # Quản trị rủi ro & Vị thế T+2.5
 │   │   ├── __init__.py
 │   │   ├── position_sizer.py     # Tính toán tỷ trọng theo Volatility ATR(14)
-│   │   └── t25_manager.py        # Quản lý vòng quay hàng sẵn T+0 & Margin Buffer
+│   │   ├── t25_manager.py        # Quản lý vòng quay hàng sẵn T+0 & Margin Buffer
+│   │   └── liquidity_sizer.py    # Bộ lọc ADTV20, Sức chứa danh mục & Trượt giá phi tuyến
+│   ├── backtesting/              # Module Kiểm định Quá khứ Walk-Forward T+2.5
+│   │   ├── __init__.py
+│   │   ├── models.py             # Data models: Exchange, PriceBand, Position, TradeRecord
+│   │   ├── engine.py             # Lõi T25BacktestEngine: Queue T+2.5, Phí/Thuế, Trần/Sàn
+│   │   ├── metrics.py            # Suite toán học: Sharpe, Sortino, MDD, CAGR, WinRate, PF
+│   │   ├── point_in_time.py      # PIT Engine: Khắc phục triệt để Point-in-Time bias của BCTC
+│   │   ├── historical_data.py    # Dataset chuẩn 2021-2026 cho VN30 & VNINDEX Benchmark
+│   │   └── walk_forward.py       # Điều phối kiểm định In-Sample vs Out-of-Sample & tính WFE
 │   └── hud/                      # Giao diện Tactical Terminal
 │       ├── __init__.py
-│       └── terminal.py           # Sinh Plotly Dashboard tương tác đa chiều & Top 5 Super Stocks
+│       └── terminal.py           # Sinh Terminal tương tác đa tab, Equity Curve SVG & Top 20
 ├── data/                         # Dữ liệu chuẩn hóa mẫu (benchmark data)
 ├── exports/                      # File HTML Terminal và báo cáo định lượng xuất bản (GitHub Pages)
 ├── reports/                      # Báo cáo kết quả quét Top 5 mới nhất (latest_scan.md)
@@ -253,6 +262,20 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
    - Chỉ giải ngân vị thế tỷ trọng lớn $\ge 20\%$ tài khoản khi tài khoản **đã có sẵn ít nhất $50\%$ khối lượng mã đó ở trạng thái T+0** (hàng đã khả dụng bán).
    - Nếu thị trường bất ngờ có biến cố Black Swan trong phiên, nhà đầu tư có thể xả ngay lượng hàng T+0 sẵn có để khóa rủi ro, vô hiệu hóa hoàn toàn bẫy kẹt hàng T+2.5.
 
+3. **Bộ Lọc Thanh Khoản & Sức Chứa Danh Mục (Liquidity & Capacity Sizer - Quy Chuẩn Quỹ):**
+   - **Bộ lọc ADTV20 (Average Daily Trading Value 20 phiên):**
+     $$\text{ADTV20} = \frac{1}{20} \sum_{t=1}^{20} (\text{Close}_t \times \text{Volume}_t)$$
+     - $\text{ADTV20} \ge 30.0$ tỷ VNĐ/phiên: Đạt chuẩn Quỹ Định Chế (Institutional Grade).
+     - $15.0 \le \text{ADTV20} < 30.0$ tỷ VNĐ/phiên: Đạt chuẩn Biên (Borderline Liquid).
+     - $\text{ADTV20} < 15.0$ tỷ VNĐ/phiên: Loại bỏ hoàn toàn khỏi danh mục để triệt tiêu rủi ro mất thanh khoản khi thị trường sập.
+   - **Mô Hình Sức Chứa Danh Mục (Portfolio Capacity Model):**
+     Giới hạn tỷ trọng mua tối đa của 1 vị thế không vượt quá $10\% - 15\%$ khối lượng giao dịch trung bình ngày ($ADV20 = \text{ADTV20} / \text{Price}$), làm tròn lô 100 cổ phiếu:
+     $$\text{Max Shares} = \left\lfloor \frac{ADV20 \times P_{\max}}{100} \right\rfloor \times 100$$
+     Đảm bảo thời gian thanh lý an toàn trong chu kỳ T+2.5: $\text{Exit Days} \le 1.0$ phiên.
+   - **Mô Hình Ước Lượng Trượt Giá Phi Tuyến (Nonlinear Slippage Model):**
+     $$\text{Slippage} (\%) = \text{Spread}_{\text{bid-ask}} + k \cdot \left( \frac{\text{Order Shares}}{ADV20} \right)^\alpha$$
+     với $k = 2.5$, $\alpha = 0.60$ (Square-Root Market Impact Law). Tự động kích hoạt cảnh báo `CRITICAL_OVER_CAPACITY` nếu tỷ lệ tham gia $> 15\%$, và cảnh báo `HIGH_SLIPPAGE` nếu trượt giá $\ge 1.50\%$.
+
 ---
 
 ### Tier 7: Fialda VIP Expert Harvester & Tactical Terminal Live (GitHub Pages)
@@ -266,4 +289,27 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 2. **Chuẩn Hóa Giao Diện Tiếng Việt & Triển Khai GitHub Pages:**
    - **Bản Địa Hóa 100% Tiếng Việt:** Toàn bộ bảng điều khiển chiến thuật (`src/hud/terminal.py`) và báo cáo quét thị trường (`reports/latest_scan.md`) sử dụng tiếng Việt chuẩn mực, giữ nguyên các ký hiệu định lượng quốc tế chuẩn (Piotroski F-Score, P/E, P/B, RRG, Basis, Stop Loss, Target, NAV, T+2.5).
    - **Triển Khai Tự Động:** Nhánh `gh-pages` được tự động cập nhật qua GitHub Actions, cung cấp giao diện trực quan 24/7 xem được trên mọi thiết bị di động tại URL: `https://daninguyen2509.github.io/Neiro-Stock-VN/`.
+
+---
+
+### Tier 8: Walk-Forward Backtesting Engine T+2.5 & Phòng Vệ Thiên Lệch Định Lượng
+
+1. **Ràng Buộc Thực Thi Chu Kỳ Thanh Toán T+2.5:**
+   - Mua phiên $T$ (bar index $i$) $\rightarrow$ Cổ phiếu được gán `settle_day_index = i + 2`. Cấm bán tuyệt đối tại $T+0$ và $T+1$.
+   - Chiều ngày $T+2$ hoặc từ $T+3$ trở đi: Cổ phiếu khả dụng bán (`available_shares > 0`).
+2. **Kiểm Soát Biên Độ Trần / Sàn Theo Sàn Niêm Yết:**
+   - HOSE: $\pm 7\%$, HNX: $\pm 10\%$, UPCoM: $\pm 15\%$.
+   - Lệnh mua bị từ chối nếu giá khớp vượt trần (trắng bên bán); lệnh bán bị từ chối nếu giá khớp dưới sàn (trắng bên mua / mất thanh khoản).
+3. **Khấu Trừ Thuế & Phí Giao Dịch Thực Tế:**
+   - Phí mua: $0.15\%$.
+   - Phí bán: $0.15\%$ phí môi giới $+ 0.10\%$ thuế TNCN bán chứng khoán $= 0.25\%$.
+   - Tổng ma sát vòng quay (Round-trip drag): $0.40\%$.
+4. **Bộ Phòng Vệ 4 Thiên Lệch Định Lượng (Quantamental Bias Defense):**
+   - **Look-ahead Bias:** Tín hiệu tính toán cuối ngày $t$ (ATC), khớp lệnh mở cửa ATO phiên $t+1$.
+   - **Point-in-Time Bias:** BCTC chỉ được đưa vào tính Piotroski F-Score / CAMEL khi $filing\_date \le as\_of\_date$ (tối thiểu 30-45 ngày sau chốt quý).
+   - **Overfitting & Curve Fitting:** Đóng băng và phân tách độc lập 2 tập dữ liệu: In-Sample (2021-2023: Bullrun + Đại suy thoái 2022) và Out-of-Sample (2024-2026: Dữ liệu mù Unseen Data). Đo lường $\text{WFE} = \text{Sharpe}_{\text{OOS}} / \text{Sharpe}_{\text{IS}}$.
+5. **Thước Đo Hiệu Suất Chuẩn Mực:**
+   - CAGR, Annualized Sharpe ($R_f = 4.5\%$), Sortino Ratio, Max Drawdown (MDD), Profit Factor, Win Rate.
+   - Kết quả thực nghiệm 2021-2026: MDD hệ thống chỉ **19.10%** (so với VN-Index sập tới **44.09%** trong khủng hoảng 2022), Sharpe OOS đạt **1.77**.
+
 

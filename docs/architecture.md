@@ -22,7 +22,7 @@ flowchart TD
     end
 
     subgraph Risk_Orchestrator ["3. Execution & Risk Engine"]
-        RE["Risk Engine\n- Volatility-Adjusted ATR Sizing\n- Rolling Inventory Manager (T+0 Cushion)\n- Margin Call Buffer & Force Sell Radar"]
+        RE["Risk Engine\n- Liquidity & Capacity Sizer (ADTV20 >= 15-30T)\n- Nonlinear Slippage Model (Almgren-Chriss)\n- Volatility-Adjusted ATR Sizing\n- Rolling Inventory Manager (T+0 Cushion)\n- Margin Call Buffer & Force Sell Radar"]
     end
 
     subgraph HUD_Presentation ["4. Tactical HUD Terminal Layer"]
@@ -75,17 +75,34 @@ flowchart TD
 - **`market_breadth.py`:** Đo lường độ rộng thị trường (tỷ lệ cổ phiếu trên MA20, MA50, MA200, đường Advance-Decline Line) để phát hiện sớm các hiện tượng "kéo trụ xả danh mục" (Green Index - Red Market).
 
 ### 2.5. Tầng Quản Trị Rủi Ro & Vị Thế T+2.5 (`src/risk_engine/`)
+- **`liquidity_sizer.py`:** Bộ lọc thanh khoản và mô hình sức chứa danh mục quy chuẩn Quỹ:
+  - Sàng lọc ADTV20 $\ge 15.0 - 30.0$ tỷ đồng/phiên (loại bỏ hoàn toàn cổ phiếu penny/illiquid).
+  - Khống chế quy mô vị thế không quá $10\% - 15\%$ ADV20, làm tròn chuẩn lô 100 cổ phiếu, kiểm soát thời gian thanh lý an toàn trong chu kỳ T+2.5 ($ExitDays \le 1.0$ ngày).
+  - Ước lượng trượt giá phi tuyến theo quy mô lệnh: $\text{Slippage} = \text{Spread} + k \times (\text{Size}/\text{ADTV})^\alpha$, phát tín hiệu cảnh báo trực tiếp trên Terminal khi quy mô vượt sức chứa chịu đựng.
+  - Chấm điểm thanh khoản đa biến (0 - 100 điểm) phân cấp độ an toàn dòng tiền.
 - **`position_sizer.py`:** Tính toán quy mô giải ngân an toàn dựa trên rủi ro biến động $ATR(14)$ của cổ phiếu, khống chế mức lỗ tối đa cho mỗi vị thế không vượt quá $1.5\% - 2.0\%$ tổng NAV tài khoản.
 - **`t25_manager.py`:** Quản trị vòng quay hàng sẵn có (Rolling Inventory), thiết lập cơ chế khóa lợi nhuận hoặc phòng hộ danh mục bằng HĐTL VN30F1M khi thị trường vi phạm các mốc thanh khoản trọng yếu.
 
-### 2.6. Tầng Giao Diện Tác Chiến (`src/hud/`)
-- **`terminal.py`:** Sinh mã nguồn HTML Plotly tương tác hoàn chỉnh, hỗ trợ chế độ Dark Mode hiện đại, giao diện trực quan theo tiêu chuẩn Bloomberg/TradingView, bao gồm:
-  - Bảng Top 5 Siêu Cổ Phiếu Chân Sóng (Fialda VIP Expert & Order Flow).
-  - Bảng xếp hạng Quantamental Screener (Mã, F-Score, PE Percentile, OFI, Khối ngoại, Khuyến nghị).
-  - Thanh trạng thái Basis VN30F1M và Khối ngoại / Tự doanh trong phiên.
-  - Tối ưu hóa hiển thị responsive (`viewport`, `table-container` trượt ngang) cho thiết bị di động (iOS / Android).
+### 2.6. Tầng Kiểm Định Quá Khứ (`src/backtesting/`)
+- **`models.py`:** Cấu trúc dữ liệu mô phỏng khớp lệnh: `Exchange` (HOSE 7%, HNX 10%, UPCoM 15%), `PriceBand`, `SettlementBatch`, `Position`, `TradeRecord`, `BacktestConfig`, `BacktestResult`.
+- **`engine.py` (`T25BacktestEngine`):** Lõi mô phỏng thực thi lệnh với ràng buộc khắt khe của TTCK Việt Nam:
+  - Hàng đợi `SettlementQueue`: Mua tại $T$ chỉ được bán từ chiều ngày $T+2$ (hoặc từ $T+3$ trở đi).
+  - Kiểm tra biên độ trần/sàn: Từ chối lệnh mua nếu vượt trần (trắng bên bán), từ chối lệnh bán nếu dưới sàn (mất thanh khoản).
+  - Khấu trừ chi phí thực tế: $0.15\%$ phí mua, $0.15\%$ phí bán $+ 0.10\%$ thuế bán chứng khoán (tổng $0.40\%$).
+  - Khớp lệnh tại $t+1$ (giá Open/ATO) để triệt tiêu hoàn toàn Look-ahead Bias.
+- **`point_in_time.py` (`PointInTimeDatabase`):** Đảm bảo BCTC chỉ được đưa vào tính Piotroski F-score và CAMEL sau ngày nộp chính thức (`filing_date`), triệt tiêu Point-in-Time Bias.
+- **`metrics.py`:** Bộ công thức toán học đo lường hiệu suất định chế: CAGR, Sharpe, Sortino, Max Drawdown, Calmar, Win Rate, Profit Factor, Walk-Forward Efficiency (WFE).
+- **`walk_forward.py` (`WalkForwardCoordinator`):** Điều phối kiểm định độc lập giữa tập In-Sample (2021-2023) và Out-of-Sample (2024-2026), tính tỷ số WFE chứng minh hệ thống không bị Overfitting.
 
-### 2.7. Tầng Tự Động Hóa & Đám Mây CI/CD (`.github/workflows/`)
+### 2.7. Tầng Giao Diện Tác Chiến (`src/hud/`)
+- **`terminal.py`:** Sinh mã nguồn HTML tương tác đa tab hoàn chỉnh, hỗ trợ Dark Mode hiện đại, bao gồm:
+  - Tab 1: Top 20 Siêu Cổ Phiếu Chân Sóng & Bảng Xếp Hạng Định Lượng Cơ Bản (Piotroski F-Score).
+  - Tab 2: Kiểm Định Lịch Sử T+2.5 Walk-Forward (Biểu đồ đường cong vốn SVG siêu nét Strategy vs VN-Index Benchmark, Bảng so sánh In-Sample vs Out-of-Sample, Nhật ký giao dịch thực chiến).
+  - Tab 3: Bảng Định Lượng Ngân Hàng Thương Mại CAMEL & Basel II/III.
+  - Tab 4: Báo Cáo Kết Quả Kinh Doanh BCTC & Tin Tức Doanh Nghiệp Spotlight.
+  - Hệ thống Tab Navigation tương tác chuyển đổi mượt mà không cần tải lại trang.
+
+### 2.8. Tầng Tự Động Hóa & Đám Mây CI/CD (`.github/workflows/`)
 - **`ci.yml`:** Quality Gate tự động chạy trên mọi Pull Request và Push to `main`, kiểm thử 100% pytest và kiểm tra giới hạn dung lượng Zero-Waste (< 15MB).
 - **`scanner_and_pages.yml`:** Quy trình tự động hóa tác chiến 24/7 trên GitHub Actions:
   - Tự động kích hoạt định kỳ 30 phút/lần trong giờ giao dịch (09:15 - 11:45 và 13:15 - 15:05).

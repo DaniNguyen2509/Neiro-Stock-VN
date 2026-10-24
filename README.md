@@ -54,15 +54,16 @@ Neiro-Stock-VN/
 │   ├── fundamental_engine/       # Bộ lọc Piotroski F-score, EPS, PE/PB Banding
 │   ├── microstructure_engine/    # Volume Profile (POC/HVN/LVN), OFI, Basis VN30F1M
 │   ├── sector_engine/            # Mô hình luân chuyển ngành RRG & Độ rộng thị trường
-│   ├── risk_engine/              # Quản trị T+2.5, Rolling Position, ATR Sizing
-│   └── hud/                      # Giao diện Tactical Terminal Web Plotly (Dark Mode)
+│   ├── risk_engine/              # Quản trị T+2.5, Rolling Position, ATR Sizing, Sức chứa Quỹ
+│   ├── backtesting/              # Walk-Forward Backtesting T+2.5 (Look-ahead & PIT Defense)
+│   └── hud/                      # Giao diện Tactical Terminal Web Đa Tab (Dark Mode)
 ├── data/                         # Dữ liệu mẫu benchmark phục vụ kiểm thử
-├── exports/                      # Tệp HTML Terminal xuất bản
+├── exports/                      # Tệp HTML Terminal xuất bản (GitHub Pages)
 ├── tests/                        # Kiểm thử tự động Unit & Math verification
 ├── AGENTS.md / GEMINI.md         # Quy tắc bắt buộc gọi Skill & Zero-Waste Mandate
 ├── requirements.txt              # Thư viện Python phụ thuộc
 ├── pyproject.toml                # Cấu hình ruff & pytest
-└── README.md                     # Tài liệu giới thiệu dự án
+└── README.md                     # Hướng dẫn tổng quan & Bắt đầu nhanh
 ```
 
 ---
@@ -85,7 +86,7 @@ pip install -r requirements.txt
 
 ### 4.2. Chạy kiểm thử tự động
 ```bash
-# Chạy 100% Unit Tests xác minh tính toán toán học
+# Chạy 100% Unit Tests xác minh tính toán toán học & T+2.5 Backtest
 python -m pytest tests/ -v --tb=short
 
 # Kiểm tra quy chuẩn mã nguồn (Ruff)
@@ -106,7 +107,7 @@ python -m src.sector_engine.rrg_rotation
 # 4. Quét tự động Top 20 Siêu cổ phiếu chân sóng, BCTC 4 quý & Tin tức (Fialda VIP Expert Scanner)
 python -m src.collector.fialda_scanner --top 20 --save-report reports/latest_scan.md --generate-terminal
 
-# 5. Xuất bản Tactical Terminal Web (Dark Theme) với Top 20 Siêu Cổ Phiếu, BCTC & Tin tức
+# 5. Chạy Kiểm Định Quá Khứ Walk-Forward T+2.5 & Xuất Bản Dashboard Web Đa Tab
 python -m src.hud.terminal --output exports/index.html
 ```
 

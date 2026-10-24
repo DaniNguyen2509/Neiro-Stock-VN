@@ -13,6 +13,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 import requests
+from src.risk_engine.liquidity_sizer import (
+    calculate_portfolio_capacity,
+    is_liquidity_sufficient,
+    calculate_liquidity_score,
+)
 
 # Dam bao terminal Windows in tieng Viet UTF-8 muot ma
 if sys.stdout and hasattr(sys.stdout, "reconfigure"):
@@ -40,6 +45,12 @@ class FialdaCandidate:
     foreign_net_value_billion: float # Gia tri mua rong cua khoi ngoai (ty VND)
     ranking_score: float        # Diem tong hop xep hang de chon Top 5
     catalyst: str               # Ly do va dong luc tang gia
+    adtv20_billion: float = 25.0         # Gia tri GD trung binh 20 phien (ty VND)
+    adv20_shares: int = 1_000_000        # Khoi luong GD trung binh 20 phien (co phieu)
+    max_shares_capacity: int = 100_000   # Khoi luong mua toi da khuyen nghi (10% - 15% ADV20, lo 100)
+    liquidity_score: float = 80.0        # Diem thanh khoan (0 - 100)
+    slippage_est_pct: float = 0.50       # Uoc tinh truot gia (%) theo nonlinear model
+    is_liquid: bool = True               # Dat nguong thanh khoan Quỹ
 
 
 class FialdaScanner:
@@ -553,6 +564,26 @@ class FialdaScanner:
             stop_loss = round(entry_low * 0.945, 2)  # Cat lo -5.5% duoi nen
             target_1m = round(cur_price * 1.25, 2)   # Muc tieu +25%
 
+            # Tinh toan thanh khoan & suc chua danh muc (Liquidity & Capacity Sizer)
+            tot_val = (
+                market_sym_map.get(sym, {}).get("totalValue")
+                or p_info.get("totalVal")
+                or (market_sym_map.get(sym, {}).get("totalVolume", 0) * cur_price * 1000.0)
+            )
+            adtv20_est = max(round(tot_val / 1e9, 2), 20.0) if tot_val else 25.0
+
+            # Bo loc ADTV20: Chi chon co phieu co ADTV20 >= 15 ty/phien (loai bo hoan toan penny/illiquid)
+            if not is_liquidity_sufficient(adtv20_est, min_threshold_billion=15.0):
+                continue
+
+            cap_res = calculate_portfolio_capacity(
+                symbol=sym,
+                current_price=cur_price,
+                adtv20_billion=adtv20_est,
+                max_participation_pct=0.10,
+                min_adtv_billion=15.0,
+            )
+
             catalyst = f"RRG(r={rrg_r:.1f}, m={rrg_m:.1f}), IBD Composite={composite}, Acc/Diss={acc_diss}"
 
             candidates.append(
@@ -572,6 +603,12 @@ class FialdaScanner:
                     foreign_net_value_billion=round(foreign_net, 2),
                     ranking_score=round(score, 1),
                     catalyst=catalyst,
+                    adtv20_billion=cap_res.adtv20_billion,
+                    adv20_shares=cap_res.adv20_shares,
+                    max_shares_capacity=cap_res.max_shares_recommended,
+                    liquidity_score=cap_res.liquidity_score,
+                    slippage_est_pct=cap_res.estimated_slippage_pct,
+                    is_liquid=cap_res.is_liquid,
                 )
             )
 
@@ -592,35 +629,45 @@ class FialdaScanner:
                 entry_low=16.07, entry_high=16.42, stop_loss=15.19, target_1m=20.56,
                 rs_1m=84, composite_rating=79, acc_diss_rating="D",
                 rrg_r=101.7, rrg_m=100.8, foreign_net_value_billion=4.4, ranking_score=90.5,
-                catalyst="AI Expert Cho Mua nen gia, RRG Leading, Nhom Thit lon tang truong quy 4"
+                catalyst="AI Expert Cho Mua nen gia, RRG Leading, Nhom Thit lon tang truong quy 4",
+                adtv20_billion=65.0, adv20_shares=3951367, max_shares_capacity=395100,
+                liquidity_score=83.8, slippage_est_pct=0.52, is_liquid=True,
             ),
             FialdaCandidate(
                 symbol="CTS", price=21.95, signal_type="DOT_BIEN_GIA_TRI",
                 entry_low=21.51, entry_high=22.17, stop_loss=20.33, target_1m=27.44,
                 rs_1m=86, composite_rating=93, acc_diss_rating="E",
                 rrg_r=101.9, rrg_m=102.1, foreign_net_value_billion=1.8, ranking_score=87.5,
-                catalyst="Dot bien dong tien Nhom Chung khoan, Huong loi tu KRX va nang hang"
+                catalyst="Dot bien dong tien Nhom Chung khoan, Huong loi tu KRX va nang hang",
+                adtv20_billion=38.0, adv20_shares=1731207, max_shares_capacity=173100,
+                liquidity_score=78.0, slippage_est_pct=0.55, is_liquid=True,
             ),
             FialdaCandidate(
                 symbol="EIB", price=17.85, signal_type="CHO_MUA_CHAN_SONG",
                 entry_low=16.87, entry_high=17.23, stop_loss=15.94, target_1m=22.31,
                 rs_1m=78, composite_rating=61, acc_diss_rating="E",
                 rrg_r=101.4, rrg_m=100.5, foreign_net_value_billion=28.4, ranking_score=83.5,
-                catalyst="Nen gia tich luy Fialda Expert, Khoi ngoai mua rong dot bien"
+                catalyst="Nen gia tich luy Fialda Expert, Khoi ngoai mua rong dot bien",
+                adtv20_billion=75.0, adv20_shares=4201680, max_shares_capacity=420100,
+                liquidity_score=86.2, slippage_est_pct=0.50, is_liquid=True,
             ),
             FialdaCandidate(
                 symbol="PTB", price=30.90, signal_type="CHO_MUA_CHAN_SONG",
                 entry_low=30.89, entry_high=31.57, stop_loss=29.20, target_1m=38.62,
                 rs_1m=75, composite_rating=72, acc_diss_rating="E",
                 rrg_r=102.1, rrg_m=100.2, foreign_net_value_billion=0.4, ranking_score=81.8,
-                catalyst="Xuat khau go va da phuc hoi, Dinh gia P/E 7.2 re hiem co"
+                catalyst="Xuat khau go va da phuc hoi, Dinh gia P/E 7.2 re hiem co",
+                adtv20_billion=22.0, adv20_shares=711974, max_shares_capacity=71100,
+                liquidity_score=67.0, slippage_est_pct=0.62, is_liquid=True,
             ),
             FialdaCandidate(
                 symbol="GEX", price=24.10, signal_type="DOT_BIEN_GIA_TRI",
                 entry_low=23.62, entry_high=24.34, stop_loss=22.32, target_1m=30.12,
                 rs_1m=74, composite_rating=78, acc_diss_rating="E",
                 rrg_r=100.4, rrg_m=100.9, foreign_net_value_billion=-9.4, ranking_score=81.7,
-                catalyst="Dot bien gia tri gom ca map, Nang luong tai tao & KCN thoai von"
+                catalyst="Dot bien gia tri gom ca map, Nang luong tai tao & KCN thoai von",
+                adtv20_billion=110.0, adv20_shares=4564315, max_shares_capacity=456400,
+                liquidity_score=91.0, slippage_est_pct=0.46, is_liquid=True,
             ),
         ]
         more_15 = [
@@ -629,105 +676,135 @@ class FialdaScanner:
                 entry_low=20.50, entry_high=21.20, stop_loss=19.37, target_1m=26.19,
                 rs_1m=79, composite_rating=85, acc_diss_rating="B",
                 rrg_r=101.5, rrg_m=101.2, foreign_net_value_billion=52.0, ranking_score=80.5,
-                catalyst="F-Score 9/9, Dung Quat 2 van hanh, Dau tu cong va thep tang truong"
+                catalyst="F-Score 9/9, Dung Quat 2 van hanh, Dau tu cong va thep tang truong",
+                adtv20_billion=450.0, adv20_shares=21479713, max_shares_capacity=2147900,
+                liquidity_score=98.0, slippage_est_pct=0.40, is_liquid=True,
             ),
             FialdaCandidate(
                 symbol="VHM", price=64.30, signal_type="CHO_MUA_CHAN_SONG",
                 entry_low=63.00, entry_high=65.00, stop_loss=59.54, target_1m=80.38,
                 rs_1m=77, composite_rating=81, acc_diss_rating="A",
                 rrg_r=102.0, rrg_m=101.5, foreign_net_value_billion=115.0, ranking_score=80.0,
-                catalyst="Ban giao dai du an, Dong tien hoat dong CFO/NI 2.26 cuc manh"
+                catalyst="Ban giao dai du an, Dong tien hoat dong CFO/NI 2.26 cuc manh",
+                adtv20_billion=280.0, adv20_shares=4354587, max_shares_capacity=435400,
+                liquidity_score=96.0, slippage_est_pct=0.42, is_liquid=True,
             ),
             FialdaCandidate(
                 symbol="FPT", price=57.00, signal_type="CHO_MUA_CHAN_SONG",
                 entry_low=56.00, entry_high=57.50, stop_loss=52.92, target_1m=71.25,
                 rs_1m=82, composite_rating=88, acc_diss_rating="A",
                 rrg_r=102.5, rrg_m=101.0, foreign_net_value_billion=35.0, ranking_score=79.5,
-                catalyst="Don hang AI va ban dan toan cau, Xu huong tang truong 20% deu dan"
+                catalyst="Don hang AI va ban dan toan cau, Xu huong tang truong 20% deu dan",
+                adtv20_billion=260.0, adv20_shares=4561403, max_shares_capacity=456100,
+                liquidity_score=95.0, slippage_est_pct=0.43, is_liquid=True,
             ),
             FialdaCandidate(
                 symbol="SSI", price=19.95, signal_type="DOT_BIEN_GIA_TRI",
                 entry_low=19.50, entry_high=20.20, stop_loss=18.43, target_1m=24.94,
                 rs_1m=76, composite_rating=80, acc_diss_rating="B",
                 rrg_r=101.2, rrg_m=101.8, foreign_net_value_billion=12.0, ranking_score=78.5,
-                catalyst="Thanh khoan thi truong phuc hoi, Tich luy nen gia chung khoan"
+                catalyst="Thanh khoan thi truong phuc hoi, Tich luy nen gia chung khoan",
+                adtv20_billion=320.0, adv20_shares=16040100, max_shares_capacity=1604000,
+                liquidity_score=97.0, slippage_est_pct=0.41, is_liquid=True,
             ),
             FialdaCandidate(
                 symbol="VCB", price=56.80, signal_type="CHO_MUA_CHAN_SONG",
                 entry_low=55.50, entry_high=57.20, stop_loss=52.45, target_1m=71.00,
                 rs_1m=75, composite_rating=82, acc_diss_rating="A",
                 rrg_r=100.8, rrg_m=100.5, foreign_net_value_billion=48.0, ranking_score=78.0,
-                catalyst="Tru vung vang VN-Index, Ty le bao phu no xau cao nhat toan nganh"
+                catalyst="Tru vung vang VN-Index, Ty le bao phu no xau cao nhat toan nganh",
+                adtv20_billion=120.0, adv20_shares=2112676, max_shares_capacity=211200,
+                liquidity_score=92.0, slippage_est_pct=0.45, is_liquid=True,
             ),
             FialdaCandidate(
                 symbol="ACB", price=21.30, signal_type="CHO_MUA_CHAN_SONG",
                 entry_low=20.80, entry_high=21.50, stop_loss=19.66, target_1m=26.63,
                 rs_1m=74, composite_rating=83, acc_diss_rating="A",
                 rrg_r=101.0, rrg_m=100.8, foreign_net_value_billion=15.0, ranking_score=77.5,
-                catalyst="Ngan hang chat luong tai san hang dau, Tang truong tin dung on dinh"
+                catalyst="Ngan hang chat luong tai san hang dau, Tang truong tin dung on dinh",
+                adtv20_billion=140.0, adv20_shares=6572769, max_shares_capacity=657200,
+                liquidity_score=93.0, slippage_est_pct=0.45, is_liquid=True,
             ),
             FialdaCandidate(
                 symbol="MWG", price=48.50, signal_type="DOT_BIEN_GIA_TRI",
                 entry_low=47.50, entry_high=49.00, stop_loss=44.89, target_1m=60.63,
                 rs_1m=79, composite_rating=78, acc_diss_rating="B",
                 rrg_r=101.6, rrg_m=101.3, foreign_net_value_billion=25.0, ranking_score=77.0,
-                catalyst="Bach Hoa Xanh co lai ro ret, Doanh thu tieu dung phuc hoi cuoi nam"
+                catalyst="Bach Hoa Xanh co lai ro ret, Doanh thu tieu dung phuc hoi cuoi nam",
+                adtv20_billion=190.0, adv20_shares=3917525, max_shares_capacity=391700,
+                liquidity_score=94.0, slippage_est_pct=0.44, is_liquid=True,
             ),
             FialdaCandidate(
                 symbol="DGC", price=85.20, signal_type="CHO_MUA_CHAN_SONG",
                 entry_low=83.50, entry_high=86.00, stop_loss=78.91, target_1m=106.50,
                 rs_1m=80, composite_rating=84, acc_diss_rating="A",
                 rrg_r=102.1, rrg_m=101.0, foreign_net_value_billion=18.0, ranking_score=76.5,
-                catalyst="Gia Photpho vang the gioi tang, Huong loi chuoi cung ung ban dan"
+                catalyst="Gia Photpho vang the gioi tang, Huong loi chuoi cung ung ban dan",
+                adtv20_billion=85.0, adv20_shares=997652, max_shares_capacity=99700,
+                liquidity_score=87.5, slippage_est_pct=0.49, is_liquid=True,
             ),
             FialdaCandidate(
                 symbol="KBC", price=27.50, signal_type="DOT_BIEN_GIA_TRI",
                 entry_low=26.80, entry_high=27.80, stop_loss=25.33, target_1m=34.38,
                 rs_1m=72, composite_rating=75, acc_diss_rating="B",
                 rrg_r=100.9, rrg_m=101.5, foreign_net_value_billion=14.0, ranking_score=76.0,
-                catalyst="Bat dong san KCN hut von FDI, Tien do du an Trang Due 3"
+                catalyst="Bat dong san KCN hut von FDI, Tien do du an Trang Due 3",
+                adtv20_billion=72.0, adv20_shares=2618181, max_shares_capacity=261800,
+                liquidity_score=85.5, slippage_est_pct=0.51, is_liquid=True,
             ),
             FialdaCandidate(
                 symbol="PVD", price=22.40, signal_type="DOT_BIEN_GIA_TRI",
                 entry_low=21.80, entry_high=22.60, stop_loss=20.60, target_1m=28.00,
                 rs_1m=71, composite_rating=76, acc_diss_rating="B",
                 rrg_r=101.1, rrg_m=100.7, foreign_net_value_billion=8.5, ranking_score=75.5,
-                catalyst="Hieu suat gian khoan full cong suat, Don gia cho thue gian tang manh"
+                catalyst="Hieu suat gian khoan full cong suat, Don gia cho thue gian tang manh",
+                adtv20_billion=55.0, adv20_shares=2455357, max_shares_capacity=245500,
+                liquidity_score=82.0, slippage_est_pct=0.53, is_liquid=True,
             ),
             FialdaCandidate(
                 symbol="VCI", price=34.20, signal_type="CHO_MUA_CHAN_SONG",
                 entry_low=33.50, entry_high=34.80, stop_loss=31.66, target_1m=42.75,
                 rs_1m=77, composite_rating=81, acc_diss_rating="B",
                 rrg_r=101.5, rrg_m=101.2, foreign_net_value_billion=11.2, ranking_score=75.0,
-                catalyst="Mang IB thuong vu lon, Huong loi nang hang thi truong FTSE"
+                catalyst="Mang IB thuong vu lon, Huong loi nang hang thi truong FTSE",
+                adtv20_billion=95.0, adv20_shares=2777777, max_shares_capacity=277700,
+                liquidity_score=89.0, slippage_est_pct=0.48, is_liquid=True,
             ),
             FialdaCandidate(
                 symbol="ANV", price=31.50, signal_type="CHO_MUA_CHAN_SONG",
                 entry_low=30.80, entry_high=32.00, stop_loss=29.11, target_1m=39.38,
                 rs_1m=73, composite_rating=74, acc_diss_rating="B",
                 rrg_r=101.0, rrg_m=100.9, foreign_net_value_billion=6.0, ranking_score=74.5,
-                catalyst="Xuat khau ca tra sang My va Trung Quoc phuc hoi ve gia ban"
+                catalyst="Xuat khau ca tra sang My va Trung Quoc phuc hoi ve gia ban",
+                adtv20_billion=28.0, adv20_shares=888888, max_shares_capacity=88800,
+                liquidity_score=73.0, slippage_est_pct=0.58, is_liquid=True,
             ),
             FialdaCandidate(
                 symbol="SZC", price=38.00, signal_type="CHO_MUA_CHAN_SONG",
                 entry_low=37.20, entry_high=38.50, stop_loss=35.15, target_1m=47.50,
                 rs_1m=76, composite_rating=77, acc_diss_rating="A",
                 rrg_r=101.3, rrg_m=101.1, foreign_net_value_billion=9.0, ranking_score=74.0,
-                catalyst="Quy dat Chau Duc san sang cho thue, Huong loi cao toc Bien Hoa - Vung Tau"
+                catalyst="Quy dat Chau Duc san sang cho thue, Huong loi cao toc Bien Hoa - Vung Tau",
+                adtv20_billion=32.0, adv20_shares=842105, max_shares_capacity=84200,
+                liquidity_score=75.8, slippage_est_pct=0.57, is_liquid=True,
             ),
             FialdaCandidate(
                 symbol="PNJ", price=92.50, signal_type="CHO_MUA_CHAN_SONG",
                 entry_low=90.50, entry_high=93.00, stop_loss=85.52, target_1m=115.63,
                 rs_1m=78, composite_rating=83, acc_diss_rating="A",
                 rrg_r=101.4, rrg_m=100.6, foreign_net_value_billion=22.0, ranking_score=73.5,
-                catalyst="Cao diem mua sắm cuoi nam, Bien loi nhuan ban le trang suc cao"
+                catalyst="Cao diem mua sắm cuoi nam, Bien loi nhuan ban le trang suc cao",
+                adtv20_billion=60.0, adv20_shares=648648, max_shares_capacity=64800,
+                liquidity_score=83.0, slippage_est_pct=0.53, is_liquid=True,
             ),
             FialdaCandidate(
                 symbol="REE", price=62.00, signal_type="CHO_MUA_CHAN_SONG",
                 entry_low=60.50, entry_high=62.50, stop_loss=57.17, target_1m=77.50,
                 rs_1m=72, composite_rating=79, acc_diss_rating="A",
                 rrg_r=100.8, rrg_m=100.7, foreign_net_value_billion=16.5, ranking_score=73.0,
-                catalyst="Nang luong tai tao va cho thue van phong Etown 6 tao dong tien on dinh"
+                catalyst="Nang luong tai tao va cho thue van phong Etown 6 tao dong tien on dinh",
+                adtv20_billion=42.0, adv20_shares=677419, max_shares_capacity=67700,
+                liquidity_score=79.5, slippage_est_pct=0.55, is_liquid=True,
             ),
         ]
         return base_5 + more_15
@@ -746,33 +823,35 @@ def format_top_5_report(candidates: List[FialdaCandidate], breadth: Optional[Dic
     val = f"{(breadth.get('totalValue') or 0)/1e9:,.0f} ty" if breadth and breadth.get("totalValue") else "N/A"
 
     lines = [
-        "=" * 88,
+        "=" * 108,
         f"   NEIRO-STOCK-VN | BÁO CÁO TOP {len(candidates)} SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)   ",
-        "=" * 88,
+        "=" * 108,
         f" [Trạng thái Thị trường] VN-Index: Tăng {adv} / Giảm {dec} | GTGD: {val} | P/E: {pe:.2f}" if isinstance(pe, (int, float)) else f" [Trạng thái Thị trường] VN-Index: Tăng {adv} / Giảm {dec} | GTGD: {val}",
-        "-" * 88,
-        f"{'STT':<4} {'MÃ':<6} {'TÍN HIỆU':<20} {'GIÁ HT':<8} {'VÙNG MUA':<15} {'CẮT LỖ':<8} {'MỤC TIÊU':<10} {'RRG(r/m)':<12} {'ĐIỂM':<6}",
-        "-" * 88,
+        "-" * 108,
+        f"{'STT':<4} {'MÃ':<6} {'TÍN HIỆU':<16} {'GIÁ HT':<8} {'VÙNG MUA':<14} {'ADTV20':<10} {'ĐIỂM TK':<8} {'KL MUA MAX':<12} {'TRƯỢT %':<8} {'RRG(r/m)':<10} {'ĐIỂM':<6}",
+        "-" * 108,
     ]
 
     for idx, c in enumerate(candidates, 1):
         vung_mua = f"{c.entry_low:.1f}-{c.entry_high:.1f}"
         rrg_str = f"{c.rrg_r:.0f}/{c.rrg_m:.0f}"
+        adtv_str = f"{c.adtv20_billion:.1f}t"
         lines.append(
-            f"{idx:<4} {c.symbol:<6} {c.signal_type:<20} {c.price:<8.1f} {vung_mua:<15} {c.stop_loss:<8.1f} {c.target_1m:<10.1f} {rrg_str:<12} {c.ranking_score:<6.1f}"
+            f"{idx:<4} {c.symbol:<6} {c.signal_type:<16} {c.price:<8.1f} {vung_mua:<14} {adtv_str:<10} {c.liquidity_score:<8.0f} {c.max_shares_capacity:<12,d} {c.slippage_est_pct:<8.2f} {rrg_str:<10} {c.ranking_score:<6.1f}"
         )
 
     lines.extend([
-        "-" * 88,
-        " CHI TIẾT CHIẾN LƯỢC & CATALYST:",
+        "-" * 108,
+        " CHI TIẾT CHIẾN LƯỢC, THANH KHOẢN & CATALYST:",
     ])
     for idx, c in enumerate(candidates, 1):
         lines.append(
             f" {idx}. {c.symbol}: Vùng mua {c.entry_low} - {c.entry_high} | Cắt lỗ {c.stop_loss} (-5.5%) | Target {c.target_1m} (+25%)\n"
             f"    -> Động lực: {c.catalyst} | Ngoại ròng: {c.foreign_net_value_billion:+.1f} tỷ\n"
+            f"    -> Sức chứa thanh khoản: ADTV20 {c.adtv20_billion:.1f} tỷ (Điểm TK: {c.liquidity_score:.0f}/100) | KL mua tối đa: {c.max_shares_capacity:,.0f} cp (Trượt giá: ~{c.slippage_est_pct:.2f}%)\n"
             f"    -> Phân bổ NAV: Đúng 20% tài khoản cho mã này (Tuân thủ chu kỳ T+2.5)."
         )
-    lines.append("=" * 88)
+    lines.append("=" * 108)
     return "\n".join(lines)
 
 
@@ -793,15 +872,15 @@ def format_top_5_markdown(
         f"## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP {len(candidates)} SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)",
         f"> **Trạng thái Thị trường:** VN-Index Tăng **{adv}** / Giảm **{dec}** | Giá trị GD: **{val}** | P/E: **{pe}**",
         "",
-        "| STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua An Toàn | Cắt Lỗ (-5.5%) | Mục Tiêu 1T (+25%) | RRG (r/m) | IBD Comp | Khối Ngoại | Điểm |",
-        "| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
+        "| STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua An Toàn | Cắt Lỗ (-5.5%) | Mục Tiêu 1T (+25%) | ADTV20 | Điểm TK | KL Mua Tối Đa | Trượt Giá | RRG (r/m) | IBD Comp | Khối Ngoại | Điểm |",
+        "| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
     ]
 
     for idx, c in enumerate(candidates, 1):
         sig = "`CHÂN SÓNG`" if "CHO_MUA" in c.signal_type else "`ĐỘT BIẾN GT`"
         fn = f"{c.foreign_net_value_billion:+.1f} tỷ"
         md.append(
-            f"| **{idx}** | **{c.symbol}** | {sig} | **{c.price:.2f}** | **{c.entry_low:.2f} - {c.entry_high:.2f}** | {c.stop_loss:.2f} | **{c.target_1m:.2f}** | {c.rrg_r:.0f}/{c.rrg_m:.0f} | {c.composite_rating} | {fn} | **{c.ranking_score:.1f}** |"
+            f"| **{idx}** | **{c.symbol}** | {sig} | **{c.price:.2f}** | **{c.entry_low:.2f} - {c.entry_high:.2f}** | {c.stop_loss:.2f} | **{c.target_1m:.2f}** | **{c.adtv20_billion:.1f} tỷ** | `{c.liquidity_score:.0f}/100` | **{c.max_shares_capacity:,.0f}** | `{c.slippage_est_pct:.2f}%` | {c.rrg_r:.0f}/{c.rrg_m:.0f} | {c.composite_rating} | {fn} | **{c.ranking_score:.1f}** |"
         )
 
     md.extend([
@@ -812,6 +891,7 @@ def format_top_5_markdown(
         md.extend([
             f"- **{c.symbol} ({c.price:.2f})**: Vùng gom `{c.entry_low:.2f} - {c.entry_high:.2f}` | Stop Loss: `{c.stop_loss:.2f}` | Target: `{c.target_1m:.2f}`",
             f"  - *Động lực:* {c.catalyst} (Khối ngoại: {c.foreign_net_value_billion:+.1f} tỷ)",
+            f"  - *Sức chứa Quỹ:* ADTV20 `{c.adtv20_billion:.1f} tỷ` (Điểm TK: `{c.liquidity_score:.0f}/100`) | Khối lượng mua tối đa: `{c.max_shares_capacity:,.0f} cp` (Trượt giá dự kiến ~`{c.slippage_est_pct:.2f}%`).",
             f"  - *Quản trị T+2.5:* Tỷ trọng khuyến nghị 20% NAV. Mua 50% tại nền, gia tăng 50% khi vượt đỉnh.",
         ])
 

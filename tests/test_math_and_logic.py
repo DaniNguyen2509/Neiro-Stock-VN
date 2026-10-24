@@ -27,6 +27,13 @@ from src.sector_engine.rrg_rotation import compute_rrg_quadrant, calculate_rrg_s
 # 4. Risk Engine
 from src.risk_engine.position_sizer import calculate_atr_position_size
 from src.risk_engine.t25_manager import RollingInventory, can_safely_scale_up
+from src.risk_engine.liquidity_sizer import (
+    calculate_portfolio_capacity,
+    estimate_nonlinear_slippage,
+    calculate_adtv20,
+    calculate_liquidity_score,
+    is_liquidity_sufficient,
+)
 
 # 5. Fialda Scanner Top 20
 from src.collector.fialda_scanner import FialdaScanner, FialdaCandidate
@@ -284,6 +291,29 @@ def test_rolling_inventory_t25_gate():
     assert can_safely_scale_up(inv_unsafe, 1000) is False
 
 
+def test_liquidity_capacity_math_invariants():
+    """Kiem tra bat bien toan hoc cua Bo loc Thanh khoan & Mo hinh Suc chua Quy."""
+    # Bat bien 1: Lot 100 luon duoc thoa man tren moi muc gia
+    for price in [5.2, 16.45, 21.95, 57.0, 92.5]:
+        cap = calculate_portfolio_capacity("TEST", current_price=price, adtv20_billion=50.0, max_participation_pct=0.10)
+        assert cap.max_shares_recommended % 100 == 0
+        assert cap.liquidation_days_est == 1.0
+
+    # Bat bien 2: Ham truot gia phi tuyen la ham lom (concave) theo Luat can bac 2 (alpha = 0.6 < 1)
+    adv = 1_000_000
+    s1, _, _ = estimate_nonlinear_slippage(50_000, adv)   # 5%
+    s2, _, _ = estimate_nonlinear_slippage(100_000, adv)  # 10%
+    s3, _, _ = estimate_nonlinear_slippage(150_000, adv)  # 15%
+    delta1 = s2 - s1
+    delta2 = s3 - s2
+    # Do loi so lenh: toc do tang truot gia cham lai theo quy mo (alpha = 0.6)
+    assert delta1 > delta2 > 0
+
+    # Bat bien 3: Diem thanh khoan luon bi chan tren 100 va chan duoi 0
+    assert 0.0 <= calculate_liquidity_score(10.0) <= 100.0
+    assert 0.0 <= calculate_liquidity_score(500.0) <= 100.0
+
+
 # ============================================================================
 # TIER 7: KIỂM THỬ XẾP HẠNG VÀ BỘ LỌC TOP 20 SIÊU CỔ PHIẾU
 # ============================================================================
@@ -305,6 +335,11 @@ def test_fallback_mock_top_20_invariants():
         assert c.entry_low <= c.entry_high
         # Ranking score phai duong
         assert c.ranking_score > 0
+        # Bat bien thanh khoan quy: ADTV20 phai >= 15 ty, KL mua chia het cho 100
+        assert c.adtv20_billion >= 15.0
+        assert c.max_shares_capacity % 100 == 0
+        assert 0.0 <= c.liquidity_score <= 100.0
+        assert c.slippage_est_pct > 0.0
 
 
 def test_scan_top_rockets_top_n_parameter():
