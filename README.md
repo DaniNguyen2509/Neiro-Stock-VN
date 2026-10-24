@@ -71,6 +71,10 @@ Neiro-Stock-VN/
 
 ### 4.1. Cài đặt môi trường
 ```bash
+# Clone repository từ GitHub
+git clone https://github.com/DaniNguyen2509/Neiro-Stock-VN.git
+cd Neiro-Stock-VN
+
 # Khởi tạo môi trường ảo Python
 python -m venv .venv
 .venv\Scripts\activate
