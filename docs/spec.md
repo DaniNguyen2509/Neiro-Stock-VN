@@ -71,6 +71,9 @@ python -m src.hud.terminal --output exports/vn_stock_terminal.html
 
 ```
 Neiro-Stock-VN/
+├── .github/workflows/            # CI/CD & Tự động hóa tác chiến 24/7 trên Cloud
+│   ├── ci.yml                    # Quality Gate tự động: Pytest & Zero-Waste Check
+│   └── scanner_and_pages.yml     # Quét Top 5 tự động (09:15, 11:45, 15:05) & Deploy GitHub Pages
 ├── .agents/skills/               # 24 bộ kỹ năng chuẩn mực cho AI Agents
 ├── docs/
 │   ├── spec.md                   # Bản đặc tả kỹ thuật hệ thống Quantamental VN
@@ -107,7 +110,8 @@ Neiro-Stock-VN/
 │       ├── __init__.py
 │       └── terminal.py           # Sinh Plotly Dashboard tương tác đa chiều & Top 5 Super Stocks
 ├── data/                         # Dữ liệu chuẩn hóa mẫu (benchmark data)
-├── exports/                      # File HTML Terminal và báo cáo định lượng xuất bản
+├── exports/                      # File HTML Terminal và báo cáo định lượng xuất bản (GitHub Pages)
+├── reports/                      # Báo cáo kết quả quét Top 5 mới nhất (latest_scan.md)
 ├── tests/                        # 100% Automated Unit Tests cho từng công thức toán
 ├── AGENTS.md / GEMINI.md         # Quy tắc kích hoạt Skill & Luật bất di bất dịch
 ├── requirements.txt              # Danh sách thư viện Python phụ thuộc

@@ -1,0 +1,81 @@
+name: Fialda VIP Expert Scanner & GitHub Pages Deploy
+
+on:
+  schedule:
+    # Giờ Việt Nam (UTC+7):
+    # 09:15 AM VN -> 02:15 UTC (Sau phiên ATO mở cửa)
+    - cron: '15 2 * * 1-5'
+    # 11:45 AM VN -> 04:45 UTC (Chốt phiên sáng)
+    - cron: '45 4 * * 1-5'
+    # 15:05 PM VN -> 08:05 UTC (Chốt phiên ATC chiều)
+    - cron: '5 8 * * 1-5'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - '.github/workflows/**'
+      - 'requirements.txt'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
+jobs:
+  scan-and-deploy:
+    name: Scan Top 5 & Deploy Dashboard
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Fialda VIP Expert Scanner & Generate Terminal HTML
+        env:
+          FIALDA_USERNAME: ${{ secrets.FIALDA_USERNAME }}
+          FIALDA_PASSWORD: ${{ secrets.FIALDA_PASSWORD }}
+        run: |
+          mkdir -p exports reports
+          python -m src.collector.fialda_scanner --save-report reports/latest_scan.md --generate-terminal
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload GitHub Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'exports/'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Commit Latest Scan Report
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add reports/latest_scan.md || true
+          if git diff --staged --quiet; then
+            echo "No changes in latest_scan.md to commit."
+          else
+            git commit -m "chore(report): auto-update Top 5 Super Stocks scan [skip ci]"
+            git push origin main
+          fi

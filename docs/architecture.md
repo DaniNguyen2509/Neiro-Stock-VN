@@ -80,10 +80,20 @@ flowchart TD
 
 ### 2.6. Tầng Giao Diện Tác Chiến (`src/hud/`)
 - **`terminal.py`:** Sinh mã nguồn HTML Plotly tương tác hoàn chỉnh, hỗ trợ chế độ Dark Mode hiện đại, giao diện trực quan theo tiêu chuẩn Bloomberg/TradingView, bao gồm:
-  - Panel 1: Biểu đồ nến kết hợp Volume Profile ngang, đánh dấu rõ POC, VAH, VAL, HVN, LVN.
-  - Panel 2: Biểu đồ RRG luân chuyển dòng tiền ngành 4 pha.
-  - Panel 3: Bảng xếp hạng Quantamental Screener (Mã, F-Score, PE Percentile, OFI, Khối ngoại, Khuyến nghị).
-  - Panel 4: Thanh trạng thái Basis VN30F1M và Khối ngoại / Tự doanh trong phiên.
+  - Bảng Top 5 Siêu Cổ Phiếu Chân Sóng (Fialda VIP Expert & Order Flow).
+  - Bảng xếp hạng Quantamental Screener (Mã, F-Score, PE Percentile, OFI, Khối ngoại, Khuyến nghị).
+  - Thanh trạng thái Basis VN30F1M và Khối ngoại / Tự doanh trong phiên.
+  - Tối ưu hóa hiển thị responsive (`viewport`, `table-container` trượt ngang) cho thiết bị di động (iOS / Android).
+
+### 2.7. Tầng Tự Động Hóa & Đám Mây CI/CD (`.github/workflows/`)
+- **`ci.yml`:** Quality Gate tự động chạy trên mọi Pull Request và Push to `main`, kiểm thử 100% pytest và kiểm tra giới hạn dung lượng Zero-Waste (< 15MB).
+- **`scanner_and_pages.yml`:** Quy trình tự động hóa tác chiến 24/7 trên GitHub Actions:
+  - Tự động kích hoạt vào 3 mốc thời gian giao dịch chủ chốt (09:15 ATO, 11:45 Hết phiên sáng, 15:05 ATC chiều).
+  - Hỗ trợ `workflow_dispatch` cho phép kích hoạt thủ công từ điện thoại bất kỳ lúc nào.
+  - Đăng nhập Fialda VIP qua GitHub Secrets, quét Top 5 và sinh giao diện HTML.
+  - Xuất bản bảng kết quả tức thì vào **GitHub Step Summary** trên ứng dụng di động.
+  - Tự động deploy dashboard lên **GitHub Pages** (`exports/index.html`) để xem trực tuyến mọi lúc mọi nơi.
+
 
 ---
 

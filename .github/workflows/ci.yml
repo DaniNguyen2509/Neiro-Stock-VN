@@ -1,0 +1,39 @@
+name: CI Quality Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Run Unit Tests & Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Test Suite (Pytest)
+        run: |
+          python -m pytest tests/ -v --tb=short
+
+      - name: Verify Project Size (< 15MB Zero-Waste)
+        run: |
+          SIZE_MB=$(du -sm . | cut -f1)
+          echo "Total workspace size: ${SIZE_MB}MB"
+          if [ "$SIZE_MB" -gt 15 ]; then
+            echo "Error: Repository exceeds 15MB limit!"
+            exit 1
+          fi

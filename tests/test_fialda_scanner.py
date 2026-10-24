@@ -88,3 +88,21 @@ def test_fialda_scanner_ranking_logic():
         dbc_item = next(x for x in result if x.symbol == "DBC")
         assert dbc_item.signal_type == "CHO_MUA_CHAN_SONG"
         assert dbc_item.ranking_score > 85.0
+
+
+def test_format_top_5_markdown():
+    """Kiem tra ham format_top_5_markdown sinh chuan GitHub Flavored Markdown."""
+    from src.collector.fialda_scanner import format_top_5_markdown
+    top5 = FialdaScanner._fallback_mock_top_5()
+    breadth = {
+        "advances": 144,
+        "declines": 156,
+        "pe": 12.44,
+        "totalValue": 16942000000000.0,
+    }
+    md = format_top_5_markdown(top5, breadth)
+    assert "## 🚀 NEIRO-STOCK-VN" in md
+    assert "| STT | Mã CP | Tín Hiệu AI" in md
+    assert "**DBC**" in md
+    assert "16,942 tỷ VND" in md
+

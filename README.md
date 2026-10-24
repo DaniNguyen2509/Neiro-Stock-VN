@@ -110,7 +110,7 @@ python -m src.collector.fialda_scanner
 python -m src.hud.terminal --output exports/vn_stock_terminal.html
 ```
 
-### 4.4. Cấu hình Tài khoản VIP Fialda (Tùy chọn)
+### 4.4. Cấu hình Tài khoản VIP Fialda (Tùy chọn cục bộ)
 Tạo file `.env` từ file mẫu `.env.example`:
 ```bash
 cp .env.example .env
@@ -121,6 +121,24 @@ FIALDA_USERNAME=your_vip_email@example.com
 FIALDA_PASSWORD=your_password
 ```
 *Lưu ý:* File `.env` được bảo vệ nghiêm ngặt trong `.gitignore` và không bao giờ được commit lên Git. Hệ thống tự động fallback sang bộ dữ liệu mẫu benchmark nếu không có tài khoản.
+
+### 4.5. Tự Động 100% Trên GitHub (Xem Mọi Lúc Mọi Nơi 24/7)
+Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động hoàn toàn:
+- **Lịch trình quét tự động trong ngày (Giờ Việt Nam - Thứ 2 đến Thứ 6):**
+  - **09:15 AM:** Quét sau phiên mở cửa ATO.
+  - **11:45 AM:** Quét chốt phiên giao dịch buổi sáng.
+  - **15:05 PM:** Quét chốt dữ liệu phiên ATC và toàn bộ biến động trong ngày.
+- **Kích hoạt thủ công bất kỳ lúc nào:** Vào tab **Actions** trên GitHub (trên máy tính hoặc ứng dụng di động GitHub Mobile) -> Chọn workflow **Fialda VIP Expert Scanner & GitHub Pages Deploy** -> Bấm **Run workflow**.
+- **Địa chỉ truy cập Dashboard trực tiếp trên Mobile/Web:**
+  - **GitHub Pages:** `https://daninguyen2509.github.io/Neiro-Stock-VN/` (Giao diện Dark Mode tương tác mượt mà trên iPhone/Android).
+  - **GitHub Mobile App:** Mở lượt chạy Action bất kỳ, bảng xếp hạng Top 5 hiển thị rực rỡ ngay trong tab **Summary**.
+- **Cấu hình GitHub Secrets:**
+  Vào repository: **Settings** -> **Secrets and variables** -> **Actions** -> Thêm 2 Secrets:
+  - `FIALDA_USERNAME`: Email tài khoản Fialda VIP.
+  - `FIALDA_PASSWORD`: Mật khẩu tài khoản Fialda VIP.
+- **Kích hoạt GitHub Pages:**
+  Vào **Settings** -> **Pages** -> Tại mục **Build and deployment**, chọn **Source: GitHub Actions**.
+
 
 
 ---

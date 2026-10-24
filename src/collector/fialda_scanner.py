@@ -349,9 +349,84 @@ def format_top_5_report(candidates: List[FialdaCandidate], breadth: Optional[Dic
     return "\n".join(lines)
 
 
+def format_top_5_markdown(candidates: List[FialdaCandidate], breadth: Optional[Dict[str, Any]] = None) -> str:
+    """Xuat ban bao cao Top 5 dinh dang GitHub Markdown cho GitHub Actions Summary / Web."""
+    adv = breadth.get("advances", "N/A") if breadth else "N/A"
+    dec = breadth.get("declines", "N/A") if breadth else "N/A"
+    pe = f"{breadth.get('pe'):.2f}" if breadth and isinstance(breadth.get("pe"), (int, float)) else "N/A"
+    val = f"{(breadth.get('totalValue') or 0)/1e9:,.0f} tỷ VND" if breadth and breadth.get("totalValue") else "N/A"
+
+    md = [
+        "## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 5 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)",
+        f"> **Trạng thái Thị trường:** VN-Index Tăng **{adv}** / Giảm **{dec}** | Giá trị GD: **{val}** | P/E: **{pe}**",
+        "",
+        "| STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua An Toàn | Cắt Lỗ (-5.5%) | Mục Tiêu 1T (+25%) | RRG (r/m) | IBD Comp | Khối Ngoại | Điểm |",
+        "| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
+    ]
+
+    for idx, c in enumerate(candidates, 1):
+        sig = "`CHÂN SÓNG`" if "CHO_MUA" in c.signal_type else "`ĐỘT BIẾN GT`"
+        fn = f"{c.foreign_net_value_billion:+.1f} tỷ"
+        md.append(
+            f"| **{idx}** | **{c.symbol}** | {sig} | **{c.price:.1f}** | **{c.entry_low:.1f} - {c.entry_high:.1f}** | {c.stop_loss:.1f} | **{c.target_1m:.1f}** | {c.rrg_r:.0f}/{c.rrg_m:.0f} | {c.composite_rating} | {fn} | **{c.ranking_score:.1f}** |"
+        )
+
+    md.extend([
+        "",
+        "### 🎯 Kế Hoạch Tác Chiến & Catalysts:",
+    ])
+    for idx, c in enumerate(candidates, 1):
+        md.extend([
+            f"- **{c.symbol} ({c.price:.1f})**: Vùng gom `{c.entry_low:.1f} - {c.entry_high:.1f}` | Stop Loss: `{c.stop_loss:.1f}` | Target: `{c.target_1m:.1f}`",
+            f"  - *Động lực:* {c.catalyst} (Khối ngoại: {c.foreign_net_value_billion:+.1f} tỷ)",
+            f"  - *Quản trị T+2.5:* Tỷ trọng khuyến nghị 20% NAV. Mua 50% tại nền, gia tăng 50% khi vượt đỉnh.",
+        ])
+
+    md.extend([
+        "",
+        "---",
+        "*Báo cáo được tạo tự động bởi Neiro-Stock-VN Fialda VIP Expert Harvester trên GitHub Actions.*"
+    ])
+    return "\n".join(md)
+
+
 if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="Chay Fialda VIP Expert Scanner")
+    parser.add_argument("--save-report", default="", help="Duong dan luu file Markdown report")
+    parser.add_argument("--generate-terminal", action="store_true", help="Tu dong sinh HTML Terminal")
+    args = parser.parse_args()
+
     scanner = FialdaScanner()
     top5 = scanner.scan_top_5_rockets()
     breadth_info = scanner.get_market_breadth() if scanner.token else None
+
+    # In ra terminal
     report_text = format_top_5_report(top5, breadth_info)
     print(report_text)
+
+    # Ghi vao GITHUB_STEP_SUMMARY neu dang chay trong GitHub Actions
+    md_report = format_top_5_markdown(top5, breadth_info)
+    summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary_path:
+        try:
+            with open(summary_path, "a", encoding="utf-8") as f:
+                f.write("\n" + md_report + "\n")
+        except Exception as e:
+            print(f"Warning: Khong the ghi GITHUB_STEP_SUMMARY: {e}")
+
+    # Luu file report neu duoc yeu cau
+    if args.save_report:
+        p = Path(args.save_report)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(md_report, encoding="utf-8")
+        print(f"Da luu bao cao markdown tai: {p}")
+
+    # Tu dong sinh HTML Terminal
+    if args.generate_terminal:
+        try:
+            from src.hud.terminal import generate_terminal_html
+            out_html = generate_terminal_html("exports/index.html", fialda_candidates=top5)
+            print(f"Da sinh HTML Terminal tai: {out_html}")
+        except Exception as e:
+            print(f"Warning: Khong the sinh HTML Terminal: {e}")
