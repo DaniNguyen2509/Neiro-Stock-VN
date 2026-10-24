@@ -92,6 +92,7 @@ Neiro-Stock-VN/
 │   ├── fundamental_engine/       # Lõi lọc cơ bản định lượng
 │   │   ├── __init__.py
 │   │   ├── screener.py           # Bộ lọc CANSLIM, Piotroski F-score, CFO/NI
+│   │   ├── banking_quant.py      # Mô hình CAMEL & Basel II/III (CAR, NPL, LLR, CIR, CASA, NIM, LDR)
 │   │   └── valuation.py          # Định giá phân vị lịch sử PE/PB Banding
 │   ├── microstructure_engine/    # Cấu trúc vi mô sổ lệnh & Khối lượng
 │   │   ├── __init__.py

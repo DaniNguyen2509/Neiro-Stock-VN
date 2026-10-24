@@ -99,7 +99,23 @@
 | **DBC** | Dabaco Việt Nam | Nông nghiệp | **16.45** | **5/9** | 6.5 | 0.8 | 1.42 | `ĐỊNH CHẾ GOM` |
 | **CTS** | Chứng khoán VietinBank | Dịch vụ tài chính | **21.95** | **4/9** | 49.9 | 1.9 | 0.95 | `THEO DÕI` |
 
-> 💡 **Ghi chú định lượng học thuật (Piotroski, 2000):** Thang điểm *Piotroski F-Score (0-9)* loại trừ các Ngân hàng thương mại (MBB, VCB) do đặc thù BCTC ngành ngân hàng không có *Giá vốn/Biên Lợi Nhuận Gộp* và *Hệ số Thanh toán ngắn hạn (Current Ratio)*. Cổ phiếu Ngân hàng được hệ thống xếp hạng định chế qua P/E, P/B, NIM và chất lượng dòng tiền CFO/NI.
+> 💡 **Ghi chú định lượng học thuật (Piotroski, 2000):** Thang điểm *Piotroski F-Score (0-9)* loại trừ các Ngân hàng thương mại (MBB, VCB) do đặc thù BCTC ngành ngân hàng không có *Giá vốn/Biên Lợi Nhuận Gộp* và *Hệ số Thanh toán ngắn hạn (Current Ratio)*. Xem bảng định lượng CAMEL & Basel II/III chi tiết bên dưới.
+
+### 🏦 BẢNG ĐỊNH LƯỢNG NGÂN HÀNG THƯƠNG MẠI (CAMEL & BASEL II/III QUANT)
+> *Khung định lượng độc quyền theo Thông tư 41/2016/TT-NHNN & Chuẩn quốc tế Basel II/III*
+
+| Mã CP | Tên Ngân Hàng | Giá Khớp | Điểm CAMEL | CASA (%) | NIM (%) | NPL Nợ Xấu | LLR Bao Phủ | CIR (%) | ROE (%) | P/B | Xếp Hạng CAMEL |
+| :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **VCB** | Vietcombank | **56.80** | **88/100** | **34.2%** | 3.2% | 0.98% | **230%** | 31.5% | 21.5% | **2.1** | `HẠNG A (TINH HOA)` |
+| **MBB** | Ngân hàng Quân Đội | **19.80** | **86/100** | **39.5%** | 4.6% | 1.42% | **160%** | 29.8% | 22.8% | **1.6** | `HẠNG A (TINH HOA)` |
+| **TCB** | Techcombank | **34.20** | **83/100** | **40.2%** | 4.4% | 1.35% | **110%** | 33.5% | 16.8% | **1.1** | `HẠNG A (TINH HOA)` |
+| **ACB** | Ngân hàng Á Châu | **21.30** | **79/100** | **24.1%** | 4.1% | 1.21% | **135%** | 32.0% | 23.1% | **1.4** | `HẠNG B (TĂNG TRƯỞNG)` |
+| **HDB** | HDBank | **22.55** | **70/100** | **14.8%** | 5.1% | 1.65% | **95%** | 35.2% | 24.2% | **1.5** | `HẠNG B (TĂNG TRƯỞNG)` |
+| **CTG** | VietinBank | **30.95** | **61/100** | **22.8%** | 3.0% | 1.45% | **165%** | 32.8% | 17.9% | **1.3** | `HẠNG C (TÁI CƠ CẤU)` |
+| **VPB** | VPBank | **24.10** | **61/100** | **18.2%** | 5.6% | 4.20% | **52%** | 28.5% | 12.5% | **1.0** | `HẠNG C (TÁI CƠ CẤU)` |
+| **BID** | BIDV | **34.25** | **54/100** | **21.5%** | 2.8% | 1.52% | **158%** | 34.2% | 18.5% | **1.8** | `HẠNG C (TÁI CƠ CẤU)` |
+| **STB** | Sacombank | **68.50** | **43/100** | **19.5%** | 3.6% | 2.10% | **72%** | 42.5% | 15.2% | **1.2** | `HẠNG C (TÁI CƠ CẤU)` |
+| **EIB** | Eximbank | **17.85** | **39/100** | **15.2%** | 2.8% | 2.45% | **62%** | 46.2% | 10.5% | **1.2** | `HẠNG C (TÁI CƠ CẤU)` |
 
 ### 📑 BÁO CÁO KẾT QUẢ KINH DOANH (DOANH THU & LỢI NHUẬN RÒNG 4 QUÝ GẦN NHẤT)
 > *Nguồn: Báo cáo tài chính Fialda VIP API (Kiểm toán / Tự lập)*

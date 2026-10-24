@@ -86,6 +86,44 @@ def generate_terminal_html(
         </tr>
         """
 
+    # Chuan bi du lieu Bang Dinh Luong Ngan Hang CAMEL & Basel II/III
+    try:
+        from src.fundamental_engine.banking_quant import get_benchmark_vn_banks, screen_banks_camel
+        bank_scores = scanner.get_banking_screener_data()
+    except Exception:
+        from src.fundamental_engine.banking_quant import get_benchmark_vn_banks, screen_banks_camel
+        bank_scores = screen_banks_camel(get_benchmark_vn_banks())
+
+    bank_rows_html = ""
+    for b in bank_scores:
+        m = b.metrics
+        if "HẠNG A" in b.tier:
+            tier_badge = f'<span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">{b.tier}</span>'
+            score_color = "#00e676"
+        elif "HẠNG B" in b.tier:
+            tier_badge = f'<span style="background:#0d47a1;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">{b.tier}</span>'
+            score_color = "#4fc3f7"
+        else:
+            tier_badge = f'<span style="background:#ff6f00;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">{b.tier}</span>'
+            score_color = "#ffb300"
+
+        bank_rows_html += f"""
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">{b.symbol}</td>
+            <td style="padding:10px;">{b.bank_name}</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">{b.price:.2f}</td>
+            <td style="padding:10px;text-align:center;font-weight:800;color:{score_color};font-size:14px;">{b.total_score:.0f}/100</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">{m.casa:.1f}%</td>
+            <td style="padding:10px;text-align:center;">{m.nim:.1f}%</td>
+            <td style="padding:10px;text-align:center;color:{'#00e676' if m.npl <= 1.5 else '#ff5252'};">{m.npl:.2f}%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">{m.llr:.0f}%</td>
+            <td style="padding:10px;text-align:center;">{m.cir:.1f}%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">{m.roe:.1f}%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">{m.pb:.1f}</td>
+            <td style="padding:10px;text-align:center;">{tier_badge}</td>
+        </tr>
+        """
+
     # Chuan bi du lieu BCTC 4 quy cho cac co phieu tam diem
     spotlight_symbols = [c.symbol for c in fialda_candidates[:5]] if fialda_candidates else ["DBC", "CTS", "HPG", "PTB", "GEX"]
     bctc_rows_html = ""
@@ -349,7 +387,35 @@ def generate_terminal_html(
         </table>
     </div>
     <div style="font-size:12px;color:#78909c;margin:-15px 0 25px 4px;line-height:1.6;">
-        💡 <b>Ghi chú định lượng học thuật (Piotroski, 2000):</b> Thang điểm <b>Piotroski F-Score (0-9)</b> loại trừ ngành Ngân hàng (MBB, VCB) do đặc thù BCTC không có <i>Giá vốn/Biên Lợi Nhuận Gộp</i> và <i>Hệ số Thanh toán ngắn hạn (Current Ratio)</i>. Cổ phiếu Ngân hàng được hệ thống xếp hạng định chế qua <b>P/E, P/B, NIM</b> và tỷ lệ dòng tiền hoạt động <b>CFO / Net Income</b>.
+        💡 <b>Ghi chú định lượng học thuật (Piotroski, 2000):</b> Thang điểm <b>Piotroski F-Score (0-9)</b> loại trừ ngành Ngân hàng (MBB, VCB) do đặc thù BCTC không có <i>Giá vốn/Biên Lợi Nhuận Gộp</i> và <i>Hệ số Thanh toán ngắn hạn (Current Ratio)</i>. Toàn bộ cổ phiếu Ngân hàng được đánh giá chuyên sâu qua Bảng Định Lượng CAMEL & Basel II/III ngay bên dưới.
+    </div>
+
+    <div class="section-header">
+        <div class="section-title" style="color:#00e676;">🏦 BẢNG ĐỊNH LƯỢNG NGÂN HÀNG THƯƠNG MẠI (CAMEL & BASEL II/III QUANT)</div>
+        <span style="font-size:11px;color:#78909c;">Mô hình độc quyền phân tích 5 trụ cột: Vốn (C), Chất lượng nợ & LLR (A), Chi phí CIR (M), Lợi nhuận & CASA (E), Thanh khoản LDR (L)</span>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã CP</th>
+                    <th>Tên Ngân Hàng</th>
+                    <th>Giá Khớp (1,000 đ)</th>
+                    <th style="text-align:center;">Điểm CAMEL</th>
+                    <th style="text-align:center;">CASA (%)</th>
+                    <th style="text-align:center;">NIM (%)</th>
+                    <th style="text-align:center;">NPL Nợ Xấu</th>
+                    <th style="text-align:center;">LLR Bao Phủ</th>
+                    <th style="text-align:center;">CIR (%)</th>
+                    <th style="text-align:center;">ROE (%)</th>
+                    <th style="text-align:center;">P/B</th>
+                    <th style="text-align:center;">Xếp Hạng CAMEL</th>
+                </tr>
+            </thead>
+            <tbody>
+                {bank_rows_html}
+            </tbody>
+        </table>
     </div>
 
     <div class="section-header">

@@ -417,6 +417,42 @@ class FialdaScanner:
             {"quarter": 4, "year": 2025, "revenue_billion": 3800.0, "gross_profit_billion": 540.0, "net_profit_billion": 210.0},
         ]
 
+    def get_banking_screener_data(self) -> List[Any]:
+        """Lay bang xep hang CAMEL & Basel II/III cho cac ngan hang thuong mai."""
+        from src.fundamental_engine.banking_quant import (
+            get_benchmark_vn_banks,
+            screen_banks_camel,
+            BankCamelMetrics,
+        )
+        banks = get_benchmark_vn_banks()
+        if self.token:
+            syms = [b.symbol for b in banks]
+            prices = self.get_stock_infos(syms)
+            updated = []
+            for b in banks:
+                p_info = prices.get(b.symbol, {}).get("PriceInfo", {})
+                cur_p = p_info.get("currentPrice") or p_info.get("lastPrice") or p_info.get("closePrice") or b.price
+                updated.append(
+                    BankCamelMetrics(
+                        symbol=b.symbol,
+                        bank_name=b.bank_name,
+                        price=cur_p,
+                        car=b.car,
+                        equity_multiplier=b.equity_multiplier,
+                        npl=b.npl,
+                        llr=b.llr,
+                        cir=b.cir,
+                        casa=b.casa,
+                        nim=b.nim,
+                        roe=b.roe,
+                        ldr=b.ldr,
+                        pb=b.pb,
+                        pe=b.pe,
+                    )
+                )
+            return screen_banks_camel(updated)
+        return screen_banks_camel(banks)
+
     def scan_top_rockets(self, top_n: int = 20) -> List[FialdaCandidate]:
         """Quet va tong hop chon ra Top N Sieu Co Phieu cho chu ky 1 thang (mac dinh top 20)."""
         if not self.token:
@@ -745,6 +781,7 @@ def format_top_5_markdown(
     breadth: Optional[Dict[str, Any]] = None,
     fund_data: Optional[List[Dict[str, Any]]] = None,
     scanner: Optional["FialdaScanner"] = None,
+    bank_data: Optional[List[Any]] = None,
 ) -> str:
     """Xuat ban bao cao Top N va Dinh luong co ban dinh dang GitHub Markdown cho GitHub Actions Summary / Web."""
     adv = breadth.get("advances", "N/A") if breadth else "N/A"
@@ -796,8 +833,24 @@ def format_top_5_markdown(
             )
         md.extend([
             "",
-            "> 💡 **Ghi chú định lượng học thuật (Piotroski, 2000):** Thang điểm *Piotroski F-Score (0-9)* loại trừ các Ngân hàng thương mại (MBB, VCB) do đặc thù BCTC ngành ngân hàng không có *Giá vốn/Biên Lợi Nhuận Gộp* và *Hệ số Thanh toán ngắn hạn (Current Ratio)*. Cổ phiếu Ngân hàng được hệ thống xếp hạng định chế qua P/E, P/B, NIM và chất lượng dòng tiền CFO/NI.",
+            "> 💡 **Ghi chú định lượng học thuật (Piotroski, 2000):** Thang điểm *Piotroski F-Score (0-9)* loại trừ các Ngân hàng thương mại (MBB, VCB) do đặc thù BCTC ngành ngân hàng không có *Giá vốn/Biên Lợi Nhuận Gộp* và *Hệ số Thanh toán ngắn hạn (Current Ratio)*. Xem bảng định lượng CAMEL & Basel II/III chi tiết bên dưới.",
         ])
+
+    # Bo sung Bang Dinh Luong Ngan Hang Thuong Mai (CAMEL & Basel II/III)
+    if bank_data:
+        md.extend([
+            "",
+            "### 🏦 BẢNG ĐỊNH LƯỢNG NGÂN HÀNG THƯƠNG MẠI (CAMEL & BASEL II/III QUANT)",
+            "> *Khung định lượng độc quyền theo Thông tư 41/2016/TT-NHNN & Chuẩn quốc tế Basel II/III*",
+            "",
+            "| Mã CP | Tên Ngân Hàng | Giá Khớp | Điểm CAMEL | CASA (%) | NIM (%) | NPL Nợ Xấu | LLR Bao Phủ | CIR (%) | ROE (%) | P/B | Xếp Hạng CAMEL |",
+            "| :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
+        ])
+        for b in bank_data:
+            m = b.metrics
+            md.append(
+                f"| **{b.symbol}** | {b.bank_name} | **{b.price:.2f}** | **{b.total_score:.0f}/100** | **{m.casa:.1f}%** | {m.nim:.1f}% | {m.npl:.2f}% | **{m.llr:.0f}%** | {m.cir:.1f}% | {m.roe:.1f}% | **{m.pb:.1f}** | `{b.tier}` |"
+            )
 
     # Bo sung Bao cao Tai chinh 4 quy gan nhat (BCTC)
     if scanner and candidates:
@@ -875,8 +928,11 @@ if __name__ == "__main__":
     report_text = format_top_5_report(top_candidates, breadth_info)
     print(report_text)
 
+    # Lay du lieu CAMEL cho Ngan hang
+    bank_data = scanner.get_banking_screener_data()
+
     # Ghi vao GITHUB_STEP_SUMMARY neu dang chay trong GitHub Actions
-    md_report = format_top_5_markdown(top_candidates, breadth_info, fund_data, scanner=scanner)
+    md_report = format_top_5_markdown(top_candidates, breadth_info, fund_data, scanner=scanner, bank_data=bank_data)
     summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary_path:
         try:
