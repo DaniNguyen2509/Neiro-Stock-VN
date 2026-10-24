@@ -77,8 +77,8 @@ def generate_terminal_html(
             <td style="padding:10px;font-weight:bold;">{c.price:,.2f}</td>
             <td style="padding:10px;color:#00e676;font-weight:600;">{c.entry_low:.2f} - {c.entry_high:.2f}</td>
             <td style="padding:10px;color:#ff5252;font-weight:bold;">{c.stop_loss:.2f}</td>
-            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">{tp1_val:.2f} <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
-            <td style="padding:10px;color:#ffb300;font-weight:bold;">{tp2_val:.2f} <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">{tp1_val:.2f}</td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">{tp2_val:.2f}</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">{c.adtv20_billion:.1f} tỷ</td>
             <td style="padding:10px;text-align:center;">
                 <div style="font-weight:bold;color:{liq_color};">{c.liquidity_score:.0f}/100</div>
