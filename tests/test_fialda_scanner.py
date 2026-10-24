@@ -118,3 +118,16 @@ def test_get_fundamental_screener_data_fallback():
     assert hpg["is_institutional"] is True
 
 
+def test_candidates_trailing_stop_enrichment():
+    """Kiem tra candidates duoc enrich day du SL, TP1, TP2, R:R va Delta Rank."""
+    top = FialdaScanner._fallback_mock_top_5()
+    for c in top:
+        assert c.tp1 > c.price
+        assert c.tp2 > c.tp1
+        assert c.stop_loss < c.price
+        assert c.rr_ratio >= 2.4
+        assert c.rank_change_badge != ""
+        assert "T+0" in c.t25_status_badge
+
+
+

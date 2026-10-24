@@ -88,7 +88,8 @@ Neiro-Stock-VN/
 │   │   ├── __init__.py
 │   │   ├── data_loader.py        # Ingestion, cache & chuẩn hóa dữ liệu OHLCV / BCTC
 │   │   ├── vn_market_client.py   # Client kết nối dữ liệu thị trường (Cơ sở, Phái sinh, Khối ngoại)
-│   │   └── fialda_scanner.py     # Harvester Fialda VIP Expert, AI signals, RRG & Top 5 Rockets
+│   │   ├── fialda_scanner.py     # Harvester Fialda VIP Expert, AI signals, RRG & Top 5 Rockets
+│   │   └── ranking_history.py    # Lưu snapshot thứ hạng chuỗi thời gian, tính Delta Rank & Top Movers
 │   ├── fundamental_engine/       # Lõi lọc cơ bản định lượng
 │   │   ├── __init__.py
 │   │   ├── screener.py           # Bộ lọc CANSLIM, Piotroski F-score, CFO/NI
@@ -107,7 +108,8 @@ Neiro-Stock-VN/
 │   │   ├── __init__.py
 │   │   ├── position_sizer.py     # Tính toán tỷ trọng theo Volatility ATR(14)
 │   │   ├── t25_manager.py        # Quản lý vòng quay hàng sẵn T+0 & Margin Buffer
-│   │   └── liquidity_sizer.py    # Bộ lọc ADTV20, Sức chứa danh mục & Trượt giá phi tuyến
+│   │   ├── liquidity_sizer.py    # Bộ lọc ADTV20, Sức chứa danh mục & Trượt giá phi tuyến
+│   │   └── trailing_stop.py      # Initial SL, Chandelier Exit, Break-even 1.5R/2R & T+2.5 Exposure
 │   ├── backtesting/              # Module Kiểm định Quá khứ Walk-Forward T+2.5
 │   │   ├── __init__.py
 │   │   ├── models.py             # Data models: Exchange, PriceBand, Position, TradeRecord
@@ -118,8 +120,8 @@ Neiro-Stock-VN/
 │   │   └── walk_forward.py       # Điều phối kiểm định In-Sample vs Out-of-Sample & tính WFE
 │   └── hud/                      # Giao diện Tactical Terminal
 │       ├── __init__.py
-│       └── terminal.py           # Sinh Terminal tương tác đa tab, Equity Curve SVG & Top 20
-├── data/                         # Dữ liệu chuẩn hóa mẫu (benchmark data)
+│       └── terminal.py           # Sinh Terminal tương tác đa tab, Widget Lịch sử Rank & Top 20
+├── data/                         # Dữ liệu chuẩn hóa mẫu & ranking_history.jsonl (Zero-Waste < 50KB)
 ├── exports/                      # File HTML Terminal và báo cáo định lượng xuất bản (GitHub Pages)
 ├── reports/                      # Báo cáo kết quả quét Top 5 mới nhất (latest_scan.md)
 ├── tests/                        # 100% Automated Unit Tests cho từng công thức toán
@@ -321,5 +323,38 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
    - CAGR, Annualized Sharpe ($R_f = 4.5\%$), Sortino Ratio, Max Drawdown (MDD), Profit Factor, Win Rate.
    - Kết quả thực nghiệm 2021-2026: MDD hệ thống chỉ **19.10%** (so với VN-Index sập tới **44.09%** trong khủng hoảng 2022), Sharpe OOS đạt **1.77**.
    - **Phân Định Trách Nhiệm:** Module Kiểm Định Lịch Sử (`src/backtesting/`) đóng vai trò động cơ kiểm chứng định lượng nội bộ (Internal Research Engine), độc lập phục vụ nghiên cứu và kiểm thử mô hình. Giao diện Web Dashboard (`exports/index.html`) duy trì cấu trúc tác chiến liên tục (Top 20 Siêu Cổ Phiếu Chân Sóng, Định Lượng Cơ Bản, CAMEL Ngân Hàng, BCTC & Tin Tức Spotlight) để nhà đầu tư hành động nhanh nhất.
+
+---
+
+### Tier 9: Quản Trị Rủi Ro Động, Điểm Thoát Lệnh T+2.5 & Theo Vết Lịch Sử Xếp Hạng
+
+1. **Ngưỡng Cắt Lỗ Cứng Ban Đầu (Initial Stop Loss):**
+   - Kết hợp giữa đáy nến gần nhất (Swing Low - hỗ trợ kỹ thuật) và độ biến động ATR(14):
+     $$\text{Stop Loss} = \text{clamp}\Big(\max(\text{Swing Low}, \text{Entry} - 1.5 \times \text{ATR}_{14}),\ [0.93 \times \text{Entry},\ 0.97 \times \text{Entry}]\Big)$$
+   - Khống chế mức rủi ro tối thiểu $3\%$ (tránh quét râu nhiễu) và tối đa $7\%$ (tương thích biên độ sàn HOSE).
+   - Xác định đơn vị rủi ro chuẩn $1R = \text{Entry} - \text{Stop Loss}$.
+
+2. **Cơ Chế Khóa Lợi Nhuận Tự Động (Chandelier Exit & Break-Even Ratchet):**
+   - **Nâng lên Hòa Vốn (Break-Even):** Khi giá tăng đạt $\ge 1.5R$, Stop Loss tự động dời lên giá vốn ($\text{Entry}$) để bảo toàn 100% tài sản, xóa bỏ hoàn toàn rủi ro đảo chiều.
+   - **Chandelier Trailing Stop:** Khi giá tiếp tục lập đỉnh mới ($\text{Highest High}$), Stop Loss bám sát:
+     $$\text{Trailing Stop} = \max\Big(\text{Current Stop},\ \text{Highest High} - 2.0 \times \text{ATR}_{14}\Big)$$
+   - **Tính chất bất biến (Ratchet Property):** Stop Loss chỉ đơn điệu tăng, tuyệt đối không bao giờ bị hạ xuống.
+
+3. **Tỷ Lệ Vàng Risk/Reward ($R:R \ge 1:2.5$):**
+   - **TP1 (Target 1.5R):** Khuyến nghị bán chốt lời $50\%$ số lượng cổ phiếu để hiện thực hóa lợi nhuận.
+   - **TP2 (Target 2.5R đến 3.0R):** Gồng lãi $50\%$ còn lại theo Trailing Stop để tối đa hóa lợi nhuận toàn bộ con sóng.
+
+4. **Quản Trị Rủi Ro "Vùng Đóng Băng T+0 đến T+2" Cho Nhà Đầu Tư Cổ Phiếu Cơ Sở:**
+   - Dành riêng cho nhà đầu tư thuần mua bán Cổ phiếu Cơ sở (Spot Equities Long-Only): không short phái sinh.
+   - Dùng độ lệch Basis VN30F1M và Độ rộng thị trường làm **Rada Cảnh Báo Sớm**:
+     - 🟢 **SAFE:** Basis dương, thị trường giữ trend $\rightarrow$ Mở mua bình thường.
+     - 🟡 **MODERATE:** Basis phân kỳ nhẹ $\rightarrow$ Chỉ giải ngân đợt 1 (50% vị thế tại nền).
+     - 🔴 **HIGH / CRITICAL:** Phái sinh bán tháo mạnh (Basis âm sâu $< -10$ điểm) $\rightarrow$ Tạm dừng mở mua mới hàng đóng băng, bán hạ tỷ trọng trên các mã sẵn có để giữ tỷ trọng tiền mặt $\ge 50\% - 60\%$.
+
+5. **Theo Vết & Lưu Trữ Lịch Sử Xếp Hạng (Ranking History Tracker):**
+   - Tự động lưu trữ chuỗi thời gian các phiên quét vào `data/ranking_history.jsonl` (áp dụng Rolling Window giữ tối đa 500 records $\sim 35\text{ KB}$, bảo đảm tiêu chuẩn Zero-Waste $< 15\text{ MB}$).
+   - So sánh với phiên liền trước để tính biến động thứ hạng: $\Delta Rank = \text{Rank}_{\text{cũ}} - \text{Rank}_{\text{mới}}$ (`↗ +N` thăng hạng, `↘ -N` tụt hạng, `=` giữ hạng, `🆕 MỚI` bứt phá vào Top).
+   - Hiển thị trực quan cột $\Delta Rank$ trên bảng Top 20 và Widget lịch sử phiên quét trên Terminal HTML.
+
 
 

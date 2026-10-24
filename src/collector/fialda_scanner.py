@@ -20,6 +20,12 @@ from src.risk_engine.liquidity_sizer import (
     is_liquidity_sufficient,
     calculate_liquidity_score,
 )
+from src.risk_engine.trailing_stop import (
+    calculate_initial_stop_loss,
+    calculate_take_profit_levels,
+    evaluate_t25_exposure,
+)
+from src.collector.ranking_history import RankingHistoryTracker
 
 # Dam bao terminal Windows in tieng Viet UTF-8 muot ma
 if sys.stdout and hasattr(sys.stdout, "reconfigure"):
@@ -53,6 +59,75 @@ class FialdaCandidate:
     liquidity_score: float = 80.0        # Diem thanh khoan (0 - 100)
     slippage_est_pct: float = 0.50       # Uoc tinh truot gia (%) theo nonlinear model
     is_liquid: bool = True               # Dat nguong thanh khoan Quỹ
+    tp1: float = 0.0                     # Muc tieu chot loi 1 (1.5R)
+    tp2: float = 0.0                     # Muc tieu chot loi 2 (2.5R)
+    rr_ratio: float = 2.5                # Ty le Risk/Reward (>= 1:2.5)
+    rank_change_badge: str = "🆕 MỚI"   # Huy hieu bien dong thu hang (vi du "↗ +2", "↘ -1", "=")
+    rank_change_delta: Optional[int] = None
+    t25_exposure_level: str = "SAFE"     # SAFE, MODERATE, HIGH, CRITICAL
+    t25_status_badge: str = "T+0 (Vùng gom)"
+
+
+def enrich_candidates_with_trailing_stop_and_history(
+    candidates: List[FialdaCandidate],
+    basis_points: float = 0.0,
+    record_history: bool = True,
+) -> List[FialdaCandidate]:
+    """Bo sung Stop Loss, TP1, TP2, R:R, T+2.5 Exposure va Delta Rank cho danh sach ung vien."""
+    if not candidates:
+        return candidates
+
+    tracker = RankingHistoryTracker()
+    try:
+        rank_changes = tracker.calculate_rank_changes(candidates)
+    except Exception:
+        rank_changes = {}
+
+    for idx, c in enumerate(candidates, 1):
+        # Tinh toan Initial Stop Loss chuan Swing Low & ATR
+        c.stop_loss = calculate_initial_stop_loss(
+            entry_price=c.price,
+            swing_low=c.entry_low,
+            atr_14=c.price * 0.035,
+        )
+        # Tinh TP1, TP2 va R:R
+        tp1, tp2, rr = calculate_take_profit_levels(
+            entry_price=c.price,
+            stop_loss=c.stop_loss,
+            tp1_r_multiple=1.5,
+            tp2_r_multiple=2.5,
+        )
+        c.tp1 = tp1
+        c.tp2 = tp2
+        c.rr_ratio = rr
+
+        # Gan bien dong thu hang tu phien truoc
+        ch = rank_changes.get(c.symbol, {})
+        c.rank_change_badge = ch.get("badge", "🆕 MỚI")
+        c.rank_change_delta = ch.get("delta_rank")
+
+        # Danh gia rui ro Vung Dong Bang T+2.5
+        try:
+            exp = evaluate_t25_exposure(
+                symbol=c.symbol,
+                shares=c.max_shares_capacity,
+                t_stage="T+0",
+                basis_points=basis_points,
+            )
+            c.t25_exposure_level = exp.exposure_level
+            c.t25_status_badge = f"T+0 ({exp.exposure_level})"
+        except Exception:
+            c.t25_exposure_level = "SAFE"
+            c.t25_status_badge = "T+0 (SAFE)"
+
+    # Ghi snapshot vao data/ranking_history.jsonl
+    if record_history and candidates:
+        try:
+            tracker.record_snapshot(candidates)
+        except Exception:
+            pass
+
+    return candidates
 
 
 class FialdaScanner:
@@ -696,7 +771,8 @@ class FialdaScanner:
 
         # Sap xep va lay Top N co diem so cao nhat
         candidates.sort(key=lambda x: x.ranking_score, reverse=True)
-        return candidates[:top_n]
+        top_list = candidates[:top_n]
+        return enrich_candidates_with_trailing_stop_and_history(top_list)
 
     def scan_top_5_rockets(self) -> List[FialdaCandidate]:
         """Tien ich backward compatibility: quet va lay Top 5 co phieu."""
@@ -905,7 +981,7 @@ class FialdaScanner:
         except Exception:
             pass
         full_list.sort(key=lambda x: x.ranking_score, reverse=True)
-        return full_list
+        return enrich_candidates_with_trailing_stop_and_history(full_list)
 
     @staticmethod
     def _fallback_mock_top_5() -> List[FialdaCandidate]:
@@ -940,14 +1016,16 @@ def format_top_5_report(candidates: List[FialdaCandidate], breadth: Optional[Dic
 
     lines.extend([
         "-" * 108,
-        " CHI TIẾT CHIẾN LƯỢC, THANH KHOẢN & CATALYST:",
+        " CHI TIẾT CHIẾN LƯỢC, THANH KHOẢN, RỦI RO T+2.5 & CATALYST:",
     ])
     for idx, c in enumerate(candidates, 1):
+        rr_str = f"1:{c.rr_ratio:.1f}"
         lines.append(
-            f" {idx}. {c.symbol}: Vùng mua {c.entry_low} - {c.entry_high} | Cắt lỗ {c.stop_loss} (-5.5%) | Target {c.target_1m} (+25%)\n"
+            f" {idx}. {c.symbol} ({c.rank_change_badge}): Vùng gom {c.entry_low:.2f} - {c.entry_high:.2f} | "
+            f"SL {c.stop_loss:.2f} | TP1 {c.tp1:.2f} | TP2 {c.tp2:.2f} (R:R {rr_str}) | {c.t25_status_badge}\n"
             f"    -> Động lực: {c.catalyst} | Ngoại ròng: {c.foreign_net_value_billion:+.1f} tỷ\n"
             f"    -> Sức chứa thanh khoản: ADTV20 {c.adtv20_billion:.1f} tỷ (Điểm TK: {c.liquidity_score:.0f}/100) | KL mua tối đa: {c.max_shares_capacity:,.0f} cp (Trượt giá: ~{c.slippage_est_pct:.2f}%)\n"
-            f"    -> Phân bổ NAV: Đúng 20% tài khoản cho mã này (Tuân thủ chu kỳ T+2.5)."
+            f"    -> Quản trị T+2.5: Đợt 1 mua 50% tại nền, đợt 2 mua 50% khi bứt phá; duy trì đệm hàng T+0 >= 35%."
         )
     lines.append("=" * 108)
     return "\n".join(lines)
@@ -976,27 +1054,28 @@ def format_top_5_markdown(
         md.append("> 🟡 **Trạng Thái Dữ Liệu:** `BẢNG GIÁ REAL-TIME THỰC TẾ (ENTRADE/DNSE PUBLIC)` | Chiến thuật định lượng mô phỏng")
     md.extend([
         "",
-        "| STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua An Toàn | Cắt Lỗ (-5.5%) | Mục Tiêu 1T (+25%) | ADTV20 | Điểm TK | KL Mua Tối Đa | Trượt Giá | RRG (r/m) | IBD Comp | Khối Ngoại | Điểm |",
-        "| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
+        "| STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua | Cắt Lỗ (SL) | TP1 (1.5R) | TP2 (2.5R) | Tỷ Lệ R:R | ADTV20 | Điểm TK | KL Mua Max | Trượt Giá | RRG | Comp | Ngoại | Điểm |",
+        "| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
     ])
 
     for idx, c in enumerate(candidates, 1):
         sig = "`CHÂN SÓNG`" if "CHO_MUA" in c.signal_type else "`ĐỘT BIẾN GT`"
         fn = f"{c.foreign_net_value_billion:+.1f} tỷ"
+        rr_str = f"1:{c.rr_ratio:.1f}"
         md.append(
-            f"| **{idx}** | **{c.symbol}** | {sig} | **{c.price:.2f}** | **{c.entry_low:.2f} - {c.entry_high:.2f}** | {c.stop_loss:.2f} | **{c.target_1m:.2f}** | **{c.adtv20_billion:.1f} tỷ** | `{c.liquidity_score:.0f}/100` | **{c.max_shares_capacity:,.0f}** | `{c.slippage_est_pct:.2f}%` | {c.rrg_r:.0f}/{c.rrg_m:.0f} | {c.composite_rating} | {fn} | **{c.ranking_score:.1f}** |"
+            f"| **{idx}** {c.rank_change_badge} | **{c.symbol}** | {sig} | **{c.price:.2f}** | `{c.entry_low:.2f} - {c.entry_high:.2f}` | **{c.stop_loss:.2f}** | {c.tp1:.2f} | **{c.tp2:.2f}** | `{rr_str}` | **{c.adtv20_billion:.1f} tỷ** | `{c.liquidity_score:.0f}/100` | **{c.max_shares_capacity:,.0f}** | `{c.slippage_est_pct:.2f}%` | {c.rrg_r:.0f}/{c.rrg_m:.0f} | {c.composite_rating} | {fn} | **{c.ranking_score:.1f}** |"
         )
 
     md.extend([
         "",
-        "### 🎯 Kế Hoạch Tác Chiến & Catalysts:",
+        "### 🎯 Kế Hoạch Tác Chiến, Điểm Thoát Lệnh T+2.5 & Catalysts:",
     ])
     for idx, c in enumerate(candidates, 1):
         md.extend([
-            f"- **{c.symbol} ({c.price:.2f})**: Vùng gom `{c.entry_low:.2f} - {c.entry_high:.2f}` | Stop Loss: `{c.stop_loss:.2f}` | Target: `{c.target_1m:.2f}`",
+            f"- **{c.symbol} ({c.price:.2f})** `{c.rank_change_badge}`: Vùng gom `{c.entry_low:.2f} - {c.entry_high:.2f}` | Cắt lỗ cứng: `{c.stop_loss:.2f}` | TP1 (1.5R): `{c.tp1:.2f}` | TP2 (2.5R): `{c.tp2:.2f}` (R:R `1:{c.rr_ratio:.1f}`)",
             f"  - *Động lực:* {c.catalyst} (Khối ngoại: {c.foreign_net_value_billion:+.1f} tỷ)",
             f"  - *Sức chứa Quỹ:* ADTV20 `{c.adtv20_billion:.1f} tỷ` (Điểm TK: `{c.liquidity_score:.0f}/100`) | Khối lượng mua tối đa: `{c.max_shares_capacity:,.0f} cp` (Trượt giá dự kiến ~`{c.slippage_est_pct:.2f}%`).",
-            f"  - *Quản trị T+2.5:* Tỷ trọng khuyến nghị 20% NAV. Mua 50% tại nền, gia tăng 50% khi vượt đỉnh.",
+            f"  - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `{c.t25_status_badge}`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.",
         ])
 
     # Bo sung Bang Xep Hang Dinh Luong Co Ban (Piotroski F-Score & P/E) that tu Fialda

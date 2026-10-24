@@ -7,9 +7,9 @@
 
 | Phiên | Mục Tiêu Chiến Thuật | Tệp Liên Quan | Độ Ưu Tiên |
 | :--- | :--- | :--- | :--- |
-| **Phiên 1** | **Bộ lọc Thanh khoản & Sức chứa Danh mục (Liquidity & Capacity Sizer)** | `src/risk_engine/liquidity_sizer.py`, `src/collector/fialda_scanner.py` | 🔴 **Ưu tiên 1 (Làm trước)** |
-| **Phiên 2** | **Kiểm định Quá khứ (Walk-Forward Backtesting Engine T+2.5)** | `src/backtesting/engine.py`, `reports/backtest_results.md` | 🟡 **Ưu tiên 2** |
-| **Phiên 3** | **Quản trị Rủi ro Động & Điểm Thoát Lệnh T+2.5 (Dynamic Risk-Reward & ATR Trailing Stop)** | `src/risk_engine/trailing_stop.py`, `src/hud/terminal.py` | 🟢 **Ưu tiên 3** |
+| **Phiên 1** | **Bộ lọc Thanh khoản & Sức chứa Danh mục (Liquidity & Capacity Sizer)** | `src/risk_engine/liquidity_sizer.py`, `src/collector/fialda_scanner.py` | ✅ **ĐÃ HOÀN THÀNH** |
+| **Phiên 2** | **Kiểm định Quá khứ (Walk-Forward Backtesting Engine T+2.5)** | `src/backtesting/engine.py`, `reports/backtest_results.md` | ✅ **ĐÃ HOÀN THÀNH** |
+| **Phiên 3** | **Quản trị Rủi ro Động, Thoát Lệnh T+2.5 & Lịch Sử Xếp Hạng (Dynamic Trailing Stop & Ranking History)** | `src/risk_engine/trailing_stop.py`, `src/collector/ranking_history.py`, `src/hud/terminal.py` | ✅ **ĐÃ HOÀN THÀNH 100%** |
 
 ---
 
