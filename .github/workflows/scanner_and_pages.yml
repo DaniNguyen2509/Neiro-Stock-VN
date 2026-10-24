@@ -2,13 +2,24 @@ name: Fialda VIP Expert Scanner & GitHub Pages Deploy
 
 on:
   schedule:
-    # Giờ Việt Nam (UTC+7):
-    # 09:15 AM VN -> 02:15 UTC (Sau phiên ATO mở cửa)
-    - cron: '15 2 * * 1-5'
-    # 11:45 AM VN -> 04:45 UTC (Chốt phiên sáng)
-    - cron: '45 4 * * 1-5'
-    # 15:05 PM VN -> 08:05 UTC (Chốt phiên ATC chiều)
-    - cron: '5 8 * * 1-5'
+    # =========================================================================
+    # LỊCH QUÉT TỰ ĐỘNG ĐỊNH KỲ 30 PHÚT/LẦN TRONG GIỜ GIAO DỊCH (THỨ 2 - THỨ 6)
+    # Giờ Việt Nam (UTC+7) = Giờ UTC + 7 tiếng
+    # =========================================================================
+    # --- PHIÊN SÁNG (09:00 - 11:30 VN <=> 02:00 - 04:30 UTC) ---
+    - cron: '15 2 * * 1-5'  # 09:15 VN -> 02:15 UTC (Sau phiên ATO mở cửa)
+    - cron: '45 2 * * 1-5'  # 09:45 VN -> 02:45 UTC (Sóng bùng nổ đầu phiên)
+    - cron: '15 3 * * 1-5'  # 10:15 VN -> 03:15 UTC (Nhịp rung lắc kiểm định)
+    - cron: '45 3 * * 1-5'  # 10:45 VN -> 03:45 UTC (Điểm cân bằng phiên sáng)
+    - cron: '15 4 * * 1-5'  # 11:15 VN -> 04:15 UTC (Áp lực chốt lời trước giờ trưa)
+    - cron: '45 4 * * 1-5'  # 11:45 VN -> 04:45 UTC (Chốt phiên sáng toàn diện)
+
+    # --- PHIÊN CHIỀU (13:00 - 15:00 VN <=> 06:00 - 08:00 UTC) ---
+    - cron: '15 6 * * 1-5'  # 13:15 VN -> 06:15 UTC (Mở phiên chiều & Hấp thụ tin tức trưa)
+    - cron: '45 6 * * 1-5'  # 13:45 VN -> 06:45 UTC (Bắt đầu áp lực hàng T+2.5 về tài khoản)
+    - cron: '15 7 * * 1-5'  # 14:15 VN -> 07:15 UTC (Giờ vàng T+2.5 & Big Boy chuẩn bị ATC)
+    - cron: '45 7 * * 1-5'  # 14:45 VN -> 07:45 UTC (Đang khớp lệnh ATC)
+    - cron: '5 8 * * 1-5'   # 15:05 VN -> 08:05 UTC (Chốt phiên đóng cửa ATC chính thức)
   workflow_dispatch:
   push:
     branches: [main]

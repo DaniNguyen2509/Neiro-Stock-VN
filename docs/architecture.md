@@ -88,7 +88,7 @@ flowchart TD
 ### 2.7. Tầng Tự Động Hóa & Đám Mây CI/CD (`.github/workflows/`)
 - **`ci.yml`:** Quality Gate tự động chạy trên mọi Pull Request và Push to `main`, kiểm thử 100% pytest và kiểm tra giới hạn dung lượng Zero-Waste (< 15MB).
 - **`scanner_and_pages.yml`:** Quy trình tự động hóa tác chiến 24/7 trên GitHub Actions:
-  - Tự động kích hoạt vào 3 mốc thời gian giao dịch chủ chốt (09:15 ATO, 11:45 Hết phiên sáng, 15:05 ATC chiều).
+  - Tự động kích hoạt định kỳ 30 phút/lần trong giờ giao dịch (09:15 - 11:45 và 13:15 - 15:05).
   - Hỗ trợ `workflow_dispatch` cho phép kích hoạt thủ công từ điện thoại bất kỳ lúc nào.
   - Đăng nhập Fialda VIP qua GitHub Secrets, quét Top 5 và sinh giao diện HTML.
   - Xuất bản bảng kết quả tức thì vào **GitHub Step Summary** trên ứng dụng di động.
