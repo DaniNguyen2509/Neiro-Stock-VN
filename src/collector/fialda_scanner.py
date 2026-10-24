@@ -1135,8 +1135,8 @@ def format_top_5_markdown(
             "### 📑 BÁO CÁO KẾT QUẢ KINH DOANH CÁC QUÝ GẦN NHẤT (DOANH THU & LỢI NHUẬN RÒNG BCTC)",
             "> *Thống kê xu hướng tăng trưởng 1 CP / 1 dòng duy nhất • Nguồn: Báo cáo tài chính Fialda VIP API*",
             "",
-            "| Mã CP | Kỳ Gần Nhất | Tiến Trình Doanh Thu (3 Quý Cũ ➔ Mới) | Tiến Trình LNST (3 Quý Cũ ➔ Mới) | Tăng Trưởng QoQ | Biên Lãi Gộp | Xu Hướng Động Lượng |",
-            "| :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
+            "| Mã CP | Kỳ BCTC | DTT Quý N-2 | DTT Quý N-1 | DTT Quý N (Mới) | LNST Quý N-2 | LNST Quý N-1 | LNST Quý N (Mới) | Tăng Trưởng QoQ | Biên Gộp | Xu Hướng Động Lượng |",
+            "| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
         ])
         for sym in spotlight:
             try:
@@ -1176,19 +1176,9 @@ def format_top_5_markdown(
             else:
                 eval_tag = "↘ CHẬM LẠI"
 
-            if len(quarters) >= 3:
-                rev_trend = f"{rev2:,.1f}t ➔ {rev1:,.1f}t ➔ **{rev0:,.1f} tỷ**"
-                np_trend = f"{np2:,.1f}t ➔ {np1:,.1f}t ➔ **{np0:,.1f} tỷ**"
-            elif len(quarters) == 2:
-                rev_trend = f"{rev1:,.1f}t ➔ **{rev0:,.1f} tỷ**"
-                np_trend = f"{np1:,.1f}t ➔ **{np0:,.1f} tỷ**"
-            else:
-                rev_trend = f"**{rev0:,.1f} tỷ**"
-                np_trend = f"**{np0:,.1f} tỷ**"
-
             growth_badge = f"`{growth_str}` ↗" if growth_qoq > 0 else f"`{growth_str}`"
             md.append(
-                f"| **{sym}** | `{q_name}` | {rev_trend} | {np_trend} | {growth_badge} | {margin0:.1f}% | `{eval_tag}` |"
+                f"| **{sym}** | `{q_name}` | {rev2:,.1f} tỷ | {rev1:,.1f} tỷ | **{rev0:,.1f} tỷ** | {np2:,.1f} tỷ | {np1:,.1f} tỷ | **{np0:,.1f} tỷ** | {growth_badge} | {margin0:.1f}% | `{eval_tag}` |"
             )
 
         # Bo sung Tin tuc & Su kien doanh nghiep

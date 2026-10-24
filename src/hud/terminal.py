@@ -214,38 +214,20 @@ def generate_terminal_html(
 
         growth_bg = "#1b5e20" if growth_qoq > 0 else ("#b71c1c" if growth_qoq < 0 else "#37474f")
         growth_fg = "#00e676" if growth_qoq > 0 else ("#ff8a80" if growth_qoq < 0 else "#b0bec5")
+        np2_color = "#00e676" if np2 >= 0 else "#ff5252"
+        np1_color = "#00e676" if np1 >= 0 else "#ff5252"
         np0_color = "#00e676" if np0 >= 0 else "#ff5252"
-
-        if len(quarters) >= 3:
-            rev_html = (
-                f'<span style="color:#78909c;">{rev2:,.1f}t</span> <span style="color:#4fc3f7;">➔</span> '
-                f'<span style="color:#90a4ae;">{rev1:,.1f}t</span> <span style="color:#4fc3f7;">➔</span> '
-                f'<span style="color:#ffb300;font-weight:700;">{rev0:,.1f} tỷ</span>'
-            )
-            np_html = (
-                f'<span style="color:#78909c;">{np2:,.1f}t</span> <span style="color:#4fc3f7;">➔</span> '
-                f'<span style="color:#90a4ae;">{np1:,.1f}t</span> <span style="color:#4fc3f7;">➔</span> '
-                f'<span style="color:{np0_color};font-weight:700;">{np0:,.1f} tỷ</span>'
-            )
-        elif len(quarters) == 2:
-            rev_html = (
-                f'<span style="color:#90a4ae;">{rev1:,.1f}t</span> <span style="color:#4fc3f7;">➔</span> '
-                f'<span style="color:#ffb300;font-weight:700;">{rev0:,.1f} tỷ</span>'
-            )
-            np_html = (
-                f'<span style="color:#90a4ae;">{np1:,.1f}t</span> <span style="color:#4fc3f7;">➔</span> '
-                f'<span style="color:{np0_color};font-weight:700;">{np0:,.1f} tỷ</span>'
-            )
-        else:
-            rev_html = f'<span style="color:#ffb300;font-weight:700;">{rev0:,.1f} tỷ</span>'
-            np_html = f'<span style="color:{np0_color};font-weight:700;">{np0:,.1f} tỷ</span>'
 
         bctc_rows_html += f"""
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">{sym}</td>
             <td style="padding:10px;text-align:center;"><span style="background:#263238;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;">{q_name}</span></td>
-            <td style="padding:10px;font-size:13px;white-space:nowrap;">{rev_html}</td>
-            <td style="padding:10px;font-size:13px;white-space:nowrap;">{np_html}</td>
+            <td style="padding:10px;text-align:right;color:#78909c;border-left:1px solid #1f2937;">{rev2:,.1f} tỷ</td>
+            <td style="padding:10px;text-align:right;color:#90a4ae;">{rev1:,.1f} tỷ</td>
+            <td style="padding:10px;text-align:right;font-weight:700;color:#ffb300;border-right:1px solid #1f2937;">{rev0:,.1f} tỷ</td>
+            <td style="padding:10px;text-align:right;color:{np2_color};">{np2:,.1f} tỷ</td>
+            <td style="padding:10px;text-align:right;color:{np1_color};">{np1:,.1f} tỷ</td>
+            <td style="padding:10px;text-align:right;font-weight:700;color:{np0_color};border-right:1px solid #1f2937;">{np0:,.1f} tỷ</td>
             <td style="padding:10px;text-align:center;">
                 <span style="background:{growth_bg};color:{growth_fg};padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">{growth_str}</span>
             </td>
@@ -551,13 +533,21 @@ def generate_terminal_html(
         <table>
             <thead>
                 <tr>
-                    <th>Mã CP</th>
-                    <th style="text-align:center;">Kỳ Gần Nhất</th>
-                    <th>Tiến Trình Doanh Thu Thuần (3 Quý Cũ ➔ Mới)</th>
-                    <th>Tiến Trình Lợi Nhuận Sau Thuế (3 Quý Cũ ➔ Mới)</th>
-                    <th style="text-align:center;">Tăng Trưởng LNST (QoQ)</th>
-                    <th style="text-align:center;">Biên Lãi Gộp</th>
-                    <th style="text-align:center;">Xu Hướng Động Lượng</th>
+                    <th rowspan="2" style="vertical-align:middle;">Mã CP</th>
+                    <th rowspan="2" style="text-align:center;vertical-align:middle;">Kỳ BCTC</th>
+                    <th colspan="3" style="text-align:center;background:#102a43;color:#4fc3f7;border-left:1px solid #243b53;border-right:1px solid #243b53;font-weight:bold;">DOANH THU THUẦN (TỶ VNĐ)</th>
+                    <th colspan="3" style="text-align:center;background:#0d3326;color:#00e676;border-right:1px solid #1b4d3e;font-weight:bold;">LỢI NHUẬN SAU THUẾ (TỶ VNĐ)</th>
+                    <th rowspan="2" style="text-align:center;vertical-align:middle;">Tăng Trưởng QoQ</th>
+                    <th rowspan="2" style="text-align:center;vertical-align:middle;">Biên Lãi Gộp</th>
+                    <th rowspan="2" style="text-align:center;vertical-align:middle;">Xu Hướng Động Lượng</th>
+                </tr>
+                <tr>
+                    <th style="text-align:right;font-size:11px;color:#90a4ae;border-left:1px solid #243b53;">Quý N-2</th>
+                    <th style="text-align:right;font-size:11px;color:#b0bec5;">Quý N-1</th>
+                    <th style="text-align:right;font-size:11px;color:#ffb300;font-weight:bold;border-right:1px solid #243b53;">Quý N (Mới)</th>
+                    <th style="text-align:right;font-size:11px;color:#90a4ae;">Quý N-2</th>
+                    <th style="text-align:right;font-size:11px;color:#b0bec5;">Quý N-1</th>
+                    <th style="text-align:right;font-size:11px;color:#00e676;font-weight:bold;border-right:1px solid #1b4d3e;">Quý N (Mới)</th>
                 </tr>
             </thead>
             <tbody>
