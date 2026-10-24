@@ -1056,13 +1056,14 @@ def format_top_5_markdown(
         md.append("> 🟡 **Trạng Thái Dữ Liệu:** `BẢNG GIÁ REAL-TIME THỰC TẾ (ENTRADE/DNSE PUBLIC)` | Chiến thuật định lượng mô phỏng")
     md.extend([
         "",
-        "| STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua | Cắt Lỗ (SL) | TP1 (1.5R) | TP2 (2.5R) | ADTV20 | Điểm TK | KL Mua Max | Trượt Giá | RRG | Comp | Ngoại | Điểm | Hạng Kỳ Trước |",
-        "| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
+        "| STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua | Cắt Lỗ | Chốt Lời (TP1 / TP2) | Thanh Khoản | RRG | IBD | Ngoại Ròng | Điểm AI | Kỳ Trước |",
+        "| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
     ])
 
     for idx, c in enumerate(candidates, 1):
         sig = "`CHÂN SÓNG`" if "CHO_MUA" in c.signal_type else "`ĐỘT BIẾN GT`"
         fn = f"{c.foreign_net_value_billion:+.1f} tỷ"
+        ad_letter = getattr(c, "acc_diss_rating", "C")
         if getattr(c, "prev_rank", None) is not None:
             delta = getattr(c, "rank_change_delta", None)
             if delta is not None and delta > 0:
@@ -1075,7 +1076,7 @@ def format_top_5_markdown(
             prev_str = "Mới"
 
         md.append(
-            f"| **{idx}** | **{c.symbol}** | {sig} | **{c.price:.2f}** | `{c.entry_low:.2f} - {c.entry_high:.2f}` | **{c.stop_loss:.2f}** | {c.tp1:.2f} | **{c.tp2:.2f}** | **{c.adtv20_billion:.1f} tỷ** | `{c.liquidity_score:.0f}/100` | **{c.max_shares_capacity:,.0f}** | `{c.slippage_est_pct:.2f}%` | {c.rrg_r:.0f}/{c.rrg_m:.0f} | {c.composite_rating} | {fn} | **{c.ranking_score:.1f}** | {prev_str} |"
+            f"| **{idx}** | **{c.symbol}** | {sig} | **{c.price:.2f}** | `{c.entry_low:.2f} - {c.entry_high:.2f}` | **{c.stop_loss:.2f}** | **{c.tp1:.2f}** / **{c.tp2:.2f}** | **{c.adtv20_billion:.1f}t** | {c.rrg_r:.0f}/{c.rrg_m:.0f} | {c.composite_rating} ({ad_letter}) | {fn} | **{c.ranking_score:.1f}** | {prev_str} |"
         )
 
     md.extend([

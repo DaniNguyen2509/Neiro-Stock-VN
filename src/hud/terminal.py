@@ -42,56 +42,51 @@ def generate_terminal_html(
         foreign_color = "#00e676" if c.foreign_net_value_billion >= 0 else "#ff5252"
 
         if c.liquidity_score >= 90:
-            liq_badge = '<span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">SIÊU TK</span>'
-            liq_color = "#00e676"
+            liq_badge = '<span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span>'
         elif c.liquidity_score >= 75:
-            liq_badge = '<span style="background:#01579b;color:#29b6f6;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span>'
-            liq_color = "#29b6f6"
+            liq_badge = '<span style="background:#01579b;color:#29b6f6;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span>'
         else:
-            liq_badge = '<span style="background:#ff6f00;color:#fff;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span>'
-            liq_color = "#ffb300"
+            liq_badge = '<span style="background:#ff6f00;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span>'
 
-        slip_color = "#00e676" if c.slippage_est_pct < 0.60 else ("#ffb300" if c.slippage_est_pct < 1.50 else "#ff5252")
+        ad_letter = getattr(c, "acc_diss_rating", "C")
+        ad_color = "#00e676" if ad_letter in ["A", "B"] else ("#ffb300" if ad_letter == "C" else "#ff5252")
+        ad_badge = f'<span style="font-size:11px;color:{ad_color};font-weight:bold;">{ad_letter}</span>'
 
         tp1_val = getattr(c, "tp1", c.price * 1.08)
         tp2_val = getattr(c, "tp2", c.target_1m)
+        tp_html = f'<span style="color:#4fc3f7;font-weight:bold;">{tp1_val:.2f}</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">{tp2_val:.2f}</span>'
 
         # Xep hang ky truoc va bien dong (+ / - hang)
         prev_rank = getattr(c, "prev_rank", None)
         delta_rank = getattr(c, "rank_change_delta", None)
         if prev_rank is not None:
             if delta_rank is not None and delta_rank > 0:
-                prev_rank_html = f'<span style="font-weight:bold;color:#eceff1;">#{prev_rank}</span> <span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">+{delta_rank}</span>'
+                prev_rank_html = f'<span style="font-weight:bold;color:#eceff1;">#{prev_rank}</span> <span style="background:#1b5e20;color:#00e676;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">+{delta_rank}</span>'
             elif delta_rank is not None and delta_rank < 0:
-                prev_rank_html = f'<span style="font-weight:bold;color:#eceff1;">#{prev_rank}</span> <span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">{delta_rank}</span>'
+                prev_rank_html = f'<span style="font-weight:bold;color:#eceff1;">#{prev_rank}</span> <span style="background:#b71c1c;color:#ff8a80;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">{delta_rank}</span>'
             else:
-                prev_rank_html = f'<span style="font-weight:bold;color:#eceff1;">#{prev_rank}</span> <span style="color:#78909c;font-size:11px;font-weight:bold;">(=)</span>'
+                prev_rank_html = f'<span style="font-weight:bold;color:#eceff1;">#{prev_rank}</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span>'
         else:
-            prev_rank_html = '<span style="background:#e65100;color:#ffe0b2;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">MỚI</span>'
+            prev_rank_html = '<span style="background:#e65100;color:#ffe0b2;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">MỚI</span>'
 
         fialda_rows_html += f"""
         <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:10px;text-align:center;color:#78909c;font-weight:bold;">{idx}</td>
-            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">{c.symbol}</td>
-            <td style="padding:10px;text-align:center;">{sig_badge}</td>
-            <td style="padding:10px;font-weight:bold;">{c.price:,.2f}</td>
-            <td style="padding:10px;color:#00e676;font-weight:600;">{c.entry_low:.2f} - {c.entry_high:.2f}</td>
-            <td style="padding:10px;color:#ff5252;font-weight:bold;">{c.stop_loss:.2f}</td>
-            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">{tp1_val:.2f}</td>
-            <td style="padding:10px;color:#ffb300;font-weight:bold;">{tp2_val:.2f}</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">{c.adtv20_billion:.1f} tỷ</td>
-            <td style="padding:10px;text-align:center;">
-                <div style="font-weight:bold;color:{liq_color};">{c.liquidity_score:.0f}/100</div>
-                <div style="margin-top:2px;">{liq_badge}</div>
+            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">{idx}</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">{c.symbol}</td>
+            <td style="padding:6px 5px;text-align:center;">{sig_badge}</td>
+            <td style="padding:6px 5px;font-weight:bold;">{c.price:,.2f}</td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">{c.entry_low:.2f} - {c.entry_high:.2f}</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">{c.stop_loss:.2f}</td>
+            <td style="padding:6px 5px;text-align:center;">{tp_html}</td>
+            <td style="padding:6px 5px;text-align:center;">
+                <span style="font-weight:bold;color:#4fc3f7;">{c.adtv20_billion:.1f}t</span>
+                <span style="margin-left:2px;">{liq_badge}</span>
             </td>
-            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">{c.max_shares_capacity:,.0f} cp</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:{slip_color};">~{c.slippage_est_pct:.2f}%</td>
-            <td style="padding:10px;text-align:center;color:#4fc3f7;">{c.rrg_r:.0f} / {c.rrg_m:.0f}</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;">{c.composite_rating}</td>
-            <td style="padding:10px;text-align:center;color:{foreign_color};">{foreign_str}</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">{c.ranking_score:.1f}</td>
-            <td style="padding:10px;font-size:12px;color:#b0bec5;">{c.catalyst}</td>
-            <td style="padding:10px;text-align:center;white-space:nowrap;">{prev_rank_html}</td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">{c.rrg_r:.0f}/{c.rrg_m:.0f}</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;">{c.composite_rating} <span style="font-size:10.5px;color:#78909c;">(</span>{ad_badge}<span style="font-size:10.5px;color:#78909c;">)</span></td>
+            <td style="padding:6px 5px;text-align:center;color:{foreign_color};font-weight:600;">{foreign_str}</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">{c.ranking_score:.1f}</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;">{prev_rank_html}</td>
         </tr>
         """
 
@@ -353,19 +348,20 @@ def generate_terminal_html(
         table {{
             width: 100%;
             border-collapse: collapse;
-            min-width: 700px;
         }}
         th {{
             background: #1c2431;
-            padding: 12px 10px;
+            padding: 8px 5px;
             text-align: left;
-            font-size: 12px;
+            font-size: 11px;
             color: #90a4ae;
             text-transform: uppercase;
             white-space: nowrap;
+            letter-spacing: 0.3px;
         }}
         td {{
             white-space: nowrap;
+            font-size: 12px;
         }}
         .section-header {{
             display: flex;
@@ -443,21 +439,16 @@ def generate_terminal_html(
                     <th style="text-align:center;">STT</th>
                     <th>Mã CP</th>
                     <th style="text-align:center;">Tín Hiệu AI</th>
-                    <th>Giá Khớp (1,000 đ)</th>
-                    <th>Vùng Mua An Toàn</th>
-                    <th>Cắt Lỗ (Stop Loss)</th>
-                    <th>Chốt Lời 1 (1.5R)</th>
-                    <th>Chốt Lời 2 (2.5R)</th>
-                    <th style="text-align:center;">Sức Chứa ADTV20</th>
-                    <th style="text-align:center;">Điểm TK</th>
-                    <th style="text-align:right;">KL Mua Max (Lô 100)</th>
-                    <th style="text-align:center;">Trượt Giá Dự Kiến</th>
-                    <th style="text-align:center;">RRG (r/m)</th>
-                    <th style="text-align:center;">IBD Tổng Hợp</th>
+                    <th>Giá Khớp</th>
+                    <th>Vùng Mua</th>
+                    <th>Cắt Lỗ</th>
+                    <th style="text-align:center;">Chốt Lời (TP1 / TP2)</th>
+                    <th style="text-align:center;">Thanh Khoản</th>
+                    <th style="text-align:center;">RRG</th>
+                    <th style="text-align:center;">IBD</th>
                     <th style="text-align:center;">Khối Ngoại</th>
-                    <th style="text-align:center;">Điểm Đánh Giá</th>
-                    <th>Động Lực Tăng Trưởng</th>
-                    <th style="text-align:center;">Hạng Kỳ Trước</th>
+                    <th style="text-align:center;">Điểm AI</th>
+                    <th style="text-align:center;">Kỳ Trước</th>
                 </tr>
             </thead>
             <tbody>

@@ -354,7 +354,7 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 5. **Theo Vết & Lưu Trữ Lịch Sử Xếp Hạng (Ranking History Tracker):**
    - Tự động lưu trữ chuỗi thời gian các phiên quét vào `data/ranking_history.jsonl` (áp dụng Rolling Window giữ tối đa 500 records $\sim 35\text{ KB}$, bảo đảm tiêu chuẩn Zero-Waste $< 15\text{ MB}$).
    - So sánh với phiên liền trước để tính biến động thứ hạng: $\Delta Rank = \text{Rank}_{\text{cũ}} - \text{Rank}_{\text{mới}}$ (`↗ +N` thăng hạng, `↘ -N` tụt hạng, `=` giữ hạng, `🆕 MỚI` bứt phá vào Top).
-   - Hiển thị trực quan cột $\Delta Rank$ trên bảng Top 20 và Widget lịch sử phiên quét trên Terminal HTML.
+   - Hiển thị trực quan cột `Kỳ Trước` (`#cũ +N` / `MỚI`) ở cột cuối cùng trên bảng Top 20; tinh gọn và hợp nhất các cột chốt lời (`TP1 / TP2`), thanh khoản ADTV để tối ưu bảng 13 cột hiển thị vừa vặn 100% màn hình, loại bỏ hoàn toàn thanh cuộn ngang (Zero Horizontal Scroll).
 
 
 
