@@ -308,8 +308,9 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
    - **Look-ahead Bias:** Tín hiệu tính toán cuối ngày $t$ (ATC), khớp lệnh mở cửa ATO phiên $t+1$.
    - **Point-in-Time Bias:** BCTC chỉ được đưa vào tính Piotroski F-Score / CAMEL khi $filing\_date \le as\_of\_date$ (tối thiểu 30-45 ngày sau chốt quý).
    - **Overfitting & Curve Fitting:** Đóng băng và phân tách độc lập 2 tập dữ liệu: In-Sample (2021-2023: Bullrun + Đại suy thoái 2022) và Out-of-Sample (2024-2026: Dữ liệu mù Unseen Data). Đo lường $\text{WFE} = \text{Sharpe}_{\text{OOS}} / \text{Sharpe}_{\text{IS}}$.
-5. **Thước Đo Hiệu Suất Chuẩn Mực:**
+5. **Thước Đo Hiệu Suất Chuẩn Mực & Phân Định Trách Nhiệm:**
    - CAGR, Annualized Sharpe ($R_f = 4.5\%$), Sortino Ratio, Max Drawdown (MDD), Profit Factor, Win Rate.
    - Kết quả thực nghiệm 2021-2026: MDD hệ thống chỉ **19.10%** (so với VN-Index sập tới **44.09%** trong khủng hoảng 2022), Sharpe OOS đạt **1.77**.
+   - **Phân Định Trách Nhiệm:** Module Kiểm Định Lịch Sử (`src/backtesting/`) đóng vai trò động cơ kiểm chứng định lượng nội bộ (Internal Research Engine), độc lập phục vụ nghiên cứu và kiểm thử mô hình. Giao diện Web Dashboard (`exports/index.html`) duy trì cấu trúc tác chiến liên tục (Top 20 Siêu Cổ Phiếu Chân Sóng, Định Lượng Cơ Bản, CAMEL Ngân Hàng, BCTC & Tin Tức Spotlight) để nhà đầu tư hành động nhanh nhất.
 
 
