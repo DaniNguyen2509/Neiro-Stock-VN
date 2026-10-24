@@ -251,3 +251,18 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 2. **Quy tắc Rolling Inventory (Đệm Hàng Sẵn Có T+0):**
    - Chỉ giải ngân vị thế tỷ trọng lớn $\ge 20\%$ tài khoản khi tài khoản **đã có sẵn ít nhất $50\%$ khối lượng mã đó ở trạng thái T+0** (hàng đã khả dụng bán).
    - Nếu thị trường bất ngờ có biến cố Black Swan trong phiên, nhà đầu tư có thể xả ngay lượng hàng T+0 sẵn có để khóa rủi ro, vô hiệu hóa hoàn toàn bẫy kẹt hàng T+2.5.
+
+---
+
+### Tier 7: Fialda VIP Expert Harvester & Tactical Terminal Live (GitHub Pages)
+
+1. **Kết Nối Trực Tiếp API Fialda VIP:**
+   - **Bảng Giá & Khớp Lệnh Real-time:** `POST /api/services/app/Common/GetStockInfos` truy xuất dữ liệu giá khớp (`currentPrice`, `lastPrice`, `highPrice`, `lowPrice`) và giá trị giao dịch ròng Khối ngoại (`totalForeignNetValue`) theo thời gian thực (đơn vị: 1,000 VND).
+   - **Chỉ Số Tài Chính Định Lượng Chuẩn:** `GET /api/services/app/TechnicalAnalysis/GetFinancialHighlights?symbol={symbol}` cung cấp dữ liệu báo cáo tài chính chuẩn hóa: Piotroski F-Score (0-9), P/E, P/B, EPS, dòng tiền $CFO / Net Income$.
+   - **Tín Hiệu AI Chân Sóng & Đột Biến:** `GetTinHieuChoMuaNew` và `GetTinHieuDotBienGiaTri` lọc ra các mã nén giá nền tích lũy hoặc có dòng tiền cá mập đột biến giá trị.
+   - **Ma Trận Luân Chuyển Ngành RRG:** `GetRRGData` tính toán tọa độ $RS\text{-Ratio}$ và $RS\text{-Momentum}$ chuẩn xác từ Fialda Expert.
+
+2. **Chuẩn Hóa Giao Diện Tiếng Việt & Triển Khai GitHub Pages:**
+   - **Bản Địa Hóa 100% Tiếng Việt:** Toàn bộ bảng điều khiển chiến thuật (`src/hud/terminal.py`) và báo cáo quét thị trường (`reports/latest_scan.md`) sử dụng tiếng Việt chuẩn mực, giữ nguyên các ký hiệu định lượng quốc tế chuẩn (Piotroski F-Score, P/E, P/B, RRG, Basis, Stop Loss, Target, NAV, T+2.5).
+   - **Triển Khai Tự Động:** Nhánh `gh-pages` được tự động cập nhật qua GitHub Actions, cung cấp giao diện trực quan 24/7 xem được trên mọi thiết bị di động tại URL: `https://daninguyen2509.github.io/Neiro-Stock-VN/`.
+

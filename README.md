@@ -137,7 +137,8 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
   - `FIALDA_USERNAME`: Email tài khoản Fialda VIP.
   - `FIALDA_PASSWORD`: Mật khẩu tài khoản Fialda VIP.
 - **Kích hoạt GitHub Pages:**
-  Vào **Settings** -> **Pages** -> Tại mục **Build and deployment**, chọn **Source: GitHub Actions**.
+  Vào **Settings** -> **Pages** -> Tại mục **Build and deployment**, chọn **Source: Deploy from a branch** với Branch là **gh-pages / (root)** để xem trực tiếp ngay lập tức tại:
+  `https://daninguyen2509.github.io/Neiro-Stock-VN/`
 
 
 
