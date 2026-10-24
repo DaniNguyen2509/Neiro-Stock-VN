@@ -56,16 +56,31 @@ jobs:
           mkdir -p exports reports
           python -m src.collector.fialda_scanner --save-report reports/latest_scan.md --generate-terminal
 
-      - name: Setup GitHub Pages
-        uses: actions/configure-pages@v5
+      - name: Copy 404 and nojekyll for GitHub Pages
+        run: |
+          cp exports/index.html exports/404.html || true
+          touch exports/.nojekyll
 
-      - name: Upload GitHub Pages Artifact
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./exports
+          keep_files: false
+
+      - name: Setup GitHub Pages (Actions Mode)
+        uses: actions/configure-pages@v5
+        continue-on-error: true
+
+      - name: Upload GitHub Pages Artifact (Actions Mode)
         uses: actions/upload-pages-artifact@v3
+        continue-on-error: true
         with:
           path: 'exports/'
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages (Actions Mode)
         id: deployment
+        continue-on-error: true
         uses: actions/deploy-pages@v4
 
       - name: Commit Latest Scan Report

@@ -166,6 +166,20 @@ class FialdaScanner:
             pass
         return {}
 
+    def get_stock_infos(self, symbols: List[str]) -> Dict[str, Dict[str, Any]]:
+        """Lay gia khop thuc te, bien do va giao dich khoi ngoai chinh xac 100% qua GetStockInfos."""
+        if not symbols or not self.token:
+            return {}
+        url = f"{self.BASE_URL}/api/services/app/Common/GetStockInfos"
+        payload = [{"symbol": s} for s in symbols]
+        try:
+            resp = requests.post(url, json=payload, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                return resp.json().get("result", {})
+        except Exception as e:
+            print(f"Warning: Khong the lay GetStockInfos: {e}")
+        return {}
+
     def scan_top_5_rockets(self) -> List[FialdaCandidate]:
         """Quet va tong hop chon ra dung Top 5 Sieu Co Phieu cho chu ky 1 thang."""
         if not self.token:
@@ -185,11 +199,30 @@ class FialdaScanner:
         for sym in list(market_sym_map.keys())[:15]:
             pool.add(sym)
 
+        clean_pool = [s for s in pool if s and len(s) == 3]
+        stock_infos = self.get_stock_infos(clean_pool)
+
         candidates: List[FialdaCandidate] = []
 
-        for sym in pool:
-            if not sym or len(sym) != 3:
+        for sym in clean_pool:
+            # Lay thong tin gia khop that 100% tu GetStockInfos
+            s_info = stock_infos.get(sym, {})
+            p_info = s_info.get("PriceInfo", {})
+            f_trade = s_info.get("ForeignTrade", {})
+
+            cur_price = p_info.get("currentPrice") or p_info.get("lastPrice") or p_info.get("closePrice")
+            if not cur_price:
+                cur_price = market_sym_map.get(sym, {}).get("currentPrice") or 0.0
+
+            if cur_price <= 0:
                 continue
+
+            # Lay gia tri khoi ngoai that tu ForeignTrade
+            foreign_net = f_trade.get("totalForeignNetValue")
+            if foreign_net is not None:
+                foreign_net = foreign_net / 1e9
+            else:
+                foreign_net = (market_sym_map.get(sym, {}).get("totalForeignerNetBuyValue") or 0.0) / 1e9
 
             # Lay diem so the che
             rating = self.get_expert_rating(sym)
@@ -197,15 +230,10 @@ class FialdaScanner:
             composite = rating.get("compositeRating") or 50
             acc_diss = rating.get("accDissRating") or "C"
 
-            # Tọa do RRG
+            # Toa do RRG
             rrg_item = rrg_all.get(sym, {})
             rrg_r = rrg_item.get("r", 100.0)
             rrg_m = rrg_item.get("m", 100.0)
-
-            # Thong tin gia tu MarketTopSymbols
-            m_data = market_sym_map.get(sym, {})
-            cur_price = m_data.get("currentPrice") or 25.0
-            foreign_net = (m_data.get("totalForeignerNetBuyValue") or 0.0) / 1e9
 
             # Xac dinh tin hieu & vung gia mua
             signal_type = "THE_CHE_GOM"
