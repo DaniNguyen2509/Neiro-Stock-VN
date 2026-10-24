@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neiro-Stock-VN | Bảng Điều Khiển Chiến Thuật Định Lượng</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #0b0e14;
+            color: #d1d4dc;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 15px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 2px solid #1f2937;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffb300;
+            letter-spacing: 0.5px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        .card {
+            background: #151a23;
+            border: 1px solid #263238;
+            border-radius: 8px;
+            padding: 14px;
+        }
+        .card-title {
+            font-size: 11px;
+            color: #78909c;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        .card-value {
+            font-size: 20px;
+            font-weight: 800;
+        }
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #263238;
+            margin-bottom: 25px;
+            background: #151a23;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+        th {
+            background: #1c2431;
+            padding: 12px 10px;
+            text-align: left;
+            font-size: 12px;
+            color: #90a4ae;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        td {
+            white-space: nowrap;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .section-title {
+            color: #ffb300;
+            font-size: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 11px;
+            color: #546e7a;
+            border-top: 1px solid #1f2937;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <div class="title">NEIRO-STOCK-VN | BẢNG ĐIỀU KHIỂN CHIẾN THUẬT ĐỊNH LƯỢNG</div>
+            <div style="font-size:12px;color:#78909c;margin-top:4px;">
+                Hệ Thống Phân Tích Cơ Bản Học Thuật Stanford (F-Score) & Vi Cấu Trúc Sổ Lệnh (OFI & Volume Profile)
+            </div>
+        </div>
+        <div style="text-align:right;">
+            <div style="display:inline-block;background:#0d47a1;color:#64b5f6;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;">🟡 DỮ LIỆU: BẢNG GIÁ REAL-TIME (ENTRADE/DNSE)</div>
+            <div style="font-size:11px;color:#78909c;margin-top:4px;">Cập nhật theo chu kỳ giao dịch thực tế</div>
+        </div>
+    </div>
+
+    <!-- 4 METRIC CARDS -->
+    <div class="grid">
+        <div class="card">
+            <div class="card-title">Chênh Lệch Basis VN30F1M</div>
+            <div class="card-value" style="color:#29b6f6;">-3.30 ĐIỂM</div>
+            <div style="font-size:11px;color:#78909c;margin-top:4px;">Trạng thái: Cân Bằng Bình Thường</div>
+        </div>
+        <div class="card">
+            <div class="card-title">Dòng Tiền Cá Mập Định Chế</div>
+            <div class="card-value" style="color:#00e676;">+427.5 Tỷ VND</div>
+            <div style="font-size:11px;color:#78909c;margin-top:4px;">Khối ngoại + Tự doanh mua ròng</div>
+        </div>
+        <div class="card">
+            <div class="card-title">Độ Rộng Thị Trường (VN30 > MA20)</div>
+            <div class="card-value" style="color:#ffb300;">73.3%</div>
+            <div style="font-size:11px;color:#78909c;margin-top:4px;">22/30 Cổ phiếu giữ xu hướng tăng</div>
+        </div>
+        <div class="card">
+            <div class="card-title">Ngành Dẫn Dắt (Động Lượng RRG)</div>
+            <div class="card-value" style="color:#00e676;">NÔNG NGHIỆP & CHỨNG KHOÁN</div>
+            <div style="font-size:11px;color:#78909c;margin-top:4px;">DBC, CTS bứt phá mạnh</div>
+        </div>
+    </div>
+
+    <!-- PHẦN 1: BẢNG TOP SIÊU CỔ PHIẾU CHÂN SÓNG -->
+    <div class="section-header">
+        <div class="section-title">TOP 20 SIÊU CỔ PHIẾU CHÂN SÓNG & ĐỘT BIẾN DÒNG TIỀN (1 THÁNG | MỤC TIÊU +20% - +35%)</div>
+        <span style="font-size:11px;color:#78909c;">Nguồn: Fialda VIP Expert & Tích Lũy Khối Lượng Order Flow & Quản Trị Sức Chứa Thanh Khoản</span>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th style="text-align:center;">STT</th>
+                    <th>Mã CP</th>
+                    <th style="text-align:center;">Tín Hiệu AI</th>
+                    <th>Giá Khớp (1,000 đ)</th>
+                    <th>Vùng Mua An Toàn</th>
+                    <th>Cắt Lỗ (Stop Loss)</th>
+                    <th>Chốt Lời 1 (1.5R)</th>
+                    <th>Chốt Lời 2 (2.5R)</th>
+                    <th style="text-align:center;">Tỷ Lệ R:R</th>
+                    <th style="text-align:center;">Vùng T+2.5</th>
+                    <th style="text-align:center;">Sức Chứa ADTV20</th>
+                    <th style="text-align:center;">Điểm TK</th>
+                    <th style="text-align:right;">KL Mua Max (Lô 100)</th>
+                    <th style="text-align:center;">Trượt Giá Dự Kiến</th>
+                    <th style="text-align:center;">RRG (r/m)</th>
+                    <th style="text-align:center;">IBD Tổng Hợp</th>
+                    <th style="text-align:center;">Khối Ngoại</th>
+                    <th style="text-align:center;">Điểm Đánh Giá</th>
+                    <th>Động Lực Tăng Trưởng</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">1 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">DBC</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
+            <td style="padding:10px;font-weight:bold;">16.45</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">16.12 - 16.61</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">15.96</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">17.18 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">17.67 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">65.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#29b6f6;">84/100</div>
+                <div style="margin-top:2px;"><span style="background:#01579b;color:#29b6f6;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">395,100 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">~0.52%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">102 / 101</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">79</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">+4.4 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">90.5</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">AI Expert Cho Mua nen gia, RRG Leading, Nhom Thit lon tang truong quy 4</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">2 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">CTS</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
+            <td style="padding:10px;font-weight:bold;">21.95</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">21.51 - 22.17</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">21.29</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">22.94 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">23.60 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">38.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#29b6f6;">78/100</div>
+                <div style="margin-top:2px;"><span style="background:#01579b;color:#29b6f6;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">173,100 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">~0.55%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">102 / 102</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">93</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">+1.8 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">87.5</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">Dot bien dong tien Nhom Chung khoan, Huong loi tu KRX va nang hang</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">3 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">EIB</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
+            <td style="padding:10px;font-weight:bold;">17.85</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">17.49 - 18.03</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">17.31</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">18.66 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">19.20 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">75.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#29b6f6;">86/100</div>
+                <div style="margin-top:2px;"><span style="background:#01579b;color:#29b6f6;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">420,100 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">~0.50%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">101 / 100</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">61</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">+28.4 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">83.5</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">Nen gia tich luy Fialda Expert, Khoi ngoai mua rong dot bien</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">4 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">PTB</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
+            <td style="padding:10px;font-weight:bold;">30.90</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">30.28 - 31.21</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">29.97</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">32.30 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">33.22 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">22.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#ffb300;">67/100</div>
+                <div style="margin-top:2px;"><span style="background:#ff6f00;color:#fff;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">71,100 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">~0.62%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">102 / 100</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">72</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">+0.4 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">81.8</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">Xuat khau go va da phuc hoi, Dinh gia P/E 7.2 re hiem co</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">5 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">GEX</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
+            <td style="padding:10px;font-weight:bold;">24.10</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">23.62 - 24.34</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">23.38</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">25.18 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">25.90 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">110.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#00e676;">91/100</div>
+                <div style="margin-top:2px;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">SIÊU TK</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">456,400 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">~0.46%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">100 / 101</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">78</td>
+            <td style="padding:10px;text-align:center;color:#ff5252;">-9.4 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">81.7</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">Dot bien gia tri gom ca map, Nang luong tai tao & KCN thoai von</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">6 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">HPG</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
+            <td style="padding:10px;font-weight:bold;">20.95</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">20.53 - 21.16</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">20.32</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">21.89 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">22.52 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">450.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#00e676;">98/100</div>
+                <div style="margin-top:2px;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">SIÊU TK</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">2,147,900 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">~0.40%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">102 / 101</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">85</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">+52.0 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">80.5</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">F-Score 9/9, Dung Quat 2 van hanh, Dau tu cong va thep tang truong</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">7 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">VHM</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
+            <td style="padding:10px;font-weight:bold;">64.30</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">63.01 - 64.94</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">62.37</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">67.19 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">69.12 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">280.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#00e676;">96/100</div>
+                <div style="margin-top:2px;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">SIÊU TK</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">435,400 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">~0.42%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">102 / 102</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">81</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">+115.0 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">80.0</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">Ban giao dai du an, Dong tien hoat dong CFO/NI 2.26 cuc manh</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">8 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">FPT</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
+            <td style="padding:10px;font-weight:bold;">57.00</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">55.86 - 57.57</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">55.29</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">59.56 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">61.28 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">260.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#00e676;">95/100</div>
+                <div style="margin-top:2px;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">SIÊU TK</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">456,100 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">~0.43%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">102 / 101</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">88</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">+35.0 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">79.5</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">Don hang AI va ban dan toan cau, Xu huong tang truong 20% deu dan</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">9 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">SSI</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
+            <td style="padding:10px;font-weight:bold;">19.95</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">19.55 - 20.15</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">19.35</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">20.85 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">21.45 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">320.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#00e676;">97/100</div>
+                <div style="margin-top:2px;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">SIÊU TK</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">1,604,000 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">~0.41%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">101 / 102</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">80</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">+12.0 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">78.5</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">Thanh khoan thi truong phuc hoi, Tich luy nen gia chung khoan</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">10 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">VCB</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
+            <td style="padding:10px;font-weight:bold;">56.80</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">55.66 - 57.37</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">55.10</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">59.35 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">61.05 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">120.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#00e676;">92/100</div>
+                <div style="margin-top:2px;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">SIÊU TK</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">211,200 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">~0.45%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">101 / 100</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">82</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">+48.0 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">78.0</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">Tru vung vang VN-Index, Ty le bao phu no xau cao nhat toan nganh</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">11 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">ACB</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
+            <td style="padding:10px;font-weight:bold;">21.30</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">20.87 - 21.51</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">20.66</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">22.26 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">22.90 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">140.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#00e676;">93/100</div>
+                <div style="margin-top:2px;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">SIÊU TK</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">657,200 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">~0.45%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">101 / 101</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">83</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">+15.0 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">77.5</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">Ngan hang chat luong tai san hang dau, Tang truong tin dung on dinh</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">12 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">MWG</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
+            <td style="padding:10px;font-weight:bold;">75.50</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">73.99 - 76.25</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">73.23</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">78.91 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">81.17 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">190.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#00e676;">94/100</div>
+                <div style="margin-top:2px;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">SIÊU TK</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">391,700 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">~0.44%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">102 / 101</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">78</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">+25.0 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">77.0</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">Bach Hoa Xanh co lai ro ret, Doanh thu tieu dung phuc hoi cuoi nam</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">13 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">DGC</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
+            <td style="padding:10px;font-weight:bold;">33.70</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">33.03 - 34.04</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">32.69</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">35.22 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">36.23 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">85.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#29b6f6;">88/100</div>
+                <div style="margin-top:2px;"><span style="background:#01579b;color:#29b6f6;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">99,700 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">~0.49%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">102 / 101</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">84</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">+18.0 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">76.5</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">Gia Photpho vang the gioi tang, Huong loi chuoi cung ung ban dan</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">14 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">KBC</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
+            <td style="padding:10px;font-weight:bold;">27.00</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">26.46 - 27.27</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">26.19</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">28.21 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">29.02 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">72.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#29b6f6;">86/100</div>
+                <div style="margin-top:2px;"><span style="background:#01579b;color:#29b6f6;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">261,800 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">~0.51%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">101 / 102</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">75</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">+14.0 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">76.0</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">Bat dong san KCN hut von FDI, Tien do du an Trang Due 3</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">15 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">PVD</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
+            <td style="padding:10px;font-weight:bold;">18.70</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">18.33 - 18.89</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">18.14</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">19.54 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">20.10 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">55.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#29b6f6;">82/100</div>
+                <div style="margin-top:2px;"><span style="background:#01579b;color:#29b6f6;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">245,500 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">~0.53%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">101 / 101</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">76</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">+8.5 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">75.5</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">Hieu suat gian khoan full cong suat, Don gia cho thue gian tang manh</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">16 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">VCI</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
+            <td style="padding:10px;font-weight:bold;">19.60</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">19.21 - 19.80</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">19.01</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">20.48 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">21.08 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">95.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#29b6f6;">89/100</div>
+                <div style="margin-top:2px;"><span style="background:#01579b;color:#29b6f6;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">277,700 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">~0.48%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">102 / 101</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">81</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">+11.2 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">75.0</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">Mang IB thuong vu lon, Huong loi nang hang thi truong FTSE</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">17 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">ANV</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
+            <td style="padding:10px;font-weight:bold;">19.05</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">18.67 - 19.24</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">18.48</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">19.91 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">20.48 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">28.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#ffb300;">73/100</div>
+                <div style="margin-top:2px;"><span style="background:#ff6f00;color:#fff;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">88,800 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">~0.58%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">101 / 101</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">74</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">+6.0 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">74.5</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">Xuat khau ca tra sang My va Trung Quoc phuc hoi ve gia ban</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">18 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">SZC</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
+            <td style="padding:10px;font-weight:bold;">20.20</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">19.80 - 20.40</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">19.59</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">21.11 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">21.72 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">32.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#29b6f6;">76/100</div>
+                <div style="margin-top:2px;"><span style="background:#01579b;color:#29b6f6;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">84,200 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">~0.57%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">101 / 101</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">77</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">+9.0 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">74.0</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">Quy dat Chau Duc san sang cho thue, Huong loi cao toc Bien Hoa - Vung Tau</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">19 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">TCB</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
+            <td style="padding:10px;font-weight:bold;">34.20</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">33.52 - 34.54</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">33.17</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">35.75 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">36.78 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">180.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#00e676;">94/100</div>
+                <div style="margin-top:2px;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">SIÊU TK</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">526,300 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">~0.44%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">101 / 101</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">83</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">+32.0 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">73.5</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">Ngan hang hang dau ve CASA 40.2%, Dinh gia P/B 1.1x re hap dan, Basel III</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;text-align:center;color:#78909c;white-space:nowrap;">20 <span style="color:#78909c;font-size:10px;margin-left:3px;">=</span></td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:15px;">REE</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
+            <td style="padding:10px;font-weight:bold;">45.90</td>
+            <td style="padding:10px;color:#00e676;font-weight:600;">44.98 - 46.36</td>
+            <td style="padding:10px;color:#ff5252;font-weight:bold;">44.52</td>
+            <td style="padding:10px;color:#4fc3f7;font-weight:bold;">47.97 <span style="font-size:10px;color:#78909c;">(1.5R)</span></td>
+            <td style="padding:10px;color:#ffb300;font-weight:bold;">49.35 <span style="font-size:10px;color:#78909c;">(2.5R)</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#00e676;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold;">1:2.5</span>
+            </td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">T+0 (SAFE)</span></td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">42.0 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <div style="font-weight:bold;color:#29b6f6;">80/100</div>
+                <div style="margin-top:2px;"><span style="background:#01579b;color:#29b6f6;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span></div>
+            </td>
+            <td style="padding:10px;text-align:right;font-weight:bold;color:#00e676;font-size:13px;">91,500 cp</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">~0.55%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">101 / 101</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">79</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">+16.5 tỷ</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">73.0</td>
+            <td style="padding:10px;font-size:12px;color:#b0bec5;">Nang luong tai tao va cho thue van phong Etown 6 tao dong tien on dinh</td>
+        </tr>
+        
+            </tbody>
+        </table>
+    </div>
+
+    <!-- PHẦN 1.5: THEO VẾT LỊCH SỬ XẾP HẠNG & BIẾN ĐỘNG THỨ HẠNG -->
+    <div class="section-header">
+        <div class="section-title" style="color:#00e676;">📈 LỊCH SỬ XẾP HẠNG & THEO VẾT BIẾN ĐỘNG THỨ HẠNG (RANKING HISTORY TRACKER)</div>
+        <span style="font-size:11px;color:#78909c;">Tự động lưu trữ chuỗi thời gian & nhận diện cổ phiếu bứt phá / thăng hạng qua các phiên quét</span>
+    </div>
+    <div style="margin-bottom:25px;">
+        
+            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:8px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                    <span style="font-weight:bold;color:#4fc3f7;font-size:13px;">🕒 Phiên Quét: 2026-10-24 21:09:42</span>
+                    <span style="font-size:11px;color:#78909c;">Theo dõi: 20 Cổ phiếu</span>
+                </div>
+                <div style="font-size:12px;color:#b0bec5;margin-top:4px;">
+                    Top 5 Dẫn Đầu: <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#1 DBC (90.5đ)</span> <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#2 CTS (87.5đ)</span> <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#3 EIB (83.5đ)</span> <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#4 PTB (81.8đ)</span> <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#5 GEX (81.7đ)</span>
+                </div>
+            </div>
+            
+            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:8px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                    <span style="font-weight:bold;color:#4fc3f7;font-size:13px;">🕒 Phiên Quét: 2026-10-24 21:08:05</span>
+                    <span style="font-size:11px;color:#78909c;">Theo dõi: 20 Cổ phiếu</span>
+                </div>
+                <div style="font-size:12px;color:#b0bec5;margin-top:4px;">
+                    Top 5 Dẫn Đầu: <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#1 DBC (90.5đ)</span> <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#2 CTS (87.5đ)</span> <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#3 EIB (83.5đ)</span> <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#4 PTB (81.8đ)</span> <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#5 GEX (81.7đ)</span>
+                </div>
+            </div>
+            
+            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:8px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                    <span style="font-weight:bold;color:#4fc3f7;font-size:13px;">🕒 Phiên Quét: 2026-10-24 21:08:04</span>
+                    <span style="font-size:11px;color:#78909c;">Theo dõi: 40 Cổ phiếu</span>
+                </div>
+                <div style="font-size:12px;color:#b0bec5;margin-top:4px;">
+                    Top 5 Dẫn Đầu: <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#1 DBC (90.5đ)</span> <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#1 DBC (90.5đ)</span> <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#2 CTS (87.5đ)</span> <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#2 CTS (87.5đ)</span> <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#3 EIB (83.5đ)</span>
+                </div>
+            </div>
+            
+            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:8px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                    <span style="font-weight:bold;color:#4fc3f7;font-size:13px;">🕒 Phiên Quét: 2026-10-24 21:08:03</span>
+                    <span style="font-size:11px;color:#78909c;">Theo dõi: 40 Cổ phiếu</span>
+                </div>
+                <div style="font-size:12px;color:#b0bec5;margin-top:4px;">
+                    Top 5 Dẫn Đầu: <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#1 DBC (90.5đ)</span> <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#1 DBC (90.5đ)</span> <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#2 CTS (87.5đ)</span> <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#2 CTS (87.5đ)</span> <span style="background:#263238;color:#ffb300;padding:3px 7px;border-radius:4px;font-size:12px;font-weight:bold;margin-right:4px;">#3 EIB (83.5đ)</span>
+                </div>
+            </div>
+            
+    </div>
+
+    <!-- PHẦN 2: BẢNG XẾP HẠNG ĐỊNH LƯỢNG CƠ BẢN -->
+    <div class="section-header">
+        <div class="section-title" style="color:#90a4ae;">BẢNG XẾP HẠNG ĐỊNH LƯỢNG CƠ BẢN (PIOTROSKI F-SCORE & CHỈ SỐ TÀI CHÍNH)</div>
+        <span style="font-size:11px;color:#78909c;">Bộ lọc tài chính định lượng giá trị & chất lượng lợi nhuận</span>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã CP</th>
+                    <th>Tên Doanh Nghiệp</th>
+                    <th>Nhóm Ngành</th>
+                    <th>Giá Khớp (1,000 đ)</th>
+                    <th style="text-align:center;">F-Score (Piotroski)</th>
+                    <th style="text-align:center;">P/E</th>
+                    <th style="text-align:center;">P/B</th>
+                    <th style="text-align:center;">CFO / NI</th>
+                    <th style="text-align:center;">Xếp Hạng Định Chế</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">HPG</td>
+            <td style="padding:10px;">Tập đoàn Hòa Phát</td>
+            <td style="padding:10px;color:#aaa;">Thép & Vật liệu</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">20.95</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">9/9</td>
+            <td style="padding:10px;text-align:center;">8.5</td>
+            <td style="padding:10px;text-align:center;">1.4</td>
+            <td style="padding:10px;text-align:center;">0.91</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỊNH CHẾ GOM</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">PTB</td>
+            <td style="padding:10px;">Phú Tài</td>
+            <td style="padding:10px;color:#aaa;">Gỗ & Đá xuất khẩu</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">30.90</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">6/9</td>
+            <td style="padding:10px;text-align:center;">7.2</td>
+            <td style="padding:10px;text-align:center;">1.0</td>
+            <td style="padding:10px;text-align:center;">1.15</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỊNH CHẾ GOM</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">VHM</td>
+            <td style="padding:10px;">Vinhomes</td>
+            <td style="padding:10px;color:#aaa;">Bất động sản</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">64.30</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">6/9</td>
+            <td style="padding:10px;text-align:center;">15.8</td>
+            <td style="padding:10px;text-align:center;">4.4</td>
+            <td style="padding:10px;text-align:center;">2.26</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỊNH CHẾ GOM</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">FPT</td>
+            <td style="padding:10px;">Tập đoàn FPT</td>
+            <td style="padding:10px;color:#aaa;">Công nghệ thông tin</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">57.00</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">5/9</td>
+            <td style="padding:10px;text-align:center;">13.2</td>
+            <td style="padding:10px;text-align:center;">3.2</td>
+            <td style="padding:10px;text-align:center;">0.66</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#37474f;color:#b0bec5;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">THEO DÕI</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">SSI</td>
+            <td style="padding:10px;">Chứng khoán SSI</td>
+            <td style="padding:10px;color:#aaa;">Dịch vụ tài chính</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">19.95</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">5/9</td>
+            <td style="padding:10px;text-align:center;">16.7</td>
+            <td style="padding:10px;text-align:center;">2.0</td>
+            <td style="padding:10px;text-align:center;">0.85</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#37474f;color:#b0bec5;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">THEO DÕI</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">DBC</td>
+            <td style="padding:10px;">Dabaco Việt Nam</td>
+            <td style="padding:10px;color:#aaa;">Nông nghiệp</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">16.45</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">5/9</td>
+            <td style="padding:10px;text-align:center;">6.5</td>
+            <td style="padding:10px;text-align:center;">0.8</td>
+            <td style="padding:10px;text-align:center;">1.42</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỊNH CHẾ GOM</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">CTS</td>
+            <td style="padding:10px;">Chứng khoán VietinBank</td>
+            <td style="padding:10px;color:#aaa;">Dịch vụ tài chính</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">21.95</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">4/9</td>
+            <td style="padding:10px;text-align:center;">49.9</td>
+            <td style="padding:10px;text-align:center;">1.9</td>
+            <td style="padding:10px;text-align:center;">0.95</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#37474f;color:#b0bec5;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">THEO DÕI</span></td>
+        </tr>
+        
+            </tbody>
+        </table>
+    </div>
+    <div style="font-size:12px;color:#78909c;margin:-15px 0 25px 4px;line-height:1.6;">
+        💡 <b>Ghi chú định lượng học thuật (Piotroski, 2000):</b> Thang điểm <b>Piotroski F-Score (0-9)</b> loại trừ ngành Ngân hàng (MBB, VCB) do đặc thù BCTC không có <i>Giá vốn/Biên Lợi Nhuận Gộp</i> và <i>Hệ số Thanh toán ngắn hạn (Current Ratio)</i>. Toàn bộ cổ phiếu Ngân hàng được đánh giá chuyên sâu qua Bảng Định Lượng CAMEL & Basel II/III ngay bên dưới.
+    </div>
+
+    <!-- PHẦN 3: BẢNG ĐỊNH LƯỢNG NGÂN HÀNG THƯƠNG MẠI CAMEL -->
+    <div class="section-header">
+        <div class="section-title" style="color:#00e676;">🏦 BẢNG ĐỊNH LƯỢNG NGÂN HÀNG THƯƠNG MẠI (CAMEL & BASEL II/III QUANT)</div>
+        <span style="font-size:11px;color:#78909c;">Mô hình độc quyền phân tích 5 trụ cột: Vốn (C), Chất lượng nợ & LLR (A), Chi phí CIR (M), Lợi nhuận & CASA (E), Thanh khoản LDR (L)</span>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã CP</th>
+                    <th>Tên Ngân Hàng</th>
+                    <th>Giá Khớp (1,000 đ)</th>
+                    <th style="text-align:center;">Điểm CAMEL</th>
+                    <th style="text-align:center;">CASA (%)</th>
+                    <th style="text-align:center;">NIM (%)</th>
+                    <th style="text-align:center;">NPL Nợ Xấu</th>
+                    <th style="text-align:center;">LLR Bao Phủ</th>
+                    <th style="text-align:center;">CIR (%)</th>
+                    <th style="text-align:center;">ROE (%)</th>
+                    <th style="text-align:center;">P/B</th>
+                    <th style="text-align:center;">Xếp Hạng CAMEL</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">VCB</td>
+            <td style="padding:10px;">Vietcombank</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">56.80</td>
+            <td style="padding:10px;text-align:center;font-weight:800;color:#00e676;font-size:14px;">88/100</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">34.2%</td>
+            <td style="padding:10px;text-align:center;">3.2%</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">0.98%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">230%</td>
+            <td style="padding:10px;text-align:center;">31.5%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">21.5%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">2.1</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">HẠNG A (TINH HOA)</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">MBB</td>
+            <td style="padding:10px;">Ngân hàng Quân Đội</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">19.80</td>
+            <td style="padding:10px;text-align:center;font-weight:800;color:#00e676;font-size:14px;">86/100</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">39.5%</td>
+            <td style="padding:10px;text-align:center;">4.6%</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">1.42%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">160%</td>
+            <td style="padding:10px;text-align:center;">29.8%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">22.8%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">1.6</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">HẠNG A (TINH HOA)</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">TCB</td>
+            <td style="padding:10px;">Techcombank</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">24.50</td>
+            <td style="padding:10px;text-align:center;font-weight:800;color:#00e676;font-size:14px;">83/100</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">40.2%</td>
+            <td style="padding:10px;text-align:center;">4.4%</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">1.35%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">110%</td>
+            <td style="padding:10px;text-align:center;">33.5%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">16.8%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">1.1</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">HẠNG A (TINH HOA)</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">ACB</td>
+            <td style="padding:10px;">Ngân hàng Á Châu</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">21.30</td>
+            <td style="padding:10px;text-align:center;font-weight:800;color:#4fc3f7;font-size:14px;">79/100</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">24.1%</td>
+            <td style="padding:10px;text-align:center;">4.1%</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">1.21%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">135%</td>
+            <td style="padding:10px;text-align:center;">32.0%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">23.1%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">1.4</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#0d47a1;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">HẠNG B (TĂNG TRƯỞNG)</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">HDB</td>
+            <td style="padding:10px;">HDBank</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">26.70</td>
+            <td style="padding:10px;text-align:center;font-weight:800;color:#4fc3f7;font-size:14px;">70/100</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">14.8%</td>
+            <td style="padding:10px;text-align:center;">5.1%</td>
+            <td style="padding:10px;text-align:center;color:#ff5252;">1.65%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">95%</td>
+            <td style="padding:10px;text-align:center;">35.2%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">24.2%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">1.5</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#0d47a1;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">HẠNG B (TĂNG TRƯỞNG)</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">CTG</td>
+            <td style="padding:10px;">VietinBank</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">28.40</td>
+            <td style="padding:10px;text-align:center;font-weight:800;color:#ffb300;font-size:14px;">61/100</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">22.8%</td>
+            <td style="padding:10px;text-align:center;">3.0%</td>
+            <td style="padding:10px;text-align:center;color:#00e676;">1.45%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">165%</td>
+            <td style="padding:10px;text-align:center;">32.8%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">17.9%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">1.3</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">HẠNG C (TÁI CƠ CẤU)</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">VPB</td>
+            <td style="padding:10px;">VPBank</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">19.10</td>
+            <td style="padding:10px;text-align:center;font-weight:800;color:#ffb300;font-size:14px;">61/100</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">18.2%</td>
+            <td style="padding:10px;text-align:center;">5.6%</td>
+            <td style="padding:10px;text-align:center;color:#ff5252;">4.20%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">52%</td>
+            <td style="padding:10px;text-align:center;">28.5%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">12.5%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">1.0</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">HẠNG C (TÁI CƠ CẤU)</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">BID</td>
+            <td style="padding:10px;">BIDV</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">39.20</td>
+            <td style="padding:10px;text-align:center;font-weight:800;color:#ffb300;font-size:14px;">54/100</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">21.5%</td>
+            <td style="padding:10px;text-align:center;">2.8%</td>
+            <td style="padding:10px;text-align:center;color:#ff5252;">1.52%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">158%</td>
+            <td style="padding:10px;text-align:center;">34.2%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">18.5%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">1.8</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">HẠNG C (TÁI CƠ CẤU)</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">STB</td>
+            <td style="padding:10px;">Sacombank</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">68.50</td>
+            <td style="padding:10px;text-align:center;font-weight:800;color:#ffb300;font-size:14px;">43/100</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">19.5%</td>
+            <td style="padding:10px;text-align:center;">3.6%</td>
+            <td style="padding:10px;text-align:center;color:#ff5252;">2.10%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">72%</td>
+            <td style="padding:10px;text-align:center;">42.5%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">15.2%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">1.2</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">HẠNG C (TÁI CƠ CẤU)</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">EIB</td>
+            <td style="padding:10px;">Eximbank</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">17.85</td>
+            <td style="padding:10px;text-align:center;font-weight:800;color:#ffb300;font-size:14px;">39/100</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">15.2%</td>
+            <td style="padding:10px;text-align:center;">2.8%</td>
+            <td style="padding:10px;text-align:center;color:#ff5252;">2.45%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">62%</td>
+            <td style="padding:10px;text-align:center;">46.2%</td>
+            <td style="padding:10px;text-align:center;color:#4fc3f7;">10.5%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">1.2</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">HẠNG C (TÁI CƠ CẤU)</span></td>
+        </tr>
+        
+            </tbody>
+        </table>
+    </div>
+
+    <!-- PHẦN 4: BÁO CÁO KẾT QUẢ KINH DOANH CÁC QUÝ GẦN NHẤT -->
+    <div class="section-header">
+        <div class="section-title" style="color:#4fc3f7;">📑 BÁO CÁO KẾT QUẢ KINH DOANH CÁC QUÝ GẦN NHẤT (DOANH THU & LỢI NHUẬN RÒNG BCTC)</div>
+        <span style="font-size:11px;color:#78909c;">Thống kê xu hướng tăng trưởng 1 CP / 1 dòng duy nhất • Nguồn: BCTC Fialda VIP API</span>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã CP</th>
+                    <th style="text-align:center;">Kỳ Gần Nhất</th>
+                    <th>Tiến Trình Doanh Thu Thuần (3 Quý Cũ ➔ Mới)</th>
+                    <th>Tiến Trình Lợi Nhuận Sau Thuế (3 Quý Cũ ➔ Mới)</th>
+                    <th style="text-align:center;">Tăng Trưởng LNST (QoQ)</th>
+                    <th style="text-align:center;">Biên Lãi Gộp</th>
+                    <th style="text-align:center;">Xu Hướng Động Lượng</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">DBC</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#263238;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;">Q3/2026</span></td>
+            <td style="padding:10px;font-size:13px;white-space:nowrap;"><span style="color:#78909c;">4,307.7t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#90a4ae;">4,434.2t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#ffb300;font-weight:700;">5,317.8 tỷ</span></td>
+            <td style="padding:10px;font-size:13px;white-space:nowrap;"><span style="color:#78909c;">374.0t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#90a4ae;">289.1t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#00e676;font-weight:700;">200.2 tỷ</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#b71c1c;color:#ff8a80;padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">-30.8%</span>
+            </td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">11.1%</td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#37474f;color:#b0bec5;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">↘ CHẬM LẠI</span>
+            </td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">CTS</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#263238;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;">Q3/2026</span></td>
+            <td style="padding:10px;font-size:13px;white-space:nowrap;"><span style="color:#78909c;">351.9t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#90a4ae;">357.1t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#ffb300;font-weight:700;">410.2 tỷ</span></td>
+            <td style="padding:10px;font-size:13px;white-space:nowrap;"><span style="color:#78909c;">65.8t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#90a4ae;">15.4t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#00e676;font-weight:700;">5.0 tỷ</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#b71c1c;color:#ff8a80;padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">-67.5%</span>
+            </td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">45.1%</td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#37474f;color:#b0bec5;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">↘ CHẬM LẠI</span>
+            </td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">EIB</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#263238;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;">Q2/2026</span></td>
+            <td style="padding:10px;font-size:13px;white-space:nowrap;"><span style="color:#78909c;">0.0t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#90a4ae;">0.0t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#ffb300;font-weight:700;">0.0 tỷ</span></td>
+            <td style="padding:10px;font-size:13px;white-space:nowrap;"><span style="color:#78909c;">-472.5t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#90a4ae;">269.2t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#00e676;font-weight:700;">250.5 tỷ</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#b71c1c;color:#ff8a80;padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">-6.9%</span>
+            </td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">0.0%</td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#37474f;color:#b0bec5;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">↘ CHẬM LẠI</span>
+            </td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">PTB</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#263238;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;">Q2/2026</span></td>
+            <td style="padding:10px;font-size:13px;white-space:nowrap;"><span style="color:#78909c;">2,088.4t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#90a4ae;">2,094.7t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#ffb300;font-weight:700;">2,087.2 tỷ</span></td>
+            <td style="padding:10px;font-size:13px;white-space:nowrap;"><span style="color:#78909c;">132.8t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#90a4ae;">154.0t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#00e676;font-weight:700;">132.6 tỷ</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#b71c1c;color:#ff8a80;padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">-13.9%</span>
+            </td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">19.4%</td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#37474f;color:#b0bec5;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">↘ CHẬM LẠI</span>
+            </td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">GEX</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#263238;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;">Q2/2026</span></td>
+            <td style="padding:10px;font-size:13px;white-space:nowrap;"><span style="color:#78909c;">11,765.8t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#90a4ae;">10,822.9t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#ffb300;font-weight:700;">14,639.7 tỷ</span></td>
+            <td style="padding:10px;font-size:13px;white-space:nowrap;"><span style="color:#78909c;">541.2t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#90a4ae;">578.8t</span> <span style="color:#4fc3f7;">➔</span> <span style="color:#00e676;font-weight:700;">1,355.8 tỷ</span></td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">+134.2%</span>
+            </td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">20.3%</td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🚀 TĂNG TỐC 3 QUÝ</span>
+            </td>
+        </tr>
+        
+            </tbody>
+        </table>
+    </div>
+
+    <!-- PHẦN 5: TIN TỨC SPOTLIGHT & SỰ KIỆN DOANH NGHIỆP -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:15px;margin-bottom:25px;">
+        <div>
+            <div class="section-title" style="color:#ffb300;margin-bottom:12px;">📰 TIN TỨC DOANH NGHIỆP MỚI NHẤT (SPOTLIGHT)</div>
+            
+            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span style="font-weight:bold;color:#ffb300;font-size:13px;">DBC</span>
+                    <span style="font-size:11px;color:#78909c;">2026-10-22 • An ninh tiền tệ</span>
+                </div>
+                <div style="font-weight:600;font-size:13px;color:#eceff1;margin-bottom:4px;">DBC: Giá lợn hơi giảm, Dabaco báo lãi ròng quý III/2026 giảm hơn 41% dù doanh thu tăng</div>
+                <div style="font-size:12px;color:#90a4ae;line-height:1.4;">Dabaco (DBC) báo doanh thu quý III/2026 tăng gần 37%, nhưng lãi ròng giảm hơn 41% do giá lợn hơi xuống và chi phí tài chính, bán hàng, quản lý đều tăng.</div>
+            </div>
+            
+            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span style="font-weight:bold;color:#ffb300;font-size:13px;">CTS</span>
+                    <span style="font-size:11px;color:#78909c;">2026-10-20 • Nhà đầu tư</span>
+                </div>
+                <div style="font-weight:600;font-size:13px;color:#eceff1;margin-bottom:4px;">VBSE ký kết hợp tác với Manulife Investments phân phối chứng chỉ quỹ mở</div>
+                <div style="font-size:12px;color:#90a4ae;line-height:1.4;">Công ty chứng khoán VBSE trở thành đại lý phân phối chứng chỉ quỹ mở của Manulife Investments (Vietnam), cho phép nhà đầu tư giao dịch từ 16/10/2026 qua hệ thống và các chi nhánh của VBSE.</div>
+            </div>
+            
+            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span style="font-weight:bold;color:#ffb300;font-size:13px;">EIB</span>
+                    <span style="font-size:11px;color:#78909c;">2026-10-16 • Tạp chí tài chính</span>
+                </div>
+                <div style="font-weight:600;font-size:13px;color:#eceff1;margin-bottom:4px;">EIB: Eximbank bỏ giới hạn sở hữu ngoại 6%, Chủ tịch nói về thách thức quản trị</div>
+                <div style="font-size:12px;color:#90a4ae;line-height:1.4;">Eximbank bỏ giới hạn 6% sở hữu nước ngoài để tuân thủ quy định Ngân hàng Nhà nước, đồng thời bổ sung bà Phạm Thị Huyền Trang vào HĐQT trong bối cảnh lợi nhuận 6 tháng đầu năm giảm mạnh.</div>
+            </div>
+            
+            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span style="font-weight:bold;color:#ffb300;font-size:13px;">PTB</span>
+                    <span style="font-size:11px;color:#78909c;">2026-08-28 • Vietnam Finance</span>
+                </div>
+                <div style="font-weight:600;font-size:13px;color:#eceff1;margin-bottom:4px;">PTB: Từ xuất khẩu đến hiện diện trực tiếp, Phú Tài rót tiền lập công ty tại Mỹ</div>
+                <div style="font-size:12px;color:#90a4ae;line-height:1.4;">Phú Tài (PTB) đã phê duyệt góp 950.000 USD để lập công ty PHU TAI HOME USA tại Houston, Texas, nhằm hiện diện trực tiếp tại thị trường Mỹ sau nhiều năm chỉ xuất khẩu.</div>
+            </div>
+            
+        </div>
+        <div>
+            <div class="section-title" style="color:#00e676;margin-bottom:12px;">📅 LỊCH SỰ KIỆN & CHỐT QUYỀN SẮP TỚI</div>
+            
+            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span style="font-weight:bold;color:#00e676;font-size:13px;">DBC</span>
+                    <span style="font-size:11px;color:#ffb300;background:#263238;padding:2px 6px;border-radius:4px;">Thời gian: 2026-10-06</span>
+                </div>
+                <div style="font-size:13px;color:#d1d4dc;">DBC: Thông báo giao dịch cổ phiếu của Người nội bộ Nguyễn Thị Thu Hương</div>
+            </div>
+            
+            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span style="font-weight:bold;color:#00e676;font-size:13px;">CTS</span>
+                    <span style="font-size:11px;color:#ffb300;background:#263238;padding:2px 6px;border-radius:4px;">Thời gian: 2026-11-05</span>
+                </div>
+                <div style="font-size:13px;color:#d1d4dc;">Lấy ý kiến cổ đông bằng văn bản năm 2026</div>
+            </div>
+            
+            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span style="font-weight:bold;color:#00e676;font-size:13px;">EIB</span>
+                    <span style="font-size:11px;color:#ffb300;background:#263238;padding:2px 6px;border-radius:4px;">Thời gian: 2026-11-15</span>
+                </div>
+                <div style="font-size:13px;color:#d1d4dc;">EIB: Lấy ý kiến cổ đông bằng văn bản và chuẩn bị chi trả cổ tức đợt 1</div>
+            </div>
+            
+            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span style="font-weight:bold;color:#00e676;font-size:13px;">PTB</span>
+                    <span style="font-size:11px;color:#ffb300;background:#263238;padding:2px 6px;border-radius:4px;">Thời gian: 2026-10-05</span>
+                </div>
+                <div style="font-size:13px;color:#d1d4dc;">PTB: Thông báo giao dịch cổ phiếu của Người nội bộ Nguyễn Sỹ Hòe</div>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="footer">
+        Neiro-Stock-VN • Tự động quét và cập nhật qua GitHub Actions • Vận hành 24/7 trên Cloud • Xem được trên mọi thiết bị di động
+    </div>
+</body>
+</html>
