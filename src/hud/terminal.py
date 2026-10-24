@@ -50,7 +50,8 @@ def generate_terminal_html(
 
         ad_letter = getattr(c, "acc_diss_rating", "C")
         ad_color = "#00e676" if ad_letter in ["A", "B"] else ("#ffb300" if ad_letter == "C" else "#ff5252")
-        ad_badge = f'<span style="font-size:11px;color:{ad_color};font-weight:bold;">{ad_letter}</span>'
+        ad_bg = "#1b5e20" if ad_letter in ["A", "B"] else ("#3e2723" if ad_letter == "C" else "#450a0a")
+        ad_badge = f'<span style="background:{ad_bg};color:{ad_color};padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">{ad_letter}</span>'
 
         tp1_val = getattr(c, "tp1", c.price * 1.08)
         tp2_val = getattr(c, "tp2", c.target_1m)
@@ -78,12 +79,11 @@ def generate_terminal_html(
             <td style="padding:6px 5px;color:#00e676;font-weight:600;">{c.entry_low:.2f} - {c.entry_high:.2f}</td>
             <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">{c.stop_loss:.2f}</td>
             <td style="padding:6px 5px;text-align:center;">{tp_html}</td>
-            <td style="padding:6px 5px;text-align:center;">
-                <span style="font-weight:bold;color:#4fc3f7;">{c.adtv20_billion:.1f}t</span>
-                <span style="margin-left:2px;">{liq_badge}</span>
-            </td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">{c.adtv20_billion:.1f}t</td>
+            <td style="padding:6px 5px;text-align:center;">{liq_badge}</td>
             <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">{c.rrg_r:.0f}/{c.rrg_m:.0f}</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;">{c.composite_rating} <span style="font-size:10.5px;color:#78909c;">(</span>{ad_badge}<span style="font-size:10.5px;color:#78909c;">)</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">{c.composite_rating}</td>
+            <td style="padding:6px 5px;text-align:center;">{ad_badge}</td>
             <td style="padding:6px 5px;text-align:center;color:{foreign_color};font-weight:600;">{foreign_str}</td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">{c.ranking_score:.1f}</td>
             <td style="padding:6px 5px;text-align:center;white-space:nowrap;">{prev_rank_html}</td>
@@ -444,8 +444,10 @@ def generate_terminal_html(
                     <th>Cắt Lỗ</th>
                     <th style="text-align:center;">Chốt Lời (TP1 / TP2)</th>
                     <th style="text-align:center;">Thanh Khoản</th>
+                    <th style="text-align:center;">Chuẩn Quỹ</th>
                     <th style="text-align:center;">RRG</th>
-                    <th style="text-align:center;">IBD</th>
+                    <th style="text-align:center;">Điểm IBD</th>
+                    <th style="text-align:center;">Tích Luỹ</th>
                     <th style="text-align:center;">Khối Ngoại</th>
                     <th style="text-align:center;">Điểm AI</th>
                     <th style="text-align:center;">Kỳ Trước</th>
