@@ -23,11 +23,17 @@ flowchart TD
 
     subgraph Risk_Orchestrator ["3. Execution & Risk Engine"]
         RE["Risk Engine\n- Liquidity & Capacity Sizer (ADTV20 >= 15-30T)\n- Nonlinear Slippage Model (Almgren-Chriss)\n- Volatility-Adjusted ATR Sizing\n- Rolling Inventory Manager (T+0 Cushion)\n- Margin Call Buffer & Force Sell Radar"]
+        ST["Signal Tracker & Anti-FOMO Guard\n- Background Price & Signal Ledger\n- T0 Pivot Anchoring & Return Drift\n- Chasing Prevention (> +5% CẤM MUA ĐUỔI)\n- Break-Even Stop Ratchet at TP1"]
     end
 
-    subgraph HUD_Presentation ["4. Tactical HUD Terminal Layer"]
-        HUD["Plotly Interactive Dark Terminal\n- Multi-Panel Volume Profile\n- Screener Ranked Table\n- RRG Quadrant Radar\n- Basis Spread Gauge\n- Actionable Trade Cards"]
-        OUT["HTML Web Exports & Alerts\n(exports/vn_stock_terminal.html)"]
+    subgraph Storage_Audit ["4. Background Ledger & Audit (GitHub Internal)"]
+        LEDGER[("Active Signal Ledger\ndata/active_signals.jsonl")]
+        SCORECARD["Advisory Scorecard Report\ndata/advisory_scorecard.md\n(GitHub Step Summary)"]
+    end
+
+    subgraph HUD_Presentation ["5. Tactical HUD Terminal Layer (Public Web)"]
+        HUD["Plotly Interactive Dark Terminal\n- Multi-Panel Volume Profile\n- Screener Ranked Table\n- RRG Quadrant Radar\n- Auto-Reload & Live Countdown Timer (60s)"]
+        OUT["HTML Web Exports & GitHub Pages\n(exports/index.html)"]
     end
 
     D1 & D2 --> FE
@@ -36,6 +42,9 @@ flowchart TD
     D1 & D4 --> DE
 
     FE & ME & SE & DE --> RE
+    RE --> ST
+    ST --> LEDGER
+    ST --> SCORECARD
     RE --> HUD
     HUD --> OUT
 ```
@@ -124,14 +133,15 @@ flowchart TD
 ### 2.8. Tầng Tự Động Hóa & Đám Mây CI/CD (`.github/workflows/`)
 - **`ci.yml` (CI Quality Gate):** Tự động kiểm định trên mọi Pull Request và Push to `main`:
   - Khắc phục triệt để lỗi type annotation trên Python 3.12 Linux runner (ADR-007).
-  - Kiểm thử 100% pytest suite (72/72 tests passed).
+  - Kiểm thử 100% pytest suite (75/75 tests passed).
   - Kiểm tra tự động giới hạn dung lượng Zero-Waste (< 15MB).
 - **`scanner_and_pages.yml` (Scanner & Pages Deploy):** Quy trình tự động hóa tác chiến 24/7 trên GitHub Actions:
   - **Tối ưu hóa Lập lịch POSIX (ADR-007):** Gom 11 mốc thời gian thành 3 biểu thức chuẩn (`15,45 2,3,4 * * 1-5`, `15,45 6,7 * * 1-5`, `5 8 * * 1-5`), chống nghẽn hàng đợi scheduler.
   - Hỗ trợ `workflow_dispatch` cho phép kích hoạt thủ công từ điện thoại hoặc máy trạm bất kỳ lúc nào.
   - Đăng nhập Fialda VIP qua GitHub Secrets với cơ chế khử nhiễu chuỗi bí mật tự động (ADR-007), quét Top 20 và sinh giao diện HTML.
+  - **Sổ Cái Tín Hiệu Ngầm & Báo Cáo Đối Chiếu (ADR-009):** Cập nhật `data/active_signals.jsonl` và tự động đính kèm `data/advisory_scorecard.md` trực tiếp vào **GitHub Step Summary**, báo cáo hiệu suất T+0 đến T+5 và kích hoạt radar chống mua đuổi.
   - Xuất bản bảng kết quả tức thì vào **GitHub Step Summary** trên ứng dụng di động.
-  - Tự động deploy dashboard lên **GitHub Pages** (`exports/index.html`) để xem trực tuyến mọi lúc mọi nơi.
+  - Tự động deploy dashboard lên **GitHub Pages** (`exports/index.html`) với tính năng tự động làm mới và bộ đếm lùi thời gian thực (ADR-008).
 
 
 ---

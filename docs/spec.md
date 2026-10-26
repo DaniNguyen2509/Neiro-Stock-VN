@@ -80,9 +80,16 @@ Neiro-Stock-VN/
 │   ├── architecture.md           # Kiến trúc dữ liệu và luồng thực thi tổng thể
 │   ├── thuat_ngu_quant_vn.md     # Từ điển thuật ngữ Quantamental & Vi cấu trúc TTCK VN
 │   ├── TRADER_PLAYBOOK_VN.md     # Cẩm nang tác chiến thực chiến cho Trader / Quỹ
-│   └── decisions/                # Architecture Decision Records (ADRs)
+│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-009)
 │       ├── ADR-001-quantamental-foundations-for-vn-equities.md
-│       └── ADR-002-fialda-vip-expert-automated-scanner.md
+│       ├── ADR-002-fialda-vip-expert-automated-scanner.md
+│       ├── ADR-003-liquidity-and-portfolio-capacity-sizer.md
+│       ├── ADR-004-walk-forward-backtest-engine-t25.md
+│       ├── ADR-005-resilient-realtime-pricing-and-public-fallback.md
+│       ├── ADR-006-dynamic-trailing-stop-t25-and-ranking-history.md
+│       ├── ADR-007-credential-sanitization-ci-hardening-and-scheduler-consolidation.md
+│       ├── ADR-008-client-auto-reload-live-countdown-and-scheduling-mechanics.md
+│       └── ADR-009-background-anti-fomo-signal-ledger-and-chasing-prevention.md
 ├── src/
 │   ├── collector/                # Thu thập dữ liệu TTCK Việt Nam
 │   │   ├── __init__.py
@@ -109,7 +116,8 @@ Neiro-Stock-VN/
 │   │   ├── position_sizer.py     # Tính toán tỷ trọng theo Volatility ATR(14)
 │   │   ├── t25_manager.py        # Quản lý vòng quay hàng sẵn T+0 & Margin Buffer
 │   │   ├── liquidity_sizer.py    # Bộ lọc ADTV20, Sức chứa danh mục & Trượt giá phi tuyến
-│   │   └── trailing_stop.py      # Initial SL, Chandelier Exit, Break-even 1.5R/2R & T+2.5 Exposure
+│   │   ├── trailing_stop.py      # Initial SL, Chandelier Exit, Break-even 1.5R/2R & T+2.5 Exposure
+│   │   └── signal_tracker.py     # Sổ cái tín hiệu ngầm, Neo mốc giá gốc T0, Chống mua đuổi (ADR-009)
 │   ├── backtesting/              # Module Kiểm định Quá khứ Walk-Forward T+2.5
 │   │   ├── __init__.py
 │   │   ├── models.py             # Data models: Exchange, PriceBand, Position, TradeRecord
@@ -121,7 +129,7 @@ Neiro-Stock-VN/
 │   └── hud/                      # Giao diện Tactical Terminal
 │       ├── __init__.py
 │       └── terminal.py           # Sinh Terminal tương tác đa tab, Widget Lịch sử Rank & Top 20
-├── data/                         # Dữ liệu chuẩn hóa mẫu & ranking_history.jsonl (Zero-Waste < 50KB)
+├── data/                         # Dữ liệu mẫu benchmark, ranking_history.jsonl, active_signals.jsonl (Zero-Waste)
 ├── exports/                      # File HTML Terminal và báo cáo định lượng xuất bản (GitHub Pages)
 ├── reports/                      # Báo cáo kết quả quét Top 5 mới nhất (latest_scan.md)
 ├── tests/                        # 100% Automated Unit Tests cho từng công thức toán
@@ -373,7 +381,7 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 
 3. **Tương Thích Ngược & Đảm Bảo Chất Lượng CI Quality Gate:**
    - Chuẩn hóa khai báo Type Hinting cross-platform trên module Walk-Forward Backtesting (`src/backtesting/walk_forward.py`), giải quyết triệt để lỗi `NameError: name 'Any' is not defined` trên môi trường runtime Python 3.12 (Linux runner).
-   - Duy trì tỷ lệ pass 100% cho 72 unit tests toán học định lượng và kiểm soát dung lượng repository dưới 15MB theo quy định Zero-Waste Mandate.
+   - Duy trì tỷ lệ pass 100% cho 75 unit tests toán học định lượng và kiểm soát dung lượng repository dưới 15MB theo quy định Zero-Waste Mandate.
 
 4. **Tối Ưu Hóa Bộ Lập Lịch Cron Chuẩn POSIX (`scanner_and_pages.yml`):**
    - Hợp nhất 11 mốc quét rời rạc thành 3 biểu thức chuẩn POSIX (`15,45 2,3,4 * * 1-5`, `15,45 6,7 * * 1-5`, `5 8 * * 1-5`).
