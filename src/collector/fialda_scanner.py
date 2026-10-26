@@ -26,6 +26,7 @@ from src.risk_engine.trailing_stop import (
     evaluate_t25_exposure,
 )
 from src.collector.ranking_history import RankingHistoryTracker
+from src.risk_engine.signal_tracker import SignalTracker
 
 # Dam bao terminal Windows in tieng Viet UTF-8 muot ma
 if sys.stdout and hasattr(sys.stdout, "reconfigure"):
@@ -122,10 +123,16 @@ def enrich_candidates_with_trailing_stop_and_history(
             c.t25_exposure_level = "SAFE"
             c.t25_status_badge = "T+0 (SAFE)"
 
-    # Ghi snapshot vao data/ranking_history.jsonl
+    # Ghi snapshot vao data/ranking_history.jsonl va cap nhat So Cai Tin Hieu data/active_signals.jsonl
     if record_history and candidates:
         try:
             tracker.record_snapshot(candidates)
+        except Exception:
+            pass
+
+        try:
+            sig_tracker = SignalTracker()
+            sig_tracker.update_signals(candidates)
         except Exception:
             pass
 

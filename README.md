@@ -47,7 +47,7 @@ Neiro-Stock-VN/
 │   ├── architecture.md           # Kiến trúc hệ thống và luồng dữ liệu toàn cảnh
 │   ├── thuat_ngu_quant_vn.md     # Từ điển thuật ngữ Quantamental & Vi cấu trúc TTCK VN
 │   ├── TRADER_PLAYBOOK_VN.md     # Cẩm nang tác chiến thực chiến cho Trader / Quỹ
-│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-008)
+│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-009)
 ├── src/
 │   ├── collector/                # Thu thập & chuẩn hóa dữ liệu TTCK VN
 │   ├── fundamental_engine/       # Bộ lọc Piotroski F-score, EPS, PE/PB Banding

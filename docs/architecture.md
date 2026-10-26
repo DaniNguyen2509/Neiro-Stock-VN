@@ -95,6 +95,11 @@ flowchart TD
   - Radar cảnh báo rủi ro "Vùng Đóng Băng T+0 đến T+2" cho cổ phiếu cơ sở dựa trên Basis VN30F1M và Độ rộng thị trường.
 - **`position_sizer.py`:** Tính toán quy mô giải ngân an toàn dựa trên rủi ro biến động $ATR(14)$ của cổ phiếu, khống chế mức lỗ tối đa cho mỗi vị thế không vượt quá $1.5\% - 2.0\%$ tổng NAV tài khoản.
 - **`t25_manager.py`:** Quản trị vòng quay hàng sẵn có (Rolling Inventory), thiết lập cơ chế khóa lợi nhuận hoặc phòng hộ danh mục bằng HĐTL VN30F1M khi thị trường vi phạm các mốc thanh khoản trọng yếu.
+- **`signal_tracker.py` (`SignalTracker` - ADR-009):** Sổ Cái Tín Hiệu Ngầm & Rada Chống Mua Đuổi (Anti-FOMO Guard):
+  - Chạy ngầm 100% trên GitHub Actions (không hiển thị lên Web Dashboard), lưu trữ tại `data/active_signals.jsonl`.
+  - Neo giữ mốc Giá Khuyến Nghị Ban Đầu ($T_0$), đo lường tỷ lệ trượt giá lũy kế $\Delta\%$ và số ngày nắm giữ chu kỳ T+2.5 sau 4-5 ngày.
+  - Phán quyết tư vấn tự động: $\le +3\%$ (`BUY_OK` - Vùng mua chuẩn), $+3.1\% \rightarrow +5\%$ (`BUY_CAUTION` - Vùng với thăm dò $\le 30\%$), $> +5\%$ (`EXTENDED_NO_CHASING` - Quá điểm mua, TUYỆT ĐỐI CẤM MUA ĐUỔI để tránh bẫy kẹp T+2.5).
+  - Tự động nâng Stop Loss lên giá hòa vốn khi đạt TP1, xuất bản tệp đối chiếu ngầm `data/advisory_scorecard.md` và cung cấp API truy vấn tư vấn `get_advisory(symbol)`.
 
 ### 2.6. Tầng Kiểm Định Quá Khứ (`src/backtesting/`)
 - **`models.py`:** Cấu trúc dữ liệu mô phỏng khớp lệnh: `Exchange` (HOSE 7%, HNX 10%, UPCoM 15%), `PriceBand`, `SettlementBatch`, `Position`, `TradeRecord`, `BacktestConfig`, `BacktestResult`.

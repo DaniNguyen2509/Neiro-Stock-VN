@@ -394,3 +394,22 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
    - Đóng dấu thời gian quét cụ thể theo múi giờ Việt Nam (UTC+7) trên thanh Header: `🕒 Cập nhật: HH:MM:SS • DD/MM/YYYY`.
    - Giúp nhà đầu tư định chế nhận diện tức thì độ tươi mới của dữ liệu vi cấu trúc và điểm mua bán trong phiên giao dịch.
 
+---
+
+### Tier 12: Sổ Cái Tín Hiệu Ngầm & Rada Chống Mua Đuổi (Anti-FOMO Signal Ledger - ADR-009)
+
+1. **Kiến Trúc Hoạt Động Ngầm (Background Architecture):**
+   - Hệ thống vận hành ngầm 100% trên GitHub Actions, lưu trữ dữ liệu tại `data/active_signals.jsonl` và xuất bản tệp đối chiếu `data/advisory_scorecard.md`.
+   - Tách biệt hoàn toàn với Web Dashboard (`exports/index.html`), bảo đảm giao diện công khai luôn tinh gọn và không bị xáo trộn.
+
+2. **Mỏ Neo Giá Gốc & Đo Lường Trượt Giá Sau 4-5 Ngày:**
+   - Neo giữ mức giá khuyến nghị ban đầu ($T_0$ Anchor Price), Stop Loss, TP1, TP2 khi cổ phiếu xuất hiện lần đầu.
+   - Khi quét các phiên tiếp theo, tự động đo lường tỷ lệ trượt giá $\Delta\% = (\text{price} - \text{entry\_original}) / \text{entry\_original} \times 100\%$ và số ngày nắm giữ $T+0 \rightarrow T+5$.
+
+3. **Rada Khóa Chiều Mua An Toàn (Anti-FOMO Guard):**
+   - $\le +3.0\%$: `BUY_OK` (🟢 VÙNG MUA CHUẨN) — Cho phép mở vị thế tại nền.
+   - $+3.1\% \rightarrow +5.0\%$: `BUY_CAUTION` (🟡 VÙNG VỚI) — Thăm dò tối đa 30%, không margin.
+   - $> +5.0\%$ hoặc nắm giữ $\ge 3$ phiên: `EXTENDED_NO_CHASING` (🔴 QUÁ ĐIỂM MUA - CẤM MUA ĐUỔI) — Tuyệt đối cấm mua đuổi, bảo vệ nhà đầu tư khỏi bẫy điều chỉnh và kẹp thanh khoản $T+2.5$.
+   - Khi đạt TP1: Tự động dời Stop Loss lên điểm hòa vốn (`entry_original`) bảo vệ toàn bộ vốn gốc.
+
+

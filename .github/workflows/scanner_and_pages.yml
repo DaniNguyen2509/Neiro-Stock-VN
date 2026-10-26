@@ -57,8 +57,14 @@ jobs:
           FIALDA_USERNAME: ${{ secrets.FIALDA_USERNAME }}
           FIALDA_PASSWORD: ${{ secrets.FIALDA_PASSWORD }}
         run: |
-          mkdir -p exports reports
+          mkdir -p exports reports data
           python -m src.collector.fialda_scanner --save-report reports/latest_scan.md --generate-terminal
+          if [ -f data/advisory_scorecard.md ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            cat data/advisory_scorecard.md >> $GITHUB_STEP_SUMMARY
+          elif [ -f reports/latest_scan.md ]; then
+            cat reports/latest_scan.md >> $GITHUB_STEP_SUMMARY
+          fi
 
       - name: Copy 404 and nojekyll for GitHub Pages
         run: |
@@ -89,14 +95,14 @@ jobs:
         continue-on-error: true
         uses: actions/deploy-pages@v4
 
-      - name: Commit Latest Scan Report
+      - name: Commit Latest Scan Report & Signal Ledger
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add reports/latest_scan.md || true
+          git add reports/latest_scan.md data/ranking_history.jsonl data/active_signals.jsonl data/advisory_scorecard.md || true
           if git diff --staged --quiet; then
-            echo "No changes in latest_scan.md to commit."
+            echo "No changes in reports/data to commit."
           else
-            git commit -m "chore(report): auto-update Top 5 Super Stocks scan [skip ci]"
+            git commit -m "chore(report): auto-update Top 5 Super Stocks and signal ledger [skip ci]"
             git push origin main
           fi
