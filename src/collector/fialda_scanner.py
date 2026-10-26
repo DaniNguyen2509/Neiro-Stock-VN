@@ -168,7 +168,8 @@ class FialdaScanner:
         p = (self.password or "").strip().strip("'\"")
 
         if not u or not p:
-            print("[FialdaScanner] Thông báo: Chưa cấu hình FIALDA_USERNAME hoặc FIALDA_PASSWORD.")
+            print("[FialdaScanner] ⚠️ CẢNH BÁO: Chưa cấu hình FIALDA_USERNAME hoặc FIALDA_PASSWORD.")
+            print("[FialdaScanner] ⚠️ Hệ thống tự động chuyển sang chế độ Dự phòng (Public Real-time Entrade/DNSE).")
             return False
 
         print(
@@ -192,11 +193,14 @@ class FialdaScanner:
                     print("[FialdaScanner] Đăng nhập Fialda thành công (Bearer Token đã cập nhật).")
                     return True
                 else:
-                    print(f"[FialdaScanner] Đăng nhập không thành công: {data}")
+                    print(f"[FialdaScanner] ⚠️ Đăng nhập không thành công: {data}")
             else:
-                print(f"[FialdaScanner] Fialda API trả về HTTP {res.status_code}: {res.text[:200]}")
+                print(f"[FialdaScanner] ⚠️ Fialda API trả về HTTP {res.status_code}: {res.text[:200]}")
+                print("[FialdaScanner] ⚠️ CẢNH BÁO: Xác thực tài khoản Fialda thất bại! Kích hoạt chế độ Dự phòng Fallback.")
+                print("[FialdaScanner] ⚠️ Vui lòng kiểm tra lại FIALDA_USERNAME / FIALDA_PASSWORD trong .env hoặc GitHub Secrets.")
         except Exception as e:
-            print(f"[FialdaScanner] Lỗi kết nối tới Fialda Authenticate: {e}")
+            print(f"[FialdaScanner] ⚠️ Lỗi kết nối tới Fialda Authenticate: {e}")
+            print("[FialdaScanner] ⚠️ Kích hoạt chế độ Dự phòng Fallback an toàn (Public Entrade / Mock).")
             return False
         return False
 

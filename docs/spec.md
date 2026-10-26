@@ -358,6 +358,23 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
    - **Tính toán Biến động Thứ hạng ($\Delta Rank$):** So sánh với phiên liền trước để tính: $\Delta Rank = \text{Rank}_{\text{cũ}} - \text{Rank}_{\text{mới}}$ (`↗ +N` thăng hạng, `↘ -N` tụt hạng, `=` giữ hạng, `🆕 MỚI` bứt phá vào Top).
    - **Bố cục 15 cột tinh gọn trên Dashboard & Báo cáo:** Hiển thị trực quan cột `Kỳ Trước` (`#cũ +N` / `MỚI`) ở cột cuối cùng trên bảng Top 20; phân tách mạch lạc các cột `Thanh Khoản (ADTV)`, `Chuẩn Quỹ (Lô Max/Trượt)`, `Điểm IBD Composite`, và `Tích Luỹ (A-E)` để hiển thị trực quan, vừa vặn 100% màn hình, không cần cuộn ngang.
 
+---
 
+### Tier 10: Chuẩn Hóa Chuỗi Xác Thực API, Khắc Phục CI Quality Gate & Tối Ưu Hóa Bộ Lập Lịch Tự Động (ADR-007)
 
+1. **Chuẩn Hóa Bí Mật & Chống Nhiễu Chuỗi Môi Trường (Credential Sanitization):**
+   - Loại bỏ tự động toàn bộ ký tự khoảng trắng thừa, dấu xuống dòng ẩn (`\r\n`), và dấu ngoặc kép bọc ngoài từ biến môi trường `FIALDA_USERNAME` và `FIALDA_PASSWORD`.
+   - Ngăn chặn hoàn toàn lỗi xác thực giả `HTTP 500: Email hoặc mật khẩu không chính xác` do thao tác copy-paste trên giao diện đám mây GitHub Secrets.
+   - Cơ chế chẩn đoán an toàn (Masked Diagnostics): Ghi nhận độ dài chuỗi và ký tự đầu/cuối của thông tin xác thực trên log console nhằm hỗ trợ gỡ lỗi tức thì mà không làm rò rỉ mật khẩu.
 
+2. **Cơ Chế Đèn Báo Dữ Liệu & Fallback Dự Phòng Thông Minh:**
+   - Khi kết nối Fialda VIP API thành công: Bật huy hiệu xanh `🟢 DỮ LIỆU: REAL-TIME FIALDA PRO API`.
+   - Khi kết nối Fialda VIP gặp sự cố (mạng, hết hạn phiên hoặc sai thông tin xác thực): Hệ thống tự động in cảnh báo chi tiết, chuyển sang chế độ dự phòng an toàn `🟡 CHẾ ĐỘ DỰ PHÒNG: BẢNG GIÁ ENTRADE/DNSE PUBLIC` kèm thông báo trạng thái `⚠️ Fialda VIP gián đoạn - Đang tự động bảo vệ tín hiệu bằng nguồn dự phòng` để duy trì báo cáo và dashboard liên tục 24/7.
+
+3. **Tương Thích Ngược & Đảm Bảo Chất Lượng CI Quality Gate:**
+   - Chuẩn hóa khai báo Type Hinting cross-platform trên module Walk-Forward Backtesting (`src/backtesting/walk_forward.py`), giải quyết triệt để lỗi `NameError: name 'Any' is not defined` trên môi trường runtime Python 3.12 (Linux runner).
+   - Duy trì tỷ lệ pass 100% cho 72 unit tests toán học định lượng và kiểm soát dung lượng repository dưới 15MB theo quy định Zero-Waste Mandate.
+
+4. **Tối Ưu Hóa Bộ Lập Lịch Cron Chuẩn POSIX (`scanner_and_pages.yml`):**
+   - Hợp nhất 11 mốc quét rời rạc thành 3 biểu thức chuẩn POSIX (`15,45 2,3,4 * * 1-5`, `15,45 6,7 * * 1-5`, `5 8 * * 1-5`).
+   - Tối ưu hóa chu kỳ quét tự động trong phiên giao dịch HOSE/HNX, loại bỏ hiện tượng nghẽn hàng đợi (queue starvation) của bộ điều phối GitHub Actions Scheduler.

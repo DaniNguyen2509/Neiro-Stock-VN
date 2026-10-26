@@ -47,8 +47,7 @@ Neiro-Stock-VN/
 │   ├── architecture.md           # Kiến trúc hệ thống và luồng dữ liệu toàn cảnh
 │   ├── thuat_ngu_quant_vn.md     # Từ điển thuật ngữ Quantamental & Vi cấu trúc TTCK VN
 │   ├── TRADER_PLAYBOOK_VN.md     # Cẩm nang tác chiến thực chiến cho Trader / Quỹ
-│   └── decisions/                # Architecture Decision Records (ADRs)
-│       └── ADR-001-quantamental-foundations-for-vn-equities.md
+│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-007)
 ├── src/
 │   ├── collector/                # Thu thập & chuẩn hóa dữ liệu TTCK VN
 │   ├── fundamental_engine/       # Bộ lọc Piotroski F-score, EPS, PE/PB Banding
@@ -125,10 +124,10 @@ FIALDA_PASSWORD=your_password
 
 ### 4.5. Tự Động 100% Trên GitHub (Xem Mọi Lúc Mọi Nơi 24/7)
 Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động hoàn toàn:
-- **Lịch trình quét tự động trong ngày (Giờ Việt Nam - Thứ 2 đến Thứ 6):**
-  - **09:15 AM:** Quét sau phiên mở cửa ATO.
-  - **11:45 AM:** Quét chốt phiên giao dịch buổi sáng.
-  - **15:05 PM:** Quét chốt dữ liệu phiên ATC và toàn bộ biến động trong ngày.
+- **Lịch trình quét tự động 30 phút/lần chuẩn POSIX (Giờ Việt Nam - Thứ 2 đến Thứ 6):**
+  - **Phiên sáng:** `09:15`, `09:45`, `10:15`, `10:45`, `11:15`, `11:45` (Quét từ mở cửa ATO đến hết phiên sáng).
+  - **Phiên chiều:** `13:15`, `13:45`, `14:15`, `14:45` (Quét hấp thụ tin tức trưa, hàng T+2.5 về tài khoản và đón sóng ATC).
+  - **Chốt phiên:** `15:05` (Chốt dữ liệu đóng cửa phiên chính thức toàn thị trường).
 - **Kích hoạt thủ công bất kỳ lúc nào:** Vào tab **Actions** trên GitHub (trên máy tính hoặc ứng dụng di động GitHub Mobile) -> Chọn workflow **Fialda VIP Expert Scanner & GitHub Pages Deploy** -> Bấm **Run workflow**.
 - **Địa chỉ truy cập Dashboard trực tiếp trên Mobile/Web:**
   - **GitHub Pages:** `https://daninguyen2509.github.io/Neiro-Stock-VN/` (Giao diện Dark Mode tương tác mượt mà trên iPhone/Android với Top 20 cổ phiếu, BCTC 4 quý, Tin tức & Sự kiện).

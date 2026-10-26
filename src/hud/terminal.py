@@ -279,7 +279,12 @@ def generate_terminal_html(
     data_badge = (
         '<div style="display:inline-block;background:#1b5e20;color:#00e676;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;">🟢 DỮ LIỆU: REAL-TIME FIALDA PRO API</div>'
         if is_live
-        else '<div style="display:inline-block;background:#0d47a1;color:#64b5f6;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;">🟡 DỮ LIỆU: BẢNG GIÁ REAL-TIME (ENTRADE/DNSE)</div>'
+        else '<div style="display:inline-block;background:#d84315;color:#ffe0b2;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;">🟡 CHẾ ĐỘ DỰ PHÒNG: BẢNG GIÁ ENTRADE/DNSE PUBLIC</div>'
+    )
+    data_subtext = (
+        "Cập nhật theo chu kỳ giao dịch thực tế"
+        if is_live
+        else '<span style="color:#ffb300;">⚠️ Fialda VIP gián đoạn - Đang tự động bảo vệ tín hiệu bằng nguồn dự phòng</span>'
     )
     html_content = f"""<!DOCTYPE html>
 <html lang="vi">
@@ -399,7 +404,7 @@ def generate_terminal_html(
         </div>
         <div style="text-align:right;">
             {data_badge}
-            <div style="font-size:11px;color:#78909c;margin-top:4px;">Cập nhật theo chu kỳ giao dịch thực tế</div>
+            <div style="font-size:11px;color:#78909c;margin-top:4px;">{data_subtext}</div>
         </div>
     </div>
 

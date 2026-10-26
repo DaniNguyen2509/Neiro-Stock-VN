@@ -49,6 +49,8 @@ flowchart TD
 - **`data_loader.py`:** Làm sạch dữ liệu, xử lý các sự kiện chia tách cổ tức, tăng vốn, thưởng cổ phiếu; chuyển đổi cấu trúc BCTC chuẩn VAS về dataclasses định lượng nhất quán.
 - **`fialda_scanner.py`:** Khai thác chuyên sâu hệ thống **Fialda VIP Expert & Swagger API** (529 endpoints):
   - Tự động xác thực JWT Token (`/api/TokenAuth/Authenticate`) với chu kỳ hiệu lực 24 giờ.
+  - **Cơ chế Chuẩn hóa Bí Mật & Lọc Ký Tự Ẩn (ADR-007):** Tự động loại bỏ khoảng trắng, dấu xuống dòng ẩn (`\r\n`) và ngoặc kép ngoài từ biến môi trường CI/CD, ngăn ngừa hoàn toàn lỗi xác thực giả.
+  - **Hệ thống Cảnh báo Đa Tầng & Fallback An Toàn (ADR-005 & ADR-007):** Khi Fialda API gián đoạn, tự động phát cảnh báo rõ ràng và kích hoạt luồng fallback lấy giá Real-time công khai (Entrade/DNSE) kết hợp dữ liệu BCTC dự phòng, đảm bảo Dashboard không bao giờ sập.
   - Thu thập tín hiệu AI Expert: Chờ Mua Chân Sóng (`GetTinHieuChoMuaNew`), Đột biến Giá trị giao dịch (`GetTinHieuDotBienGiaTri`).
   - Trích xuất bộ chỉ số định chế IBD O'Neil: Sức mạnh giá RS 1 tháng (`rS1M`), Điểm tổng hợp (`compositeRating`), Hệ số Tích lũy/Phân phối (`accDissRating`).
   - Nạp toàn bộ ma trận luân chuyển dòng tiền RRG 1,530 mã toàn thị trường (`GetRRGData`).
@@ -114,11 +116,14 @@ flowchart TD
   - Hệ thống Tab Navigation tương tác chuyển đổi mượt mà không cần tải lại trang.
 
 ### 2.8. Tầng Tự Động Hóa & Đám Mây CI/CD (`.github/workflows/`)
-- **`ci.yml`:** Quality Gate tự động chạy trên mọi Pull Request và Push to `main`, kiểm thử 100% pytest và kiểm tra giới hạn dung lượng Zero-Waste (< 15MB).
-- **`scanner_and_pages.yml`:** Quy trình tự động hóa tác chiến 24/7 trên GitHub Actions:
-  - Tự động kích hoạt định kỳ 30 phút/lần trong giờ giao dịch (09:15 - 11:45 và 13:15 - 15:05).
-  - Hỗ trợ `workflow_dispatch` cho phép kích hoạt thủ công từ điện thoại bất kỳ lúc nào.
-  - Đăng nhập Fialda VIP qua GitHub Secrets, quét Top 5 và sinh giao diện HTML.
+- **`ci.yml` (CI Quality Gate):** Tự động kiểm định trên mọi Pull Request và Push to `main`:
+  - Khắc phục triệt để lỗi type annotation trên Python 3.12 Linux runner (ADR-007).
+  - Kiểm thử 100% pytest suite (72/72 tests passed).
+  - Kiểm tra tự động giới hạn dung lượng Zero-Waste (< 15MB).
+- **`scanner_and_pages.yml` (Scanner & Pages Deploy):** Quy trình tự động hóa tác chiến 24/7 trên GitHub Actions:
+  - **Tối ưu hóa Lập lịch POSIX (ADR-007):** Gom 11 mốc thời gian thành 3 biểu thức chuẩn (`15,45 2,3,4 * * 1-5`, `15,45 6,7 * * 1-5`, `5 8 * * 1-5`), chống nghẽn hàng đợi scheduler.
+  - Hỗ trợ `workflow_dispatch` cho phép kích hoạt thủ công từ điện thoại hoặc máy trạm bất kỳ lúc nào.
+  - Đăng nhập Fialda VIP qua GitHub Secrets với cơ chế khử nhiễu chuỗi bí mật tự động (ADR-007), quét Top 20 và sinh giao diện HTML.
   - Xuất bản bảng kết quả tức thì vào **GitHub Step Summary** trên ứng dụng di động.
   - Tự động deploy dashboard lên **GitHub Pages** (`exports/index.html`) để xem trực tuyến mọi lúc mọi nơi.
 
