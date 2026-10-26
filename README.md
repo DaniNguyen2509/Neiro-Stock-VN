@@ -132,6 +132,8 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
   - **Phiên sáng:** `09:15`, `09:45`, `10:15`, `10:45`, `11:15`, `11:45` (Quét từ mở cửa ATO đến hết phiên sáng).
   - **Phiên chiều:** `13:15`, `13:45`, `14:15`, `14:45` (Quét hấp thụ tin tức trưa, hàng T+2.5 về tài khoản và đón sóng ATC).
   - **Chốt phiên:** `15:05` (Chốt dữ liệu đóng cửa phiên chính thức toàn thị trường).
+  - **Chốt Tự doanh & Khối ngoại chiều:** `17:30` (Cập nhật sớm dòng tiền Tự doanh CTCK & Thỏa thuận cá mập).
+  - **Chốt sổ toàn diện buổi tối (EOD Final Smart Money):** `19:00` (Khóa băng toàn diện 100% dòng tiền Tự doanh, Khối ngoại, Phái sinh VSDC để review chiến lược tối).
 - **Kích hoạt thủ công bất kỳ lúc nào:** Vào tab **Actions** trên GitHub (trên máy tính hoặc ứng dụng di động GitHub Mobile) -> Chọn workflow **Fialda VIP Expert Scanner & GitHub Pages Deploy** -> Bấm **Run workflow**.
 - **Địa chỉ truy cập Dashboard trực tiếp trên Mobile/Web:**
   - **GitHub Pages:** `https://daninguyen2509.github.io/Neiro-Stock-VN/` (Giao diện Dark Mode tương tác mượt mà trên iPhone/Android với Top 20 cổ phiếu, BCTC 4 quý, Tin tức & Sự kiện; tích hợp **Bộ đếm ngược Live Countdown 60s & Tự động làm mới Auto-Reload** không cần bấm F5).

@@ -384,8 +384,8 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
    - Duy trì tỷ lệ pass 100% cho 75 unit tests toán học định lượng và kiểm soát dung lượng repository dưới 15MB theo quy định Zero-Waste Mandate.
 
 4. **Tối Ưu Hóa Bộ Lập Lịch Cron Chuẩn POSIX (`scanner_and_pages.yml`):**
-   - Hợp nhất 11 mốc quét rời rạc thành 3 biểu thức chuẩn POSIX (`15,45 2,3,4 * * 1-5`, `15,45 6,7 * * 1-5`, `5 8 * * 1-5`).
-   - Tối ưu hóa chu kỳ quét tự động trong phiên giao dịch HOSE/HNX, loại bỏ hiện tượng nghẽn hàng đợi (queue starvation) của bộ điều phối GitHub Actions Scheduler.
+   - Hợp nhất các mốc quét thành 5 biểu thức chuẩn POSIX (`15,45 2,3,4 * * 1-5`, `15,45 6,7 * * 1-5`, `5 8 * * 1-5`, `30 10 * * 1-5`, `0 12 * * 1-5`).
+   - Tối ưu hóa chu kỳ quét tự động trong phiên giao dịch HOSE/HNX, bổ sung mốc 17:30 (bắt trọn Tự doanh sớm) và 19:00 (EOD Final Smart Money khóa băng toàn diện Tự doanh + Ngoại ròng + Phái sinh VSDC), loại bỏ hiện tượng nghẽn hàng đợi (queue starvation) của bộ điều phối GitHub Actions Scheduler.
 
 ---
 

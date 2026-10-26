@@ -136,7 +136,7 @@ flowchart TD
   - Kiểm thử 100% pytest suite (75/75 tests passed).
   - Kiểm tra tự động giới hạn dung lượng Zero-Waste (< 15MB).
 - **`scanner_and_pages.yml` (Scanner & Pages Deploy):** Quy trình tự động hóa tác chiến 24/7 trên GitHub Actions:
-  - **Tối ưu hóa Lập lịch POSIX (ADR-007):** Gom 11 mốc thời gian thành 3 biểu thức chuẩn (`15,45 2,3,4 * * 1-5`, `15,45 6,7 * * 1-5`, `5 8 * * 1-5`), chống nghẽn hàng đợi scheduler.
+  - **Tối ưu hóa Lập lịch POSIX (ADR-007):** Quét định kỳ 30 phút trong phiên và bổ sung 2 mốc đóng băng dữ liệu cuối ngày (`15,45 2,3,4 * * 1-5`, `15,45 6,7 * * 1-5`, `5 8 * * 1-5`, `30 10 * * 1-5` - 17:30 VN, `0 12 * * 1-5` - 19:00 VN EOD Final Smart Money), chống nghẽn hàng đợi scheduler.
   - Hỗ trợ `workflow_dispatch` cho phép kích hoạt thủ công từ điện thoại hoặc máy trạm bất kỳ lúc nào.
   - Đăng nhập Fialda VIP qua GitHub Secrets với cơ chế khử nhiễu chuỗi bí mật tự động (ADR-007), quét Top 20 và sinh giao diện HTML.
   - **Sổ Cái Tín Hiệu Ngầm & Báo Cáo Đối Chiếu (ADR-009):** Cập nhật `data/active_signals.jsonl` và tự động đính kèm `data/advisory_scorecard.md` trực tiếp vào **GitHub Step Summary**, báo cáo hiệu suất T+0 đến T+5 và kích hoạt radar chống mua đuổi.

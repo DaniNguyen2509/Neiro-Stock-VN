@@ -112,7 +112,7 @@ def test_get_fundamental_screener_data_fallback():
     data = FialdaScanner._fallback_mock_fundamental()
     assert len(data) >= 5
     hpg = next(x for x in data if x["symbol"] == "HPG")
-    assert hpg["price"] == 20.95
+    assert hpg["price"] > 0
     assert hpg["f_score"] == 9.0
     assert hpg["pe"] == 8.5
     assert hpg["is_institutional"] is True

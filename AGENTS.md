@@ -77,3 +77,21 @@ Các model **TUYỆT ĐỐI KHÔNG ĐƯỢC** tự biện hộ để bỏ qua vi
 > 1. **Tự động dọn rác ngay lập tức:** Mọi file cào thử nghiệm (HTML/JSON tạm), script test scratch, file log tạm thời sinh ra trong quá trình nghiên cứu bắt buộc phải bị XÓA SẠCH SẼ ngay sau khi tác vụ hoàn thành.
 > 2. **Không xả rác vào thư mục gốc:** Không tạo các file rác, file backup đuôi .bak, .tmp bừa bãi.
 > 3. **Tận dụng đám mây (Cloud-First):** Ưu tiên chạy tính toán trên Google Colab / Codespaces, không cài đặt các gói dữ liệu nặng vào ổ cứng laptop của người dùng nếu không có yêu cầu rõ ràng.
+
+---
+
+## 🚀 5. QUY TRÌNH KẾT THÚC BẮT BUỘC: 4 BƯỚC FINAL TỰ ĐỘNG (ZERO-PROMPT FINALIZATION MANDATE)
+
+> [!CRITICAL]
+> **LUẬT TỐI CAO - KHÔNG CẦN CHỜ NGƯỜI DÙNG NHẮC LẠI:**
+> Sau khi hoàn thành bất kỳ nhiệm vụ lập trình, sửa đổi mã nguồn, tối ưu tính năng hoặc cấu hình hệ thống nào, AI model **TUYỆT ĐỐI KHÔNG ĐƯỢC DỪNG LẠI** khi chưa hoàn tất chuỗi **4 BƯỚC FINAL TỰ ĐỘNG** sau:
+> 
+> 1. **Đồng Bộ Tài Liệu & Kiến Trúc (Documentation Sync):**
+>    - Bắt buộc cập nhật ngay các tệp tài liệu tương ứng: [README.md](README.md), [docs/spec.md](docs/spec.md), [docs/architecture.md](docs/architecture.md) (và lập ADR trong `docs/decisions/` nếu có thay đổi kiến trúc/nghiệp vụ).
+> 2. **Kiểm Thử Quality Gate:**
+>    - Chạy toàn bộ test suite (`python -m pytest`) đảm bảo tỷ lệ pass 100%, không để lọt bất kỳ lỗi hồi quy (regression) nào.
+> 3. **Dọn Rác & Kiểm Soát Zero-Waste:**
+>    - Xóa sạch các tệp tạm, cache cào dữ liệu, log scratch phát sinh trong phiên làm việc; kiểm tra dung lượng repository luôn `< 15MB`.
+> 4. **Commit & Push Lên Git (Automated Git Push):**
+>    - Tự động `git add`, `git commit` với thông điệp chuẩn Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `ci:`) và thực thi `git push origin <branch>`.
+>    - Báo cáo rõ ràng commit hash và trạng thái đẩy code thành công trong câu trả lời kết thúc phiên.
