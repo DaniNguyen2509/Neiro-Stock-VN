@@ -153,25 +153,33 @@ class FialdaScanner:
         """Doc gia tri tu moi truong hoac tep .env."""
         val = os.getenv(key)
         if val:
-            return val
+            return val.strip().strip("'\"")
         env_path = Path(".env")
         if env_path.exists():
             with open(env_path, "r", encoding="utf-8") as f:
                 for line in f:
                     if line.strip().startswith(f"{key}="):
-                        return line.strip().split("=", 1)[1].strip()
+                        return line.strip().split("=", 1)[1].strip().strip("'\"")
         return None
 
     def login(self) -> bool:
         """Dang nhap vao Fialda API va lay Bearer Token co thoi han 24h."""
-        if not self.username or not self.password:
+        u = (self.username or "").strip().strip("'\"")
+        p = (self.password or "").strip().strip("'\"")
+
+        if not u or not p:
             print("[FialdaScanner] Thông báo: Chưa cấu hình FIALDA_USERNAME hoặc FIALDA_PASSWORD.")
             return False
 
+        print(
+            f"[FialdaScanner] Kiểm tra thông tin: user_len={len(u)} (prefix='{u[:4]}', suffix='{u[-6:]}'), "
+            f"pwd_len={len(p)} (prefix='{p[:2]}', suffix='{p[-2:]}')"
+        )
+
         url = f"{self.BASE_URL}/api/TokenAuth/Authenticate"
         payload = {
-            "userNameOrEmailAddress": self.username,
-            "password": self.password,
+            "userNameOrEmailAddress": u,
+            "password": p,
             "rememberClient": True,
         }
         try:
