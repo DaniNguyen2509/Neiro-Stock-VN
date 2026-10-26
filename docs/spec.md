@@ -378,3 +378,19 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 4. **Tối Ưu Hóa Bộ Lập Lịch Cron Chuẩn POSIX (`scanner_and_pages.yml`):**
    - Hợp nhất 11 mốc quét rời rạc thành 3 biểu thức chuẩn POSIX (`15,45 2,3,4 * * 1-5`, `15,45 6,7 * * 1-5`, `5 8 * * 1-5`).
    - Tối ưu hóa chu kỳ quét tự động trong phiên giao dịch HOSE/HNX, loại bỏ hiện tượng nghẽn hàng đợi (queue starvation) của bộ điều phối GitHub Actions Scheduler.
+
+---
+
+### Tier 11: Tự Động Làm Mới Dashboard Trực Tuyến & Đồng Bộ Thời Gian Thực (Client Auto-Reload & Live Countdown Timer)
+
+1. **Cơ Chế Tự Động Nạp Lại Trình Duyệt (Browser Client-Side Auto-Reload):**
+   - Loại bỏ hoàn toàn sự phụ thuộc vào thao tác bấm phím F5 thủ công của người dùng khi theo dõi Dashboard trên máy tính hoặc điện thoại di động.
+   - Tích hợp bộ đếm ngược thời gian thực (`Live Countdown Timer`) 60 giây hiển thị trực quan tại góc trên bên phải thanh Header (`🔄 Tự làm mới: 60s`).
+   - Cung cấp nút thao tác tức thì `⚡ Tải lại ngay` cho phép người dùng chủ động nạp lại trang bất cứ lúc nào.
+   - Cơ chế nạp lại chống lưu đệm trình duyệt (Cache-Busting Reload): Tự động gán tham số truy vấn thời gian thực `_t=Date.now()` khi tải lại, buộc trình duyệt luôn lấy phiên bản HTML mới nhất vừa được xuất bản từ CDN GitHub Pages.
+   - Thẻ `<meta http-equiv="refresh" content="180">` đóng vai trò dự phòng an toàn (safe fallback) nếu trình duyệt chặn thực thi JavaScript.
+
+2. **Hiển Thị Thời Gian Quét Thời Gian Thực (Scan Timestamping):**
+   - Đóng dấu thời gian quét cụ thể theo múi giờ Việt Nam (UTC+7) trên thanh Header: `🕒 Cập nhật: HH:MM:SS • DD/MM/YYYY`.
+   - Giúp nhà đầu tư định chế nhận diện tức thì độ tươi mới của dữ liệu vi cấu trúc và điểm mua bán trong phiên giao dịch.
+

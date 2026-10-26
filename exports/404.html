@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="180">
     <title>Neiro-Stock-VN | Bảng Điều Khiển Chiến Thuật Định Lượng</title>
     <style>
         * {
@@ -117,6 +118,12 @@
         <div style="text-align:right;">
             <div style="display:inline-block;background:#1b5e20;color:#00e676;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;">🟢 DỮ LIỆU: REAL-TIME FIALDA PRO API</div>
             <div style="font-size:11px;color:#78909c;margin-top:4px;">Cập nhật theo chu kỳ giao dịch thực tế</div>
+            <div style="display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-top:6px;flex-wrap:wrap;">
+                <span style="font-size:11px;color:#90a4ae;">🕒 Cập nhật: <b style="color:#ffb300;">13:52:23 • 26/10/2026</b></span>
+                <span style="font-size:11px;color:#546e7a;">•</span>
+                <span style="font-size:11px;color:#90a4ae;">🔄 Tự làm mới: <b id="countdown" style="color:#00e676;">60</b>s</span>
+                <button onclick="reloadDashboard()" style="background:#1e293b;color:#38bdf8;border:1px solid #0284c7;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer;">⚡ Tải lại ngay</button>
+            </div>
         </div>
     </div>
 
@@ -174,362 +181,362 @@
                 
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">1</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">DBC</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
-            <td style="padding:6px 5px;font-weight:bold;">16.45</td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">16.07 - 16.42</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">15.96</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">17.18</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">17.67</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">57.6t</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">CTS</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
+            <td style="padding:6px 5px;font-weight:bold;">22.20</td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">21.76 - 22.42</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">21.53</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">23.20</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">23.87</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">47.5t</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">102/101</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">79</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">D</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+4.4 tỷ</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">90.5</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#1</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">103/102</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">93</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+1.0 tỷ</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">87.5</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="background:#e65100;color:#ffe0b2;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">MỚI</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">2</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">CTS</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
-            <td style="padding:6px 5px;font-weight:bold;">21.95</td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">21.51 - 22.17</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">21.29</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">22.94</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">23.60</span></td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">AAA</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
+            <td style="padding:6px 5px;font-weight:bold;">7.32</td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">7.29 - 7.45</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">7.10</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">7.65</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">7.87</span></td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">25.0t</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">102/102</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">93</td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/100</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">34</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+1.8 tỷ</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">87.5</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#2</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;">-1.0 tỷ</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">78.3</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="background:#e65100;color:#ffe0b2;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">MỚI</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">3</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">EIB</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
-            <td style="padding:6px 5px;font-weight:bold;">17.85</td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">16.87 - 17.23</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">16.91</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">19.26</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">20.20</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">353.2t</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">VGC</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
+            <td style="padding:6px 5px;font-weight:bold;">46.40</td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">45.47 - 46.86</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">45.01</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">48.48</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">49.88</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">192.3t</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">101/100</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">61</td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">102/99</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">92</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+28.4 tỷ</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">83.5</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#3</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;">-8.0 tỷ</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">73.9</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="background:#e65100;color:#ffe0b2;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">MỚI</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">4</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">PTB</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
-            <td style="padding:6px 5px;font-weight:bold;">30.90</td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">30.89 - 31.57</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">29.97</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">32.30</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">33.22</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">25.0t</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">BVS</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
+            <td style="padding:6px 5px;font-weight:bold;">27.40</td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">26.85 - 27.67</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">26.58</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">28.63</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">29.45</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">20.0t</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">102/100</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">72</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+0.4 tỷ</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">81.8</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#4</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">101/101</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">50</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#3e2723;color:#ffb300;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">C</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;">-1.5 tỷ</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">72.5</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="background:#e65100;color:#ffe0b2;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">MỚI</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">5</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">GEX</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">PVC</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
-            <td style="padding:6px 5px;font-weight:bold;">24.10</td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">23.62 - 24.34</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">23.38</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">25.18</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">25.90</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">243.8t</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/101</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">78</td>
+            <td style="padding:6px 5px;font-weight:bold;">11.90</td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">11.66 - 12.02</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">11.54</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">12.44</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">12.80</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">20.0t</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">99/100</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">88</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;">-9.4 tỷ</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">81.7</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#5</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+0.0 tỷ</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">70.7</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="background:#e65100;color:#ffe0b2;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">MỚI</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">6</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">AAS</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
-            <td style="padding:6px 5px;font-weight:bold;">10.60</td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">10.25 - 10.47</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">10.25</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">11.12</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">11.47</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">25.0t</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">103/99</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">84</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">-0.0 tỷ</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">78.5</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#6</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
-        </tr>
-        
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">7</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">VGC</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
-            <td style="padding:6px 5px;font-weight:bold;">44.50</td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">43.61 - 44.95</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">43.16</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">46.51</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">47.85</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">25.0t</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">102/99</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">92</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+0.4 tỷ</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">73.9</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#7</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
-        </tr>
-        
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">8</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">BVB</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
-            <td style="padding:6px 5px;font-weight:bold;">10.65</td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">10.45 - 10.68</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">10.33</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">11.13</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">11.45</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">25.0t</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/100</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">50</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#3e2723;color:#ffb300;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">C</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+2.7 tỷ</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">67.5</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#9</span> <span style="background:#1b5e20;color:#00e676;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">+1</span></td>
-        </tr>
-        
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">9</td>
             <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">VTZ</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
             <td style="padding:6px 5px;font-weight:bold;">20.30</td>
             <td style="padding:6px 5px;color:#00e676;font-weight:600;">20.20 - 20.64</td>
             <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">19.69</td>
             <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">21.21</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">21.82</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">25.7t</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">20.0t</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span></td>
             <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">101/100</td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">50</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#3e2723;color:#ffb300;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">C</span></td>
             <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+0.0 tỷ</td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">67.5</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#8</span> <span style="background:#b71c1c;color:#ff8a80;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">-1</span></td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#5</span> <span style="background:#b71c1c;color:#ff8a80;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">-1</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">7</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">SIP</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
+            <td style="padding:6px 5px;font-weight:bold;">50.50</td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">49.75 - 50.84</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">48.98</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">52.78</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">54.30</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">25.0t</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">101/100</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">50</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#3e2723;color:#ffb300;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">C</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+0.2 tỷ</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">67.5</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="background:#e65100;color:#ffe0b2;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">MỚI</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">8</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">PHR</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
+            <td style="padding:6px 5px;font-weight:bold;">32.65</td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">32.00 - 32.98</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">31.67</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">34.12</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">35.10</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">25.0t</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/99</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">67</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+0.0 tỷ</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">64.4</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="background:#e65100;color:#ffe0b2;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">MỚI</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">9</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">NT2</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
+            <td style="padding:6px 5px;font-weight:bold;">24.50</td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">24.23 - 24.76</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">23.77</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">25.59</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">26.33</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">25.0t</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">104/100</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">27</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+8.4 tỷ</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">63.6</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="background:#e65100;color:#ffe0b2;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">MỚI</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">10</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">ACB</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
-            <td style="padding:6px 5px;font-weight:bold;">21.30</td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">20.50 - 20.95</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">20.50</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">22.50</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">23.30</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">846.8t</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/100</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">38</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">QNS</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
+            <td style="padding:6px 5px;font-weight:bold;">50.30</td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">49.29 - 50.80</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">48.79</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">52.56</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">54.07</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">25.0t</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/99</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">63</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;">-469.4 tỷ</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">65.7</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#10</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;">-4.2 tỷ</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">59.9</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="background:#e65100;color:#ffe0b2;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">MỚI</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">11</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">VAB</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
-            <td style="padding:6px 5px;font-weight:bold;">9.09</td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">9.02 - 9.22</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">8.82</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">9.49</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">9.76</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">25.0t</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">101/100</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">56</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+0.3 tỷ</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">64.7</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#11</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">PDR</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
+            <td style="padding:6px 5px;font-weight:bold;">11.85</td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">11.61 - 11.97</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">11.49</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">12.39</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">12.75</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">47.2t</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">102/101</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">99</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">D</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;">-1.0 tỷ</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">59.6</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="background:#e65100;color:#ffe0b2;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">MỚI</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">12</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">PDR</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
-            <td style="padding:6px 5px;font-weight:bold;">12.15</td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">11.91 - 12.27</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">11.79</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">12.69</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">13.05</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">102.8t</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">102/101</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">99</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">D</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;">-0.4 tỷ</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">59.6</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#12</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
-        </tr>
-        
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">13</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">VCB</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
-            <td style="padding:6px 5px;font-weight:bold;">56.80</td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">56.62 - 57.86</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">55.10</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">59.35</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">61.05</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">185.3t</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/100</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">38</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+11.2 tỷ</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">59.6</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#13</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
-        </tr>
-        
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">14</td>
             <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">VIX</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
             <td style="padding:6px 5px;font-weight:bold;">12.70</td>
             <td style="padding:6px 5px;color:#00e676;font-weight:600;">12.45 - 12.83</td>
             <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">12.32</td>
             <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">13.27</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">13.65</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">504.2t</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">258.5t</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span></td>
             <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">101/102</td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">92</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+1.5 tỷ</td>
+            <td style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;">-10.6 tỷ</td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">58.0</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#14</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#10</span> <span style="background:#b71c1c;color:#ff8a80;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">-2</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">13</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">KDC</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
+            <td style="padding:6px 5px;font-weight:bold;">50.90</td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">50.74 - 51.86</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">49.37</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">53.20</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">54.73</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">25.0t</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">101/100</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">20</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;">-3.9 tỷ</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">56.5</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="background:#e65100;color:#ffe0b2;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">MỚI</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">14</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">TCH</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
+            <td style="padding:6px 5px;font-weight:bold;">11.95</td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">11.71 - 12.07</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">11.59</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">12.49</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">12.85</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">41.6t</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">102/102</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">82</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;">-2.6 tỷ</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">54.8</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#12</span> <span style="background:#b71c1c;color:#ff8a80;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">-2</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">15</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">NKG</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">DIG</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
-            <td style="padding:6px 5px;font-weight:bold;">12.00</td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">11.76 - 12.12</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">11.64</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">12.54</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">12.90</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">69.4t</td>
+            <td style="padding:6px 5px;font-weight:bold;">9.99</td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">9.79 - 10.09</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">9.69</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">10.44</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">10.74</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">56.1t</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">106/103</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">87</td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">102/101</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">65</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+2.5 tỷ</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">56.8</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#15</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;">-11.7 tỷ</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">52.9</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#13</span> <span style="background:#b71c1c;color:#ff8a80;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">-2</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">16</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">MSN</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">ORS</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
-            <td style="padding:6px 5px;font-weight:bold;">74.20</td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">72.72 - 74.94</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">71.97</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">77.55</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">79.78</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">350.1t</td>
+            <td style="padding:6px 5px;font-weight:bold;">15.50</td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">15.19 - 15.65</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">15.04</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">16.19</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">16.65</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">77.1t</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">102/99</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">21</td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">104/102</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">83</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+92.0 tỷ</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">55.5</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#16</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;">-1.4 tỷ</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">52.0</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#15</span> <span style="background:#b71c1c;color:#ff8a80;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">-1</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">17</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">TCH</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">DXS</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
-            <td style="padding:6px 5px;font-weight:bold;">12.00</td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">11.76 - 12.12</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">11.64</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">12.54</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">12.90</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">84.6t</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">102/102</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">82</td>
+            <td style="padding:6px 5px;font-weight:bold;">5.22</td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">5.12 - 5.27</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">5.06</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">5.46</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">5.62</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">20.0t</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/101</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">64</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+1.0 tỷ</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">54.8</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#17</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;">-7.1 tỷ</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">51.8</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="background:#e65100;color:#ffe0b2;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">MỚI</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">18</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">STB</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">GEX</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
-            <td style="padding:6px 5px;font-weight:bold;">68.50</td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">67.13 - 69.19</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">66.44</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">71.59</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">73.65</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">554.4t</td>
+            <td style="padding:6px 5px;font-weight:bold;">23.60</td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">23.13 - 23.84</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">22.89</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">24.67</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">25.38</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">173.6t</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">97/100</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">98</td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">101/101</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">78</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;">-83.5 tỷ</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">54.6</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#18</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;">-23.6 tỷ</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">51.7</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#16</span> <span style="background:#b71c1c;color:#ff8a80;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">-2</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">19</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">GEL</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span></td>
-            <td style="padding:6px 5px;font-weight:bold;">28.75</td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">28.41 - 29.03</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">27.89</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">30.04</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">30.90</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">25.0t</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#ff6f00;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/100</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">50</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#3e2723;color:#ffb300;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">C</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+3.3 tỷ</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">52.5</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#20</span> <span style="background:#1b5e20;color:#00e676;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">+1</span></td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">DXG</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
+            <td style="padding:6px 5px;font-weight:bold;">10.25</td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">10.04 - 10.35</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">9.94</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">10.71</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">11.03</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">53.4t</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">102/101</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">65</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;">-2.5 tỷ</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">51.6</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#17</span> <span style="background:#b71c1c;color:#ff8a80;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">-2</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">20</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">ORS</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">SSI</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></td>
-            <td style="padding:6px 5px;font-weight:bold;">16.00</td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">15.68 - 16.16</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">15.52</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">16.72</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">17.20</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">177.1t</td>
+            <td style="padding:6px 5px;font-weight:bold;">19.95</td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">19.55 - 20.15</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">19.35</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">20.85</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">21.45</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">193.0t</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">103/101</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">83</td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/101</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">76</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;">+18.4 tỷ</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">52.0</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="background:#e65100;color:#ffe0b2;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">MỚI</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;">-25.4 tỷ</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">51.0</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#18</span> <span style="background:#b71c1c;color:#ff8a80;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">-2</span></td>
         </tr>
         
             </tbody>
@@ -574,7 +581,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">PTB</td>
             <td style="padding:10px;">Phú Tài</td>
             <td style="padding:10px;color:#aaa;">Gỗ & Đá xuất khẩu</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">30.90</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">30.75</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">6/9</td>
             <td style="padding:10px;text-align:center;">7.2</td>
             <td style="padding:10px;text-align:center;">1.0</td>
@@ -586,7 +593,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">VHM</td>
             <td style="padding:10px;">Vinhomes</td>
             <td style="padding:10px;color:#aaa;">Bất động sản dân cư</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">64.30</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">63.30</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">6/9</td>
             <td style="padding:10px;text-align:center;">15.8</td>
             <td style="padding:10px;text-align:center;">4.4</td>
@@ -598,7 +605,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">DBC</td>
             <td style="padding:10px;">Dabaco Việt Nam</td>
             <td style="padding:10px;color:#aaa;">Nông nghiệp & Chăn nuôi</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">16.45</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">16.35</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">5/9</td>
             <td style="padding:10px;text-align:center;">6.5</td>
             <td style="padding:10px;text-align:center;">0.8</td>
@@ -610,7 +617,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">FPT</td>
             <td style="padding:10px;">Tập đoàn FPT</td>
             <td style="padding:10px;color:#aaa;">Công nghệ thông tin</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">57.00</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">56.50</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">5/9</td>
             <td style="padding:10px;text-align:center;">13.2</td>
             <td style="padding:10px;text-align:center;">3.2</td>
@@ -631,10 +638,22 @@
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">GEX</td>
+            <td style="padding:10px;">Tập đoàn GELEX</td>
+            <td style="padding:10px;color:#aaa;">Thiết bị điện & KCN</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">23.60</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">5/9</td>
+            <td style="padding:10px;text-align:center;">30.0</td>
+            <td style="padding:10px;text-align:center;">1.2</td>
+            <td style="padding:10px;text-align:center;">7.30</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#37474f;color:#b0bec5;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">THEO DÕI</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">CTS</td>
             <td style="padding:10px;">Chứng khoán VietinBank</td>
             <td style="padding:10px;color:#aaa;">Dịch vụ tài chính & CK</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">21.95</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">22.20</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">4/9</td>
             <td style="padding:10px;text-align:center;">49.9</td>
             <td style="padding:10px;text-align:center;">1.9</td>
@@ -643,22 +662,10 @@
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:10px;font-weight:bold;color:#ffb300;">GEX</td>
-            <td style="padding:10px;">Tập đoàn GELEX</td>
-            <td style="padding:10px;color:#aaa;">Thiết bị điện & KCN</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">24.10</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#78909c;">N/A</td>
-            <td style="padding:10px;text-align:center;">0.0</td>
-            <td style="padding:10px;text-align:center;">0.0</td>
-            <td style="padding:10px;text-align:center;">0.00</td>
-            <td style="padding:10px;text-align:center;"><span style="background:#37474f;color:#b0bec5;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">THEO DÕI</span></td>
-        </tr>
-        
-        <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">MBB</td>
             <td style="padding:10px;">Ngân hàng Quân Đội</td>
             <td style="padding:10px;color:#aaa;">Ngân hàng thương mại</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">19.80</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">19.60</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#78909c;">N/A (Ngân hàng)</td>
             <td style="padding:10px;text-align:center;">8.4</td>
             <td style="padding:10px;text-align:center;">1.6</td>
@@ -670,7 +677,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">VCB</td>
             <td style="padding:10px;">Vietcombank</td>
             <td style="padding:10px;color:#aaa;">Ngân hàng thương mại</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">56.80</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">56.20</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#78909c;">N/A (Ngân hàng)</td>
             <td style="padding:10px;text-align:center;">12.5</td>
             <td style="padding:10px;text-align:center;">2.1</td>
@@ -713,7 +720,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">VCB</td>
             <td style="padding:10px;">Vietcombank</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">56.80</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">56.20</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#00e676;font-size:14px;">88/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">34.2%</td>
             <td style="padding:10px;text-align:center;">3.2%</td>
@@ -728,7 +735,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">MBB</td>
             <td style="padding:10px;">Ngân hàng Quân Đội</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">19.80</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">19.60</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#00e676;font-size:14px;">86/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">39.5%</td>
             <td style="padding:10px;text-align:center;">4.6%</td>
@@ -743,7 +750,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">TCB</td>
             <td style="padding:10px;">Techcombank</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">34.20</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">33.95</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#00e676;font-size:14px;">83/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">40.2%</td>
             <td style="padding:10px;text-align:center;">4.4%</td>
@@ -758,7 +765,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">ACB</td>
             <td style="padding:10px;">Ngân hàng Á Châu</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">21.30</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">21.05</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#4fc3f7;font-size:14px;">79/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">24.1%</td>
             <td style="padding:10px;text-align:center;">4.1%</td>
@@ -773,7 +780,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">HDB</td>
             <td style="padding:10px;">HDBank</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">22.55</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">22.25</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#4fc3f7;font-size:14px;">70/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">14.8%</td>
             <td style="padding:10px;text-align:center;">5.1%</td>
@@ -788,7 +795,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">CTG</td>
             <td style="padding:10px;">VietinBank</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">30.95</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">30.65</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#ffb300;font-size:14px;">61/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">22.8%</td>
             <td style="padding:10px;text-align:center;">3.0%</td>
@@ -803,7 +810,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">VPB</td>
             <td style="padding:10px;">VPBank</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">24.10</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">23.85</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#ffb300;font-size:14px;">61/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">18.2%</td>
             <td style="padding:10px;text-align:center;">5.6%</td>
@@ -818,7 +825,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">BID</td>
             <td style="padding:10px;">BIDV</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">34.25</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">34.00</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#ffb300;font-size:14px;">54/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">21.5%</td>
             <td style="padding:10px;text-align:center;">2.8%</td>
@@ -833,7 +840,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">STB</td>
             <td style="padding:10px;">Sacombank</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">68.50</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">67.60</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#ffb300;font-size:14px;">43/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">19.5%</td>
             <td style="padding:10px;text-align:center;">3.6%</td>
@@ -848,7 +855,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">EIB</td>
             <td style="padding:10px;">Eximbank</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">17.85</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;">17.35</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#ffb300;font-size:14px;">39/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">15.2%</td>
             <td style="padding:10px;text-align:center;">2.8%</td>
@@ -893,92 +900,92 @@
             <tbody>
                 
         <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">DBC</td>
-            <td style="padding:10px;text-align:center;"><span style="background:#263238;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;">Q3/2026</span></td>
-            <td style="padding:10px;text-align:right;color:#78909c;border-left:1px solid #1f2937;">4,307.7 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#90a4ae;">4,434.2 tỷ</td>
-            <td style="padding:10px;text-align:right;font-weight:700;color:#ffb300;border-right:1px solid #1f2937;">5,317.8 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#00e676;">374.0 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#00e676;">289.1 tỷ</td>
-            <td style="padding:10px;text-align:right;font-weight:700;color:#00e676;border-right:1px solid #1f2937;">200.2 tỷ</td>
-            <td style="padding:10px;text-align:center;">
-                <span style="background:#b71c1c;color:#ff8a80;padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">-30.8%</span>
-            </td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">11.1%</td>
-            <td style="padding:10px;text-align:center;">
-                <span style="background:#37474f;color:#b0bec5;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">↘ CHẬM LẠI</span>
-            </td>
-        </tr>
-        
-        <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">CTS</td>
             <td style="padding:10px;text-align:center;"><span style="background:#263238;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;">Q3/2026</span></td>
-            <td style="padding:10px;text-align:right;color:#78909c;border-left:1px solid #1f2937;">3,950.0 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#90a4ae;">4,150.0 tỷ</td>
-            <td style="padding:10px;text-align:right;font-weight:700;color:#ffb300;border-right:1px solid #1f2937;">4,520.5 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#00e676;">250.0 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#00e676;">280.0 tỷ</td>
-            <td style="padding:10px;text-align:right;font-weight:700;color:#00e676;border-right:1px solid #1f2937;">320.5 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#78909c;border-left:1px solid #1f2937;">351.9 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#90a4ae;">357.1 tỷ</td>
+            <td style="padding:10px;text-align:right;font-weight:700;color:#ffb300;border-right:1px solid #1f2937;">410.2 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#00e676;">65.8 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#00e676;">15.4 tỷ</td>
+            <td style="padding:10px;text-align:right;font-weight:700;color:#00e676;border-right:1px solid #1f2937;">5.0 tỷ</td>
             <td style="padding:10px;text-align:center;">
-                <span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">+14.5%</span>
+                <span style="background:#b71c1c;color:#ff8a80;padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">-67.5%</span>
             </td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">15.0%</td>
-            <td style="padding:10px;text-align:center;">
-                <span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🚀 TĂNG TỐC 3 QUÝ</span>
-            </td>
-        </tr>
-        
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">EIB</td>
-            <td style="padding:10px;text-align:center;"><span style="background:#263238;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;">Q2/2026</span></td>
-            <td style="padding:10px;text-align:right;color:#78909c;border-left:1px solid #1f2937;">0.0 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#90a4ae;">0.0 tỷ</td>
-            <td style="padding:10px;text-align:right;font-weight:700;color:#ffb300;border-right:1px solid #1f2937;">0.0 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#ff5252;">-472.5 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#00e676;">269.2 tỷ</td>
-            <td style="padding:10px;text-align:right;font-weight:700;color:#00e676;border-right:1px solid #1f2937;">250.5 tỷ</td>
-            <td style="padding:10px;text-align:center;">
-                <span style="background:#b71c1c;color:#ff8a80;padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">-6.9%</span>
-            </td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">0.0%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">45.1%</td>
             <td style="padding:10px;text-align:center;">
                 <span style="background:#37474f;color:#b0bec5;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">↘ CHẬM LẠI</span>
             </td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">PTB</td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">AAA</td>
             <td style="padding:10px;text-align:center;"><span style="background:#263238;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;">Q2/2026</span></td>
-            <td style="padding:10px;text-align:right;color:#78909c;border-left:1px solid #1f2937;">2,088.4 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#90a4ae;">2,094.7 tỷ</td>
-            <td style="padding:10px;text-align:right;font-weight:700;color:#ffb300;border-right:1px solid #1f2937;">2,087.2 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#00e676;">132.8 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#00e676;">154.0 tỷ</td>
-            <td style="padding:10px;text-align:right;font-weight:700;color:#00e676;border-right:1px solid #1f2937;">132.6 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#78909c;border-left:1px solid #1f2937;">2,193.5 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#90a4ae;">2,224.7 tỷ</td>
+            <td style="padding:10px;text-align:right;font-weight:700;color:#ffb300;border-right:1px solid #1f2937;">2,456.8 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#00e676;">62.0 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#00e676;">162.6 tỷ</td>
+            <td style="padding:10px;text-align:right;font-weight:700;color:#00e676;border-right:1px solid #1f2937;">202.5 tỷ</td>
             <td style="padding:10px;text-align:center;">
-                <span style="background:#b71c1c;color:#ff8a80;padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">-13.9%</span>
+                <span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">+24.5%</span>
             </td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">19.4%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">14.6%</td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🚀 TĂNG TỐC 3 QUÝ</span>
+            </td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">VGC</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#263238;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;">Q2/2026</span></td>
+            <td style="padding:10px;text-align:right;color:#78909c;border-left:1px solid #1f2937;">4,046.7 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#90a4ae;">3,329.3 tỷ</td>
+            <td style="padding:10px;text-align:right;font-weight:700;color:#ffb300;border-right:1px solid #1f2937;">4,566.4 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#00e676;">638.9 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#00e676;">321.1 tỷ</td>
+            <td style="padding:10px;text-align:right;font-weight:700;color:#00e676;border-right:1px solid #1f2937;">831.8 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">+159.0%</span>
+            </td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">30.4%</td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🔥 BÙNG NỔ LNST</span>
+            </td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">BVS</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#263238;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;">Q3/2026</span></td>
+            <td style="padding:10px;text-align:right;color:#78909c;border-left:1px solid #1f2937;">282.5 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#90a4ae;">265.7 tỷ</td>
+            <td style="padding:10px;text-align:right;font-weight:700;color:#ffb300;border-right:1px solid #1f2937;">227.5 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#00e676;">20.9 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#00e676;">42.4 tỷ</td>
+            <td style="padding:10px;text-align:right;font-weight:700;color:#00e676;border-right:1px solid #1f2937;">16.7 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#b71c1c;color:#ff8a80;padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">-60.6%</span>
+            </td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">49.7%</td>
             <td style="padding:10px;text-align:center;">
                 <span style="background:#37474f;color:#b0bec5;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">↘ CHẬM LẠI</span>
             </td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">GEX</td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">PVC</td>
             <td style="padding:10px;text-align:center;"><span style="background:#263238;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;">Q2/2026</span></td>
-            <td style="padding:10px;text-align:right;color:#78909c;border-left:1px solid #1f2937;">11,765.8 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#90a4ae;">10,822.9 tỷ</td>
-            <td style="padding:10px;text-align:right;font-weight:700;color:#ffb300;border-right:1px solid #1f2937;">14,639.7 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#00e676;">541.2 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#00e676;">578.8 tỷ</td>
-            <td style="padding:10px;text-align:right;font-weight:700;color:#00e676;border-right:1px solid #1f2937;">1,355.8 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#78909c;border-left:1px solid #1f2937;">1,605.8 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#90a4ae;">1,211.3 tỷ</td>
+            <td style="padding:10px;text-align:right;font-weight:700;color:#ffb300;border-right:1px solid #1f2937;">1,932.6 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#00e676;">11.1 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#00e676;">7.9 tỷ</td>
+            <td style="padding:10px;text-align:right;font-weight:700;color:#00e676;border-right:1px solid #1f2937;">12.8 tỷ</td>
             <td style="padding:10px;text-align:center;">
-                <span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">+134.2%</span>
+                <span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">+62.0%</span>
             </td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">20.3%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">6.4%</td>
             <td style="padding:10px;text-align:center;">
-                <span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🚀 TĂNG TỐC 3 QUÝ</span>
+                <span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🔥 BÙNG NỔ LNST</span>
             </td>
         </tr>
         
@@ -993,15 +1000,6 @@
             
             <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-                    <span style="font-weight:bold;color:#ffb300;font-size:13px;">DBC</span>
-                    <span style="font-size:11px;color:#78909c;">2026-10-22 • An ninh tiền tệ</span>
-                </div>
-                <div style="font-weight:600;font-size:13px;color:#eceff1;margin-bottom:4px;">DBC: Giá lợn hơi giảm, Dabaco báo lãi ròng quý III/2026 giảm hơn 41% dù doanh thu tăng</div>
-                <div style="font-size:12px;color:#90a4ae;line-height:1.4;">Dabaco (DBC) báo doanh thu quý III/2026 tăng gần 37%, nhưng lãi ròng giảm hơn 41% do giá lợn hơi xuống và chi phí tài chính, bán hàng, quản lý đều tăng.</div>
-            </div>
-            
-            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
                     <span style="font-weight:bold;color:#ffb300;font-size:13px;">CTS</span>
                     <span style="font-size:11px;color:#78909c;">2026-10-20 • Nhà đầu tư</span>
                 </div>
@@ -1011,33 +1009,34 @@
             
             <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-                    <span style="font-weight:bold;color:#ffb300;font-size:13px;">EIB</span>
-                    <span style="font-size:11px;color:#78909c;">2026-10-16 • Tạp chí tài chính</span>
+                    <span style="font-weight:bold;color:#ffb300;font-size:13px;">AAA</span>
+                    <span style="font-size:11px;color:#78909c;">2026-09-25 • CafeF</span>
                 </div>
-                <div style="font-weight:600;font-size:13px;color:#eceff1;margin-bottom:4px;">EIB: Eximbank bỏ giới hạn sở hữu ngoại 6%, Chủ tịch nói về thách thức quản trị</div>
-                <div style="font-size:12px;color:#90a4ae;line-height:1.4;">Eximbank bỏ giới hạn 6% sở hữu nước ngoài để tuân thủ quy định Ngân hàng Nhà nước, đồng thời bổ sung bà Phạm Thị Huyền Trang vào HĐQT trong bối cảnh lợi nhuận 6 tháng đầu năm giảm mạnh.</div>
+                <div style="font-weight:600;font-size:13px;color:#eceff1;margin-bottom:4px;">MB muốn chuyển nhượng cổ phần Bảo hiểm AAA cho MBCapital</div>
+                <div style="font-size:12px;color:#90a4ae;line-height:1.4;">MB thông qua việc chuyển nhượng cổ phần Bảo hiểm AAA cho công ty con MBCapital, đồng thời ông Hà Trọng Khiêm thôi làm Phó Tổng Giám đốc để nhận nhiệm vụ tại MBV.</div>
             </div>
             
             <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-                    <span style="font-weight:bold;color:#ffb300;font-size:13px;">PTB</span>
-                    <span style="font-size:11px;color:#78909c;">2026-08-28 • Vietnam Finance</span>
+                    <span style="font-weight:bold;color:#ffb300;font-size:13px;">VGC</span>
+                    <span style="font-size:11px;color:#78909c;">2026-10-08 • Vietnam+</span>
                 </div>
-                <div style="font-weight:600;font-size:13px;color:#eceff1;margin-bottom:4px;">PTB: Từ xuất khẩu đến hiện diện trực tiếp, Phú Tài rót tiền lập công ty tại Mỹ</div>
-                <div style="font-size:12px;color:#90a4ae;line-height:1.4;">Phú Tài (PTB) đã phê duyệt góp 950.000 USD để lập công ty PHU TAI HOME USA tại Houston, Texas, nhằm hiện diện trực tiếp tại thị trường Mỹ sau nhiều năm chỉ xuất khẩu.</div>
+                <div style="font-weight:600;font-size:13px;color:#eceff1;margin-bottom:4px;">Công ty chứng khoán khuyến nghị tích cực với DGW, mua VGC và VSC</div>
+                <div style="font-size:12px;color:#90a4ae;line-height:1.4;">VIX khuyến nghị tích cực DGW với giá mục tiêu 58.300 đồng; VPBankS khuyến nghị mua VGC (51.800 đồng) và FPTS khuyến nghị mua VSC (22.100 đồng) nhờ triển vọng khu công nghiệp và logistics.</div>
+            </div>
+            
+            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span style="font-weight:bold;color:#ffb300;font-size:13px;">BVS</span>
+                    <span style="font-size:11px;color:#78909c;">2026-10-21 • Người đưa tin</span>
+                </div>
+                <div style="font-weight:600;font-size:13px;color:#eceff1;margin-bottom:4px;">BVS: Hoạt động môi giới giảm sâu, tự doanh từ lãi thành lỗ</div>
+                <div style="font-size:12px;color:#90a4ae;line-height:1.4;">BVSC ghi nhận lợi nhuận sau thuế quý III/2026 giảm gần 80% so với cùng kỳ, do tự doanh chuyển từ lãi sang lỗ và doanh thu môi giới sụt giảm mạnh.</div>
             </div>
             
         </div>
         <div>
             <div class="section-title" style="color:#00e676;margin-bottom:12px;">📅 LỊCH SỰ KIỆN & CHỐT QUYỀN SẮP TỚI</div>
-            
-            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-                    <span style="font-weight:bold;color:#00e676;font-size:13px;">DBC</span>
-                    <span style="font-size:11px;color:#ffb300;background:#263238;padding:2px 6px;border-radius:4px;">Thời gian: 2026-10-06</span>
-                </div>
-                <div style="font-size:13px;color:#d1d4dc;">DBC: Thông báo giao dịch cổ phiếu của Người nội bộ Nguyễn Thị Thu Hương</div>
-            </div>
             
             <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
@@ -1049,18 +1048,26 @@
             
             <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-                    <span style="font-weight:bold;color:#00e676;font-size:13px;">EIB</span>
+                    <span style="font-weight:bold;color:#00e676;font-size:13px;">AAA</span>
                     <span style="font-size:11px;color:#ffb300;background:#263238;padding:2px 6px;border-radius:4px;">Thời gian: 2026-11-15</span>
                 </div>
-                <div style="font-size:13px;color:#d1d4dc;">EIB: Lấy ý kiến cổ đông bằng văn bản và chuẩn bị chi trả cổ tức đợt 1</div>
+                <div style="font-size:13px;color:#d1d4dc;">AAA: Lấy ý kiến cổ đông bằng văn bản và chuẩn bị chi trả cổ tức đợt 1</div>
             </div>
             
             <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-                    <span style="font-weight:bold;color:#00e676;font-size:13px;">PTB</span>
-                    <span style="font-size:11px;color:#ffb300;background:#263238;padding:2px 6px;border-radius:4px;">Thời gian: 2026-10-05</span>
+                    <span style="font-weight:bold;color:#00e676;font-size:13px;">VGC</span>
+                    <span style="font-size:11px;color:#ffb300;background:#263238;padding:2px 6px;border-radius:4px;">Thời gian: 2026-11-15</span>
                 </div>
-                <div style="font-size:13px;color:#d1d4dc;">PTB: Thông báo giao dịch cổ phiếu của Người nội bộ Nguyễn Sỹ Hòe</div>
+                <div style="font-size:13px;color:#d1d4dc;">VGC: Lấy ý kiến cổ đông bằng văn bản và chuẩn bị chi trả cổ tức đợt 1</div>
+            </div>
+            
+            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span style="font-weight:bold;color:#00e676;font-size:13px;">BVS</span>
+                    <span style="font-size:11px;color:#ffb300;background:#263238;padding:2px 6px;border-radius:4px;">Thời gian: 2026-11-15</span>
+                </div>
+                <div style="font-size:13px;color:#d1d4dc;">BVS: Lấy ý kiến cổ đông bằng văn bản và chuẩn bị chi trả cổ tức đợt 1</div>
             </div>
             
         </div>
@@ -1069,5 +1076,25 @@
     <div class="footer">
         Neiro-Stock-VN • Tự động quét và cập nhật qua GitHub Actions • Vận hành 24/7 trên Cloud • Xem được trên mọi thiết bị di động
     </div>
+
+    <script>
+        let secondsLeft = 60;
+        const countdownEl = document.getElementById('countdown');
+        function reloadDashboard() {
+            if (countdownEl) countdownEl.innerText = 'Đang nạp...';
+            const url = new URL(window.location.href);
+            url.searchParams.set('_t', Date.now().toString());
+            window.location.href = url.toString();
+        }
+        setInterval(function() {
+            secondsLeft--;
+            if (countdownEl) {
+                countdownEl.innerText = secondsLeft > 0 ? secondsLeft : '0';
+            }
+            if (secondsLeft <= 0) {
+                reloadDashboard();
+            }
+        }, 1000);
+    </script>
 </body>
 </html>

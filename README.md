@@ -47,7 +47,7 @@ Neiro-Stock-VN/
 │   ├── architecture.md           # Kiến trúc hệ thống và luồng dữ liệu toàn cảnh
 │   ├── thuat_ngu_quant_vn.md     # Từ điển thuật ngữ Quantamental & Vi cấu trúc TTCK VN
 │   ├── TRADER_PLAYBOOK_VN.md     # Cẩm nang tác chiến thực chiến cho Trader / Quỹ
-│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-007)
+│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-008)
 ├── src/
 │   ├── collector/                # Thu thập & chuẩn hóa dữ liệu TTCK VN
 │   ├── fundamental_engine/       # Bộ lọc Piotroski F-score, EPS, PE/PB Banding
@@ -130,7 +130,7 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
   - **Chốt phiên:** `15:05` (Chốt dữ liệu đóng cửa phiên chính thức toàn thị trường).
 - **Kích hoạt thủ công bất kỳ lúc nào:** Vào tab **Actions** trên GitHub (trên máy tính hoặc ứng dụng di động GitHub Mobile) -> Chọn workflow **Fialda VIP Expert Scanner & GitHub Pages Deploy** -> Bấm **Run workflow**.
 - **Địa chỉ truy cập Dashboard trực tiếp trên Mobile/Web:**
-  - **GitHub Pages:** `https://daninguyen2509.github.io/Neiro-Stock-VN/` (Giao diện Dark Mode tương tác mượt mà trên iPhone/Android với Top 20 cổ phiếu, BCTC 4 quý, Tin tức & Sự kiện).
+  - **GitHub Pages:** `https://daninguyen2509.github.io/Neiro-Stock-VN/` (Giao diện Dark Mode tương tác mượt mà trên iPhone/Android với Top 20 cổ phiếu, BCTC 4 quý, Tin tức & Sự kiện; tích hợp **Bộ đếm ngược Live Countdown 60s & Tự động làm mới Auto-Reload** không cần bấm F5).
   - **GitHub Mobile App:** Mở lượt chạy Action bất kỳ, bảng xếp hạng Top 20 hiển thị rực rỡ ngay trong tab **Summary**.
 - **Cấu hình GitHub Secrets:**
   Vào repository: **Settings** -> **Secrets and variables** -> **Actions** -> Thêm 2 Secrets:

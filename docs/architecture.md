@@ -109,6 +109,7 @@ flowchart TD
 
 ### 2.7. Tầng Giao Diện Tác Chiến (`src/hud/`)
 - **`terminal.py`:** Sinh mã nguồn HTML tương tác đa tab hoàn chỉnh, hỗ trợ Dark Mode hiện đại, bao gồm:
+  - **Cơ chế Tự Động Nạp Lại & Đếm Ngược Thời Gian Thực (Auto-Reload & Live Countdown):** Tích hợp bộ đếm lùi 60 giây kèm nút `⚡ Tải lại ngay` và cơ chế Cache-Busting (`_t=Date.now()`), kết hợp hiển thị nhãn thời gian quét chính xác theo giờ Việt Nam (`🕒 Cập nhật: HH:MM:SS • DD/MM/YYYY`) và thẻ `<meta http-equiv="refresh" content="180">` dự phòng, bảo đảm trình duyệt tab luôn cập nhật dữ liệu mới nhất mà không cần bấm F5.
   - Tab 1: Top 20 Siêu Cổ Phiếu Chân Sóng với thiết kế 15 cột trực quan vừa vặn 100% màn hình không cần cuộn ngang: tách biệt hoàn toàn giữa `Thanh Khoản (ADTV20)`, `Chuẩn Quỹ (Lô Max/Trượt)`, `Điểm IBD`, và `Tích Luỹ (A-E)`; Cột `Kỳ Trước` hiển thị ổn định `#cũ (+N)` dựa trên cơ chế Session Debounce 30 phút. Bảng Xếp Hạng Định Lượng Cơ Bản (Piotroski F-Score).
   - Tab 2: Kiểm Định Lịch Sử T+2.5 Walk-Forward (Biểu đồ đường cong vốn SVG siêu nét Strategy vs VN-Index Benchmark, Bảng so sánh In-Sample vs Out-of-Sample, Nhật ký giao dịch thực chiến).
   - Tab 3: Bảng Định Lượng Ngân Hàng Thương Mại CAMEL & Basel II/III.

@@ -1,3 +1,4 @@
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 from src.collector.data_loader import get_mock_vietnam_stocks
@@ -286,11 +287,15 @@ def generate_terminal_html(
         if is_live
         else '<span style="color:#ffb300;">⚠️ Fialda VIP gián đoạn - Đang tự động bảo vệ tín hiệu bằng nguồn dự phòng</span>'
     )
+    vn_now = datetime.now(timezone(timedelta(hours=7)))
+    scan_time_str = vn_now.strftime("%H:%M:%S • %d/%m/%Y")
+
     html_content = f"""<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="180">
     <title>Neiro-Stock-VN | Bảng Điều Khiển Chiến Thuật Định Lượng</title>
     <style>
         * {{
@@ -405,6 +410,12 @@ def generate_terminal_html(
         <div style="text-align:right;">
             {data_badge}
             <div style="font-size:11px;color:#78909c;margin-top:4px;">{data_subtext}</div>
+            <div style="display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-top:6px;flex-wrap:wrap;">
+                <span style="font-size:11px;color:#90a4ae;">🕒 Cập nhật: <b style="color:#ffb300;">{scan_time_str}</b></span>
+                <span style="font-size:11px;color:#546e7a;">•</span>
+                <span style="font-size:11px;color:#90a4ae;">🔄 Tự làm mới: <b id="countdown" style="color:#00e676;">60</b>s</span>
+                <button onclick="reloadDashboard()" style="background:#1e293b;color:#38bdf8;border:1px solid #0284c7;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer;">⚡ Tải lại ngay</button>
+            </div>
         </div>
     </div>
 
@@ -569,6 +580,26 @@ def generate_terminal_html(
     <div class="footer">
         Neiro-Stock-VN • Tự động quét và cập nhật qua GitHub Actions • Vận hành 24/7 trên Cloud • Xem được trên mọi thiết bị di động
     </div>
+
+    <script>
+        let secondsLeft = 60;
+        const countdownEl = document.getElementById('countdown');
+        function reloadDashboard() {{
+            if (countdownEl) countdownEl.innerText = 'Đang nạp...';
+            const url = new URL(window.location.href);
+            url.searchParams.set('_t', Date.now().toString());
+            window.location.href = url.toString();
+        }}
+        setInterval(function() {{
+            secondsLeft--;
+            if (countdownEl) {{
+                countdownEl.innerText = secondsLeft > 0 ? secondsLeft : '0';
+            }}
+            if (secondsLeft <= 0) {{
+                reloadDashboard();
+            }}
+        }}, 1000);
+    </script>
 </body>
 </html>
 """
