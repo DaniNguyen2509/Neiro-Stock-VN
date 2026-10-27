@@ -151,7 +151,11 @@ flowchart TD
   - **Tối ưu hóa Lập lịch POSIX (ADR-007):** Quét định kỳ 30 phút trong phiên và bổ sung 2 mốc đóng băng dữ liệu cuối ngày (`15,45 2,3,4 * * 1-5`, `15,45 6,7 * * 1-5`, `5 8 * * 1-5`, `30 10 * * 1-5` - 17:30 VN, `0 12 * * 1-5` - 19:00 VN EOD Final Smart Money), chống nghẽn hàng đợi scheduler.
   - Hỗ trợ `workflow_dispatch` cho phép kích hoạt thủ công từ điện thoại hoặc máy trạm bất kỳ lúc nào.
   - Đăng nhập Fialda VIP qua GitHub Secrets với cơ chế khử nhiễu chuỗi bí mật tự động (ADR-007), quét Top 20 và sinh giao diện HTML.
-  - **Sổ Cái Tín Hiệu Ngầm & Báo Cáo Đối Chiếu (ADR-009):** Cập nhật `data/active_signals.jsonl` và tự động đính kèm `data/advisory_scorecard.md` trực tiếp vào **GitHub Step Summary**, báo cáo hiệu suất T+0 đến T+5 và kích hoạt radar chống mua đuổi.
+  - **Sổ Cái Tín Hiệu Ngầm, Ma Trận Dòng Tiền Kép & Xuất Bản ML Dataset (ADR-009 & ADR-011):**
+    - Cập nhật `data/active_signals.jsonl` và tự động đính kèm `data/advisory_scorecard.md` trực tiếp vào **GitHub Step Summary**, báo cáo hiệu suất T+0 đến T+5 và kích hoạt radar chống mua đuổi.
+    - **Ma Trận Dòng Tiền Kép (Dual Flow Matrix):** Phân loại 4 trạng thái dòng tiền định chế (`SIEU_SONG`, `NOI_CAN_HANG`, `NGOAI_DO_GIA`, `RUI_RO_XA`), nhận diện chính xác các pha Quỹ nội lớn gom cân hàng giá thấp khi ngoại bán ròng.
+    - **Google Sheets & Looker Studio Sync:** Đồng bộ tự động danh mục khuyến nghị lên Google Sheets qua Apps Script Webhook siêu nhẹ, kết nối trực tiếp Looker Studio Dashboard hoàn toàn miễn phí.
+    - **Xuất Bản ML Dataset:** Tự động tạo và đồng bộ phẳng [data/ml_signals_dataset.csv](file:///c:/Users/Daniel/Documents/My-Projects/Neiro-Stock-VN/data/ml_signals_dataset.csv) cho phép huấn luyện mô hình Machine Learning trên Google Colab.
   - Xuất bản bảng kết quả tức thì vào **GitHub Step Summary** trên ứng dụng di động.
   - Tự động deploy dashboard lên **GitHub Pages** (`exports/index.html`) với tính năng tự động làm mới và bộ đếm lùi thời gian thực (ADR-008).
 

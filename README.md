@@ -151,8 +151,10 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
   Vào **Settings** -> **Pages** -> Tại mục **Build and deployment**, chọn **Source: Deploy from a branch** với Branch là **gh-pages / (root)** để xem trực tiếp ngay lập tức tại:
   `https://daninguyen2509.github.io/Neiro-Stock-VN/`
 
-
-
+### 4.6. Sổ Nhật Ký Tín Hiệu Online, Ma Trận Dòng Tiền Kép & Machine Learning Dataset (ADR-011)
+- **Ma Trận Dòng Tiền Kép (Dual Flow Matrix):** Phân định 4 trạng thái dòng tiền định chế (`🟢🟢 SIEU_SONG` Đồng thuận Ngoại + Nội gom, `🟢 NOI_CAN_HANG` Sóng Quỹ nội gom cân sạch cung xả giá thấp, `🔵 NGOAI_DO_GIA`, `🔴 RUI_RO_XA`). Giúp phân biệt rõ bản chất "Ngoại bán nhưng Quỹ nội gom thì cổ phiếu vẫn vào siêu sóng".
+- **Sổ Nhật Ký Tự Động & Google Sheets Webhook:** Tự động đồng bộ các khuyến nghị lên Google Sheets qua Apps Script Webhook siêu nhẹ, kết nối trực tiếp với **Google Looker Studio** hiển thị Dashboard phân tích trực quan 100% miễn phí.
+- **Tập Dữ Liệu Huấn Luyện AI/ML (`data/ml_signals_dataset.csv`):** Tự động xuất bản và duy trì cấu trúc dữ liệu phẳng không rò rỉ tương lai ($T_0$ features vs $T+2.5/T+5$ outcomes) cho phép tải trực tiếp vào Google Colab (`pd.read_csv(...)`) để train mô hình Machine Learning.
 ---
 
 ## 5. Quy Chuẩn Vận Hành AI Agent (Zero-Waste & Skill Protocol)

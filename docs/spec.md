@@ -424,5 +424,21 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
      ```
    - Chạy vòng lặp ngầm trên máy trạm của người dùng để liên tục cập nhật và sinh lại file HTML mỗi 5 phút.
 
+---
 
+### Tier 14: Sổ Nhật Ký Đề Xuất Tự Động, Ma Trận Dòng Tiền Kép & Xuất Bản ML Dataset (ADR-011)
 
+1. **Ma Trận Dòng Tiền Kép (Dual Flow Matrix: Ngoại vs Quỹ Nội Gom):**
+   - Phân loại rõ nét 4 trạng thái dòng tiền định chế nhằm giải quyết triệt để đặc thù khối ngoại bán ròng tại TTCK Việt Nam:
+     - `SIEU_SONG` (🟢🟢 ĐỒNG THUẬN): Ngoại gom + Nội gom (Tích lũy hạng A/B, RRG Leading).
+     - `NOI_CAN_HANG` (🟢 NỘI CÂN HÀNG): Khối ngoại bán ròng hoặc trung tính nhưng Dòng tiền Nội (Quỹ nội Dragon Capital, SSIAM, Tự doanh, Cá mập nội) hấp thụ sạch cung bán giá thấp ở chân sóng.
+     - `NGOAI_DO_GIA` (🔵 NGOẠI ĐỠ GIÁ): Ngoại gom đỡ chỉ số khi dòng tiền nội chưa sẵn sàng.
+     - `RUI_RO_XA` (🔴 RỦI RO PHÂN PHỐI): Cả hai bên cùng thoái vốn (Phân phối hạng D/E, RRG Lagging).
+   - Tích hợp nhãn nhận diện trên Terminal HUD và tập dữ liệu phân tích.
+
+2. **Sổ Nhật Ký Tín Hiệu Online & Google Sheets Sync:**
+   - Tự động ghi chép và theo dõi toàn diện vòng đời tín hiệu (P&L, MFE, MAE, trạng thái $T+2.5$, Take Profit, Trailing Stop).
+   - Tự động đồng bộ hai chiều lên Google Sheets qua Apps Script Webhook siêu nhẹ, kết nối trực tiếp với Google Looker Studio để trực quan hóa hiệu suất hoàn toàn miễn phí.
+
+3. **Xuất Bản Tự Động Tập Dữ Liệu ML `data/ml_signals_dataset.csv`:**
+   - Lưu trữ Vector đặc trưng $T_0$ bất biến cùng biến mục tiêu $y$ (`outcome_label`, `target_win_binary`) phục vụ huấn luyện các mô hình Machine Learning / Deep Learning trên Google Colab.

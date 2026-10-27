@@ -43,6 +43,16 @@ Dataclass `ActiveSignal` trong [src/risk_engine/signal_tracker.py](file:///c:/Us
 - Tệp này được tự động `git add` và commit ngầm trên GitHub Actions, cho phép nhà nghiên cứu tải trực tiếp vào Google Colab qua 1 dòng lệnh `pd.read_csv()` để train mô hình Machine Learning.
 - Bảng tính trên Google Sheets được kết nối trực tiếp với **Google Looker Studio** để hiển thị Dashboard phân tích động hoàn toàn miễn phí.
 
+### 2.4. Ma Trận Dòng Tiền Kép (Dual Flow Matrix: Ngoại vs Quỹ Nội Gom)
+Trong bối cảnh đặc thù của TTCK Việt Nam, khối ngoại có thể duy trì bán ròng ròng rã do yếu tố tỷ giá USD/VND và lãi suất Fed. Tuy nhiên, các sóng tăng mạnh nhất ở nhóm cổ phiếu midcap/leading thường được dẫn dắt bởi **Quỹ nội lớn (Dragon Capital, VinaCapital, SSIAM, DCDS, Diamond ETF), Tự doanh CTCK và Cá mập nội**.
+Hệ thống thiết lập Ma trận 4 trạng thái để ML và Trader phân loại chính xác:
+1. `SIEU_SONG` (🟢🟢 Đồng thuận Ngoại gom + Nội gom): Khối ngoại mua ròng và Tích lũy hạng A/B. Tín hiệu xung lực cực mạnh.
+2. `NOI_CAN_HANG` (🟢 Sóng Nội Cân Hàng): Khối ngoại bán ròng hoặc đứng ngoài, nhưng Nội hấp thụ sạch cung bán giá thấp (Tích lũy hạng A/B, RRG Leading/Weakening, Chân sóng). Đây là các cơ hội chân sóng tiềm năng nhất không bị bỏ lỡ.
+3. `NGOAI_DO_GIA` (🔵 Ngoại đỡ giá): Khối ngoại mua ròng đỡ giá trong khi dòng tiền nội chưa vào quyết liệt.
+4. `RUI_RO_XA` (🔴 Rủi ro phân phối): Cả dòng tiền Nội lẫn Ngoại đều thoát hàng (Phân phối hạng D/E, RRG Lagging). Cấm mở mua.
+
+Các trường `prop_net_value_billion`, `flow_regime`, `flow_badge` được đưa trực tiếp vào Feature Vector phục vụ huấn luyện mô hình ML.
+
 ---
 
 ## 3. Hệ Quả & Đánh Giá (Consequences)

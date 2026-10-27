@@ -58,6 +58,9 @@ class ActiveSignal:
     adv20_shares: int = 1_000_000
     liquidity_score: float = 80.0
     t25_exposure_level: str = "SAFE"
+    prop_net_value_billion: float = 0.0  # Uoc tinh dong tien noi / Tu doanh gom (ty VND)
+    flow_regime: str = "NOI_CAN_HANG"    # 'SIEU_SONG', 'NOI_CAN_HANG', 'NGOAI_DO_GIA', 'RUI_RO_XA'
+    flow_badge: str = "🟢 NỘI GOM CÂN HÀNG" # Huy hieu phan loai dong tien kep
 
     # ML Labels & Tracking biến động theo chu kỳ T+2.5 đến T+20 (Ground Truth)
     max_price_reached: float = 0.0
@@ -273,6 +276,9 @@ class SignalTracker:
             adv20 = int(getattr(c, "adv20_shares", 1_000_000))
             liq_sc = float(getattr(c, "liquidity_score", 80.0))
             t25_exp = str(getattr(c, "t25_exposure_level", "SAFE"))
+            prop_val = float(getattr(c, "prop_net_value_billion", 0.0))
+            fl_regime = str(getattr(c, "flow_regime", "NOI_CAN_HANG"))
+            fl_badge = str(getattr(c, "flow_badge", "🟢 NỘI GOM CÂN HÀNG"))
 
             if sym in active_signals:
                 # Cổ phiếu ĐÃ TỪNG XUẤT HIỆN -> Giữ nguyên điểm vào gốc (Anchor) và cập nhật
@@ -371,6 +377,9 @@ class SignalTracker:
                     adv20_shares=adv20,
                     liquidity_score=liq_sc,
                     t25_exposure_level=t25_exp,
+                    prop_net_value_billion=prop_val,
+                    flow_regime=fl_regime,
+                    flow_badge=fl_badge,
                     max_price_reached=price,
                     min_price_reached=price,
                     mfe_pct=0.0,
@@ -409,10 +418,13 @@ class SignalTracker:
             else ("🟡 VÙNG VỚI" if sig.buy_permission == "BUY_CAUTION" else "🔴 CẤM MUA ĐUỔI")
         )
 
+        flow_info = f"{sig.flow_badge} (Khối ngoại: {sig.foreign_net_value_billion:+.1f} tỷ | Dòng tiền nội ước tính: ~{sig.prop_net_value_billion:+.1f} tỷ)"
+
         return (
             f"**[TƯ VẤN ĐỊNH LƯỢNG {sym}]** - {badge}\n"
             f"- Điểm kích hoạt gốc (T0): **{sig.entry_original:.2f}** ({sig.first_signal_date})\n"
             f"- Thị giá hiện tại: **{sig.current_price:.2f}** (Lãi/Lỗ: **{sig.pnl_pct:+.1f}%** sau {sig.holding_days} phiên)\n"
+            f"- Ma trận Dòng tiền Kép: {flow_info}\n"
             f"- Cắt lỗ: {sig.current_stop_loss:.2f} | Mục tiêu: TP1 {sig.tp1:.2f} / TP2 {sig.tp2:.2f}\n"
             f"- Khuyến nghị: {sig.advice_note}"
         )

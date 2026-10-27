@@ -130,4 +130,39 @@ def test_candidates_trailing_stop_enrichment():
         assert "T+0" in c.t25_status_badge
 
 
+def test_classify_dual_flow_matrix():
+    """Kiem tra phan loai Ma Tran Dong Tien Kep (Dual Flow Matrix)."""
+    from src.collector.fialda_scanner import classify_dual_flow
+
+    # 1. SIEU_SONG: Ca Ngoai va Noi deu gom
+    reg1, badge1, prop1 = classify_dual_flow(
+        foreign_net_val=15.0, acc_diss="A", signal_type="CHO_MUA_CHAN_SONG", rrg_r=102, rrg_m=101
+    )
+    assert reg1 == "SIEU_SONG"
+    assert "ĐỒNG THUẬN" in badge1
+    assert prop1 > 0
+
+    # 2. NOI_CAN_HANG: Ngoai xa nhung Noi nuot tron (dien hinh tren thi truong VN)
+    reg2, badge2, prop2 = classify_dual_flow(
+        foreign_net_val=-8.5, acc_diss="E", signal_type="CHO_MUA_CHAN_SONG", rrg_r=101, rrg_m=102
+    )
+    assert reg2 == "NOI_CAN_HANG"
+    assert "NỘI GOM" in badge2
+    assert prop2 >= 8.5
+
+    # 3. NGOAI_DO_GIA: Ngoai mua nhung Noi chua day
+    reg3, badge3, prop3 = classify_dual_flow(
+        foreign_net_val=2.5, acc_diss="D", signal_type="THE_CHE_GOM", rrg_r=98, rrg_m=97
+    )
+    assert reg3 == "NGOAI_DO_GIA"
+    assert "NGOẠI ĐỠ" in badge3
+
+    # 4. RUI_RO_XA: Ca Ngoai va Noi deu xa
+    reg4, badge4, prop4 = classify_dual_flow(
+        foreign_net_val=-12.0, acc_diss="E", signal_type="NONE", rrg_r=96, rrg_m=95
+    )
+    assert reg4 == "RUI_RO_XA"
+    assert "NGUY HIỂM" in badge4
+
+
 

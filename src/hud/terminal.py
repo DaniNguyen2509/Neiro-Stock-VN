@@ -41,6 +41,15 @@ def generate_terminal_html(
         )
         foreign_str = f"{c.foreign_net_value_billion:+.1f} tỷ"
         foreign_color = "#00e676" if c.foreign_net_value_billion >= 0 else "#ff5252"
+        flow_b = getattr(c, "flow_badge", "🟢 NỘI GOM CÂN HÀNG")
+        if "SIÊU" in flow_b or "ĐỒNG THUẬN" in flow_b:
+            flow_badge_html = '<div style="font-size:9px;color:#00e676;margin-top:2px;font-weight:bold;">🟢🟢 ĐỒNG THUẬN</div>'
+        elif "NỘI GOM" in flow_b:
+            flow_badge_html = '<div style="font-size:9px;color:#69f0ae;margin-top:2px;font-weight:bold;">🟢 NỘI CÂN HÀNG</div>'
+        elif "ĐỠ" in flow_b:
+            flow_badge_html = '<div style="font-size:9px;color:#4fc3f7;margin-top:2px;font-weight:bold;">🔵 NGOẠI ĐỠ GIÁ</div>'
+        else:
+            flow_badge_html = '<div style="font-size:9px;color:#ff5252;margin-top:2px;font-weight:bold;">🔴 NGUY HIỂM</div>'
 
         if c.liquidity_score >= 90:
             liq_badge = '<span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span>'
@@ -85,7 +94,7 @@ def generate_terminal_html(
             <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">{c.rrg_r:.0f}/{c.rrg_m:.0f}</td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">{c.composite_rating}</td>
             <td style="padding:6px 5px;text-align:center;">{ad_badge}</td>
-            <td style="padding:6px 5px;text-align:center;color:{foreign_color};font-weight:600;">{foreign_str}</td>
+            <td style="padding:6px 5px;text-align:center;color:{foreign_color};font-weight:600;">{foreign_str}{flow_badge_html}</td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">{c.ranking_score:.1f}</td>
             <td style="padding:6px 5px;text-align:center;white-space:nowrap;">{prev_rank_html}</td>
         </tr>

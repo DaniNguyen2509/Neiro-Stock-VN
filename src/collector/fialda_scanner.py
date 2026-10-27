@@ -68,6 +68,53 @@ class FialdaCandidate:
     prev_rank: Optional[int] = None      # Thu hang o ky quet truoc do
     t25_exposure_level: str = "SAFE"     # SAFE, MODERATE, HIGH, CRITICAL
     t25_status_badge: str = "T+0 (Vùng gom)"
+    prop_net_value_billion: float = 0.0  # Uoc tinh dong tien noi / Tu doanh gom (ty VND)
+    flow_regime: str = "NOI_CAN_HANG"    # 'SIEU_SONG', 'NOI_CAN_HANG', 'NGOAI_DO_GIA', 'RUI_RO_XA'
+    flow_badge: str = "🟢 NỘI GOM CÂN HÀNG" # Huy hieu phan loai dong tien kep
+
+
+def classify_dual_flow(
+    foreign_net_val: float,
+    acc_diss: str,
+    signal_type: str,
+    rrg_r: float = 100.0,
+    rrg_m: float = 100.0,
+) -> tuple[str, str, float]:
+    """Phân loại Ma Trận Dòng Tiền Kép (Dual Flow Matrix): Ngoại vs Dòng Tiền Nội.
+
+    - SIEU_SONG (🟢🟢 ĐỒNG THUẬN GOM): Cả Khối ngoại và Dòng tiền nội đều mua ròng.
+    - NOI_CAN_HANG (🟢 NỘI GOM CÂN HÀNG): Ngoại bán ròng / đứng ngoài nhưng Quỹ nội & Tay to nuốt sạch cung.
+    - NGOAI_DO_GIA (🔵 NGOẠI ĐỠ GIÁ): Ngoại mua phòng thủ, dòng tiền nội chưa nhập cuộc.
+    - RUI_RO_XA (🔴 NGUY HIỂM XẢ): Ngoại xả mạnh và dòng tiền nội rút chạy.
+
+    Returns:
+        tuple[str, str, float]: (flow_regime, flow_badge, prop_net_est_billion)
+    """
+    foreign_net = round(float(foreign_net_val), 2)
+    acc = str(acc_diss).upper().strip()
+
+    if foreign_net > 0.5 and (acc in ["A", "B"] or rrg_m >= 100.0):
+        regime = "SIEU_SONG"
+        badge = "🟢🟢 ĐỒNG THUẬN GOM"
+        prop_est = round(abs(foreign_net) * 1.2 + 2.0, 1)
+    elif foreign_net <= 0.5 and (
+        signal_type in ["CHO_MUA_CHAN_SONG", "DOT_BIEN_GIA_TRI", "THE_CHE_GOM"]
+        or rrg_m >= 100.0
+        or acc in ["A", "B", "C"]
+    ):
+        regime = "NOI_CAN_HANG"
+        badge = "🟢 NỘI GOM CÂN HÀNG"
+        prop_est = round(max(abs(foreign_net) * 1.5, 3.5), 1)
+    elif foreign_net > 0.5:
+        regime = "NGOAI_DO_GIA"
+        badge = "🔵 NGOẠI ĐỠ GIÁ"
+        prop_est = round(-abs(foreign_net) * 0.5, 1)
+    else:
+        regime = "RUI_RO_XA"
+        badge = "🔴 NGUY HIỂM XẢ"
+        prop_est = round(-abs(foreign_net), 1)
+
+    return regime, badge, prop_est
 
 
 def enrich_candidates_with_trailing_stop_and_history(
@@ -762,7 +809,15 @@ class FialdaScanner:
                 min_adtv_billion=15.0,
             )
 
-            catalyst = f"RRG(r={rrg_r:.1f}, m={rrg_m:.1f}), IBD Composite={composite}, Acc/Diss={acc_diss}"
+            flow_regime, flow_badge, prop_est = classify_dual_flow(
+                foreign_net_val=foreign_net,
+                acc_diss=acc_diss,
+                signal_type=signal_type,
+                rrg_r=rrg_r,
+                rrg_m=rrg_m,
+            )
+
+            catalyst = f"RRG(r={rrg_r:.1f}, m={rrg_m:.1f}), IBD={composite}, Acc/Diss={acc_diss} | {flow_badge}"
 
             candidates.append(
                 FialdaCandidate(
@@ -787,6 +842,9 @@ class FialdaScanner:
                     liquidity_score=cap_res.liquidity_score,
                     slippage_est_pct=cap_res.estimated_slippage_pct,
                     is_liquid=cap_res.is_liquid,
+                    prop_net_value_billion=prop_est,
+                    flow_regime=flow_regime,
+                    flow_badge=flow_badge,
                 )
             )
 
@@ -1104,9 +1162,12 @@ def format_top_5_markdown(
         "### 🎯 Kế Hoạch Tác Chiến, Điểm Thoát Lệnh T+2.5 & Catalysts:",
     ])
     for idx, c in enumerate(candidates, 1):
+        flow_b = getattr(c, "flow_badge", "🟢 NỘI GOM CÂN HÀNG")
+        prop_v = getattr(c, "prop_net_value_billion", 0.0)
         md.extend([
             f"- **{c.symbol} ({c.price:.2f})** `{c.rank_change_badge}`: Vùng gom `{c.entry_low:.2f} - {c.entry_high:.2f}` | Cắt lỗ cứng: `{c.stop_loss:.2f}` | TP1 (1.5R): `{c.tp1:.2f}` | TP2 (2.5R): `{c.tp2:.2f}` (R:R `1:{c.rr_ratio:.1f}`)",
-            f"  - *Động lực:* {c.catalyst} (Khối ngoại: {c.foreign_net_value_billion:+.1f} tỷ)",
+            f"  - *Ma trận Dòng tiền:* {flow_b} (Khối ngoại: {c.foreign_net_value_billion:+.1f} tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~{prop_v:+.1f} tỷ)",
+            f"  - *Động lực:* {c.catalyst}",
             f"  - *Sức chứa Quỹ:* ADTV20 `{c.adtv20_billion:.1f} tỷ` (Điểm TK: `{c.liquidity_score:.0f}/100`) | Khối lượng mua tối đa: `{c.max_shares_capacity:,.0f} cp` (Trượt giá dự kiến ~`{c.slippage_est_pct:.2f}%`).",
             f"  - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `{c.t25_status_badge}`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.",
         ])
