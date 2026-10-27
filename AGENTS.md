@@ -35,7 +35,8 @@ Các model **TUYỆT ĐỐI KHÔNG ĐƯỢC** tự biện hộ để bỏ qua vi
 | **Viết code / Sửa code / Triển khai** | incremental-implementation | `.agents/skills/incremental-implementation/SKILL.md` |
 | **Code phức tạp, rủi ro cao** | doubt-driven-development | `.agents/skills/doubt-driven-development/SKILL.md` |
 | **Đối chiếu tài liệu chuẩn / Verify API** | source-driven-development | `.agents/skills/source-driven-development/SKILL.md` |
-| **Giao diện / Dashboard / Chart UI** | frontend-ui-engineering | `.agents/skills/frontend-ui-engineering/SKILL.md` |
+| **Giao diện / Frontend / Component UI** | frontend-ui-engineering | `.agents/skills/frontend-ui-engineering/SKILL.md` |
+| **Audit Dashboard / Rà soát bảng số liệu** | multi-layer-dashboard-audit | `.agents/skills/multi-layer-dashboard-audit/SKILL.md` |
 | **Thiết kế API / Struct / Interface** | api-and-interface-design | `.agents/skills/api-and-interface-design/SKILL.md` |
 | **Thu thập context / Nạp tài liệu repo** | context-engineering | `.agents/skills/context-engineering/SKILL.md` |
 | **Viết test / TDD / Kiểm thử logic** | test-driven-development | `.agents/skills/test-driven-development/SKILL.md` |
@@ -69,7 +70,20 @@ Các model **TUYỆT ĐỐI KHÔNG ĐƯỢC** tự biện hộ để bỏ qua vi
 
 ---
 
-## 🧹 4. QUY ĐỊNH BẮT BUỘC: DỌN RÁC & BẢO TỒN DUNG LƯỢNG MÁY TÍNH (ZERO-WASTE MANDATE)
+## 🛡️ 4. QUY ĐỊNH BẮT BUỘC TỐI CAO: AUDIT DASHBOARD ĐA TẦNG & TỪNG CỘT DỮ LIỆU (MULTI-LAYER DASHBOARD MANDATE)
+
+> [!CRITICAL]
+> **LUẬT TỐI CAO CHO DASHBOARD & GIAO DIỆN BÁO CÁO TÀI CHÍNH:**
+> 1. **Tuyệt đối cấm lỗi "Hút tầm nhìn" (Anti-Tunnel-Vision Gate):** Nghiêm cấm việc chỉ sửa các lỗi bề nổi dễ thấy (như hardcode số trên thẻ Header KPI, bộ đếm ngược JS, layout CSS) rồi vội vã kết luận đã hoàn thành, trong khi bỏ sót logic nghiệp vụ cốt lõi của các cột trong bảng dữ liệu.
+> 2. **Bắt buộc kiểm tra đủ 3 tầng độc lập:**
+>    - **Tầng 1 (Presentation & Stream):** Bố cục trực quan, responsive không cuộn ngang bất hợp lý, Client JS kéo giá live và auto-reload mượt mà, đúng chuẩn màu sàn giao dịch.
+>    - **Tầng 2 (Data Pipeline & Continuity):** Kiểm tra tính liên tục của dữ liệu qua nhiều phiên quét (Session Debounce, Test Pollution Guard, Rolling Window bảo tồn bộ nhớ).
+>    - **Tầng 3 (Column-by-Column Domain Logic):** **Audit từng cột một trong bảng dữ liệu**. Phải hiểu rõ bản chất nghiệp vụ của từng con số/nhãn dán: Có cơ chế fallback lịch sử khi cổ phiếu tạm thời biến mất rồi quay lại không? Có bị gán nhãn `MỚI` sai lệch gây hiểu lầm cho trader không? Dấu âm/dương của thứ hạng và biến động có phản ánh đúng chiều tốt/xấu không?
+> 3. **Thử nghiệm góc nhìn Nhà đầu tư thực chiến (Investor Persona Test):** Trước khi kết thúc task, AI bắt buộc phải tự đặt câu hỏi: *"Nếu một nhà đầu tư thực tế nhìn vào từng con số trên bảng này qua nhiều phiên giao dịch liên tiếp, có cột nào gây hiểu lầm hoặc đưa ra tín hiệu sai lệch hay không?"*
+
+---
+
+## 🧹 5. QUY ĐỊNH BẮT BUỘC: DỌN RÁC & BẢO TỒN DUNG LƯỢNG MÁY TÍNH (ZERO-WASTE MANDATE)
 
 > [!CRITICAL]
 > **TIÊU CHUẨN DUNG LƯỢNG TỐI THIỂU CHO MÁY TÍNH CỦA NGƯỜI DÙNG:**
@@ -80,7 +94,7 @@ Các model **TUYỆT ĐỐI KHÔNG ĐƯỢC** tự biện hộ để bỏ qua vi
 
 ---
 
-## 🚀 5. QUY TRÌNH KẾT THÚC BẮT BUỘC: 4 BƯỚC FINAL TỰ ĐỘNG (ZERO-PROMPT FINALIZATION MANDATE)
+## 🚀 6. QUY TRÌNH KẾT THÚC BẮT BUỘC: 4 BƯỚC FINAL TỰ ĐỘNG (ZERO-PROMPT FINALIZATION MANDATE)
 
 > [!CRITICAL]
 > **LUẬT TỐI CAO - KHÔNG CẦN CHỜ NGƯỜI DÙNG NHẮC LẠI:**

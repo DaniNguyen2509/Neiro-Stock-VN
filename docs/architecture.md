@@ -147,7 +147,7 @@ flowchart TD
 ### 2.8. Tầng Tự Động Hóa & Đám Mây CI/CD (`.github/workflows/`)
 - **`ci.yml` (CI Quality Gate):** Tự động kiểm định trên mọi Pull Request và Push to `main`:
   - Khắc phục triệt để lỗi type annotation trên Python 3.12 Linux runner (ADR-007).
-  - Kiểm thử 100% pytest suite (75/75 tests passed).
+  - Kiểm thử 100% pytest suite (85/85 tests passed).
   - Kiểm tra tự động giới hạn dung lượng Zero-Waste (< 15MB).
 - **`scanner_and_pages.yml` (Scanner & Pages Deploy):** Quy trình tự động hóa tác chiến 24/7 trên GitHub Actions:
   - **Tối ưu hóa Lập lịch POSIX (ADR-007):** Quét định kỳ 30 phút trong phiên và bổ sung 2 mốc đóng băng dữ liệu cuối ngày (`15,45 2,3,4 * * 1-5`, `15,45 6,7 * * 1-5`, `5 8 * * 1-5`, `30 10 * * 1-5` - 17:30 VN, `0 12 * * 1-5` - 19:00 VN EOD Final Smart Money), chống nghẽn hàng đợi scheduler.
@@ -161,6 +161,12 @@ flowchart TD
   - Xuất bản bảng kết quả tức thì vào **GitHub Step Summary** trên ứng dụng di động.
   - Tự động deploy dashboard lên **GitHub Pages** (`exports/index.html`) với tính năng tự động làm mới và bộ đếm lùi thời gian thực (ADR-008).
 
+### 2.9. Tầng Chuẩn Hóa Kiểm Thử Dashboard Đa Tầng & Column Domain Verification (ADR-013)
+- **Bộ Kỹ Năng Độc Quyền `multi-layer-dashboard-audit`:** Định hình giao thức kiểm thử 3 tầng độc lập trước khi nghiệm thu bất kỳ giao diện Dashboard nào:
+  1. *Tầng 1 (Presentation & Stream):* Không hardcode thẻ KPI, hỗ trợ Live Ticker 30s, đúng bảng màu sàn chuẩn.
+  2. *Tầng 2 (Data Pipeline & Continuity):* Session Debounce 30 phút, Test Pollution Guard, Rolling Window bảo tồn bộ nhớ.
+  3. *Tầng 3 (Column-by-Column Domain Logic):* Kiểm tra bản chất nghiệp vụ từng cột từ trái qua phải, fallback lịch sử đa phiên cho cột biến động `Kỳ Trước`, tuyệt đối không gán nhãn `MỚI` sai lệch.
+- **Thử Nghiệm Investor Persona Test:** Đảm bảo toàn bộ chỉ số trực quan và phản ánh trung thực thực tế giao dịch T+2.5 của nhà đầu tư.
 
 ---
 

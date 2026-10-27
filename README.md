@@ -46,14 +46,14 @@
 
 ```
 Neiro-Stock-VN/
-├── .agents/skills/               # 24 bộ kỹ năng chuẩn cho AI Coding Agents
+├── .agents/skills/               # 25 bộ kỹ năng chuẩn cho AI Coding Agents
 ├── docs/
 │   ├── spec.md                   # Bản đặc tả kỹ thuật chi tiết hệ thống
 │   ├── architecture.md           # Kiến trúc hệ thống và luồng dữ liệu toàn cảnh
 │   ├── thuat_ngu_quant_vn.md     # Từ điển thuật ngữ Quantamental & Vi cấu trúc TTCK VN
 │   ├── TRADER_PLAYBOOK_VN.md     # Cẩm nang tác chiến thực chiến cho Trader / Quỹ
 │   ├── google_sheets_setup.md    # Hướng dẫn thiết lập Google Sheets, Looker Studio & ML
-│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-011)
+│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-013)
 ├── src/
 │   ├── collector/                # Thu thập & chuẩn hóa dữ liệu TTCK VN, Google Sheets Client (ADR-011)
 │   ├── fundamental_engine/       # Bộ lọc Piotroski F-score, EPS, PE/PB Banding
@@ -160,6 +160,10 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
 - **Xóa Bỏ Hoàn Toàn Hardcode:** 4 Thẻ chỉ số Header (Chênh lệch Basis, Dòng tiền Cá mập Ngoại/Nội, Độ rộng danh mục, Ngành dẫn dắt RRG) được tính toán động 100% từ dữ liệu thực tế, giải quyết triệt để tình trạng số liệu thẻ mâu thuẫn với bảng Top 20 bên dưới.
 - **Vòng Lặp Kéo Giá Live 30 Giây (Live Ticker Stream):** JavaScript trình duyệt tự động cập nhật giá khớp lệnh và `% Biến động` mỗi 30 giây trực tiếp từ VPS Datafeed, đồng thời đánh giá lại Vùng Mua (`MUA ĐUỔI ⚠️`), Cắt Lỗ (`CHẠM SL 🔴`) và Chốt Lời (`ĐẠT TP1 🎯`) theo thời gian thực.
 - **Cơ Chế Fallback Lịch Sử Cột Kỳ Trước:** Tự động tra cứu toàn bộ lịch sử quét để so sánh rank với lần xuất hiện gần nhất của cổ phiếu. Nếu mã chỉ tạm rớt khỏi Top 20 một phiên quét rồi quay lại, hệ thống sẽ tính toán $\Delta Rank$ chính xác dựa trên rank cũ thay vì gán nhãn `🆕 MỚI` gây nhiễu.
+
+### 4.8. Quy Chuẩn Audit Dashboard Đa Tầng & Audit Từng Cột Dữ Liệu Thực Chiến (ADR-013)
+- **Bộ Kỹ Năng Độc Quyền `multi-layer-dashboard-audit`:** Định hình quy trình kiểm định 3 tầng độc lập (Tầng 1: Presentation & Stream, Tầng 2: Data Pipeline & Continuity, Tầng 3: Column-by-Column Domain Logic) chống lại hội chứng "Hút tầm nhìn" (Tunnel Vision).
+- **Điều Luật Bắt Buộc Tối Cao (AGENTS.md & GEMINI.md):** Bắt buộc mọi AI model khi review giao diện phải audit chi tiết từng cột số liệu, đặt mình vào vị thế nhà đầu tư thực tế (Investor Persona Test), tuyệt đối không dừng lại ở việc sửa lỗi hiển thị bề nổi.
 ---
 
 ## 5. Quy Chuẩn Vận Hành AI Agent (Zero-Waste & Skill Protocol)

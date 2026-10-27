@@ -458,3 +458,20 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
    - Đồng bộ cột giá khớp kèm `% Biến động` đổi màu chuẩn Sở Giao dịch.
    - Tự động đánh giá lại Vùng Mua và Cắt Lỗ thời gian thực: Cảnh báo `MUA ĐUỔI ⚠️` nếu giá vượt quá $3\%$ điểm bùng nổ, `CHẠM SL 🔴` khi thủng stop loss, `ĐẠT TP1 🎯` khi chạm chốt lời 1.
    - Cập nhật nhãn thời gian phân định rõ ràng giữa chu kỳ quét AI toàn diện và dòng giá khớp lệnh trực tuyến.
+
+---
+
+### Tier 16: Quy Trình Rà Soát Dashboard Đa Tầng & Audit Logic Từng Cột Dữ Liệu (ADR-013 & multi-layer-dashboard-audit)
+
+1. **Bộ Kỹ Năng Độc Quyền `multi-layer-dashboard-audit`:**
+   - Ban hành quy chuẩn bắt buộc cho mọi hoạt động audit, rà soát hoặc tối ưu hóa giao diện Dashboard và báo cáo tài chính.
+   - Ngăn chặn triệt để hiện tượng "Hút tầm nhìn" (Tunnel Vision) chỉ sửa các lỗi hiển thị bề nổi (như hardcode thẻ Header, timer JS, CSS layout) mà bỏ qua logic nghiệp vụ của các cột trong bảng dữ liệu.
+
+2. **Khung Audit 3 Tầng Độc Lập:**
+   - **Tầng 1 (Presentation & Stream):** Không hardcode, hỗ trợ Live Ticker 30s, đúng chuẩn bảng màu sàn giao dịch, giao diện vừa vặn 100% màn hình.
+   - **Tầng 2 (Data Pipeline & Continuity):** Session Debounce 30 phút, Test Pollution Guard, Rolling Window bảo tồn bộ nhớ.
+   - **Tầng 3 (Column-by-Column Domain Logic):** Audit từng cột từ trái qua phải, cơ chế fallback lịch sử đa phiên cho cột biến động `Kỳ Trước`, kiểm tra tính nhất quán của dấu và nhãn dán.
+
+3. **Thử Nghiệm Investor Persona Test:**
+   - Đảm bảo toàn bộ bảng số liệu phản ánh trực quan, trung thực và hỗ trợ ra quyết định đầu tư thực tế trong chu kỳ T+2.5.
+
