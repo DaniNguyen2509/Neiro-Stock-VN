@@ -191,6 +191,11 @@ class RankingHistoryTracker:
     ) -> Dict[str, Dict[str, Any]]:
         """Tính toán biến động thứ hạng (Delta Rank) giữa danh sách hiện tại và phiên trước.
 
+        So sánh rank hiện tại với rank gần nhất đã ghi trong lịch sử.
+        Nếu mã tạm rớt khỏi Top 20 ở phiên quét gần nhất nhưng đã từng xuất hiện
+        trong lịch sử trước đó, sẽ fallback so sánh với lần xuất hiện cuối cùng
+        thay vì gán nhãn MỚI gây hiểu lầm.
+
         Args:
             current_candidates: Danh sách ứng viên hiện tại.
             use_last_batch: True để so sánh với phiên gần nhất đã lưu.
@@ -199,6 +204,16 @@ class RankingHistoryTracker:
             Dictionary map: {symbol: {'delta_rank': int|None, 'status': str, 'badge': str, 'prev_rank': int|None}}.
         """
         prev_ranks = self.get_last_scan_ranks() if use_last_batch else {}
+
+        # Xay dung ban do thu hang gan nhat cho TAT CA ma tu toan bo lich su
+        # (fallback khi ma tam rot khoi Top20 phien truoc nhung da tung xuat hien)
+        all_latest_ranks: Dict[str, int] = {}
+        if use_last_batch:
+            for r in self.load_all_records():
+                sym_r = r.get("symbol")
+                if sym_r and "rank" in r:
+                    all_latest_ranks[sym_r] = int(r["rank"])
+
         results: Dict[str, Dict[str, Any]] = {}
 
         for idx, c in enumerate(current_candidates, 1):
@@ -207,8 +222,12 @@ class RankingHistoryTracker:
                 continue
 
             current_rank = idx
-            if sym in prev_ranks:
-                prev_rank = prev_ranks[sym]
+            # Uu tien phien quet gan nhat, fallback toan bo lich su
+            prev_rank = prev_ranks.get(sym)
+            if prev_rank is None:
+                prev_rank = all_latest_ranks.get(sym)
+
+            if prev_rank is not None:
                 # prev_rank = 5, current_rank = 2 -> thăng hạng +3 bậc
                 delta = prev_rank - current_rank
                 if delta > 0:
@@ -227,6 +246,7 @@ class RankingHistoryTracker:
                     "prev_rank": prev_rank,
                 }
             else:
+                # Ma chua tung xuat hien trong bat ky phien quet nao truoc do
                 results[sym] = {
                     "delta_rank": None,
                     "status": "NEW",

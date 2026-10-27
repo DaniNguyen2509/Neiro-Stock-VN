@@ -91,7 +91,7 @@ pip install -r requirements.txt
 
 ### 4.2. Chạy kiểm thử tự động
 ```bash
-# Chạy 100% Unit Tests xác minh tính toán toán học & T+2.5 Backtest (75/75 passed)
+# Chạy 100% Unit Tests xác minh tính toán toán học & T+2.5 Backtest (85/85 passed)
 python -m pytest tests/ -v --tb=short
 
 # Kiểm tra quy chuẩn mã nguồn (Ruff)
@@ -156,9 +156,10 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
 - **Sổ Nhật Ký Tự Động & Google Sheets Webhook:** Tự động đồng bộ các khuyến nghị lên Google Sheets qua Apps Script Webhook siêu nhẹ, kết nối trực tiếp với **Google Looker Studio** hiển thị Dashboard phân tích trực quan 100% miễn phí.
 - **Tập Dữ Liệu Huấn Luyện AI/ML (`data/ml_signals_dataset.csv`):** Tự động xuất bản và duy trì cấu trúc dữ liệu phẳng không rò rỉ tương lai ($T_0$ features vs $T+2.5/T+5$ outcomes) cho phép tải trực tiếp vào Google Colab (`pd.read_csv(...)`) để train mô hình Machine Learning.
 
-### 4.7. Đồng Bộ Hóa Toàn Diện Dashboard & Live Ticker 30 Giây (ADR-012)
+### 4.7. Đồng Bộ Hóa Toàn Diện Dashboard, Live Ticker 30 Giây & Fallback Biến Động Thứ Hạng (ADR-012)
 - **Xóa Bỏ Hoàn Toàn Hardcode:** 4 Thẻ chỉ số Header (Chênh lệch Basis, Dòng tiền Cá mập Ngoại/Nội, Độ rộng danh mục, Ngành dẫn dắt RRG) được tính toán động 100% từ dữ liệu thực tế, giải quyết triệt để tình trạng số liệu thẻ mâu thuẫn với bảng Top 20 bên dưới.
 - **Vòng Lặp Kéo Giá Live 30 Giây (Live Ticker Stream):** JavaScript trình duyệt tự động cập nhật giá khớp lệnh và `% Biến động` mỗi 30 giây trực tiếp từ VPS Datafeed, đồng thời đánh giá lại Vùng Mua (`MUA ĐUỔI ⚠️`), Cắt Lỗ (`CHẠM SL 🔴`) và Chốt Lời (`ĐẠT TP1 🎯`) theo thời gian thực.
+- **Cơ Chế Fallback Lịch Sử Cột Kỳ Trước:** Tự động tra cứu toàn bộ lịch sử quét để so sánh rank với lần xuất hiện gần nhất của cổ phiếu. Nếu mã chỉ tạm rớt khỏi Top 20 một phiên quét rồi quay lại, hệ thống sẽ tính toán $\Delta Rank$ chính xác dựa trên rank cũ thay vì gán nhãn `🆕 MỚI` gây nhiễu.
 ---
 
 ## 5. Quy Chuẩn Vận Hành AI Agent (Zero-Waste & Skill Protocol)

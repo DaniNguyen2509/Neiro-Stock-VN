@@ -138,7 +138,7 @@ flowchart TD
     - **Đánh Giá Lại Vùng Mua / Cắt Lỗ Thời Gian Thực:** Tự động kích hoạt cảnh báo `MUA ĐUỔI ⚠️`, `CHẠM SL 🔴`, `ĐẠT TP1 🎯` trực tiếp trên bảng khi thị giá biến động.
     - **Bộ Đếm Ngược 5 Phút (300s):** Hiển thị trực quan `🔄 Tự làm mới: 300s` cùng nút `⚡ Tải lại ngay` và cơ chế Cache-Busting (`_t=Date.now()`), kết hợp `<meta http-equiv="refresh" content="300">` dự phòng.
     - **Local Watcher Daemon (`--watch`):** Cung cấp cờ chạy ngầm trên máy trạm (`python -m src.hud.terminal --watch --interval 300`) tự động tái tạo dashboard mỗi 5 phút.
-  - Tab 1: Top 20 Siêu Cổ Phiếu Chân Sóng với thiết kế 15 cột trực quan vừa vặn 100% màn hình không cần cuộn ngang: tách biệt hoàn toàn giữa `Thanh Khoản (ADTV20)`, `Chuẩn Quỹ (Lô Max/Trượt)`, `Điểm IBD`, và `Tích Luỹ (A-E)`; Cột `Kỳ Trước` hiển thị ổn định `#cũ (+N)` dựa trên cơ chế Session Debounce 30 phút. Bảng Xếp Hạng Định Lượng Cơ Bản (Piotroski F-Score).
+  - Tab 1: Top 20 Siêu Cổ Phiếu Chân Sóng với thiết kế 15 cột trực quan vừa vặn 100% màn hình không cần cuộn ngang: tách biệt hoàn toàn giữa `Thanh Khoản (ADTV20)`, `Chuẩn Quỹ (Lô Max/Trượt)`, `Điểm IBD`, và `Tích Luỹ (A-E)`; Cột `Kỳ Trước` hiển thị ổn định `#cũ (+N)` dựa trên cơ chế Session Debounce 30 phút kết hợp Fallback Lịch Sử (mã tạm rớt khỏi Top 20 sẽ so sánh với rank lần xuất hiện cuối cùng thay vì gán nhãn MỚI sai lệch). Bảng Xếp Hạng Định Lượng Cơ Bản (Piotroski F-Score).
   - Tab 2: Kiểm Định Lịch Sử T+2.5 Walk-Forward (Biểu đồ đường cong vốn SVG siêu nét Strategy vs VN-Index Benchmark, Bảng so sánh In-Sample vs Out-of-Sample, Nhật ký giao dịch thực chiến).
   - Tab 3: Bảng Định Lượng Ngân Hàng Thương Mại CAMEL & Basel II/III.
   - Tab 4: Báo Cáo Kết QuẢ Kinh Doanh BCTC & Tin Tức Doanh Nghiệp Spotlight.

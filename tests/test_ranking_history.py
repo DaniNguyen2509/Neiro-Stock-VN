@@ -110,3 +110,45 @@ class TestRankingHistoryTracker:
         # 2 records cuoi cua dot 1 va 4 records cua dot 2? Khong, giu 5 records moi nhat [-5:]
         symbols = [r["symbol"] for r in records]
         assert symbols == ["C", "D", "E", "F", "G"]
+
+    def test_rank_fallback_when_temporarily_absent(self, tmp_path: Path):
+        """Ma co phieu rot khoi Top20 tam thoi phai dung rank lich su, khong danh MỚI."""
+        test_file = tmp_path / "ranking_fallback.jsonl"
+        tracker = RankingHistoryTracker(history_file=test_file)
+
+        # Phien 1: HPG rank 1, SSI rank 2, VND rank 3
+        batch_1 = [
+            DummyCandidate("HPG", price=28.5, ranking_score=92.0),
+            DummyCandidate("SSI", price=34.0, ranking_score=89.0),
+            DummyCandidate("VND", price=19.2, ranking_score=85.0),
+        ]
+        tracker.record_snapshot(batch_1, timestamp="2026-10-24 09:30:00")
+
+        # Phien 2: VND rot khoi Top, FPT thay the
+        batch_2 = [
+            DummyCandidate("HPG", price=28.5, ranking_score=92.0),
+            DummyCandidate("SSI", price=34.0, ranking_score=89.0),
+            DummyCandidate("FPT", price=130.0, ranking_score=85.0),
+        ]
+        tracker.record_snapshot(batch_2, timestamp="2026-10-24 14:00:00")
+
+        # Phien 3: VND quay lai rank 2, NEW_STOCK hoan toan moi
+        batch_3 = [
+            DummyCandidate("HPG", price=28.5, ranking_score=92.0),
+            DummyCandidate("VND", price=19.5, ranking_score=90.0),
+            DummyCandidate("NEW_STOCK", price=50.0, ranking_score=85.0),
+        ]
+        changes = tracker.calculate_rank_changes(batch_3)
+
+        # VND: da tung o rank 3 (phien 1), bay gio rank 2 -> THANG HANG +1, KHONG PHAI MỚI
+        assert changes["VND"]["status"] == "UP"
+        assert changes["VND"]["prev_rank"] == 3
+        assert changes["VND"]["delta_rank"] == 1
+
+        # HPG: van rank 1 -> SAME
+        assert changes["HPG"]["status"] == "SAME"
+
+        # NEW_STOCK: chua tung xuat hien trong bat ky phien nao -> MỚI that su
+        assert changes["NEW_STOCK"]["status"] == "NEW"
+        assert changes["NEW_STOCK"]["delta_rank"] is None
+        assert changes["NEW_STOCK"]["badge"] == "🆕 MỚI"
