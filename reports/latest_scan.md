@@ -6,9 +6,9 @@
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **1** | **HSG** | `ĐỘT BIẾN GT` | **11.10** | `10.88 - 11.21` | **10.77** | **11.59** / **11.93** | **55.1t** | `CHUẨN QUỸ` | 103/100 | **81** | `E` | +0.3 tỷ | **85.3** | #1 (=) |
 | **2** | **VIB** | `CHÂN SÓNG` | **14.10** | `14.13 - 14.44` | **13.36** | **15.21** / **15.95** | **104.3t** | `SIÊU TK` | 102/99 | **51** | `E` | +32.9 tỷ | **67.9** | #2 (=) |
-| **3** | **VC3** | `CHÂN SÓNG` | **23.30** | `23.08 - 23.59` | **22.60** | **24.35** / **25.05** | **61.9t** | `CHUẨN QUỸ` | 100/99 | **50** | `C` | +1.8 tỷ | **67.5** | Mới |
-| **4** | **VTZ** | `CHÂN SÓNG` | **20.30** | `20.20 - 20.64` | **19.69** | **21.21** / **21.82** | **20.1t** | `ĐẠT BIÊN` | 100/99 | **50** | `C` | -0.2 tỷ | **67.5** | #3 (-1) |
-| **5** | **MSR** | `ĐỘT BIẾN GT` | **67.20** | `65.86 - 67.87` | **65.18** | **70.23** / **72.25** | **25.0t** | `ĐẠT BIÊN` | 103/97 | **70** | `E` | -2.7 tỷ | **61.0** | #5 (=) |
+| **3** | **VTZ** | `CHÂN SÓNG` | **20.30** | `20.20 - 20.64` | **19.69** | **21.21** / **21.82** | **20.1t** | `ĐẠT BIÊN` | 100/99 | **50** | `C` | -0.2 tỷ | **67.5** | #4 (+1) |
+| **4** | **VC3** | `CHÂN SÓNG` | **23.30** | `23.08 - 23.59` | **22.60** | **24.35** / **25.05** | **61.9t** | `CHUẨN QUỸ` | 100/99 | **50** | `C` | +1.8 tỷ | **67.5** | #3 (-1) |
+| **5** | **MSR** | `ĐỘT BIẾN GT` | **67.10** | `65.76 - 67.77` | **65.09** | **70.11** / **72.12** | **25.0t** | `ĐẠT BIÊN` | 103/97 | **70** | `E` | -2.7 tỷ | **61.0** | #5 (=) |
 | **6** | **PDR** | `ĐỘT BIẾN GT` | **11.60** | `11.37 - 11.72` | **11.25** | **12.12** / **12.47** | **67.7t** | `CHUẨN QUỸ` | 102/100 | **99** | `D` | -1.6 tỷ | **59.6** | #6 (=) |
 | **7** | **VIX** | `ĐỘT BIẾN GT` | **12.30** | `12.05 - 12.42` | **11.93** | **12.86** / **13.23** | **356.8t** | `SIÊU TK` | 101/101 | **92** | `E` | -14.0 tỷ | **58.0** | #7 (=) |
 | **8** | **NKG** | `ĐỘT BIẾN GT` | **12.05** | `11.81 - 12.17` | **11.69** | **12.59** / **12.95** | **99.2t** | `SIÊU TK` | 106/102 | **87** | `E` | -5.4 tỷ | **56.8** | #8 (=) |
@@ -36,17 +36,17 @@
   - *Động lực:* RRG(r=101.5, m=99.4), IBD=51, Acc/Diss=E | 🔵 NGOẠI ĐỠ GIÁ
   - *Sức chứa Quỹ:* ADTV20 `104.3 tỷ` (Điểm TK: `93/100`) | Khối lượng mua tối đa: `739,500 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **VC3 (23.30)** `🆕 MỚI`: Vùng gom `23.08 - 23.59` | Cắt lỗ cứng: `22.60` | TP1 (1.5R): `24.35` | TP2 (2.5R): `25.05` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +1.8 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~-0.9 tỷ)
-  - *Động lực:* RRG(r=100.0, m=99.4), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ
-  - *Sức chứa Quỹ:* ADTV20 `61.9 tỷ` (Điểm TK: `87/100`) | Khối lượng mua tối đa: `265,400 cp` (Trượt giá dự kiến ~`0.88%`).
-  - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **VTZ (20.30)** `↘ -1`: Vùng gom `20.20 - 20.64` | Cắt lỗ cứng: `19.69` | TP1 (1.5R): `21.21` | TP2 (2.5R): `21.82` (R:R `1:2.5`)
+- **VTZ (20.30)** `↗ +1`: Vùng gom `20.20 - 20.64` | Cắt lỗ cứng: `19.69` | TP1 (1.5R): `21.21` | TP2 (2.5R): `21.82` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢 NỘI GOM CÂN HÀNG (Khối ngoại: -0.2 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+3.5 tỷ)
   - *Động lực:* RRG(r=100.4, m=99.3), IBD=50, Acc/Diss=C | 🟢 NỘI GOM CÂN HÀNG
   - *Sức chứa Quỹ:* ADTV20 `20.1 tỷ` (Điểm TK: `65/100`) | Khối lượng mua tối đa: `99,100 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **MSR (67.20)** `=`: Vùng gom `65.86 - 67.87` | Cắt lỗ cứng: `65.18` | TP1 (1.5R): `70.23` | TP2 (2.5R): `72.25` (R:R `1:2.5`)
+- **VC3 (23.30)** `↘ -1`: Vùng gom `23.08 - 23.59` | Cắt lỗ cứng: `22.60` | TP1 (1.5R): `24.35` | TP2 (2.5R): `25.05` (R:R `1:2.5`)
+  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +1.8 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~-0.9 tỷ)
+  - *Động lực:* RRG(r=100.0, m=99.4), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ
+  - *Sức chứa Quỹ:* ADTV20 `61.9 tỷ` (Điểm TK: `87/100`) | Khối lượng mua tối đa: `265,400 cp` (Trượt giá dự kiến ~`0.88%`).
+  - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
+- **MSR (67.10)** `=`: Vùng gom `65.76 - 67.77` | Cắt lỗ cứng: `65.09` | TP1 (1.5R): `70.11` | TP2 (2.5R): `72.12` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢 NỘI GOM CÂN HÀNG (Khối ngoại: -2.7 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+4.1 tỷ)
   - *Động lực:* RRG(r=103.1, m=96.6), IBD=70, Acc/Diss=E | 🟢 NỘI GOM CÂN HÀNG
   - *Sức chứa Quỹ:* ADTV20 `25.0 tỷ` (Điểm TK: `70/100`) | Khối lượng mua tối đa: `37,200 cp` (Trượt giá dự kiến ~`0.88%`).
@@ -168,8 +168,8 @@
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **HSG** | `Q2/2026` | 8,610.1 tỷ | 9,230.0 tỷ | **10,267.5 tỷ** | 62.4 tỷ | 118.7 tỷ | **382.3 tỷ** | `+222.1%` ↗ | 14.9% | `🚀 TĂNG TỐC 3 QUÝ` |
 | **VIB** | `Q2/2026` | 0.0 tỷ | 0.0 tỷ | **0.0 tỷ** | 1,648.0 tỷ | 2,241.2 tỷ | **1,905.4 tỷ** | `-15.0%` | 0.0% | `↘ CHẬM LẠI` |
-| **VC3** | `Q2/2026` | 71.8 tỷ | 106.3 tỷ | **162.5 tỷ** | 11.1 tỷ | 19.3 tỷ | **31.0 tỷ** | `+60.6%` ↗ | 27.0% | `🚀 TĂNG TỐC 3 QUÝ` |
 | **VTZ** | `Q2/2026` | 1,413.2 tỷ | 1,204.8 tỷ | **1,712.9 tỷ** | 10.7 tỷ | 20.4 tỷ | **26.7 tỷ** | `+30.9%` ↗ | 5.0% | `🚀 TĂNG TỐC 3 QUÝ` |
+| **VC3** | `Q2/2026` | 71.8 tỷ | 106.3 tỷ | **162.5 tỷ** | 11.1 tỷ | 19.3 tỷ | **31.0 tỷ** | `+60.6%` ↗ | 27.0% | `🚀 TĂNG TỐC 3 QUÝ` |
 | **MSR** | `Q3/2026` | 2,993.1 tỷ | 8,137.9 tỷ | **14,556.5 tỷ** | 536.7 tỷ | 1,665.7 tỷ | **2,147.9 tỷ** | `+28.9%` ↗ | 18.9% | `🚀 TĂNG TỐC 3 QUÝ` |
 
 ### 📰 TIN TỨC DOANH NGHIỆP & LỊCH SỰ KIỆN MỚI NHẤT (SPOTLIGHT)
@@ -181,12 +181,12 @@
 - **[VIB] VIB: Dự kiến mua lại trước hạn lô trái phiếu 3.000 tỷ đồng** (2026-10-25 • *An ninh tiền tệ*)
   > VIB dự kiến mua lại trước hạn toàn bộ lô trái phiếu VIB12507 trị giá 3.000 tỷ đồng vào ngày 17/11/2026, đồng thời phát hành thêm hai lô trái phiếu mới trong tháng 9 và tháng 10/2026.
 - 📅 **[VIB - SỰ KIỆN]** Ngày: `2026-11-15` — *VIB: Lấy ý kiến cổ đông bằng văn bản và chuẩn bị chi trả cổ tức đợt 1*
-- **[VC3] VC3: Ngày 22/10/2026, Thông báo ngày giao dịch đầu tiên của cổ phiếu thay đổi đăng ký niêm yết** (2026-10-16 • *HNX*)
-  > VC3: Ngày 22/10/2026, Thông báo ngày giao dịch đầu tiên của cổ phiếu thay đổi đăng ký niêm yết
-- 📅 **[VC3 - SỰ KIỆN]** Ngày: `2026-11-15` — *VC3: Lấy ý kiến cổ đông bằng văn bản và chuẩn bị chi trả cổ tức đợt 1*
 - **[VTZ] VTZ: Nghị quyết Hội đồng quản trị thông qua hạn mức tín dụng năm 2026-2027 tại Ngân hàng TMCP Việt Nam Thịnh Vượng** (2026-10-14 • *HNX*)
   > VTZ: Nghị quyết Hội đồng quản trị thông qua hạn mức tín dụng năm 2026-2027 tại Ngân hàng TMCP Việt Nam Thịnh Vượng
 - 📅 **[VTZ - SỰ KIỆN]** Ngày: `2026-11-15` — *VTZ: Lấy ý kiến cổ đông bằng văn bản và chuẩn bị chi trả cổ tức đợt 1*
+- **[VC3] VC3: Ngày 22/10/2026, Thông báo ngày giao dịch đầu tiên của cổ phiếu thay đổi đăng ký niêm yết** (2026-10-16 • *HNX*)
+  > VC3: Ngày 22/10/2026, Thông báo ngày giao dịch đầu tiên của cổ phiếu thay đổi đăng ký niêm yết
+- 📅 **[VC3 - SỰ KIỆN]** Ngày: `2026-11-15` — *VC3: Lấy ý kiến cổ đông bằng văn bản và chuẩn bị chi trả cổ tức đợt 1*
 
 ---
 *Báo cáo được tạo tự động bởi Neiro-Stock-VN Fialda VIP Expert Harvester trên GitHub Actions.*
