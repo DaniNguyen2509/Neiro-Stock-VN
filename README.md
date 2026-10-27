@@ -36,8 +36,9 @@
 6. **Tier 6 - T+2.5 Risk & Position Sizing:** Định lượng quy mô giải ngân an toàn theo $ATR(14)$, kiểm soát tỷ lệ Margin và cảnh báo sớm nguy cơ Force Sell chéo.
 7. **Tier 7 - Dynamic Trailing Stop & Ranking History (ADR-006):** Initial SL, Break-Even Ratchet tại $1.5R$, Chandelier Exit đỉnh $2.0 \times \text{ATR}$, và theo vết $\Delta Rank$ chuỗi thời gian.
 8. **Tier 8 - Resilient Fallback & Credential Sanitization (ADR-007):** Khử nhiễu khoảng trắng/ký tự ẩn secrets, đèn báo dữ liệu, và fallback bảng giá công khai Entrade/DNSE.
-9. **Tier 9 - Client-Side Auto-Reload & Live Countdown Timer (ADR-008):** Đếm ngược 60s thời gian thực, nút nạp lại tức thì `⚡ Tải lại ngay`, và đóng dấu múi giờ VN (UTC+7).
+9. **Tier 9 - Client-Side Auto-Reload & Live Countdown Timer (ADR-008):** Đếm ngược thời gian thực, nút nạp lại tức thì `⚡ Tải lại ngay`, và đóng dấu múi giờ VN (UTC+7).
 10. **Tier 10 - Background Anti-FOMO Signal Ledger & Chasing Prevention (ADR-009):** Sổ cái tín hiệu ngầm 100% trên GitHub Actions, đo trượt giá sau 4-5 ngày, cấm mua đuổi $> +5.0\%$ (`EXTENDED_NO_CHASING`), xuất bản `advisory_scorecard.md`.
+11. **Tier 11 - 5-Minute Live Dynamic Price Polling & Local Watcher (ADR-010):** Kéo trực tiếp giá khớp lệnh thời gian thực 5 phút/lần từ Public Datafeed VPS (CORS `*`), tự động đổi màu chuẩn sàn (Tím/Xanh/Đỏ/Vàng), đếm lùi 300s và hỗ trợ cờ `--watch` chạy ngầm cục bộ.
 
 ---
 
@@ -112,6 +113,9 @@ python -m src.collector.fialda_scanner --top 20 --save-report reports/latest_sca
 
 # 5. Chạy Kiểm Định Quá Khứ Walk-Forward T+2.5 & Xuất Bản Dashboard Web Đa Tab
 python -m src.hud.terminal --output exports/index.html
+
+# 6. Chạy chế độ Watcher ngầm trên máy cá nhân (Tự động cập nhật 5 phút/lần)
+python -m src.hud.terminal --watch --interval 300
 ```
 
 ### 4.4. Cấu hình Tài khoản VIP Fialda (Tùy chọn cục bộ)
@@ -136,7 +140,7 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
   - **Chốt sổ toàn diện buổi tối (EOD Final Smart Money):** `19:00` (Khóa băng toàn diện 100% dòng tiền Tự doanh, Khối ngoại, Phái sinh VSDC để review chiến lược tối).
 - **Kích hoạt thủ công bất kỳ lúc nào:** Vào tab **Actions** trên GitHub (trên máy tính hoặc ứng dụng di động GitHub Mobile) -> Chọn workflow **Fialda VIP Expert Scanner & GitHub Pages Deploy** -> Bấm **Run workflow**.
 - **Địa chỉ truy cập Dashboard trực tiếp trên Mobile/Web:**
-  - **GitHub Pages:** `https://daninguyen2509.github.io/Neiro-Stock-VN/` (Giao diện Dark Mode tương tác mượt mà trên iPhone/Android với Top 20 cổ phiếu, BCTC 4 quý, Tin tức & Sự kiện; tích hợp **Bộ đếm ngược Live Countdown 60s & Tự động làm mới Auto-Reload** không cần bấm F5).
+  - **GitHub Pages:** `https://daninguyen2509.github.io/Neiro-Stock-VN/` (Giao diện Dark Mode tương tác mượt mà trên iPhone/Android với Top 20 cổ phiếu, BCTC 4 quý, Tin tức & Sự kiện; tích hợp **Bộ đếm ngược Live Countdown 300s, Tự động kéo giá Live 5 phút/lần từ VPS Datafeed & Auto-Reload** không cần bấm F5).
   - **GitHub Mobile App:** Mở lượt chạy Action bất kỳ, bảng xếp hạng Top 20 và **Báo Cáo Đối Chiếu Sổ Cái Tín Hiệu & Radar Chống Mua Đuổi (Advisory Scorecard)** hiển thị tức thì ngay trong tab **Summary**.
 - **Cấu hình GitHub Secrets:**
   Vào repository: **Settings** -> **Secrets and variables** -> **Actions** -> Thêm 2 Secrets:

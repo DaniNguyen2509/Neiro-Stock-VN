@@ -89,7 +89,8 @@ Neiro-Stock-VN/
 │       ├── ADR-006-dynamic-trailing-stop-t25-and-ranking-history.md
 │       ├── ADR-007-credential-sanitization-ci-hardening-and-scheduler-consolidation.md
 │       ├── ADR-008-client-auto-reload-live-countdown-and-scheduling-mechanics.md
-│       └── ADR-009-background-anti-fomo-signal-ledger-and-chasing-prevention.md
+│       ├── ADR-009-background-anti-fomo-signal-ledger-and-chasing-prevention.md
+│       └── ADR-010-live-dynamic-price-polling-5min-cadence.md
 ├── src/
 │   ├── collector/                # Thu thập dữ liệu TTCK Việt Nam
 │   │   ├── __init__.py
@@ -404,20 +405,21 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 
 ---
 
-### Tier 12: Sổ Cái Tín Hiệu Ngầm & Rada Chống Mua Đuổi (Anti-FOMO Signal Ledger - ADR-009)
+### Tier 13: Cơ Chế Cập Nhật Giá Tự Động 5 Phút & Bảng Điện Tử Trực Tuyến (Live Dynamic Price Polling - ADR-010)
 
-1. **Kiến Trúc Hoạt Động Ngầm (Background Architecture):**
-   - Hệ thống vận hành ngầm 100% trên GitHub Actions, lưu trữ dữ liệu tại `data/active_signals.jsonl` và xuất bản tệp đối chiếu `data/advisory_scorecard.md`.
-   - Tách biệt hoàn toàn với Web Dashboard (`exports/index.html`), bảo đảm giao diện công khai luôn tinh gọn và không bị xáo trộn.
+1. **Cập Nhật Giá Tự Động Phía Trình Duyệt (Browser Dynamic Live Ticker):**
+   - Tận dụng Public Datafeed mở có hỗ trợ `Access-Control-Allow-Origin: *` từ Bảng giá VPS (`https://bgapidatafeed.vps.com.vn/getliststockdata/SYM1,SYM2,...`).
+   - Cứ mỗi 5 phút (300 giây) hoặc ngay khi mở trang, mã JavaScript siêu nhẹ (~40 dòng) tự động truy vấn giá khớp mới nhất của toàn bộ cổ phiếu trên bảng.
+   - Tự động điền giá vào các ô `class="live-price"` và đổi màu sắc đúng chuẩn Sở Giao dịch (Xanh lá / Đỏ / Tím trần / Xanh lam sàn / Vàng tham chiếu).
+   - Hiển thị nhãn trạng thái trực tiếp: `🟢 Live 5m (HH:MM:SS)` phản ánh thời điểm kéo dữ liệu mới nhất.
+   - Bộ đếm ngược tự động nạp lại trang định kỳ 5 phút (`🔄 Tự làm mới: 300s`) cùng thẻ dự phòng `<meta http-equiv="refresh" content="300">`.
 
-2. **Mỏ Neo Giá Gốc & Đo Lường Trượt Giá Sau 4-5 Ngày:**
-   - Neo giữ mức giá khuyến nghị ban đầu ($T_0$ Anchor Price), Stop Loss, TP1, TP2 khi cổ phiếu xuất hiện lần đầu.
-   - Khi quét các phiên tiếp theo, tự động đo lường tỷ lệ trượt giá $\Delta\% = (\text{price} - \text{entry\_original}) / \text{entry\_original} \times 100\%$ và số ngày nắm giữ $T+0 \rightarrow T+5$.
+2. **Chế Độ Local Watcher Daemon Cho Máy Trạm:**
+   - Hỗ trợ tham số dòng lệnh `--watch` và `--interval 300` trong `src/hud/terminal.py`:
+     ```bash
+     python -m src.hud.terminal --watch --interval 300
+     ```
+   - Chạy vòng lặp ngầm trên máy trạm của người dùng để liên tục cập nhật và sinh lại file HTML mỗi 5 phút.
 
-3. **Rada Khóa Chiều Mua An Toàn (Anti-FOMO Guard):**
-   - $\le +3.0\%$: `BUY_OK` (🟢 VÙNG MUA CHUẨN) — Cho phép mở vị thế tại nền.
-   - $+3.1\% \rightarrow +5.0\%$: `BUY_CAUTION` (🟡 VÙNG VỚI) — Thăm dò tối đa 30%, không margin.
-   - $> +5.0\%$ hoặc nắm giữ $\ge 3$ phiên: `EXTENDED_NO_CHASING` (🔴 QUÁ ĐIỂM MUA - CẤM MUA ĐUỔI) — Tuyệt đối cấm mua đuổi, bảo vệ nhà đầu tư khỏi bẫy điều chỉnh và kẹp thanh khoản $T+2.5$.
-   - Khi đạt TP1: Tự động dời Stop Loss lên điểm hòa vốn (`entry_original`) bảo vệ toàn bộ vốn gốc.
 
 

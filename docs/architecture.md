@@ -123,11 +123,14 @@ flowchart TD
 
 ### 2.7. Tầng Giao Diện Tác Chiến (`src/hud/`)
 - **`terminal.py`:** Sinh mã nguồn HTML tương tác đa tab hoàn chỉnh, hỗ trợ Dark Mode hiện đại, bao gồm:
-  - **Cơ chế Tự Động Nạp Lại & Đếm Ngược Thời Gian Thực (Auto-Reload & Live Countdown):** Tích hợp bộ đếm lùi 60 giây kèm nút `⚡ Tải lại ngay` và cơ chế Cache-Busting (`_t=Date.now()`), kết hợp hiển thị nhãn thời gian quét chính xác theo giờ Việt Nam (`🕒 Cập nhật: HH:MM:SS • DD/MM/YYYY`) và thẻ `<meta http-equiv="refresh" content="180">` dự phòng, bảo đảm trình duyệt tab luôn cập nhật dữ liệu mới nhất mà không cần bấm F5.
+  - **Cơ chế Cập Nhật Giá Tự Động 5 Phút & Live Ticker (ADR-008 & ADR-010):**
+    - **Live Dynamic Price Polling (Client-Side):** Cứ mỗi 5 phút (300 giây) hoặc ngay khi mở trang, JavaScript tự động kéo dữ liệu khớp lệnh trực tiếp từ Public Datafeed VPS (`https://bgapidatafeed.vps.com.vn/getliststockdata/`, CORS `*`), tự động cập nhật số liệu và đổi màu chuẩn Sở Giao dịch (Xanh lá / Đỏ / Tím trần / Xanh lam sàn / Vàng tham chiếu), hiển thị nhãn `🟢 Live 5m (HH:MM:SS)`.
+    - **Bộ Đếm Ngược 5 Phút (300s):** Hiển thị trực quan `🔄 Tự làm mới: 300s` cùng nút `⚡ Tải lại ngay` và cơ chế Cache-Busting (`_t=Date.now()`), kết hợp `<meta http-equiv="refresh" content="300">` dự phòng.
+    - **Local Watcher Daemon (`--watch`):** Cung cấp cờ chạy ngầm trên máy trạm (`python -m src.hud.terminal --watch --interval 300`) tự động tái tạo dashboard mỗi 5 phút.
   - Tab 1: Top 20 Siêu Cổ Phiếu Chân Sóng với thiết kế 15 cột trực quan vừa vặn 100% màn hình không cần cuộn ngang: tách biệt hoàn toàn giữa `Thanh Khoản (ADTV20)`, `Chuẩn Quỹ (Lô Max/Trượt)`, `Điểm IBD`, và `Tích Luỹ (A-E)`; Cột `Kỳ Trước` hiển thị ổn định `#cũ (+N)` dựa trên cơ chế Session Debounce 30 phút. Bảng Xếp Hạng Định Lượng Cơ Bản (Piotroski F-Score).
   - Tab 2: Kiểm Định Lịch Sử T+2.5 Walk-Forward (Biểu đồ đường cong vốn SVG siêu nét Strategy vs VN-Index Benchmark, Bảng so sánh In-Sample vs Out-of-Sample, Nhật ký giao dịch thực chiến).
   - Tab 3: Bảng Định Lượng Ngân Hàng Thương Mại CAMEL & Basel II/III.
-  - Tab 4: Báo Cáo Kết Quả Kinh Doanh BCTC & Tin Tức Doanh Nghiệp Spotlight.
+  - Tab 4: Báo Cáo Kết QuẢ Kinh Doanh BCTC & Tin Tức Doanh Nghiệp Spotlight.
   - Hệ thống Tab Navigation tương tác chuyển đổi mượt mà không cần tải lại trang.
 
 ### 2.8. Tầng Tự Động Hóa & Đám Mây CI/CD (`.github/workflows/`)

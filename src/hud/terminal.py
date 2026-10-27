@@ -76,7 +76,7 @@ def generate_terminal_html(
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">{idx}</td>
             <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">{c.symbol}</td>
             <td style="padding:6px 5px;text-align:center;">{sig_badge}</td>
-            <td style="padding:6px 5px;font-weight:bold;">{c.price:,.2f}</td>
+            <td style="padding:6px 5px;font-weight:bold;" class="live-price" data-sym="{c.symbol}">{c.price:,.2f}</td>
             <td style="padding:6px 5px;color:#00e676;font-weight:600;">{c.entry_low:.2f} - {c.entry_high:.2f}</td>
             <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">{c.stop_loss:.2f}</td>
             <td style="padding:6px 5px;text-align:center;">{tp_html}</td>
@@ -111,7 +111,7 @@ def generate_terminal_html(
             <td style="padding:10px;font-weight:bold;color:#ffb300;">{s['symbol']}</td>
             <td style="padding:10px;">{s['company_name']}</td>
             <td style="padding:10px;color:#aaa;">{s['sector']}</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">{s['price']:.2f}</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="{s['symbol']}">{s['price']:.2f}</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:{f_color};">{f_score_val}</td>
             <td style="padding:10px;text-align:center;">{s['pe']:.1f}</td>
             <td style="padding:10px;text-align:center;">{s['pb']:.1f}</td>
@@ -144,7 +144,7 @@ def generate_terminal_html(
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">{b.symbol}</td>
             <td style="padding:10px;">{b.bank_name}</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;">{b.price:.2f}</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="{b.symbol}">{b.price:.2f}</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:{score_color};font-size:14px;">{b.total_score:.0f}/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">{m.casa:.1f}%</td>
             <td style="padding:10px;text-align:center;">{m.nim:.1f}%</td>
@@ -295,7 +295,7 @@ def generate_terminal_html(
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="180">
+    <meta http-equiv="refresh" content="300">
     <title>Neiro-Stock-VN | Bảng Điều Khiển Chiến Thuật Định Lượng</title>
     <style>
         * {{
@@ -411,9 +411,10 @@ def generate_terminal_html(
             {data_badge}
             <div style="font-size:11px;color:#78909c;margin-top:4px;">{data_subtext}</div>
             <div style="display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-top:6px;flex-wrap:wrap;">
+                <span id="live-status" style="font-size:11px;color:#00e676;background:#1b5e20;padding:2px 7px;border-radius:4px;font-weight:bold;">🟢 Live 5m</span>
                 <span style="font-size:11px;color:#90a4ae;">🕒 Cập nhật: <b style="color:#ffb300;">{scan_time_str}</b></span>
                 <span style="font-size:11px;color:#546e7a;">•</span>
-                <span style="font-size:11px;color:#90a4ae;">🔄 Tự làm mới: <b id="countdown" style="color:#00e676;">60</b>s</span>
+                <span style="font-size:11px;color:#90a4ae;">🔄 Tự làm mới: <b id="countdown" style="color:#00e676;">300</b>s</span>
                 <button onclick="reloadDashboard()" style="background:#1e293b;color:#38bdf8;border:1px solid #0284c7;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer;">⚡ Tải lại ngay</button>
             </div>
         </div>
@@ -582,14 +583,78 @@ def generate_terminal_html(
     </div>
 
     <script>
-        let secondsLeft = 60;
+        let secondsLeft = 300;
         const countdownEl = document.getElementById('countdown');
+        const liveStatusEl = document.getElementById('live-status');
+
         function reloadDashboard() {{
             if (countdownEl) countdownEl.innerText = 'Đang nạp...';
             const url = new URL(window.location.href);
             url.searchParams.set('_t', Date.now().toString());
             window.location.href = url.toString();
         }}
+
+        async function fetchLivePrices() {{
+            try {{
+                const priceEls = document.querySelectorAll('.live-price[data-sym]');
+                if (!priceEls.length) return;
+                const symbols = Array.from(new Set(Array.from(priceEls).map(el => el.getAttribute('data-sym'))));
+                if (!symbols.length) return;
+                
+                const res = await fetch('https://bgapidatafeed.vps.com.vn/getliststockdata/' + symbols.join(','));
+                if (!res.ok) return;
+                const data = await res.json();
+                if (!Array.isArray(data)) return;
+                
+                const priceMap = {{}};
+                data.forEach(item => {{
+                    if (item && item.sym && item.lastPrice) {{
+                        priceMap[item.sym] = {{
+                            price: item.lastPrice,
+                            ref: item.r,
+                            ceil: item.c,
+                            floor: item.f,
+                            change: item.ot,
+                            changePct: item.changePc
+                        }};
+                    }}
+                }});
+
+                priceEls.forEach(el => {{
+                    const sym = el.getAttribute('data-sym');
+                    const info = priceMap[sym];
+                    if (info) {{
+                        const p = Number(info.price);
+                        el.innerText = p.toFixed(2);
+                        if (p >= info.ceil && info.ceil > 0) {{
+                            el.style.color = '#ea39b8';
+                        }} else if (p <= info.floor && info.floor > 0) {{
+                            el.style.color = '#00e5ff';
+                        }} else if (p > info.ref) {{
+                            el.style.color = '#00e676';
+                        }} else if (p < info.ref) {{
+                            el.style.color = '#ff5252';
+                        }} else {{
+                            el.style.color = '#ffb300';
+                        }}
+                    }}
+                }});
+
+                if (liveStatusEl) {{
+                    const now = new Date();
+                    const timeStr = now.toLocaleTimeString('vi-VN', {{ hour12: false }});
+                    liveStatusEl.innerHTML = '🟢 <b>Live 5m</b> (' + timeStr + ')';
+                }}
+            }} catch (err) {{
+                console.warn('Live price fetch warning:', err);
+                if (liveStatusEl) {{
+                    liveStatusEl.innerHTML = '🟡 <b>Offline</b>';
+                }}
+            }}
+        }}
+
+        fetchLivePrices();
+
         setInterval(function() {{
             secondsLeft--;
             if (countdownEl) {{
@@ -618,10 +683,24 @@ def generate_terminal_html(
 
 if __name__ == "__main__":
     import argparse
+    import time
     parser = argparse.ArgumentParser(description="Sinh Terminal HTML cho Neiro-Stock-VN")
     parser.add_argument("--output", default="exports/vn_stock_terminal.html", help="Duong dan file HTML dau ra")
     parser.add_argument("--top", type=int, default=20, help="So luong sieu co phieu hien thi (mac dinh 20)")
+    parser.add_argument("--watch", action="store_true", help="Chay che do Watcher cap nhat lien tuc moi 5 phut (300s)")
+    parser.add_argument("--interval", type=int, default=300, help="Chu ky cap nhat tinh bang giay (mac dinh 300s = 5 phut)")
     args = parser.parse_args()
 
-    path = generate_terminal_html(args.output, top_n=args.top)
-    print(f"Generated terminal at {path}")
+    if args.watch:
+        print(f"Bắt đầu chế độ Watcher cập nhật liên tục (chu kỳ {args.interval}s / 5 phút). Nhấn Ctrl+C để dừng...")
+        try:
+            while True:
+                path = generate_terminal_html(args.output, top_n=args.top)
+                now_str = datetime.now(timezone(timedelta(hours=7))).strftime("%H:%M:%S • %d/%m/%Y")
+                print(f"[{now_str}] Đã cập nhật Terminal tại {path}. Chờ {args.interval}s...")
+                time.sleep(args.interval)
+        except KeyboardInterrupt:
+            print("\nĐã dừng Watcher.")
+    else:
+        path = generate_terminal_html(args.output, top_n=args.top)
+        print(f"Generated terminal at {path}")
