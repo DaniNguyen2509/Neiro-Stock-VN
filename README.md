@@ -52,16 +52,17 @@ Neiro-Stock-VN/
 │   ├── architecture.md           # Kiến trúc hệ thống và luồng dữ liệu toàn cảnh
 │   ├── thuat_ngu_quant_vn.md     # Từ điển thuật ngữ Quantamental & Vi cấu trúc TTCK VN
 │   ├── TRADER_PLAYBOOK_VN.md     # Cẩm nang tác chiến thực chiến cho Trader / Quỹ
-│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-009)
+│   ├── google_sheets_setup.md    # Hướng dẫn thiết lập Google Sheets, Looker Studio & ML
+│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-011)
 ├── src/
-│   ├── collector/                # Thu thập & chuẩn hóa dữ liệu TTCK VN
+│   ├── collector/                # Thu thập & chuẩn hóa dữ liệu TTCK VN, Google Sheets Client (ADR-011)
 │   ├── fundamental_engine/       # Bộ lọc Piotroski F-score, EPS, PE/PB Banding
 │   ├── microstructure_engine/    # Volume Profile (POC/HVN/LVN), OFI, Basis VN30F1M
 │   ├── sector_engine/            # Mô hình luân chuyển ngành RRG & Độ rộng thị trường
-│   ├── risk_engine/              # Quản trị T+2.5, Rolling Position, ATR Sizing, Signal Tracker (ADR-009)
+│   ├── risk_engine/              # Quản trị T+2.5, Rolling Position, ATR Sizing, Signal Tracker & ML (ADR-009/011)
 │   ├── backtesting/              # Walk-Forward Backtesting T+2.5 (Look-ahead & PIT Defense)
 │   └── hud/                      # Giao diện Tactical Terminal Web Đa Tab (Auto-Reload, Dark Mode)
-├── data/                         # Dữ liệu mẫu benchmark, ranking_history.jsonl, active_signals.jsonl
+├── data/                         # Dữ liệu mẫu benchmark, ranking_history.jsonl, active_signals.jsonl, ml_signals_dataset.csv
 ├── exports/                      # Tệp HTML Terminal xuất bản (GitHub Pages)
 ├── tests/                        # Kiểm thử tự động Unit & Math verification
 ├── AGENTS.md / GEMINI.md         # Quy tắc bắt buộc gọi Skill & Zero-Waste Mandate

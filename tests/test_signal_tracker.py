@@ -108,3 +108,71 @@ def test_signal_tracker_stop_loss_trigger(tmp_path: Path):
     assert vix.status == "STOPPED_OUT"
     assert vix.buy_permission == "EXTENDED_NO_CHASING"
     assert "VI PHẠM CẮT LỖ" in vix.advice_note
+
+
+def test_signal_tracker_ml_features_and_dataset_export(tmp_path: Path):
+    """Kiem thu tinh toan day du cac truong ML Features, Labels va xuat CSV."""
+    signals_file = tmp_path / "data" / "test_signals_ml.jsonl"
+    scorecard_file = tmp_path / "data" / "test_scorecard_ml.md"
+    ml_csv_file = tmp_path / "data" / "test_ml_dataset.csv"
+
+    tracker = SignalTracker(
+        signals_file=signals_file,
+        scorecard_file=scorecard_file,
+        ml_dataset_file=ml_csv_file,
+    )
+
+    tz_vn = timezone(timedelta(hours=7))
+    t0 = datetime(2026, 10, 20, 9, 30, 0, tzinfo=tz_vn)
+
+    c0 = [
+        MockCandidate(
+            symbol="HPG",
+            price=20.0,
+            stop_loss=19.0,
+            tp1=21.6,
+            tp2=23.0,
+        )
+    ]
+    # Bổ sung thuộc tính động
+    c0[0].composite_rating = 92
+    c0[0].rs_1m = 88
+    c0[0].catalyst = "Khai trương lò cao mới"
+
+    signals = tracker.update_signals(c0, current_time=t0)
+    hpg_t0 = signals["HPG"]
+    assert hpg_t0.composite_rating == 92
+    assert hpg_t0.rs_1m == 88
+    assert hpg_t0.catalyst == "Khai trương lò cao mới"
+    assert hpg_t0.mfe_pct == 0.0
+    assert hpg_t0.mae_pct == 0.0
+    assert hpg_t0.target_win_binary == 0
+    assert hpg_t0.outcome_label == "ACTIVE"
+
+    # Sau 2 ngay (T+2): gia tang len 21.5 (+7.5% > 5%)
+    t2 = datetime(2026, 10, 22, 14, 0, 0, tzinfo=tz_vn)
+    c2 = [
+        MockCandidate(
+            symbol="HPG",
+            price=21.5,
+            stop_loss=19.0,
+            tp1=21.6,
+            tp2=23.0,
+        )
+    ]
+    signals = tracker.update_signals(c2, current_time=t2)
+    hpg_t2 = signals["HPG"]
+
+    assert hpg_t2.max_price_reached == 21.5
+    assert hpg_t2.mfe_pct == 7.5
+    assert hpg_t2.pnl_t25_pct == 7.5
+    assert hpg_t2.target_win_binary == 1
+
+    # Kiem tra file CSV da duoc xuat ra dung
+    assert ml_csv_file.exists()
+    import pandas as pd
+    df = pd.read_csv(ml_csv_file)
+    assert len(df) == 1
+    assert df.iloc[0]["symbol"] == "HPG"
+    assert df.iloc[0]["target_win_binary"] == 1
+    assert df.iloc[0]["composite_rating"] == 92

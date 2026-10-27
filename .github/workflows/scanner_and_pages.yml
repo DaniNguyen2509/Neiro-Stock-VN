@@ -60,6 +60,7 @@ jobs:
         env:
           FIALDA_USERNAME: ${{ secrets.FIALDA_USERNAME }}
           FIALDA_PASSWORD: ${{ secrets.FIALDA_PASSWORD }}
+          GOOGLE_SHEET_WEBHOOK_URL: ${{ secrets.GOOGLE_SHEET_WEBHOOK_URL }}
         run: |
           mkdir -p exports reports data
           python -m src.collector.fialda_scanner --save-report reports/latest_scan.md --generate-terminal
@@ -103,10 +104,10 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add reports/latest_scan.md data/ranking_history.jsonl data/active_signals.jsonl data/advisory_scorecard.md || true
+          git add reports/latest_scan.md data/ranking_history.jsonl data/active_signals.jsonl data/advisory_scorecard.md data/ml_signals_dataset.csv || true
           if git diff --staged --quiet; then
             echo "No changes in reports/data to commit."
           else
-            git commit -m "chore(report): auto-update Top 5 Super Stocks and signal ledger [skip ci]"
+            git commit -m "chore(report): auto-update Top 5 Super Stocks, signal ledger and ML dataset [skip ci]"
             git push origin main
           fi

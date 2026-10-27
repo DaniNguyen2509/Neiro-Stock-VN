@@ -80,7 +80,8 @@ Neiro-Stock-VN/
 │   ├── architecture.md           # Kiến trúc dữ liệu và luồng thực thi tổng thể
 │   ├── thuat_ngu_quant_vn.md     # Từ điển thuật ngữ Quantamental & Vi cấu trúc TTCK VN
 │   ├── TRADER_PLAYBOOK_VN.md     # Cẩm nang tác chiến thực chiến cho Trader / Quỹ
-│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-009)
+│   ├── google_sheets_setup.md    # Hướng dẫn thiết lập Google Sheets, Looker Studio & ML
+│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-011)
 │       ├── ADR-001-quantamental-foundations-for-vn-equities.md
 │       ├── ADR-002-fialda-vip-expert-automated-scanner.md
 │       ├── ADR-003-liquidity-and-portfolio-capacity-sizer.md
@@ -90,14 +91,16 @@ Neiro-Stock-VN/
 │       ├── ADR-007-credential-sanitization-ci-hardening-and-scheduler-consolidation.md
 │       ├── ADR-008-client-auto-reload-live-countdown-and-scheduling-mechanics.md
 │       ├── ADR-009-background-anti-fomo-signal-ledger-and-chasing-prevention.md
-│       └── ADR-010-live-dynamic-price-polling-5min-cadence.md
+│       ├── ADR-010-live-dynamic-price-polling-5min-cadence.md
+│       └── ADR-011-online-signal-ledger-and-ml-dataset-pipeline.md
 ├── src/
 │   ├── collector/                # Thu thập dữ liệu TTCK Việt Nam
 │   │   ├── __init__.py
 │   │   ├── data_loader.py        # Ingestion, cache & chuẩn hóa dữ liệu OHLCV / BCTC
 │   │   ├── vn_market_client.py   # Client kết nối dữ liệu thị trường (Cơ sở, Phái sinh, Khối ngoại)
 │   │   ├── fialda_scanner.py     # Harvester Fialda VIP Expert, AI signals, RRG & Top 5 Rockets
-│   │   └── ranking_history.py    # Lưu snapshot thứ hạng chuỗi thời gian, tính Delta Rank & Top Movers
+│   │   ├── ranking_history.py    # Lưu snapshot thứ hạng chuỗi thời gian, tính Delta Rank & Top Movers
+│   │   └── google_sheets_client.py # Đồng bộ sổ cái trực tuyến qua Google Apps Script Webhook (ADR-011)
 │   ├── fundamental_engine/       # Lõi lọc cơ bản định lượng
 │   │   ├── __init__.py
 │   │   ├── screener.py           # Bộ lọc CANSLIM, Piotroski F-score, CFO/NI
@@ -118,7 +121,7 @@ Neiro-Stock-VN/
 │   │   ├── t25_manager.py        # Quản lý vòng quay hàng sẵn T+0 & Margin Buffer
 │   │   ├── liquidity_sizer.py    # Bộ lọc ADTV20, Sức chứa danh mục & Trượt giá phi tuyến
 │   │   ├── trailing_stop.py      # Initial SL, Chandelier Exit, Break-even 1.5R/2R & T+2.5 Exposure
-│   │   └── signal_tracker.py     # Sổ cái tín hiệu ngầm, Neo mốc giá gốc T0, Chống mua đuổi (ADR-009)
+│   │   └── signal_tracker.py     # Sổ cái tín hiệu ngầm, Neo mốc giá gốc T0, Chống mua đuổi & ML (ADR-009/011)
 │   ├── backtesting/              # Module Kiểm định Quá khứ Walk-Forward T+2.5
 │   │   ├── __init__.py
 │   │   ├── models.py             # Data models: Exchange, PriceBand, Position, TradeRecord
@@ -130,7 +133,7 @@ Neiro-Stock-VN/
 │   └── hud/                      # Giao diện Tactical Terminal
 │       ├── __init__.py
 │       └── terminal.py           # Sinh Terminal tương tác đa tab, Widget Lịch sử Rank & Top 20
-├── data/                         # Dữ liệu mẫu benchmark, ranking_history.jsonl, active_signals.jsonl (Zero-Waste)
+├── data/                         # Dữ liệu mẫu benchmark, ranking_history.jsonl, active_signals.jsonl, ml_signals_dataset.csv
 ├── exports/                      # File HTML Terminal và báo cáo định lượng xuất bản (GitHub Pages)
 ├── reports/                      # Báo cáo kết quả quét Top 5 mới nhất (latest_scan.md)
 ├── tests/                        # 100% Automated Unit Tests cho từng công thức toán

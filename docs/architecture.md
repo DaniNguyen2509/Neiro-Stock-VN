@@ -26,9 +26,12 @@ flowchart TD
         ST["Signal Tracker & Anti-FOMO Guard\n- Background Price & Signal Ledger\n- T0 Pivot Anchoring & Return Drift\n- Chasing Prevention (> +5% CẤM MUA ĐUỔI)\n- Break-Even Stop Ratchet at TP1"]
     end
 
-    subgraph Storage_Audit ["4. Background Ledger & Audit (GitHub Internal)"]
+    subgraph Storage_Audit ["4. Background Ledger, Cloud Sync & Audit (ADR-009 & ADR-011)"]
         LEDGER[("Active Signal Ledger\ndata/active_signals.jsonl")]
+        ML_DATA[("ML Signals Dataset\ndata/ml_signals_dataset.csv")]
         SCORECARD["Advisory Scorecard Report\ndata/advisory_scorecard.md\n(GitHub Step Summary)"]
+        GS_CLIENT["GoogleSheetsLedgerClient\n(Apps Script Webhook)"]
+        GSHEET[("Google Sheets Online DB\n& Looker Studio Analysis")]
     end
 
     subgraph HUD_Presentation ["5. Tactical HUD Terminal Layer (Public Web)"]
@@ -44,7 +47,10 @@ flowchart TD
     FE & ME & SE & DE --> RE
     RE --> ST
     ST --> LEDGER
+    ST --> ML_DATA
     ST --> SCORECARD
+    ST --> GS_CLIENT
+    GS_CLIENT --> GSHEET
     RE --> HUD
     HUD --> OUT
 ```
@@ -67,6 +73,9 @@ flowchart TD
 - **`ranking_history.py`:** Bộ theo dõi và lưu trữ lịch sử xếp hạng chuỗi thời gian (Ranking History Tracker):
   - Ghi nhận snapshot Top N vào `data/ranking_history.jsonl` với cơ chế Rolling Window tự động cắt tỉa (tối đa 500 bản ghi $\sim 35\text{ KB}$, Zero-Waste $< 15\text{MB}$).
   - Cơ chế **Session Debounce 30 phút**: tự động nhận diện các lần quét liên tiếp trong cùng phiên để tránh làm nhiễu dữ liệu, duy trì mốc so sánh với phiên giao dịch liền trước thực tế.
+- **`google_sheets_client.py` (`GoogleSheetsLedgerClient` - ADR-011):** Đồng bộ Sổ Cái Trực Tuyến & Dữ Liệu Machine Learning:
+  - Đồng bộ tự động 100% lên **Google Sheets** qua cơ chế Google Apps Script Webhook siêu nhẹ (< 100 dòng code, chỉ dùng `requests` có sẵn, 0 MB cài đặt ngoài).
+  - Tự động ghi nhận toàn bộ Feature Vector tại $T_0$ và cập nhật diễn biến giá theo chu kỳ $T+2.5$ đến $T+20$ phục vụ phân tích trực quan qua **Google Looker Studio** và huấn luyện mô hình Machine Learning.
   - Khiên chắn cách ly kiểm thử (`PYTEST_CURRENT_TEST`): Ngăn ngừa 100% dữ liệu mock từ unit tests làm sai lệch lịch sử xếp hạng thực tế.
   - Tính toán biến động thứ hạng ($\Delta Rank$): thăng hạng `↗ +N`, tụt hạng `↘ -N`, giữ hạng `=`, hoặc bứt phá mới `🆕 MỚI`.
 

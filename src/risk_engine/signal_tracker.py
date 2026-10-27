@@ -1,4 +1,4 @@
-"""Module Sổ Cái Tín Hiệu Ngầm & Rada Chống Mua Đuổi (Anti-FOMO Signal Ledger).
+"""Module Sổ Cái Tín Hiệu Ngầm, Rada Chống Mua Đuổi & ML Dataset Pipeline.
 
 Chạy ngầm 100% trên GitHub Actions (không hiển thị lên Web Dashboard):
 1. Neo giữ mốc Giá Khuyến Nghị Ban Đầu (T0 Original Entry Price), Stop Loss, TP1, TP2.
@@ -7,16 +7,22 @@ Chạy ngầm 100% trên GitHub Actions (không hiển thị lên Web Dashboard)
    - Δ% <= +3.0%: BUY_OK (Vùng mua chuẩn an toàn).
    - +3.1% <= Δ% <= +5.0%: BUY_CAUTION (Vùng với, chỉ mua thăm dò tối đa 30%).
    - Δ% > +5.0%: EXTENDED_NO_CHASING (Quá điểm mua - TUYỆT ĐỐI CẤM MUA ĐUỔI).
-4. Cung cấp API đối chiếu tư vấn tức thì get_advisory(symbol) và xuất bản
-   báo cáo đối chiếu ngầm data/advisory_scorecard.md.
+4. Chuẩn hóa Feature Vector T0 và Ground Truth Labels cho Machine Learning (ML).
+5. Tự động đồng bộ lên Google Sheets (online database) và xuất bản data/ml_signals_dataset.csv.
 """
 
 import json
+import logging
 import os
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, fields
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+import pandas as pd
+
+from src.collector.google_sheets_client import GoogleSheetsLedgerClient
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -38,21 +44,49 @@ class ActiveSignal:
     buy_permission: str             # 'BUY_OK', 'BUY_CAUTION', 'EXTENDED_NO_CHASING'
     advice_note: str                # Khuyến nghị hành động thực chiến chi tiết
 
+    # ML Feature Vector tại T0 (Immutable snapshot lúc bắt đầu khuyến nghị)
+    signal_type: str = "CHO_MUA_CHAN_SONG"
+    composite_rating: int = 80
+    rs_1m: int = 80
+    acc_diss_rating: str = "A"
+    rrg_r: float = 100.0
+    rrg_m: float = 100.0
+    foreign_net_value_billion: float = 0.0
+    ranking_score: float = 80.0
+    catalyst: str = ""
+    adtv20_billion: float = 25.0
+    adv20_shares: int = 1_000_000
+    liquidity_score: float = 80.0
+    t25_exposure_level: str = "SAFE"
+
+    # ML Labels & Tracking biến động theo chu kỳ T+2.5 đến T+20 (Ground Truth)
+    max_price_reached: float = 0.0
+    min_price_reached: float = 0.0
+    mfe_pct: float = 0.0            # Max Favorable Excursion (% lãi cực đại tiềm năng)
+    mae_pct: float = 0.0            # Max Adverse Excursion (% sụt giảm sâu nhất)
+    pnl_t25_pct: float = 0.0        # PnL thực tế tại chu kỳ T+2.5 (khi hàng về có thể bán)
+    pnl_t5_pct: float = 0.0         # PnL tại phiên T+5
+    outcome_label: str = "ACTIVE"   # 'WIN_TP1', 'WIN_TP2', 'STOP_LOSS', 'TIME_OUT', 'ACTIVE'
+    target_win_binary: int = 0      # 1 nếu lãi >= 5% trước khi chạm cắt lỗ, ngược lại 0
+
 
 class SignalTracker:
-    """Bộ điều phối Sổ Cái Tín Hiệu Ngầm & Kiểm Soát Rủi Ro Mua Đuổi."""
+    """Bộ điều phối Sổ Cái Tín Hiệu Ngầm, Kiểm Soát Rủi Ro & Pipeline Dữ Liệu ML."""
 
     DEFAULT_FILE = Path("data/active_signals.jsonl")
     DEFAULT_SCORECARD = Path("data/advisory_scorecard.md")
+    DEFAULT_ML_DATASET = Path("data/ml_signals_dataset.csv")
     MAX_HOLDING_DAYS = 30           # Tự động đóng/lưu trữ tín hiệu sau 30 ngày
 
     def __init__(
         self,
         signals_file: Optional[Path] = None,
         scorecard_file: Optional[Path] = None,
+        ml_dataset_file: Optional[Path] = None,
     ):
         self.file_path = Path(signals_file) if signals_file else self.DEFAULT_FILE
         self.scorecard_path = Path(scorecard_file) if scorecard_file else self.DEFAULT_SCORECARD
+        self.ml_dataset_path = Path(ml_dataset_file) if ml_dataset_file else self.DEFAULT_ML_DATASET
 
     @staticmethod
     def current_vn_time() -> datetime:
@@ -80,6 +114,7 @@ class SignalTracker:
         if not self.file_path.exists():
             return {}
 
+        valid_fields = {f.name for f in fields(ActiveSignal)}
         signals: Dict[str, ActiveSignal] = {}
         try:
             with open(self.file_path, "r", encoding="utf-8") as f:
@@ -90,8 +125,10 @@ class SignalTracker:
                     data = json.loads(line)
                     sym = data.get("symbol")
                     if sym:
-                        signals[sym] = ActiveSignal(**data)
-        except Exception:
+                        filtered = {k: v for k, v in data.items() if k in valid_fields}
+                        signals[sym] = ActiveSignal(**filtered)
+        except Exception as e:
+            logger.warning(f"Lỗi khi đọc file active_signals: {e}")
             return {}
         return signals
 
@@ -104,6 +141,30 @@ class SignalTracker:
         with open(self.file_path, "w", encoding="utf-8") as f:
             for sig in signals.values():
                 f.write(json.dumps(asdict(sig), ensure_ascii=False) + "\n")
+
+    def export_ml_dataset(self, signals: Optional[Dict[str, ActiveSignal]] = None) -> Path:
+        """Xuất bản toàn bộ lịch sử tín hiệu thành file CSV phẳng chuẩn Machine Learning."""
+        if "PYTEST_CURRENT_TEST" in os.environ and self.ml_dataset_path == self.DEFAULT_ML_DATASET:
+            return self.ml_dataset_path
+
+        active_signals = signals if signals is not None else self.load_active_signals()
+        if not active_signals:
+            return self.ml_dataset_path
+
+        try:
+            self.ml_dataset_path.parent.mkdir(parents=True, exist_ok=True)
+            records = [asdict(sig) for sig in active_signals.values()]
+            df = pd.DataFrame(records)
+            df.to_csv(self.ml_dataset_path, index=False, encoding="utf-8")
+        except Exception as e:
+            logger.warning(f"Lỗi khi xuất ml_dataset CSV: {e}")
+
+        return self.ml_dataset_path
+
+    def sync_to_google_sheets(self, signals: Dict[str, ActiveSignal]) -> bool:
+        """Đồng bộ danh sách tín hiệu sang Google Sheets qua Webhook."""
+        client = GoogleSheetsLedgerClient()
+        return client.sync_signals(list(signals.values()))
 
     def evaluate_status_and_advice(
         self,
@@ -182,7 +243,7 @@ class SignalTracker:
         current_candidates: List[Any],
         current_time: Optional[datetime] = None,
     ) -> Dict[str, ActiveSignal]:
-        """Cập nhật sổ cái tín hiệu dựa trên danh sách quét mới nhất."""
+        """Cập nhật sổ cái tín hiệu dựa trên danh sách quét mới nhất và trích xuất ML features."""
         now_dt = current_time or self.current_vn_time()
         now_str = self.format_time(now_dt)
 
@@ -197,6 +258,21 @@ class SignalTracker:
             sl = round(float(getattr(c, "stop_loss", price * 0.945)), 2)
             tp1_val = round(float(getattr(c, "tp1", price * 1.08)), 2)
             tp2_val = round(float(getattr(c, "tp2", getattr(c, "target_1m", price * 1.25))), 2)
+
+            # Trích xuất metadata ML Features
+            sig_type = str(getattr(c, "signal_type", "CHO_MUA_CHAN_SONG"))
+            comp_rating = int(getattr(c, "composite_rating", 80))
+            rs_1m_val = int(getattr(c, "rs_1m", 80))
+            acc_diss = str(getattr(c, "acc_diss_rating", "A"))
+            rrg_r_val = float(getattr(c, "rrg_r", 100.0))
+            rrg_m_val = float(getattr(c, "rrg_m", 100.0))
+            f_net = float(getattr(c, "foreign_net_value_billion", 0.0))
+            rank_sc = float(getattr(c, "ranking_score", 80.0))
+            cat = str(getattr(c, "catalyst", ""))
+            adtv20 = float(getattr(c, "adtv20_billion", 25.0))
+            adv20 = int(getattr(c, "adv20_shares", 1_000_000))
+            liq_sc = float(getattr(c, "liquidity_score", 80.0))
+            t25_exp = str(getattr(c, "t25_exposure_level", "SAFE"))
 
             if sym in active_signals:
                 # Cổ phiếu ĐÃ TỪNG XUẤT HIỆN -> Giữ nguyên điểm vào gốc (Anchor) và cập nhật
@@ -222,6 +298,41 @@ class SignalTracker:
                 existing.status = status
                 existing.buy_permission = buy_perm
                 existing.advice_note = advice
+
+                # Cập nhật Ground Truth Labels (ML)
+                cur_max = max(existing.max_price_reached or existing.entry_original, price)
+                cur_min = min(existing.min_price_reached or existing.entry_original, price)
+                mfe = round(((cur_max - existing.entry_original) / existing.entry_original) * 100.0, 2)
+                mae = round(((cur_min - existing.entry_original) / existing.entry_original) * 100.0, 2)
+                existing.max_price_reached = cur_max
+                existing.min_price_reached = cur_min
+                existing.mfe_pct = mfe
+                existing.mae_pct = mae
+
+                # Ghi nhận PnL chu kỳ T+2.5 (phiên 2 hoặc 3)
+                if holding_days in (2, 3) and existing.pnl_t25_pct == 0.0:
+                    existing.pnl_t25_pct = pnl
+                if holding_days >= 5 and existing.pnl_t5_pct == 0.0:
+                    existing.pnl_t5_pct = pnl
+
+                # Cập nhật outcome_label
+                if status == "STOPPED_OUT":
+                    existing.outcome_label = "STOP_LOSS"
+                elif status == "TP2_REACHED":
+                    existing.outcome_label = "WIN_TP2"
+                elif status == "TP1_REACHED":
+                    existing.outcome_label = "WIN_TP1"
+                elif holding_days >= self.MAX_HOLDING_DAYS:
+                    existing.outcome_label = "TIME_OUT"
+                else:
+                    existing.outcome_label = "ACTIVE"
+
+                # Cập nhật target_win_binary (lãi >= 5% mà không chạm cắt lỗ ban đầu)
+                if mfe >= 5.0 and cur_min > existing.initial_stop_loss:
+                    existing.target_win_binary = 1
+                elif status == "STOPPED_OUT" and mfe < 5.0:
+                    existing.target_win_binary = 0
+
             else:
                 # Cổ phiếu MỚI TOANH xuất hiện lần đầu (T0)
                 status, buy_perm, advice, new_sl = self.evaluate_status_and_advice(
@@ -247,10 +358,38 @@ class SignalTracker:
                     status=status,
                     buy_permission=buy_perm,
                     advice_note=advice,
+                    signal_type=sig_type,
+                    composite_rating=comp_rating,
+                    rs_1m=rs_1m_val,
+                    acc_diss_rating=acc_diss,
+                    rrg_r=rrg_r_val,
+                    rrg_m=rrg_m_val,
+                    foreign_net_value_billion=f_net,
+                    ranking_score=rank_sc,
+                    catalyst=cat,
+                    adtv20_billion=adtv20,
+                    adv20_shares=adv20,
+                    liquidity_score=liq_sc,
+                    t25_exposure_level=t25_exp,
+                    max_price_reached=price,
+                    min_price_reached=price,
+                    mfe_pct=0.0,
+                    mae_pct=0.0,
+                    pnl_t25_pct=0.0,
+                    pnl_t5_pct=0.0,
+                    outcome_label="ACTIVE",
+                    target_win_binary=0,
                 )
 
         self.save_active_signals(active_signals)
         self.generate_scorecard_markdown(active_signals, now_str)
+        self.export_ml_dataset(active_signals)
+
+        try:
+            self.sync_to_google_sheets(active_signals)
+        except Exception as e:
+            logger.warning(f"Lỗi khi đồng bộ Google Sheets: {e}")
+
         return active_signals
 
     def get_advisory(self, symbol: str) -> str:
@@ -305,7 +444,7 @@ class SignalTracker:
 *Cập nhật tự động ngầm trên GitHub lúc: `{updated_at_str}` (Giờ VN UTC+7)*
 
 | Mã CP | Ngày Bùng Nổ | Giá Entry Gốc | Giá Hiện Tại | Lãi/Lỗ (%) | Nắm Giữ | Stop Loss | TP1 / TP2 | Quyết Nghị Mua Mới |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 {table_body}
 
 ---
