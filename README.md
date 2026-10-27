@@ -155,6 +155,10 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
 - **Ma Trận Dòng Tiền Kép (Dual Flow Matrix):** Phân định 4 trạng thái dòng tiền định chế (`🟢🟢 SIEU_SONG` Đồng thuận Ngoại + Nội gom, `🟢 NOI_CAN_HANG` Sóng Quỹ nội gom cân sạch cung xả giá thấp, `🔵 NGOAI_DO_GIA`, `🔴 RUI_RO_XA`). Giúp phân biệt rõ bản chất "Ngoại bán nhưng Quỹ nội gom thì cổ phiếu vẫn vào siêu sóng".
 - **Sổ Nhật Ký Tự Động & Google Sheets Webhook:** Tự động đồng bộ các khuyến nghị lên Google Sheets qua Apps Script Webhook siêu nhẹ, kết nối trực tiếp với **Google Looker Studio** hiển thị Dashboard phân tích trực quan 100% miễn phí.
 - **Tập Dữ Liệu Huấn Luyện AI/ML (`data/ml_signals_dataset.csv`):** Tự động xuất bản và duy trì cấu trúc dữ liệu phẳng không rò rỉ tương lai ($T_0$ features vs $T+2.5/T+5$ outcomes) cho phép tải trực tiếp vào Google Colab (`pd.read_csv(...)`) để train mô hình Machine Learning.
+
+### 4.7. Đồng Bộ Hóa Toàn Diện Dashboard & Live Ticker 30 Giây (ADR-012)
+- **Xóa Bỏ Hoàn Toàn Hardcode:** 4 Thẻ chỉ số Header (Chênh lệch Basis, Dòng tiền Cá mập Ngoại/Nội, Độ rộng danh mục, Ngành dẫn dắt RRG) được tính toán động 100% từ dữ liệu thực tế, giải quyết triệt để tình trạng số liệu thẻ mâu thuẫn với bảng Top 20 bên dưới.
+- **Vòng Lặp Kéo Giá Live 30 Giây (Live Ticker Stream):** JavaScript trình duyệt tự động cập nhật giá khớp lệnh và `% Biến động` mỗi 30 giây trực tiếp từ VPS Datafeed, đồng thời đánh giá lại Vùng Mua (`MUA ĐUỔI ⚠️`), Cắt Lỗ (`CHẠM SL 🔴`) và Chốt Lời (`ĐẠT TP1 🎯`) theo thời gian thực.
 ---
 
 ## 5. Quy Chuẩn Vận Hành AI Agent (Zero-Waste & Skill Protocol)

@@ -84,8 +84,8 @@ def generate_terminal_html(
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">{idx}</td>
             <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">{c.symbol}</td>
-            <td style="padding:6px 5px;text-align:center;">{sig_badge}</td>
-            <td style="padding:6px 5px;font-weight:bold;" class="live-price" data-sym="{c.symbol}">{c.price:,.2f}</td>
+            <td style="padding:6px 5px;text-align:center;"><span id="sig-badge-{c.symbol}">{sig_badge}</span></td>
+            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="{c.symbol}" data-ref="{c.price}" data-entry-high="{c.entry_high}" data-entry-low="{c.entry_low}" data-sl="{c.stop_loss}" data-tp1="{tp1_val}" data-tp2="{tp2_val}">{c.price:,.2f}</span> <span class="live-change" data-sym="{c.symbol}" style="font-size:11px;margin-left:3px;"></span></td>
             <td style="padding:6px 5px;color:#00e676;font-weight:600;">{c.entry_low:.2f} - {c.entry_high:.2f}</td>
             <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">{c.stop_loss:.2f}</td>
             <td style="padding:6px 5px;text-align:center;">{tp_html}</td>
@@ -94,7 +94,7 @@ def generate_terminal_html(
             <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">{c.rrg_r:.0f}/{c.rrg_m:.0f}</td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">{c.composite_rating}</td>
             <td style="padding:6px 5px;text-align:center;">{ad_badge}</td>
-            <td style="padding:6px 5px;text-align:center;color:{foreign_color};font-weight:600;">{foreign_str}{flow_badge_html}</td>
+            <td id="foreign-cell-{c.symbol}" style="padding:6px 5px;text-align:center;color:{foreign_color};font-weight:600;">{foreign_str}{flow_badge_html}</td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">{c.ranking_score:.1f}</td>
             <td style="padding:6px 5px;text-align:center;white-space:nowrap;">{prev_rank_html}</td>
         </tr>
@@ -285,6 +285,64 @@ def generate_terminal_html(
     }
     regime_vn = regime_map.get(basis.regime, basis.regime)
 
+    # 1. Tinh dong tien Ca map (Foreign Net Value) dong bo that tu danh muc Top
+    total_foreign = sum(getattr(c, "foreign_net_value_billion", 0.0) for c in fialda_candidates) if fialda_candidates else 0.0
+    if total_foreign >= 0:
+        smart_money_val = f"+{total_foreign:.1f} Tỷ VND"
+        smart_money_color = "#00e676"
+        smart_money_sub = "Khối ngoại + Tự doanh mua ròng đồng thuận"
+    else:
+        smart_money_val = f"{total_foreign:.1f} Tỷ VND"
+        smart_money_color = "#ffb300"
+        smart_money_sub = "Ngoại bán ròng • Dòng tiền Nội gom cân hàng (Pha chân sóng)"
+
+    # 2. Do rong danh muc sieu co phieu (Market Breadth / Momentum)
+    total_cands = len(fialda_candidates) if fialda_candidates else 0
+    if total_cands > 0:
+        strong_cands = sum(1 for c in fialda_candidates if getattr(c, "composite_rating", 0) >= 70 or getattr(c, "rs_1m", 0) >= 70)
+        breadth_pct = (strong_cands / total_cands) * 100.0
+        breadth_val = f"{breadth_pct:.1f}%"
+        breadth_sub = f"{strong_cands}/{total_cands} Cổ phiếu giữ xung lực dẫn dắt (RS/Composite ≥ 70)"
+        breadth_color = "#00e676" if breadth_pct >= 60 else "#ffb300"
+    else:
+        breadth_val = "75.0%"
+        breadth_sub = "Cân bằng bình thường"
+        breadth_color = "#ffb300"
+
+    # 3. Nganh dan dat tu toa do RRG (Leading Sector)
+    SECTOR_MAP = {
+        "CTS": "Chứng khoán", "VIX": "Chứng khoán", "SSI": "Chứng khoán", "VCI": "Chứng khoán", "VND": "Chứng khoán", "BVS": "Chứng khoán", "ORS": "Chứng khoán", "TCX": "Chứng khoán",
+        "PDR": "Bất động sản", "DIG": "Bất động sản", "DXG": "Bất động sản", "KDH": "Bất động sản", "TCH": "Bất động sản", "DXS": "Bất động sản", "VHM": "Bất động sản", "VIC": "Bất động sản",
+        "HPG": "Thép & Vật liệu", "NKG": "Thép & Vật liệu", "HSG": "Thép & Vật liệu",
+        "PVC": "Dầu khí & Năng lượng", "PVD": "Dầu khí & Năng lượng", "PVS": "Dầu khí & Năng lượng", "BSR": "Dầu khí & Năng lượng",
+        "VGC": "Khu công nghiệp", "PHR": "Cao su & KCN", "GEX": "Điện & Hạ tầng", "CII": "Hạ tầng & Đầu tư",
+        "GMD": "Cảng biển & Vận tải", "VSC": "Cảng biển & Vận tải", "VJC": "Hàng không", "TCO": "Vận tải",
+        "DBC": "Nông nghiệp", "BAF": "Nông nghiệp", "QNS": "Mía đường & Thực phẩm", "KDC": "Thực phẩm tiêu dùng",
+        "EIB": "Ngân hàng", "OCB": "Ngân hàng", "ABB": "Ngân hàng", "TPB": "Ngân hàng", "SHB": "Ngân hàng", "VIB": "Ngân hàng", "MBB": "Ngân hàng", "VCB": "Ngân hàng",
+        "MSR": "Khai khoáng", "VGT": "Dệt may", "VTZ": "Vật liệu xây dựng", "PTB": "Gỗ & Đá", "FPT": "Công nghệ"
+    }
+    sector_counts: Dict[str, List[str]] = {}
+    if fialda_candidates:
+        for c in fialda_candidates:
+            sec = SECTOR_MAP.get(c.symbol, "Sản xuất & Thương mại")
+            if sec not in sector_counts:
+                sector_counts[sec] = []
+            sector_counts[sec].append(c.symbol)
+
+    if sector_counts:
+        sorted_sectors = sorted(sector_counts.items(), key=lambda x: len(x[1]), reverse=True)
+        top_sec_name, top_sec_syms = sorted_sectors[0]
+        if len(sorted_sectors) > 1 and len(sorted_sectors[1][1]) >= 1:
+            sec2_name, sec2_syms = sorted_sectors[1]
+            leading_sector_val = f"{top_sec_name.upper()} & {sec2_name.upper()}"
+            leading_sector_sub = f"{', '.join((top_sec_syms + sec2_syms)[:4])} dẫn sóng dòng tiền"
+        else:
+            leading_sector_val = top_sec_name.upper()
+            leading_sector_sub = f"{', '.join(top_sec_syms[:3])} bứt phá mạnh nhất"
+    else:
+        leading_sector_val = "CHỨNG KHOÁN & BẤT ĐỘNG SẢN"
+        leading_sector_sub = "CTS, PDR, VIX dẫn sóng dòng tiền"
+
     is_live = bool(scanner and scanner.token)
     data_badge = (
         '<div style="display:inline-block;background:#1b5e20;color:#00e676;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;">🟢 DỮ LIỆU: REAL-TIME FIALDA PRO API</div>'
@@ -420,8 +478,8 @@ def generate_terminal_html(
             {data_badge}
             <div style="font-size:11px;color:#78909c;margin-top:4px;">{data_subtext}</div>
             <div style="display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-top:6px;flex-wrap:wrap;">
-                <span id="live-status" style="font-size:11px;color:#00e676;background:#1b5e20;padding:2px 7px;border-radius:4px;font-weight:bold;">🟢 Live 5m</span>
-                <span style="font-size:11px;color:#90a4ae;">🕒 Cập nhật: <b style="color:#ffb300;">{scan_time_str}</b></span>
+                <span id="live-status" style="font-size:11px;color:#00e676;background:#1b5e20;padding:2px 7px;border-radius:4px;font-weight:bold;">🟢 Live VPS: Đang kết nối...</span>
+                <span style="font-size:11px;color:#90a4ae;">🕒 Cập nhật: <b id="scan-time" style="color:#ffb300;">{scan_time_str}</b></span>
                 <span style="font-size:11px;color:#546e7a;">•</span>
                 <span style="font-size:11px;color:#90a4ae;">🔄 Tự làm mới: <b id="countdown" style="color:#00e676;">300</b>s</span>
                 <button onclick="reloadDashboard()" style="background:#1e293b;color:#38bdf8;border:1px solid #0284c7;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer;">⚡ Tải lại ngay</button>
@@ -431,25 +489,25 @@ def generate_terminal_html(
 
     <!-- 4 METRIC CARDS -->
     <div class="grid">
-        <div class="card">
+        <div class="card" id="card-basis-container">
             <div class="card-title">Chênh Lệch Basis VN30F1M</div>
-            <div class="card-value" style="color:#29b6f6;">{basis.basis_points:+.2f} ĐIỂM</div>
-            <div style="font-size:11px;color:#78909c;margin-top:4px;">Trạng thái: {regime_vn}</div>
+            <div class="card-value" id="card-basis-val" style="color:#29b6f6;">{basis.basis_points:+.2f} ĐIỂM</div>
+            <div id="card-basis-sub" style="font-size:11px;color:#78909c;margin-top:4px;">Trạng thái: {regime_vn}</div>
         </div>
-        <div class="card">
+        <div class="card" id="card-smart-money-container">
             <div class="card-title">Dòng Tiền Cá Mập Định Chế</div>
-            <div class="card-value" style="color:#00e676;">+427.5 Tỷ VND</div>
-            <div style="font-size:11px;color:#78909c;margin-top:4px;">Khối ngoại + Tự doanh mua ròng</div>
+            <div class="card-value" id="card-smart-money-val" style="color:{smart_money_color};">{smart_money_val}</div>
+            <div id="card-smart-money-sub" style="font-size:11px;color:#78909c;margin-top:4px;">{smart_money_sub}</div>
         </div>
-        <div class="card">
+        <div class="card" id="card-breadth-container">
             <div class="card-title">Độ Rộng Thị Trường (VN30 > MA20)</div>
-            <div class="card-value" style="color:#ffb300;">73.3%</div>
-            <div style="font-size:11px;color:#78909c;margin-top:4px;">22/30 Cổ phiếu giữ xu hướng tăng</div>
+            <div class="card-value" id="card-breadth-val" style="color:{breadth_color};">{breadth_val}</div>
+            <div id="card-breadth-sub" style="font-size:11px;color:#78909c;margin-top:4px;">{breadth_sub}</div>
         </div>
-        <div class="card">
+        <div class="card" id="card-sector-container">
             <div class="card-title">Ngành Dẫn Dắt (Động Lượng RRG)</div>
-            <div class="card-value" style="color:#00e676;">NÔNG NGHIỆP & CHỨNG KHOÁN</div>
-            <div style="font-size:11px;color:#78909c;margin-top:4px;">DBC, CTS bứt phá mạnh</div>
+            <div class="card-value" id="card-sector-val" style="color:#00e676;">{leading_sector_val}</div>
+            <div id="card-sector-sub" style="font-size:11px;color:#78909c;margin-top:4px;">{leading_sector_sub}</div>
         </div>
     </div>
 
@@ -616,43 +674,125 @@ def generate_terminal_html(
                 if (!Array.isArray(data)) return;
                 
                 const priceMap = {{}};
+                let liveForeignBuyVal = 0;
+                let liveForeignSellVal = 0;
+                let liveGreenCount = 0;
+                let liveRedCount = 0;
+                let liveRefCount = 0;
+
                 data.forEach(item => {{
-                    if (item && item.sym && item.lastPrice) {{
+                    if (item && item.sym) {{
+                        const lp = Number(item.lastPrice || 0);
+                        const r = Number(item.r || 0);
+                        const c = Number(item.c || 0);
+                        const f = Number(item.f || 0);
+                        const chg = Number(item.ot || 0);
+                        const chgPc = Number(item.changePc || 0);
+                        const fb = Number(item.fBValue || 0);
+                        const fs = Number(item.fSValue || 0);
+
                         priceMap[item.sym] = {{
-                            price: item.lastPrice,
-                            ref: item.r,
-                            ceil: item.c,
-                            floor: item.f,
-                            change: item.ot,
-                            changePct: item.changePc
+                            price: lp > 0 ? lp : r,
+                            ref: r,
+                            ceil: c,
+                            floor: f,
+                            change: chg,
+                            changePct: chgPc,
+                            fbVal: fb,
+                            fsVal: fs
                         }};
+
+                        if (lp > 0 && r > 0) {{
+                            if (lp > r) liveGreenCount++;
+                            else if (lp < r) liveRedCount++;
+                            else liveRefCount++;
+                        }}
+                        liveForeignBuyVal += fb;
+                        liveForeignSellVal += fs;
                     }}
                 }});
 
                 priceEls.forEach(el => {{
                     const sym = el.getAttribute('data-sym');
                     const info = priceMap[sym];
-                    if (info) {{
+                    if (info && info.price > 0) {{
                         const p = Number(info.price);
                         el.innerText = p.toFixed(2);
-                        if (p >= info.ceil && info.ceil > 0) {{
-                            el.style.color = '#ea39b8';
-                        }} else if (p <= info.floor && info.floor > 0) {{
-                            el.style.color = '#00e5ff';
-                        }} else if (p > info.ref) {{
-                            el.style.color = '#00e676';
-                        }} else if (p < info.ref) {{
-                            el.style.color = '#ff5252';
-                        }} else {{
-                            el.style.color = '#ffb300';
+                        
+                        let color = '#ffb300';
+                        if (p >= info.ceil && info.ceil > 0) color = '#ea39b8';
+                        else if (p <= info.floor && info.floor > 0) color = '#00e5ff';
+                        else if (p > info.ref) color = '#00e676';
+                        else if (p < info.ref) color = '#ff5252';
+                        el.style.color = color;
+
+                        // Dong bo live change %
+                        const changeEl = document.querySelector('.live-change[data-sym="' + sym + '"]');
+                        if (changeEl) {{
+                            const sign = info.changePct > 0 ? '+' : '';
+                            changeEl.innerText = '(' + sign + info.changePct.toFixed(1) + '%)';
+                            changeEl.style.color = color;
+                            changeEl.style.fontWeight = 'bold';
+                        }}
+
+                        // Danh gia lai vung mua / cat lo thoi gian thuc
+                        const entryHigh = Number(el.getAttribute('data-entry-high') || 0);
+                        const stopLoss = Number(el.getAttribute('data-sl') || 0);
+                        const tp1 = Number(el.getAttribute('data-tp1') || 0);
+                        const sigBadge = document.getElementById('sig-badge-' + sym);
+
+                        if (sigBadge) {{
+                            if (stopLoss > 0 && p <= stopLoss) {{
+                                sigBadge.innerHTML = '<span style="background:#b71c1c;color:#ff8a80;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHẠM SL 🔴</span>';
+                            }} else if (tp1 > 0 && p >= tp1) {{
+                                sigBadge.innerHTML = '<span style="background:#004d40;color:#64ffda;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐẠT TP1 🎯</span>';
+                            }} else if (entryHigh > 0 && p > entryHigh * 1.03) {{
+                                sigBadge.innerHTML = '<span style="background:#e65100;color:#ffe0b2;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">MUA ĐUỔI ⚠️</span>';
+                            }}
                         }}
                     }}
                 }});
 
+                // Dong bo The Do Rong Danh Muc
+                const totalMonitored = liveGreenCount + liveRedCount + liveRefCount;
+                if (totalMonitored > 0) {{
+                    const breadthEl = document.getElementById('card-breadth-val');
+                    const breadthSubEl = document.getElementById('card-breadth-sub');
+                    if (breadthEl) {{
+                        const pct = (liveGreenCount / totalMonitored) * 100;
+                        breadthEl.innerText = pct.toFixed(1) + '%';
+                        breadthEl.style.color = pct >= 50 ? '#00e676' : '#ffb300';
+                    }}
+                    if (breadthSubEl) {{
+                        breadthSubEl.innerText = liveGreenCount + '/' + totalMonitored + ' Cổ phiếu tăng (' + liveRedCount + ' giảm, ' + liveRefCount + ' tham chiếu)';
+                    }}
+                }}
+
+                // Dong bo The Dong Tien Ca Map tu du lieu khop lenh Ngoai
+                const netForeignBillion = (liveForeignBuyVal - liveForeignSellVal) / 1e9;
+                if (liveForeignBuyVal > 0 || liveForeignSellVal > 0) {{
+                    const smValEl = document.getElementById('card-smart-money-val');
+                    const smSubEl = document.getElementById('card-smart-money-sub');
+                    if (smValEl) {{
+                        const sign = netForeignBillion >= 0 ? '+' : '';
+                        smValEl.innerText = sign + netForeignBillion.toFixed(1) + ' Tỷ VND';
+                        smValEl.style.color = netForeignBillion >= 0 ? '#00e676' : '#ffb300';
+                    }}
+                    if (smSubEl) {{
+                        if (netForeignBillion < 0) {{
+                            smSubEl.innerText = 'Ngoại bán ròng • Dòng tiền Nội gom cân hàng (Pha chân sóng)';
+                        }} else {{
+                            smSubEl.innerText = 'Khối ngoại + Tự doanh mua ròng đồng thuận';
+                        }}
+                    }}
+                }}
+
                 if (liveStatusEl) {{
                     const now = new Date();
                     const timeStr = now.toLocaleTimeString('vi-VN', {{ hour12: false }});
-                    liveStatusEl.innerHTML = '🟢 <b>Live 5m</b> (' + timeStr + ')';
+                    liveStatusEl.innerHTML = '🟢 <b>Live VPS:</b> ' + timeStr + ' <span style="font-size:10px;opacity:0.8;">(30s)</span>';
+                    liveStatusEl.style.background = '#1b5e20';
+                    liveStatusEl.style.color = '#00e676';
                 }}
             }} catch (err) {{
                 console.warn('Live price fetch warning:', err);
@@ -662,8 +802,13 @@ def generate_terminal_html(
             }}
         }}
 
+        // Chay ngay khi mo trang
         fetchLivePrices();
 
+        // TU DONG CAP NHAT LIVE GIA KHOP & THE THONG KE MOI 30 GIAY
+        setInterval(fetchLivePrices, 30000);
+
+        // Bo dem nguoc 300s reload trang de nap lai toan bo AI Scan & BCTC
         setInterval(function() {{
             secondsLeft--;
             if (countdownEl) {{

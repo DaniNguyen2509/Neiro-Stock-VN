@@ -132,8 +132,10 @@ flowchart TD
 
 ### 2.7. Tầng Giao Diện Tác Chiến (`src/hud/`)
 - **`terminal.py`:** Sinh mã nguồn HTML tương tác đa tab hoàn chỉnh, hỗ trợ Dark Mode hiện đại, bao gồm:
-  - **Cơ chế Cập Nhật Giá Tự Động 5 Phút & Live Ticker (ADR-008 & ADR-010):**
-    - **Live Dynamic Price Polling (Client-Side):** Cứ mỗi 5 phút (300 giây) hoặc ngay khi mở trang, JavaScript tự động kéo dữ liệu khớp lệnh trực tiếp từ Public Datafeed VPS (`https://bgapidatafeed.vps.com.vn/getliststockdata/`, CORS `*`), tự động cập nhật số liệu và đổi màu chuẩn Sở Giao dịch (Xanh lá / Đỏ / Tím trần / Xanh lam sàn / Vàng tham chiếu), hiển thị nhãn `🟢 Live 5m (HH:MM:SS)`.
+  - **Cơ chế Cập Nhật Giá Live Ticker 30s & Đồng Bộ Hóa Toàn Diện (ADR-008, ADR-010 & ADR-012):**
+    - **Live Dynamic Price & Stats Polling (Client-Side 30s):** Định kỳ mỗi 30 giây (`setInterval(fetchLivePrices, 30000)`), JavaScript tự động kéo dữ liệu khớp lệnh trực tiếp từ Public Datafeed VPS (`https://bgapidatafeed.vps.com.vn/getliststockdata/`, CORS `*`), tự động cập nhật số liệu giá khớp, `% Biến động` đổi màu chuẩn Sở Giao dịch (Xanh lá / Đỏ / Tím trần / Xanh lam sàn / Vàng tham chiếu), và cập nhật nhãn `🟢 Live VPS: HH:MM:SS (30s)`.
+    - **Đồng Bộ Hóa Động 4 Thẻ Chỉ Số Header (ADR-012):** Xóa bỏ hoàn toàn hardcode; tính toán động Smart Money (Ngoại bán ròng / Nội gom cân hàng), Độ rộng danh mục và Ngành dẫn dắt RRG; tự động cập nhật thẻ qua DOM ID khi luồng giá VPS trả về.
+    - **Đánh Giá Lại Vùng Mua / Cắt Lỗ Thời Gian Thực:** Tự động kích hoạt cảnh báo `MUA ĐUỔI ⚠️`, `CHẠM SL 🔴`, `ĐẠT TP1 🎯` trực tiếp trên bảng khi thị giá biến động.
     - **Bộ Đếm Ngược 5 Phút (300s):** Hiển thị trực quan `🔄 Tự làm mới: 300s` cùng nút `⚡ Tải lại ngay` và cơ chế Cache-Busting (`_t=Date.now()`), kết hợp `<meta http-equiv="refresh" content="300">` dự phòng.
     - **Local Watcher Daemon (`--watch`):** Cung cấp cờ chạy ngầm trên máy trạm (`python -m src.hud.terminal --watch --interval 300`) tự động tái tạo dashboard mỗi 5 phút.
   - Tab 1: Top 20 Siêu Cổ Phiếu Chân Sóng với thiết kế 15 cột trực quan vừa vặn 100% màn hình không cần cuộn ngang: tách biệt hoàn toàn giữa `Thanh Khoản (ADTV20)`, `Chuẩn Quỹ (Lô Max/Trượt)`, `Điểm IBD`, và `Tích Luỹ (A-E)`; Cột `Kỳ Trước` hiển thị ổn định `#cũ (+N)` dựa trên cơ chế Session Debounce 30 phút. Bảng Xếp Hạng Định Lượng Cơ Bản (Piotroski F-Score).

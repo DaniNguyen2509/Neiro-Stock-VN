@@ -442,3 +442,19 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 
 3. **Xuất Bản Tự Động Tập Dữ Liệu ML `data/ml_signals_dataset.csv`:**
    - Lưu trữ Vector đặc trưng $T_0$ bất biến cùng biến mục tiêu $y$ (`outcome_label`, `target_win_binary`) phục vụ huấn luyện các mô hình Machine Learning / Deep Learning trên Google Colab.
+
+---
+
+### Tier 15: Đồng Bộ Hóa Toàn Diện Dashboard & Live Ticker 30 Giây (ADR-012)
+
+1. **Xóa Bỏ Hardcode & Tính Toán Động 4 Thẻ Chỉ Số Header:**
+   - **Dòng Tiền Cá Mập (Smart Money):** Tính tổng mua/bán ròng thực tế của khối ngoại và tự doanh từ danh mục Top cổ phiếu; phản ánh chính xác trạng thái ngoại xả nội gom thay vì số liệu cứng.
+   - **Độ Rộng Danh Mục (Momentum Breadth):** Tính tỷ lệ cổ phiếu giữ xung lực dẫn dắt (RS/Composite $\ge 70$).
+   - **Ngành Dẫn Dắt (Leading Sector):** Gom nhóm ngành tự động dựa trên tọa độ RRG thực tế và số lượng ứng viên dẫn đầu.
+   - **Gán ID Semantic:** Cung cấp ID cho tất cả thẻ chỉ số để JavaScript cập nhật thời gian thực.
+
+2. **Vòng Lặp Polling 30 Giây Phía Trình Duyệt (Real-Time Live Ticker):**
+   - Lặp lại `fetchLivePrices()` định kỳ mỗi 30 giây (`setInterval(fetchLivePrices, 30000)`), liên tục kéo giá từ VPS Datafeed.
+   - Đồng bộ cột giá khớp kèm `% Biến động` đổi màu chuẩn Sở Giao dịch.
+   - Tự động đánh giá lại Vùng Mua và Cắt Lỗ thời gian thực: Cảnh báo `MUA ĐUỔI ⚠️` nếu giá vượt quá $3\%$ điểm bùng nổ, `CHẠM SL 🔴` khi thủng stop loss, `ĐẠT TP1 🎯` khi chạm chốt lời 1.
+   - Cập nhật nhãn thời gian phân định rõ ràng giữa chu kỳ quét AI toàn diện và dòng giá khớp lệnh trực tuyến.
