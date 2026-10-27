@@ -183,8 +183,8 @@ class T25BacktestEngine:
         remaining_to_deduct = shares_to_sell
         total_entry_cost = 0.0
         total_buy_fee = 0.0
-        first_entry_date = date
-        first_entry_day_idx = day_idx
+        first_entry_date = None
+        first_entry_day_idx = None
         new_batches: List[SettlementBatch] = []
 
         for b in pos.batches:
@@ -197,8 +197,10 @@ class T25BacktestEngine:
                 ratio = deduct / b.shares
                 total_entry_cost += deduct * b.buy_price
                 total_buy_fee += b.buy_fee * ratio
-                first_entry_date = b.buy_date
-                first_entry_day_idx = b.buy_day_idx
+                if first_entry_date is None:
+                    first_entry_date = b.buy_date
+                if first_entry_day_idx is None:
+                    first_entry_day_idx = b.buy_day_idx
                 remaining_to_deduct -= deduct
 
                 if deduct < b.shares:
@@ -226,11 +228,14 @@ class T25BacktestEngine:
         net_pnl = net_proceeds - (total_entry_cost + total_buy_fee)
         ret_pct = round((net_pnl / (total_entry_cost + total_buy_fee)) * 100.0, 2) if (total_entry_cost + total_buy_fee) > 0 else 0.0
 
+        final_entry_date = first_entry_date or date
+        final_entry_day_idx = first_entry_day_idx if first_entry_day_idx is not None else day_idx
+
         self._trade_counter += 1
         trade = TradeRecord(
             trade_id=self._trade_counter,
             symbol=symbol,
-            entry_date=first_entry_date,
+            entry_date=final_entry_date,
             exit_date=date,
             entry_price=round(total_entry_cost / shares_to_sell, 2) if shares_to_sell > 0 else 0.0,
             exit_price=round(price, 2),
@@ -241,7 +246,7 @@ class T25BacktestEngine:
             gross_pnl=round(gross_pnl, 2),
             net_pnl=round(net_pnl, 2),
             return_pct=ret_pct,
-            holding_days=max(day_idx - first_entry_day_idx, 1),
+            holding_days=max(day_idx - final_entry_day_idx, 1),
             reason=reason,
         )
         self.closed_trades.append(trade)

@@ -81,7 +81,7 @@ Neiro-Stock-VN/
 │   ├── thuat_ngu_quant_vn.md     # Từ điển thuật ngữ Quantamental & Vi cấu trúc TTCK VN
 │   ├── TRADER_PLAYBOOK_VN.md     # Cẩm nang tác chiến thực chiến cho Trader / Quỹ
 │   ├── google_sheets_setup.md    # Hướng dẫn thiết lập Google Sheets, Looker Studio & ML
-│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-011)
+│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-014)
 │       ├── ADR-001-quantamental-foundations-for-vn-equities.md
 │       ├── ADR-002-fialda-vip-expert-automated-scanner.md
 │       ├── ADR-003-liquidity-and-portfolio-capacity-sizer.md
@@ -92,7 +92,10 @@ Neiro-Stock-VN/
 │       ├── ADR-008-client-auto-reload-live-countdown-and-scheduling-mechanics.md
 │       ├── ADR-009-background-anti-fomo-signal-ledger-and-chasing-prevention.md
 │       ├── ADR-010-live-dynamic-price-polling-5min-cadence.md
-│       └── ADR-011-online-signal-ledger-and-ml-dataset-pipeline.md
+│       ├── ADR-011-online-signal-ledger-and-ml-dataset-pipeline.md
+│       ├── ADR-012-realtime-dashboard-synchronization-and-live-ticker.md
+│       ├── ADR-013-multi-layer-dashboard-audit-and-column-domain-verification.md
+│       └── ADR-014-comprehensive-qa-audit-and-systemic-bug-remediation.md
 ├── src/
 │   ├── collector/                # Thu thập dữ liệu TTCK Việt Nam
 │   │   ├── __init__.py

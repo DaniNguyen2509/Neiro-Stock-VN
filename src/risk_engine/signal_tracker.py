@@ -179,7 +179,10 @@ class SignalTracker:
         holding_days: int,
     ) -> tuple[str, str, str, float]:
         """Đánh giá trạng thái vị thế, quyền mở mua và câu tư vấn hành động."""
-        pnl_pct = round(((cur_price - entry_orig) / entry_orig) * 100.0, 2)
+        if entry_orig <= 0:
+            pnl_pct = 0.0
+        else:
+            pnl_pct = round(((cur_price - entry_orig) / entry_orig) * 100.0, 2)
         new_stop = cur_stop
 
         # 1. Cơ chế Trailing Stop / Nâng chặn lỗ bảo toàn vốn
@@ -295,7 +298,8 @@ class SignalTracker:
                     holding_days=holding_days,
                 )
 
-                pnl = round(((price - existing.entry_original) / existing.entry_original) * 100.0, 2)
+                entry_ref = existing.entry_original if existing.entry_original > 0 else (price if price > 0 else 1.0)
+                pnl = round(((price - entry_ref) / entry_ref) * 100.0, 2)
                 existing.current_price = price
                 existing.last_updated = now_str
                 existing.pnl_pct = pnl
@@ -306,10 +310,10 @@ class SignalTracker:
                 existing.advice_note = advice
 
                 # Cập nhật Ground Truth Labels (ML)
-                cur_max = max(existing.max_price_reached or existing.entry_original, price)
-                cur_min = min(existing.min_price_reached or existing.entry_original, price)
-                mfe = round(((cur_max - existing.entry_original) / existing.entry_original) * 100.0, 2)
-                mae = round(((cur_min - existing.entry_original) / existing.entry_original) * 100.0, 2)
+                cur_max = max(existing.max_price_reached or entry_ref, price)
+                cur_min = min(existing.min_price_reached or entry_ref, price)
+                mfe = round(((cur_max - entry_ref) / entry_ref) * 100.0, 2)
+                mae = round(((cur_min - entry_ref) / entry_ref) * 100.0, 2)
                 existing.max_price_reached = cur_max
                 existing.min_price_reached = cur_min
                 existing.mfe_pct = mfe

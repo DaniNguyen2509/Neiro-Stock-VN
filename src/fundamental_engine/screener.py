@@ -76,7 +76,16 @@ def screen_stocks(stock_list: List[StockFinancials]) -> List[ScreenerResult]:
     for item in stock_list:
         detail = calculate_piotroski_score(item.current, item.previous)
         score = detail.total_score
-        cfo_ratio = item.current.operating_cash_flow / max(item.current.net_income, 1.0)
+        net_inc = item.current.net_income
+        cfo = item.current.operating_cash_flow
+        if abs(net_inc) < 1e-6:
+            cfo_ratio = 0.0
+        else:
+            cfo_ratio = cfo / net_inc
+
+        # Doanh nghiep chi duoc xep hang Dinh che khi F-Score >= 7, co lai va dong tien manh
+        is_institutional = bool(score >= 7 and net_inc > 0 and cfo_ratio >= 1.0)
+
         results.append(ScreenerResult(
             symbol=item.symbol,
             company_name=item.company_name,
@@ -84,7 +93,7 @@ def screen_stocks(stock_list: List[StockFinancials]) -> List[ScreenerResult]:
             price=item.current_price,
             f_score=score,
             earnings_quality_ratio=round(cfo_ratio, 2),
-            is_institutional_grade=(score >= 7 and cfo_ratio >= 1.0),
+            is_institutional_grade=is_institutional,
             details=detail
         ))
     # Xep hang giam dan theo F-score

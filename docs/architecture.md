@@ -168,10 +168,19 @@ flowchart TD
   3. *Tầng 3 (Column-by-Column Domain Logic):* Kiểm tra bản chất nghiệp vụ từng cột từ trái qua phải, fallback lịch sử đa phiên cho cột biến động `Kỳ Trước`, tuyệt đối không gán nhãn `MỚI` sai lệch.
 - **Thử Nghiệm Investor Persona Test:** Đảm bảo toàn bộ chỉ số trực quan và phản ánh trung thực thực tế giao dịch T+2.5 của nhà đầu tư.
 
+### 2.10. Tầng Kiểm Thử Chuyên Nghiệp & Khắc Phục Lỗi Hệ Thống Toàn Diện (ADR-014)
+- **Bộ Kiểm Thử QA Chuyên Sâu (`tests/test_qa_professional_audit.py`):**
+  - Khắc phục triệt để xung đột múi giờ aware/naive và mở rộng hỗ trợ định dạng ISO 8601 trong `RankingHistoryTracker`.
+  - Khôi phục tính toàn vẹn của tỷ số CFO/NI và mác Định chế trong `screener.py` khi doanh nghiệp bị lỗ ròng (Net Loss).
+  - Khắc phục lỗi ghi đè ngày mua đầu tiên của thuật toán FIFO bán nhiều lô trong `T25BacktestEngine`, bảo toàn chính xác chu kỳ nắm giữ `holding_days`.
+  - Bổ sung cơ chế phòng vệ chống chia cho 0 trong `SignalTracker` khi giá khuyến nghị ban đầu `entry_orig <= 0`.
+  - Chuẩn hóa tiêu đề thẻ Card 3 thành **"Độ Rộng Danh Mục Dẫn Dắt"**, phân định phạm vi tính toán dòng tiền ngoại trong Client JS theo đúng bảng Top Super Stocks (`#top-stocks-table`), và kích hoạt tính năng tự động phục hồi huy hiệu `VÙNG MUA 🟢` khi thị giá quay về vùng an toàn.
+  - Tỷ lệ pass kiểm thử tự động đạt **91/91 tests (100%)**.
+
 ---
 
 ## 3. Quản Lý Bộ Nhớ & Tiêu Chuẩn Zero-Waste
 
 - **Zero Memory Leak:** Toàn bộ các cấu trúc dữ liệu chuỗi thời gian đều được ép kiểu `float32` hoặc `int32` trong Pandas/NumPy, tránh phát sinh overhead bộ nhớ.
 - **Tự động dọn dẹp Cache:** Các tệp cache dữ liệu tạm thời trong `data/` được giới hạn kích thước và tự động dọn sạch sau khi hoàn tất pipeline kiểm thử.
-- **Tổng dung lượng toàn bộ repository:** Đảm bảo duy trì dưới mức **15MB**, bảo vệ tối đa dung lượng ổ cứng của người dùng.
+- **Tổng dung lượng toàn bộ repository:** Đảm bảo duy trì dưới mức **~2.06MB** (vượt xa tiêu chuẩn tối đa 15MB), bảo vệ tối đa dung lượng ổ cứng của người dùng.

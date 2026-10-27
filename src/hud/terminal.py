@@ -500,7 +500,7 @@ def generate_terminal_html(
             <div id="card-smart-money-sub" style="font-size:11px;color:#78909c;margin-top:4px;">{smart_money_sub}</div>
         </div>
         <div class="card" id="card-breadth-container">
-            <div class="card-title">Độ Rộng Thị Trường (VN30 > MA20)</div>
+            <div class="card-title">Độ Rộng Danh Mục Dẫn Dắt</div>
             <div class="card-value" id="card-breadth-val" style="color:{breadth_color};">{breadth_val}</div>
             <div id="card-breadth-sub" style="font-size:11px;color:#78909c;margin-top:4px;">{breadth_sub}</div>
         </div>
@@ -517,7 +517,7 @@ def generate_terminal_html(
         <span style="font-size:11px;color:#78909c;">Nguồn: Fialda VIP Expert & Tích Lũy Khối Lượng Order Flow & Quản Trị Sức Chứa Thanh Khoản</span>
     </div>
     <div class="table-container">
-        <table>
+        <table id="top-stocks-table">
             <thead>
                 <tr>
                     <th style="text-align:center;">STT</th>
@@ -680,6 +680,9 @@ def generate_terminal_html(
                 let liveRedCount = 0;
                 let liveRefCount = 0;
 
+                const topStockEls = document.querySelectorAll('#top-stocks-table .live-price[data-sym]');
+                const topSymbols = new Set(Array.from(topStockEls).map(el => el.getAttribute('data-sym')));
+
                 data.forEach(item => {{
                     if (item && item.sym) {{
                         const lp = Number(item.lastPrice || 0);
@@ -702,13 +705,15 @@ def generate_terminal_html(
                             fsVal: fs
                         }};
 
-                        if (lp > 0 && r > 0) {{
-                            if (lp > r) liveGreenCount++;
-                            else if (lp < r) liveRedCount++;
-                            else liveRefCount++;
+                        if (topSymbols.has(item.sym)) {{
+                            if (lp > 0 && r > 0) {{
+                                if (lp > r) liveGreenCount++;
+                                else if (lp < r) liveRedCount++;
+                                else liveRefCount++;
+                            }}
+                            liveForeignBuyVal += fb;
+                            liveForeignSellVal += fs;
                         }}
-                        liveForeignBuyVal += fb;
-                        liveForeignSellVal += fs;
                     }}
                 }});
 
@@ -736,6 +741,7 @@ def generate_terminal_html(
                         }}
 
                         // Danh gia lai vung mua / cat lo thoi gian thuc
+                        const entryLow = Number(el.getAttribute('data-entry-low') || 0);
                         const entryHigh = Number(el.getAttribute('data-entry-high') || 0);
                         const stopLoss = Number(el.getAttribute('data-sl') || 0);
                         const tp1 = Number(el.getAttribute('data-tp1') || 0);
@@ -748,6 +754,8 @@ def generate_terminal_html(
                                 sigBadge.innerHTML = '<span style="background:#004d40;color:#64ffda;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐẠT TP1 🎯</span>';
                             }} else if (entryHigh > 0 && p > entryHigh * 1.03) {{
                                 sigBadge.innerHTML = '<span style="background:#e65100;color:#ffe0b2;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">MUA ĐUỔI ⚠️</span>';
+                            }} else if (entryLow > 0 && p >= entryLow * 0.98 && p <= entryHigh * 1.03) {{
+                                sigBadge.innerHTML = '<span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">VÙNG MUA 🟢</span>';
                             }}
                         }}
                     }}

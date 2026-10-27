@@ -117,6 +117,15 @@ class RankingHistoryTracker:
     @staticmethod
     def parse_time(ts_str: str) -> Optional[datetime]:
         """Chuyển đổi chuỗi timestamp thành datetime."""
+        if not ts_str:
+            return None
+        # 1. Thu ISO 8601 (ho tro ca offset +07:00, Z, v.v.)
+        try:
+            return datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
+        except Exception:
+            pass
+
+        # 2. Thu cac dinh dang chuoi truyen thong
         for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d"):
             try:
                 return datetime.strptime(ts_str, fmt)
@@ -173,6 +182,13 @@ class RankingHistoryTracker:
         ref_time = current_time or datetime.now()
         last_ts = valid_timestamps[-1]
         last_dt = self.parse_time(last_ts)
+
+        # Harmonize timezone giua ref_time va last_dt de tranh TypeError
+        if last_dt and ref_time:
+            if ref_time.tzinfo is not None and last_dt.tzinfo is None:
+                last_dt = last_dt.replace(tzinfo=ref_time.tzinfo)
+            elif ref_time.tzinfo is None and last_dt.tzinfo is not None:
+                last_dt = last_dt.replace(tzinfo=None)
 
         # Nếu mốc cuối quá gần hiện tại (< 30 phút) và có từ 2 mốc trở lên,
         # mốc kỳ trước chuẩn mực phải là session trước đó nữa
