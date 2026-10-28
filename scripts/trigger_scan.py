@@ -6,6 +6,12 @@ import urllib.error
 import urllib.request
 from typing import Tuple
 
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 
 def dispatch_scan(
     token: str,
@@ -104,11 +110,11 @@ def main() -> None:
     args = parser.parse_args()
 
     if not args.token:
-        print("❌ Lỗi: Chưa cung cấp GitHub Token.")
-        print("💡 Hướng dẫn: Truyền qua tham số --token <YOUR_PAT> hoặc gán biến môi trường GITHUB_TOKEN.")
+        print("[ERROR] Chua cung cap GitHub Token.")
+        print("Huong dan: Truyen qua tham so --token <YOUR_PAT> hoac gan bien moi truong GITHUB_TOKEN.")
         sys.exit(1)
 
-    print(f"🚀 Đang gửi yêu cầu kích hoạt quét đến {args.repo} qua {args.method}...")
+    print(f"[*] Dang gui yeu cau kich hoat quet den {args.repo} qua {args.method}...")
     success, code, msg = dispatch_scan(
         token=args.token,
         repo=args.repo,
@@ -119,10 +125,10 @@ def main() -> None:
     )
 
     if success:
-        print(f"✅ {msg}")
+        print(f"[SUCCESS] {msg}")
         sys.exit(0)
     else:
-        print(f"❌ {msg}")
+        print(f"[ERROR] {msg}")
         sys.exit(1)
 
 

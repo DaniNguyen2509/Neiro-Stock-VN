@@ -32,23 +32,24 @@ Tài liệu này hướng dẫn cách kết nối dịch vụ Cron bên ngoài (
 
 ### 2. Điền thông số Request
 - **Title:** `Neiro Stock VN - Trading Scan`
-- **URL:** 
+- **URL (chuẩn Actions workflow_dispatch - tương thích 100% với token Actions: write):** 
   ```text
-  https://api.github.com/repos/DaniNguyen2509/Neiro-Stock-VN/dispatches
+  https://api.github.com/repos/DaniNguyen2509/Neiro-Stock-VN/actions/workflows/scanner_and_pages.yml/dispatches
   ```
-- **Request Method:** Chọn **`POST`**.
-- **Headers (Nhấn Add Header):**
-  | Key | Value |
-  | :--- | :--- |
-  | `Accept` | `application/vnd.github+json` |
-  | `Authorization` | `Bearer github_pat_YOUR_TOKEN_HERE` |
-  | `User-Agent` | `Neiro-CronJob-Org` |
-  | `X-GitHub-Api-Version` | `2022-11-28` |
+- **Vào tab ADVANCED trên cron-job.org:**
+  - **Request Method:** Chọn **`POST`**.
+  - **Headers (Nhấn Add Header):**
+    | Key | Value |
+    | :--- | :--- |
+    | `Accept` | `application/vnd.github+json` |
+    | `Authorization` | `Bearer github_pat_YOUR_TOKEN_HERE` |
+    | `User-Agent` | `Neiro-CronJob-Org` |
+    | `X-GitHub-Api-Version` | `2022-11-28` |
 
-- **Request Body (dán vào ô Body):**
-  ```json
-  {"event_type": "external_scan"}
-  ```
+  - **Request Body (dán vào ô Body):**
+    ```json
+    {"ref": "main"}
+    ```
 
 ### 3. Cấu hình Lịch Quét (Schedule)
 - **Timezone:** Chọn `Asia/Bangkok` hoặc `Asia/Ho_Chi_Minh` (GMT+7).
