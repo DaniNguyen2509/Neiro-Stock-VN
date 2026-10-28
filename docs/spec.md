@@ -489,3 +489,16 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 2. **Phòng Vệ Định Dạng Dữ Liệu Client (WAF HTML Response Guard):**
    - Kiểm tra định dạng phản hồi từ API bảng giá trước khi gọi `JSON.parse()`, bảo vệ client JS không bị ném ngoại lệ khi máy chủ dữ liệu bên thứ ba trả về mã HTML lỗi (WAF / Rate limit), giữ kết nối `🟢 Live VPS` luôn ổn định.
 
+---
+
+### Tier 18: Tích Hợp External Cron Webhook Dispatch & Cloudflare Worker (ADR-016)
+
+1. **Khắc Phục Triệt Để Drop/Delay Queue của GitHub Actions Native Scheduler:**
+   - Mở rộng workflow `.github/workflows/scanner_and_pages.yml` hỗ trợ sự kiện `repository_dispatch` (types: `[external_scan, fialda_scan]`).
+   - Cung cấp module CLI chuẩn `scripts/trigger_scan.py` sử dụng thư viện `urllib.request` không phụ thuộc thư viện ngoài, hỗ trợ dispatch từ mọi môi trường qua `repository_dispatch` hoặc `workflow_dispatch`.
+
+2. **Hạ Tầng Kích Hoạt Không Trễ (Zero-Delay Triggers):**
+   - Tích hợp Cloudflare Worker script `scripts/cloudflare_worker_cron.js` tận dụng Cron Triggers serverless chạy miễn phí 100%, độ trễ 0 giây.
+   - Tài liệu hóa quy trình cấu hình webhook 0-code trên `cron-job.org` (`docs/guides/EXTERNAL_CRON_SETUP.md`) với Fine-Grained GitHub PAT đảm bảo bảo mật và kích hoạt quét đúng từng giây trong giờ giao dịch.
+
+

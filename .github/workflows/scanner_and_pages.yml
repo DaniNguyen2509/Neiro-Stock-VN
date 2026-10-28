@@ -18,6 +18,8 @@ on:
     # Chốt sổ toàn diện buổi tối (EOD Final Smart Money): 19:08 VN <=> 12:08 UTC
     - cron: '8 12 * * 1-5'
   workflow_dispatch:
+  repository_dispatch:
+    types: [external_scan, fialda_scan]
   push:
     branches: [main]
     paths:

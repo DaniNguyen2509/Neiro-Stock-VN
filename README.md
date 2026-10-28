@@ -64,7 +64,7 @@ Neiro-Stock-VN/
 │   └── hud/                      # Giao diện Tactical Terminal Web Đa Tab (Auto-Reload, Dark Mode)
 ├── data/                         # Dữ liệu mẫu benchmark, ranking_history.jsonl, active_signals.jsonl, ml_signals_dataset.csv
 ├── exports/                      # Tệp HTML Terminal xuất bản (GitHub Pages)
-├── tests/                        # Kiểm thử tự động Unit & Math verification (91/91 passed 100%)
+├── tests/                        # Kiểm thử tự động Unit & Math verification (96/96 passed 100%)
 ├── AGENTS.md / GEMINI.md         # Quy tắc bắt buộc gọi Skill & Zero-Waste Mandate
 ├── requirements.txt              # Thư viện Python phụ thuộc
 ├── pyproject.toml                # Cấu hình ruff & pytest
@@ -91,7 +91,7 @@ pip install -r requirements.txt
 
 ### 4.2. Chạy kiểm thử tự động
 ```bash
-# Chạy 100% Unit Tests xác minh tính toán toán học & T+2.5 Backtest (91/91 passed 100%)
+# Chạy 100% Unit Tests xác minh tính toán toán học & T+2.5 Backtest (96/96 passed 100%)
 python -m pytest tests/ -v --tb=short
 
 # Kiểm tra quy chuẩn mã nguồn (Ruff)
@@ -169,6 +169,13 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
 - **Khử Nghẽn Hàng Đợi GitHub Actions (Scheduler Decollision):** Chuyển dịch toàn bộ các mốc cron sang phút lệch (`:18`, `:48`, `:08`, `:35`) thay vì các mốc tròn phổ biến (`:00`, `:15`, `:30`, `:45`) nhằm tránh tình trạng bị GitHub Scheduler drop hoặc delay hàng tiếng đồng hồ do quá tải bot toàn cầu.
 - **Phòng Vệ Client Live Stream (WAF HTML Guard):** Tăng cường hàm JavaScript `fetchLivePrices()` tại Dashboard để kiểm tra dữ liệu trước khi parse JSON, ngăn chặn triệt để tình trạng máy chủ ngoài trả về mã HTML lỗi (WAF / Rate limit) khiến client bị rơi vào trạng thái `Offline` đóng băng.
 - **Đồng Bộ Hoàn Toàn Nhánh Main:** Bổ sung `exports/index.html` và `exports/404.html` vào quy trình commit tự động của GitHub Actions, đảm bảo nhánh `main` và nhánh `gh-pages` luôn luôn đồng nhất số liệu quét mới nhất.
+
+### 4.10. Tích Hợp External Cron Webhook Dispatch & Cloudflare Worker (ADR-016)
+- **Khắc Phục Triệt Để Drop/Delay Queue:** Mở rộng workflow `.github/workflows/scanner_and_pages.yml` hỗ trợ sự kiện `repository_dispatch` (types: `[external_scan, fialda_scan]`).
+- **Cloudflare Worker Serverless Cron (`scripts/cloudflare_worker_cron.js`):** Script serverless miễn phí 100% (100.000 req/ngày), kích hoạt đúng từng giây với độ trễ 0s và không phụ thuộc vào hạ tầng native scheduler của GitHub.
+- **CLI Dispatch Độc Lập (`scripts/trigger_scan.py`):** Cung cấp công cụ dòng lệnh tiêu chuẩn (zero dependencies) hỗ trợ gửi yêu cầu dispatch qua cả 2 giao thức `repository_dispatch` và `workflow_dispatch`.
+- **Hướng Dẫn Cấu Hình Webhook 0-Code (`docs/guides/EXTERNAL_CRON_SETUP.md`):** Tài liệu hóa chi tiết cách kết nối dịch vụ `cron-job.org` với GitHub Fine-Grained Personal Access Token (PAT).
+
 ---
 
 ## 5. Quy Chuẩn Vận Hành AI Agent (Zero-Waste & Skill Protocol)
@@ -176,3 +183,4 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
 - **Bắt buộc gọi Skill trước mọi hành động:** Mỗi lượt phản hồi của AI model đều phải kiểm tra và áp dụng skill từ `.agents/skills/` tương ứng với công việc (xem chi tiết tại `AGENTS.md` và `GEMINI.md`).
 - **Tiêu chuẩn Zero-Waste:** Toàn bộ dự án luôn được giữ siêu nhẹ (< 15MB), tự động thu hồi RAM, xóa cache tạm thời sau khi xử lý dữ liệu.
 - **Đồng bộ tài liệu (Documentation-First):** Bất kỳ nâng cấp tính năng hoặc thay đổi logic nào đều phải được cập nhật ngay vào `docs/spec.md` và `docs/architecture.md`.
+

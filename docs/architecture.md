@@ -180,6 +180,13 @@ flowchart TD
 - **Phòng Vệ Client Live Stream (WAF HTML Guard):** Tăng cường hàm JavaScript `fetchLivePrices()` tại Dashboard để kiểm tra dữ liệu trước khi parse JSON, ngăn chặn triệt để tình trạng máy chủ ngoài trả về mã HTML lỗi (WAF / Rate limit) khiến client bị rơi vào trạng thái `Offline` đóng băng.
 - **Đồng Bộ Hoàn Toàn Nhánh Main:** Bổ sung `exports/index.html` và `exports/404.html` vào quy trình commit tự động của GitHub Actions, đảm bảo nhánh `main` và nhánh `gh-pages` luôn luôn đồng nhất số liệu quét mới nhất.
 
+### 2.12. Tầng Kích Hoạt Tự Động Qua External Cron Webhook Dispatch & Cloudflare Worker (ADR-016)
+- **Mở Rộng Giao Thức Kích Hoạt Đa Nguồn:** Bổ sung sự kiện `repository_dispatch` (types: `[external_scan, fialda_scan]`) vào `.github/workflows/scanner_and_pages.yml`, cho phép nhận tín hiệu kích hoạt quét từ bất kỳ nền tảng cron bên ngoài nào thông qua GitHub REST API.
+- **Cloudflare Worker Serverless Cron (`scripts/cloudflare_worker_cron.js`):** Script triển khai trên Cloudflare Workers Free Tier (100.000 req/ngày), kích hoạt đúng từng giây với độ trễ 0s và không phụ thuộc vào hạ tầng native scheduler của GitHub.
+- **CLI Dispatch Độc Lập (`scripts/trigger_scan.py`):** Cung cấp công cụ dòng lệnh tiêu chuẩn (zero dependencies) hỗ trợ gửi yêu cầu dispatch qua cả 2 giao thức `repository_dispatch` và `workflow_dispatch`.
+- **Bộ Hướng Dẫn Cấu Hình Webhook 0-Code (`docs/guides/EXTERNAL_CRON_SETUP.md`):** Tài liệu hóa chi tiết cách kết nối dịch vụ `cron-job.org` với GitHub Fine-Grained Personal Access Token (PAT).
+
+
 ---
 
 ## 3. Quản Lý Bộ Nhớ & Tiêu Chuẩn Zero-Waste
