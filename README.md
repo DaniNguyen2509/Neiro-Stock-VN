@@ -164,6 +164,11 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
 ### 4.8. Quy Chuẩn Audit Dashboard Đa Tầng & Audit Từng Cột Dữ Liệu Thực Chiến (ADR-013)
 - **Bộ Kỹ Năng Độc Quyền `multi-layer-dashboard-audit`:** Định hình quy trình kiểm định 3 tầng độc lập (Tầng 1: Presentation & Stream, Tầng 2: Data Pipeline & Continuity, Tầng 3: Column-by-Column Domain Logic) chống lại hội chứng "Hút tầm nhìn" (Tunnel Vision).
 - **Điều Luật Bắt Buộc Tối Cao (AGENTS.md & GEMINI.md):** Bắt buộc mọi AI model khi review giao diện phải audit chi tiết từng cột số liệu, đặt mình vào vị thế nhà đầu tư thực tế (Investor Persona Test), tuyệt đối không dừng lại ở việc sửa lỗi hiển thị bề nổi.
+
+### 4.9. Chẩn Đoán Bảng Dashboard Bị Đứng, Khử Nghẽn Scheduler và Phòng Vệ Client Live Stream (ADR-015)
+- **Khử Nghẽn Hàng Đợi GitHub Actions (Scheduler Decollision):** Chuyển dịch toàn bộ các mốc cron sang phút lệch (`:18`, `:48`, `:08`, `:35`) thay vì các mốc tròn phổ biến (`:00`, `:15`, `:30`, `:45`) nhằm tránh tình trạng bị GitHub Scheduler drop hoặc delay hàng tiếng đồng hồ do quá tải bot toàn cầu.
+- **Phòng Vệ Client Live Stream (WAF HTML Guard):** Tăng cường hàm JavaScript `fetchLivePrices()` tại Dashboard để kiểm tra dữ liệu trước khi parse JSON, ngăn chặn triệt để tình trạng máy chủ ngoài trả về mã HTML lỗi (WAF / Rate limit) khiến client bị rơi vào trạng thái `Offline` đóng băng.
+- **Đồng Bộ Hoàn Toàn Nhánh Main:** Bổ sung `exports/index.html` và `exports/404.html` vào quy trình commit tự động của GitHub Actions, đảm bảo nhánh `main` và nhánh `gh-pages` luôn luôn đồng nhất số liệu quét mới nhất.
 ---
 
 ## 5. Quy Chuẩn Vận Hành AI Agent (Zero-Waste & Skill Protocol)

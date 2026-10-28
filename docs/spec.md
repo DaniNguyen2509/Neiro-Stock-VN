@@ -478,3 +478,14 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 3. **Thử Nghiệm Investor Persona Test:**
    - Đảm bảo toàn bộ bảng số liệu phản ánh trực quan, trung thực và hỗ trợ ra quyết định đầu tư thực tế trong chu kỳ T+2.5.
 
+---
+
+### Tier 17: Khử Nghẽn Bộ Lập Lịch GitHub Scheduler & Phòng Vệ Client Live Stream (ADR-015)
+
+1. **Khử Nghẽn Hàng Đợi Cron (Scheduler Decollision):**
+   - Phân tán các mốc cron sang phút lệch (`:18`, `:48`, `:08`, `:35`) nhằm triệt tiêu hiện tượng nghẽn hàng đợi (queue starvation) của bộ điều phối GitHub Actions Scheduler trong các khung giờ cao điểm toàn cầu.
+   - Bổ sung `exports/index.html` và `exports/404.html` vào quy trình commit tự động của GitHub Actions trên nhánh `main`.
+
+2. **Phòng Vệ Định Dạng Dữ Liệu Client (WAF HTML Response Guard):**
+   - Kiểm tra định dạng phản hồi từ API bảng giá trước khi gọi `JSON.parse()`, bảo vệ client JS không bị ném ngoại lệ khi máy chủ dữ liệu bên thứ ba trả về mã HTML lỗi (WAF / Rate limit), giữ kết nối `🟢 Live VPS` luôn ổn định.
+

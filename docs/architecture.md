@@ -175,7 +175,10 @@ flowchart TD
   - Khắc phục lỗi ghi đè ngày mua đầu tiên của thuật toán FIFO bán nhiều lô trong `T25BacktestEngine`, bảo toàn chính xác chu kỳ nắm giữ `holding_days`.
   - Bổ sung cơ chế phòng vệ chống chia cho 0 trong `SignalTracker` khi giá khuyến nghị ban đầu `entry_orig <= 0`.
   - Chuẩn hóa tiêu đề thẻ Card 3 thành **"Độ Rộng Danh Mục Dẫn Dắt"**, phân định phạm vi tính toán dòng tiền ngoại trong Client JS theo đúng bảng Top Super Stocks (`#top-stocks-table`), và kích hoạt tính năng tự động phục hồi huy hiệu `VÙNG MUA 🟢` khi thị giá quay về vùng an toàn.
-  - Tỷ lệ pass kiểm thử tự động đạt **91/91 tests (100%)**.
+### 2.11. Tầng Khử Nghẽn Lập Lịch & Phòng Vệ Client Live Stream (ADR-015)
+- **Khử Nghẽn Hàng Đợi GitHub Actions (Scheduler Decollision):** Chuyển dịch toàn bộ các mốc cron sang phút lệch (`:18`, `:48`, `:08`, `:35`) thay vì các mốc tròn phổ biến (`:00`, `:15`, `:30`, `:45`) nhằm tránh tình trạng bị GitHub Scheduler drop hoặc delay hàng tiếng đồng hồ do quá tải bot toàn cầu.
+- **Phòng Vệ Client Live Stream (WAF HTML Guard):** Tăng cường hàm JavaScript `fetchLivePrices()` tại Dashboard để kiểm tra dữ liệu trước khi parse JSON, ngăn chặn triệt để tình trạng máy chủ ngoài trả về mã HTML lỗi (WAF / Rate limit) khiến client bị rơi vào trạng thái `Offline` đóng băng.
+- **Đồng Bộ Hoàn Toàn Nhánh Main:** Bổ sung `exports/index.html` và `exports/404.html` vào quy trình commit tự động của GitHub Actions, đảm bảo nhánh `main` và nhánh `gh-pages` luôn luôn đồng nhất số liệu quét mới nhất.
 
 ---
 

@@ -670,7 +670,9 @@ def generate_terminal_html(
                 
                 const res = await fetch('https://bgapidatafeed.vps.com.vn/getliststockdata/' + symbols.join(','));
                 if (!res.ok) return;
-                const data = await res.json();
+                const rawText = await res.text();
+                if (!rawText || rawText.trim().startsWith('<')) return;
+                const data = JSON.parse(rawText);
                 if (!Array.isArray(data)) return;
                 
                 const priceMap = {{}};

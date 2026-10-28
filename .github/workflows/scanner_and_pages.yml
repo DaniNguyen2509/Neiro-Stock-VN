@@ -3,20 +3,20 @@ name: Fialda VIP Expert Scanner & GitHub Pages Deploy
 on:
   schedule:
     # =========================================================================
-    # LỊCH QUÉT TỰ ĐỘNG ĐỊNH KỲ 30 PHÚT/LẦN TRONG GIỜ GIAO DỊCH (THỨ 2 - THỨ 6)
+    # LỊCH QUÉT TỰ ĐỘNG ĐỊNH KỲ TRONG GIỜ GIAO DỊCH (THỨ 2 - THỨ 6)
     # Giờ Việt Nam (UTC+7) = Giờ UTC + 7 tiếng
-    # Tối ưu hóa thành 3 biểu thức chuẩn POSIX để GitHub Scheduler kích hoạt ổn định
+    # Tối ưu dùng phút lệch (:18, :48, :08, :35) để tránh nghẽn tải hàng loạt bot trên GitHub Scheduler
     # =========================================================================
-    # Phiên sáng: 09:15, 09:45, 10:15, 10:45, 11:15, 11:45 VN <=> 02:15, 02:45, 03:15, 03:45, 04:15, 04:45 UTC
-    - cron: '15,45 2,3,4 * * 1-5'
-    # Phiên chiều: 13:15, 13:45, 14:15, 14:45 VN <=> 06:15, 06:45, 07:15, 07:45 UTC
-    - cron: '15,45 6,7 * * 1-5'
-    # Chốt phiên ATC: 15:05 VN <=> 08:05 UTC
-    - cron: '5 8 * * 1-5'
-    # Chốt Tự doanh & Khối ngoại chiều: 17:30 VN <=> 10:30 UTC
-    - cron: '30 10 * * 1-5'
-    # Chốt sổ toàn diện buổi tối (EOD Final Smart Money): 19:00 VN <=> 12:00 UTC
-    - cron: '0 12 * * 1-5'
+    # Phiên sáng: 09:18, 09:48, 10:18, 10:48, 11:18, 11:48 VN <=> 02:18, 02:48, 03:18, 03:48, 04:18, 04:48 UTC
+    - cron: '18,48 2,3,4 * * 1-5'
+    # Phiên chiều: 13:18, 13:48, 14:18, 14:48 VN <=> 06:18, 06:48, 07:18, 07:48 UTC
+    - cron: '18,48 6,7 * * 1-5'
+    # Chốt phiên ATC: 15:08 VN <=> 08:08 UTC
+    - cron: '8 8 * * 1-5'
+    # Chốt Tự doanh & Khối ngoại chiều: 17:35 VN <=> 10:35 UTC
+    - cron: '35 10 * * 1-5'
+    # Chốt sổ toàn diện buổi tối (EOD Final Smart Money): 19:08 VN <=> 12:08 UTC
+    - cron: '8 12 * * 1-5'
   workflow_dispatch:
   push:
     branches: [main]
@@ -104,7 +104,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add reports/latest_scan.md data/ranking_history.jsonl data/active_signals.jsonl data/advisory_scorecard.md data/ml_signals_dataset.csv || true
+          git add reports/latest_scan.md data/ranking_history.jsonl data/active_signals.jsonl data/advisory_scorecard.md data/ml_signals_dataset.csv exports/index.html exports/404.html || true
           if git diff --staged --quiet; then
             echo "No changes in reports/data to commit."
           else
