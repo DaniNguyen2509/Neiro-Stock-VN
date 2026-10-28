@@ -31,15 +31,12 @@ permissions:
   id-token: write
 
 concurrency:
-  group: 'pages'
+  group: 'scanner'
   cancel-in-progress: false
 
 jobs:
   scan-and-deploy:
     name: Scan Top 5 & Deploy Dashboard
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -85,20 +82,6 @@ jobs:
           publish_dir: ./exports
           keep_files: false
 
-      - name: Setup GitHub Pages (Actions Mode)
-        uses: actions/configure-pages@v5
-        continue-on-error: true
-
-      - name: Upload GitHub Pages Artifact (Actions Mode)
-        uses: actions/upload-pages-artifact@v3
-        continue-on-error: true
-        with:
-          path: 'exports/'
-
-      - name: Deploy to GitHub Pages (Actions Mode)
-        id: deployment
-        continue-on-error: true
-        uses: actions/deploy-pages@v4
 
       - name: Commit Latest Scan Report & Signal Ledger
         run: |
