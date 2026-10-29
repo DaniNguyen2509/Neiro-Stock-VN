@@ -1,29 +1,29 @@
 ## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 20 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)
-> **Trạng thái Thị trường:** VN-Index Tăng **97** / Giảm **215** | Giá trị GD: **14,060 tỷ VND** | P/E: **12.31**
+> **Trạng thái Thị trường:** VN-Index Tăng **97** / Giảm **215** | Giá trị GD: **14,505 tỷ VND** | P/E: **12.31**
 > 🟢 **Trạng Thái Dữ Liệu:** `REAL-TIME FIALDA PRO API` (Dữ liệu khớp lệnh trực tiếp từ sàn)
 
 | STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua | Cắt Lỗ | Chốt Lời (TP1 / TP2) | Thanh Khoản | Chuẩn Quỹ | RRG | Điểm IBD | Tích Luỹ | Ngoại Ròng | Điểm AI | Kỳ Trước |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **1** | **DPR** | `ĐỘT BIẾN GT` | **38.80** | `38.02 - 39.19` | **37.64** | **40.54** / **41.70** | **25.0t** | `ĐẠT BIÊN` | 100/100 | **50** | `C` | +4.7 tỷ | **62.5** | #1 (=) |
-| **2** | **TCB** | `ĐỘT BIẾN GT` | **22.35** | `21.90 - 22.57` | **21.68** | **23.36** / **24.03** | **530.9t** | `SIÊU TK` | 101/99 | **34** | `E` | -116.8 tỷ | **59.0** | #4 (+2) |
-| **3** | **VIX** | `ĐỘT BIẾN GT` | **12.40** | `12.15 - 12.52` | **12.03** | **12.96** / **13.33** | **285.5t** | `SIÊU TK` | 101/101 | **92** | `E` | +5.2 tỷ | **58.0** | #3 (=) |
-| **4** | **NKG** | `ĐỘT BIẾN GT` | **12.10** | `11.86 - 12.22` | **11.74** | **12.64** / **13.00** | **116.6t** | `SIÊU TK` | 107/101 | **87** | `E` | +7.9 tỷ | **56.8** | #4 (=) |
-| **5** | **VTZ** | `CHÂN SÓNG` | **20.40** | `20.20 - 20.64` | **19.79** | **21.31** / **21.92** | **25.6t** | `ĐẠT BIÊN` | 100/99 | **50** | `C` | -0.2 tỷ | **52.5** | #5 (=) |
-| **6** | **ORS** | `ĐỘT BIẾN GT` | **14.75** | `14.46 - 14.90` | **14.31** | **15.41** / **15.85** | **75.1t** | `SIÊU TK` | 104/101 | **83** | `E` | -2.1 tỷ | **52.0** | #6 (=) |
-| **7** | **GEX** | `ĐỘT BIẾN GT` | **23.00** | `22.54 - 23.23` | **22.31** | **24.04** / **24.73** | **156.4t** | `SIÊU TK` | 100/100 | **78** | `E` | +7.5 tỷ | **51.7** | #7 (=) |
-| **8** | **SSI** | `ĐỘT BIẾN GT` | **19.60** | `19.21 - 19.80` | **19.01** | **20.48** / **21.08** | **272.1t** | `SIÊU TK` | 100/100 | **76** | `E` | -72.8 tỷ | **51.0** | #8 (=) |
-| **9** | **CII** | `ĐỘT BIẾN GT` | **13.45** | `13.18 - 13.58` | **13.05** | **14.05** / **14.45** | **87.6t** | `SIÊU TK` | 104/101 | **51** | `E` | +6.3 tỷ | **47.4** | #10 (+1) |
-| **10** | **VSC** | `ĐỘT BIẾN GT` | **13.80** | `13.52 - 13.94` | **13.39** | **14.42** / **14.83** | **274.1t** | `SIÊU TK` | 103/101 | **33** | `E` | -6.7 tỷ | **45.5** | #11 (+1) |
-| **11** | **HSG** | `ĐỘT BIẾN GT` | **11.15** | `10.93 - 11.26` | **10.82** | **11.64** / **11.98** | **58.2t** | `CHUẨN QUỸ` | 103/100 | **81** | `E` | +2.8 tỷ | **45.3** | #12 (+1) |
-| **12** | **TPB** | `ĐỘT BIẾN GT` | **12.90** | `12.64 - 13.03` | **12.51** | **13.49** / **13.88** | **284.6t** | `SIÊU TK` | 102/101 | **68** | `E` | -18.8 tỷ | **44.5** | #13 (+1) |
-| **13** | **DXG** | `ĐỘT BIẾN GT` | **9.88** | `9.68 - 9.98` | **9.58** | **10.33** / **10.63** | **67.7t** | `CHUẨN QUỸ` | 100/100 | **65** | `E` | -4.8 tỷ | **41.6** | #14 (+1) |
-| **14** | **BID** | `ĐỘT BIẾN GT` | **33.85** | `33.17 - 34.19` | **32.83** | **35.38** / **36.40** | **214.2t** | `SIÊU TK` | 99/100 | **13** | `E` | -10.6 tỷ | **41.5** | #15 (+1) |
-| **15** | **VCI** | `ĐỘT BIẾN GT` | **19.00** | `18.62 - 19.19` | **18.43** | **19.86** / **20.43** | **111.5t** | `SIÊU TK` | 100/100 | **72** | `E` | -5.1 tỷ | **40.8** | #16 (+1) |
-| **16** | **ACB** | `ĐỘT BIẾN GT` | **21.30** | `20.87 - 21.51` | **20.66** | **22.26** / **22.90** | **142.8t** | `SIÊU TK` | 100/100 | **38** | `E` | -1.0 tỷ | **40.7** | #17 (+1) |
-| **17** | **VND** | `ĐỘT BIẾN GT` | **13.60** | `13.33 - 13.74` | **13.19** | **14.21** / **14.62** | **118.2t** | `SIÊU TK` | 100/100 | **68** | `E` | +15.8 tỷ | **40.0** | #18 (+1) |
-| **18** | **SHB** | `ĐỘT BIẾN GT` | **10.70** | `10.49 - 10.81` | **10.38** | **11.18** / **11.50** | **259.4t** | `SIÊU TK` | 99/100 | **58** | `E` | +41.0 tỷ | **36.8** | #19 (+1) |
-| **19** | **HPG** | `ĐỘT BIẾN GT` | **21.20** | `20.78 - 21.41` | **20.56** | **22.16** / **22.80** | **774.2t** | `SIÊU TK` | 101/100 | **57** | `E` | +40.9 tỷ | **36.4** | #20 (+1) |
-| **20** | **PVD** | `ĐỘT BIẾN GT` | **18.35** | `17.98 - 18.53` | **17.80** | **19.18** / **19.73** | **97.5t** | `SIÊU TK` | 100/100 | **40** | `E` | -4.6 tỷ | **35.0** | #19 (-1) |
+| **2** | **TCB** | `ĐỘT BIẾN GT` | **22.35** | `21.90 - 22.57` | **21.68** | **23.36** / **24.03** | **531.4t** | `SIÊU TK` | 101/99 | **34** | `E` | -116.8 tỷ | **59.0** | #2 (=) |
+| **3** | **VIX** | `ĐỘT BIẾN GT` | **12.40** | `12.15 - 12.52` | **12.03** | **12.96** / **13.33** | **287.8t** | `SIÊU TK` | 101/101 | **92** | `E` | +5.2 tỷ | **58.0** | #3 (=) |
+| **4** | **NKG** | `ĐỘT BIẾN GT` | **12.10** | `11.86 - 12.22` | **11.74** | **12.64** / **13.00** | **116.6t** | `SIÊU TK` | 107/102 | **87** | `E` | +7.9 tỷ | **56.8** | #4 (=) |
+| **5** | **HSG** | `ĐỘT BIẾN GT` | **11.15** | `10.93 - 11.26` | **10.82** | **11.64** / **11.98** | **58.2t** | `CHUẨN QUỸ` | 103/100 | **81** | `E` | +2.8 tỷ | **55.3** | #11 (+6) |
+| **6** | **VTZ** | `CHÂN SÓNG` | **20.40** | `20.20 - 20.64` | **19.79** | **21.31** / **21.92** | **25.6t** | `ĐẠT BIÊN` | 100/99 | **50** | `C` | -0.2 tỷ | **52.5** | #5 (-1) |
+| **7** | **ORS** | `ĐỘT BIẾN GT` | **14.75** | `14.46 - 14.90` | **14.31** | **15.41** / **15.85** | **75.1t** | `SIÊU TK` | 104/101 | **83** | `E` | -2.1 tỷ | **52.0** | #6 (-1) |
+| **8** | **GEX** | `ĐỘT BIẾN GT` | **23.00** | `22.54 - 23.23` | **22.31** | **24.04** / **24.73** | **156.4t** | `SIÊU TK` | 100/100 | **78** | `E` | +7.5 tỷ | **51.7** | #7 (-1) |
+| **9** | **SSI** | `ĐỘT BIẾN GT` | **19.60** | `19.21 - 19.80` | **19.01** | **20.48** / **21.08** | **272.1t** | `SIÊU TK` | 100/100 | **76** | `E` | -72.8 tỷ | **51.0** | #8 (-1) |
+| **10** | **CII** | `ĐỘT BIẾN GT` | **13.45** | `13.18 - 13.58` | **13.05** | **14.05** / **14.45** | **87.6t** | `SIÊU TK` | 104/101 | **51** | `E` | +6.3 tỷ | **47.4** | #9 (-1) |
+| **11** | **VSC** | `ĐỘT BIẾN GT` | **13.80** | `13.52 - 13.94` | **13.39** | **14.42** / **14.83** | **274.1t** | `SIÊU TK` | 103/101 | **33** | `E` | -6.7 tỷ | **45.5** | #10 (-1) |
+| **12** | **TPB** | `ĐỘT BIẾN GT` | **12.90** | `12.64 - 13.03` | **12.51** | **13.49** / **13.88** | **284.6t** | `SIÊU TK` | 102/101 | **68** | `E` | -18.8 tỷ | **44.5** | #12 (=) |
+| **13** | **DXG** | `ĐỘT BIẾN GT` | **9.88** | `9.68 - 9.98` | **9.58** | **10.33** / **10.63** | **67.7t** | `CHUẨN QUỸ` | 100/100 | **65** | `E` | -4.8 tỷ | **41.6** | #13 (=) |
+| **14** | **BID** | `ĐỘT BIẾN GT` | **33.85** | `33.17 - 34.19` | **32.83** | **35.38** / **36.40** | **214.2t** | `SIÊU TK` | 99/100 | **13** | `E` | -10.6 tỷ | **41.5** | #14 (=) |
+| **15** | **VCI** | `ĐỘT BIẾN GT` | **19.00** | `18.62 - 19.19` | **18.43** | **19.86** / **20.43** | **111.6t** | `SIÊU TK` | 100/100 | **72** | `E` | -5.1 tỷ | **40.8** | #15 (=) |
+| **16** | **ACB** | `ĐỘT BIẾN GT` | **21.30** | `20.87 - 21.51` | **20.66** | **22.26** / **22.90** | **142.8t** | `SIÊU TK` | 100/100 | **38** | `E` | -1.0 tỷ | **40.7** | #16 (=) |
+| **17** | **VND** | `ĐỘT BIẾN GT` | **13.60** | `13.33 - 13.74` | **13.19** | **14.21** / **14.62** | **118.2t** | `SIÊU TK` | 100/100 | **68** | `E` | +15.8 tỷ | **40.0** | #17 (=) |
+| **18** | **SHB** | `ĐỘT BIẾN GT` | **10.70** | `10.49 - 10.81` | **10.38** | **11.18** / **11.50** | **259.4t** | `SIÊU TK` | 99/100 | **58** | `E` | +41.0 tỷ | **36.8** | #18 (=) |
+| **19** | **HPG** | `ĐỘT BIẾN GT` | **21.20** | `20.78 - 21.41` | **20.56** | **22.16** / **22.80** | **774.2t** | `SIÊU TK` | 101/100 | **57** | `E` | +40.9 tỷ | **36.4** | #19 (=) |
+| **20** | **PVD** | `ĐỘT BIẾN GT` | **18.35** | `17.98 - 18.53` | **17.80** | **19.18** / **19.73** | **97.5t** | `SIÊU TK` | 100/100 | **40** | `E` | -4.6 tỷ | **35.0** | #20 (=) |
 
 ### 🎯 Kế Hoạch Tác Chiến, Điểm Thoát Lệnh T+2.5 & Catalysts:
 - **DPR (38.80)** `=`: Vùng gom `38.02 - 39.19` | Cắt lỗ cứng: `37.64` | TP1 (1.5R): `40.54` | TP2 (2.5R): `41.70` (R:R `1:2.5`)
@@ -31,97 +31,97 @@
   - *Động lực:* RRG(r=100.2, m=99.7), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ
   - *Sức chứa Quỹ:* ADTV20 `25.0 tỷ` (Điểm TK: `70/100`) | Khối lượng mua tối đa: `64,400 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **TCB (22.35)** `↗ +2`: Vùng gom `21.90 - 22.57` | Cắt lỗ cứng: `21.68` | TP1 (1.5R): `23.36` | TP2 (2.5R): `24.03` (R:R `1:2.5`)
+- **TCB (22.35)** `=`: Vùng gom `21.90 - 22.57` | Cắt lỗ cứng: `21.68` | TP1 (1.5R): `23.36` | TP2 (2.5R): `24.03` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢 NỘI GOM CÂN HÀNG (Khối ngoại: -116.8 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+175.3 tỷ)
-  - *Động lực:* RRG(r=101.1, m=99.3), IBD=34, Acc/Diss=E | 🟢 NỘI GOM CÂN HÀNG
-  - *Sức chứa Quỹ:* ADTV20 `530.9 tỷ` (Điểm TK: `100/100`) | Khối lượng mua tối đa: `2,375,300 cp` (Trượt giá dự kiến ~`0.88%`).
+  - *Động lực:* RRG(r=101.1, m=99.2), IBD=34, Acc/Diss=E | 🟢 NỘI GOM CÂN HÀNG
+  - *Sức chứa Quỹ:* ADTV20 `531.4 tỷ` (Điểm TK: `100/100`) | Khối lượng mua tối đa: `2,377,400 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
 - **VIX (12.40)** `=`: Vùng gom `12.15 - 12.52` | Cắt lỗ cứng: `12.03` | TP1 (1.5R): `12.96` | TP2 (2.5R): `13.33` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢🟢 ĐỒNG THUẬN GOM (Khối ngoại: +5.2 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+8.3 tỷ)
-  - *Động lực:* RRG(r=101.2, m=100.8), IBD=92, Acc/Diss=E | 🟢🟢 ĐỒNG THUẬN GOM
-  - *Sức chứa Quỹ:* ADTV20 `285.5 tỷ` (Điểm TK: `98/100`) | Khối lượng mua tối đa: `2,302,500 cp` (Trượt giá dự kiến ~`0.88%`).
+  - *Động lực:* RRG(r=101.2, m=100.7), IBD=92, Acc/Diss=E | 🟢🟢 ĐỒNG THUẬN GOM
+  - *Sức chứa Quỹ:* ADTV20 `287.8 tỷ` (Điểm TK: `98/100`) | Khối lượng mua tối đa: `2,320,800 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
 - **NKG (12.10)** `=`: Vùng gom `11.86 - 12.22` | Cắt lỗ cứng: `11.74` | TP1 (1.5R): `12.64` | TP2 (2.5R): `13.00` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢🟢 ĐỒNG THUẬN GOM (Khối ngoại: +7.9 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+11.4 tỷ)
-  - *Động lực:* RRG(r=107.0, m=101.4), IBD=87, Acc/Diss=E | 🟢🟢 ĐỒNG THUẬN GOM
+  - *Động lực:* RRG(r=107.1, m=101.5), IBD=87, Acc/Diss=E | 🟢🟢 ĐỒNG THUẬN GOM
   - *Sức chứa Quỹ:* ADTV20 `116.6 tỷ` (Điểm TK: `94/100`) | Khối lượng mua tối đa: `963,300 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **VTZ (20.40)** `=`: Vùng gom `20.20 - 20.64` | Cắt lỗ cứng: `19.79` | TP1 (1.5R): `21.31` | TP2 (2.5R): `21.92` (R:R `1:2.5`)
+- **HSG (11.15)** `↗ +6`: Vùng gom `10.93 - 11.26` | Cắt lỗ cứng: `10.82` | TP1 (1.5R): `11.64` | TP2 (2.5R): `11.98` (R:R `1:2.5`)
+  - *Ma trận Dòng tiền:* 🟢🟢 ĐỒNG THUẬN GOM (Khối ngoại: +2.8 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+5.3 tỷ)
+  - *Động lực:* RRG(r=102.9, m=100.0), IBD=81, Acc/Diss=E | 🟢🟢 ĐỒNG THUẬN GOM
+  - *Sức chứa Quỹ:* ADTV20 `58.2 tỷ` (Điểm TK: `86/100`) | Khối lượng mua tối đa: `521,900 cp` (Trượt giá dự kiến ~`0.88%`).
+  - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
+- **VTZ (20.40)** `↘ -1`: Vùng gom `20.20 - 20.64` | Cắt lỗ cứng: `19.79` | TP1 (1.5R): `21.31` | TP2 (2.5R): `21.92` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢 NỘI GOM CÂN HÀNG (Khối ngoại: -0.2 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+3.5 tỷ)
   - *Động lực:* RRG(r=99.9, m=99.1), IBD=50, Acc/Diss=C | 🟢 NỘI GOM CÂN HÀNG
   - *Sức chứa Quỹ:* ADTV20 `25.6 tỷ` (Điểm TK: `71/100`) | Khối lượng mua tối đa: `125,200 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **ORS (14.75)** `=`: Vùng gom `14.46 - 14.90` | Cắt lỗ cứng: `14.31` | TP1 (1.5R): `15.41` | TP2 (2.5R): `15.85` (R:R `1:2.5`)
+- **ORS (14.75)** `↘ -1`: Vùng gom `14.46 - 14.90` | Cắt lỗ cứng: `14.31` | TP1 (1.5R): `15.41` | TP2 (2.5R): `15.85` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢 NỘI GOM CÂN HÀNG (Khối ngoại: -2.1 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+3.5 tỷ)
-  - *Động lực:* RRG(r=104.3, m=101.2), IBD=83, Acc/Diss=E | 🟢 NỘI GOM CÂN HÀNG
+  - *Động lực:* RRG(r=104.2, m=101.1), IBD=83, Acc/Diss=E | 🟢 NỘI GOM CÂN HÀNG
   - *Sức chứa Quỹ:* ADTV20 `75.1 tỷ` (Điểm TK: `90/100`) | Khối lượng mua tối đa: `509,000 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **GEX (23.00)** `=`: Vùng gom `22.54 - 23.23` | Cắt lỗ cứng: `22.31` | TP1 (1.5R): `24.04` | TP2 (2.5R): `24.73` (R:R `1:2.5`)
+- **GEX (23.00)** `↘ -1`: Vùng gom `22.54 - 23.23` | Cắt lỗ cứng: `22.31` | TP1 (1.5R): `24.04` | TP2 (2.5R): `24.73` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢🟢 ĐỒNG THUẬN GOM (Khối ngoại: +7.5 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+11.0 tỷ)
-  - *Động lực:* RRG(r=100.3, m=100.1), IBD=78, Acc/Diss=E | 🟢🟢 ĐỒNG THUẬN GOM
+  - *Động lực:* RRG(r=100.3, m=100.2), IBD=78, Acc/Diss=E | 🟢🟢 ĐỒNG THUẬN GOM
   - *Sức chứa Quỹ:* ADTV20 `156.4 tỷ` (Điểm TK: `97/100`) | Khối lượng mua tối đa: `679,900 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **SSI (19.60)** `=`: Vùng gom `19.21 - 19.80` | Cắt lỗ cứng: `19.01` | TP1 (1.5R): `20.48` | TP2 (2.5R): `21.08` (R:R `1:2.5`)
+- **SSI (19.60)** `↘ -1`: Vùng gom `19.21 - 19.80` | Cắt lỗ cứng: `19.01` | TP1 (1.5R): `20.48` | TP2 (2.5R): `21.08` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢 NỘI GOM CÂN HÀNG (Khối ngoại: -72.8 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+109.2 tỷ)
   - *Động lực:* RRG(r=100.2, m=100.1), IBD=76, Acc/Diss=E | 🟢 NỘI GOM CÂN HÀNG
   - *Sức chứa Quỹ:* ADTV20 `272.1 tỷ` (Điểm TK: `98/100`) | Khối lượng mua tối đa: `1,388,000 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **CII (13.45)** `↗ +1`: Vùng gom `13.18 - 13.58` | Cắt lỗ cứng: `13.05` | TP1 (1.5R): `14.05` | TP2 (2.5R): `14.45` (R:R `1:2.5`)
+- **CII (13.45)** `↘ -1`: Vùng gom `13.18 - 13.58` | Cắt lỗ cứng: `13.05` | TP1 (1.5R): `14.05` | TP2 (2.5R): `14.45` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢🟢 ĐỒNG THUẬN GOM (Khối ngoại: +6.3 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+9.6 tỷ)
-  - *Động lực:* RRG(r=103.7, m=100.7), IBD=51, Acc/Diss=E | 🟢🟢 ĐỒNG THUẬN GOM
+  - *Động lực:* RRG(r=103.6, m=100.7), IBD=51, Acc/Diss=E | 🟢🟢 ĐỒNG THUẬN GOM
   - *Sức chứa Quỹ:* ADTV20 `87.6 tỷ` (Điểm TK: `92/100`) | Khối lượng mua tối đa: `651,400 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **VSC (13.80)** `↗ +1`: Vùng gom `13.52 - 13.94` | Cắt lỗ cứng: `13.39` | TP1 (1.5R): `14.42` | TP2 (2.5R): `14.83` (R:R `1:2.5`)
+- **VSC (13.80)** `↘ -1`: Vùng gom `13.52 - 13.94` | Cắt lỗ cứng: `13.39` | TP1 (1.5R): `14.42` | TP2 (2.5R): `14.83` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢 NỘI GOM CÂN HÀNG (Khối ngoại: -6.7 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+10.1 tỷ)
   - *Động lực:* RRG(r=103.0, m=100.9), IBD=33, Acc/Diss=E | 🟢 NỘI GOM CÂN HÀNG
   - *Sức chứa Quỹ:* ADTV20 `274.1 tỷ` (Điểm TK: `98/100`) | Khối lượng mua tối đa: `1,986,100 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **HSG (11.15)** `↗ +1`: Vùng gom `10.93 - 11.26` | Cắt lỗ cứng: `10.82` | TP1 (1.5R): `11.64` | TP2 (2.5R): `11.98` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +2.8 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~-1.4 tỷ)
-  - *Động lực:* RRG(r=102.8, m=100.0), IBD=81, Acc/Diss=E | 🔵 NGOẠI ĐỠ GIÁ
-  - *Sức chứa Quỹ:* ADTV20 `58.2 tỷ` (Điểm TK: `86/100`) | Khối lượng mua tối đa: `521,900 cp` (Trượt giá dự kiến ~`0.88%`).
-  - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **TPB (12.90)** `↗ +1`: Vùng gom `12.64 - 13.03` | Cắt lỗ cứng: `12.51` | TP1 (1.5R): `13.49` | TP2 (2.5R): `13.88` (R:R `1:2.5`)
+- **TPB (12.90)** `=`: Vùng gom `12.64 - 13.03` | Cắt lỗ cứng: `12.51` | TP1 (1.5R): `13.49` | TP2 (2.5R): `13.88` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢 NỘI GOM CÂN HÀNG (Khối ngoại: -18.8 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+28.2 tỷ)
   - *Động lực:* RRG(r=102.2, m=100.6), IBD=68, Acc/Diss=E | 🟢 NỘI GOM CÂN HÀNG
   - *Sức chứa Quỹ:* ADTV20 `284.6 tỷ` (Điểm TK: `98/100`) | Khối lượng mua tối đa: `2,205,800 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **DXG (9.88)** `↗ +1`: Vùng gom `9.68 - 9.98` | Cắt lỗ cứng: `9.58` | TP1 (1.5R): `10.33` | TP2 (2.5R): `10.63` (R:R `1:2.5`)
+- **DXG (9.88)** `=`: Vùng gom `9.68 - 9.98` | Cắt lỗ cứng: `9.58` | TP1 (1.5R): `10.33` | TP2 (2.5R): `10.63` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢 NỘI GOM CÂN HÀNG (Khối ngoại: -4.8 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+7.3 tỷ)
   - *Động lực:* RRG(r=100.5, m=99.5), IBD=65, Acc/Diss=E | 🟢 NỘI GOM CÂN HÀNG
   - *Sức chứa Quỹ:* ADTV20 `67.7 tỷ` (Điểm TK: `89/100`) | Khối lượng mua tối đa: `685,600 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **BID (33.85)** `↗ +1`: Vùng gom `33.17 - 34.19` | Cắt lỗ cứng: `32.83` | TP1 (1.5R): `35.38` | TP2 (2.5R): `36.40` (R:R `1:2.5`)
+- **BID (33.85)** `=`: Vùng gom `33.17 - 34.19` | Cắt lỗ cứng: `32.83` | TP1 (1.5R): `35.38` | TP2 (2.5R): `36.40` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢 NỘI GOM CÂN HÀNG (Khối ngoại: -10.6 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+15.9 tỷ)
-  - *Động lực:* RRG(r=99.1, m=99.7), IBD=13, Acc/Diss=E | 🟢 NỘI GOM CÂN HÀNG
+  - *Động lực:* RRG(r=99.0, m=99.7), IBD=13, Acc/Diss=E | 🟢 NỘI GOM CÂN HÀNG
   - *Sức chứa Quỹ:* ADTV20 `214.2 tỷ` (Điểm TK: `98/100`) | Khối lượng mua tối đa: `632,600 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **VCI (19.00)** `↗ +1`: Vùng gom `18.62 - 19.19` | Cắt lỗ cứng: `18.43` | TP1 (1.5R): `19.86` | TP2 (2.5R): `20.43` (R:R `1:2.5`)
+- **VCI (19.00)** `=`: Vùng gom `18.62 - 19.19` | Cắt lỗ cứng: `18.43` | TP1 (1.5R): `19.86` | TP2 (2.5R): `20.43` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢 NỘI GOM CÂN HÀNG (Khối ngoại: -5.1 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+7.6 tỷ)
   - *Động lực:* RRG(r=100.2, m=99.9), IBD=72, Acc/Diss=E | 🟢 NỘI GOM CÂN HÀNG
-  - *Sức chứa Quỹ:* ADTV20 `111.5 tỷ` (Điểm TK: `94/100`) | Khối lượng mua tối đa: `587,100 cp` (Trượt giá dự kiến ~`0.88%`).
+  - *Sức chứa Quỹ:* ADTV20 `111.6 tỷ` (Điểm TK: `94/100`) | Khối lượng mua tối đa: `587,300 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **ACB (21.30)** `↗ +1`: Vùng gom `20.87 - 21.51` | Cắt lỗ cứng: `20.66` | TP1 (1.5R): `22.26` | TP2 (2.5R): `22.90` (R:R `1:2.5`)
+- **ACB (21.30)** `=`: Vùng gom `20.87 - 21.51` | Cắt lỗ cứng: `20.66` | TP1 (1.5R): `22.26` | TP2 (2.5R): `22.90` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢 NỘI GOM CÂN HÀNG (Khối ngoại: -1.0 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+3.5 tỷ)
   - *Động lực:* RRG(r=100.1, m=100.3), IBD=38, Acc/Diss=E | 🟢 NỘI GOM CÂN HÀNG
   - *Sức chứa Quỹ:* ADTV20 `142.8 tỷ` (Điểm TK: `96/100`) | Khối lượng mua tối đa: `670,300 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **VND (13.60)** `↗ +1`: Vùng gom `13.33 - 13.74` | Cắt lỗ cứng: `13.19` | TP1 (1.5R): `14.21` | TP2 (2.5R): `14.62` (R:R `1:2.5`)
+- **VND (13.60)** `=`: Vùng gom `13.33 - 13.74` | Cắt lỗ cứng: `13.19` | TP1 (1.5R): `14.21` | TP2 (2.5R): `14.62` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢🟢 ĐỒNG THUẬN GOM (Khối ngoại: +15.8 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+21.0 tỷ)
   - *Động lực:* RRG(r=99.9, m=100.3), IBD=68, Acc/Diss=E | 🟢🟢 ĐỒNG THUẬN GOM
   - *Sức chứa Quỹ:* ADTV20 `118.2 tỷ` (Điểm TK: `94/100`) | Khối lượng mua tối đa: `869,300 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **SHB (10.70)** `↗ +1`: Vùng gom `10.49 - 10.81` | Cắt lỗ cứng: `10.38` | TP1 (1.5R): `11.18` | TP2 (2.5R): `11.50` (R:R `1:2.5`)
+- **SHB (10.70)** `=`: Vùng gom `10.49 - 10.81` | Cắt lỗ cứng: `10.38` | TP1 (1.5R): `11.18` | TP2 (2.5R): `11.50` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢🟢 ĐỒNG THUẬN GOM (Khối ngoại: +41.0 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+51.2 tỷ)
   - *Động lực:* RRG(r=99.3, m=100.3), IBD=58, Acc/Diss=E | 🟢🟢 ĐỒNG THUẬN GOM
   - *Sức chứa Quỹ:* ADTV20 `259.4 tỷ` (Điểm TK: `98/100`) | Khối lượng mua tối đa: `2,424,300 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **HPG (21.20)** `↗ +1`: Vùng gom `20.78 - 21.41` | Cắt lỗ cứng: `20.56` | TP1 (1.5R): `22.16` | TP2 (2.5R): `22.80` (R:R `1:2.5`)
+- **HPG (21.20)** `=`: Vùng gom `20.78 - 21.41` | Cắt lỗ cứng: `20.56` | TP1 (1.5R): `22.16` | TP2 (2.5R): `22.80` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +40.9 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~-20.4 tỷ)
   - *Động lực:* RRG(r=100.8, m=99.5), IBD=57, Acc/Diss=E | 🔵 NGOẠI ĐỠ GIÁ
   - *Sức chứa Quỹ:* ADTV20 `774.2 tỷ` (Điểm TK: `100/100`) | Khối lượng mua tối đa: `3,651,700 cp` (Trượt giá dự kiến ~`0.88%`).
   - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `T+0 (SAFE)`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.
-- **PVD (18.35)** `↘ -1`: Vùng gom `17.98 - 18.53` | Cắt lỗ cứng: `17.80` | TP1 (1.5R): `19.18` | TP2 (2.5R): `19.73` (R:R `1:2.5`)
+- **PVD (18.35)** `=`: Vùng gom `17.98 - 18.53` | Cắt lỗ cứng: `17.80` | TP1 (1.5R): `19.18` | TP2 (2.5R): `19.73` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢 NỘI GOM CÂN HÀNG (Khối ngoại: -4.6 tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~+6.9 tỷ)
   - *Động lực:* RRG(r=100.5, m=100.4), IBD=40, Acc/Diss=E | 🟢 NỘI GOM CÂN HÀNG
   - *Sức chứa Quỹ:* ADTV20 `97.5 tỷ` (Điểm TK: `92/100`) | Khối lượng mua tối đa: `531,300 cp` (Trượt giá dự kiến ~`0.88%`).
@@ -170,7 +170,7 @@
 | **TCB** | `Q3/2026` | 0.0 tỷ | 0.0 tỷ | **0.0 tỷ** | 6,950.3 tỷ | 7,726.6 tỷ | **8,337.3 tỷ** | `+7.9%` ↗ | 0.0% | `🚀 TĂNG TỐC 3 QUÝ` |
 | **VIX** | `Q3/2026` | 1,653.4 tỷ | 1,349.3 tỷ | **2,047.6 tỷ** | 138.4 tỷ | 75.9 tỷ | **173.8 tỷ** | `+129.0%` ↗ | 14.8% | `🔥 BÙNG NỔ LNST` |
 | **NKG** | `Q3/2026` | 3,277.8 tỷ | 4,169.5 tỷ | **5,485.9 tỷ** | 21.5 tỷ | 102.7 tỷ | **127.7 tỷ** | `+24.3%` ↗ | 9.0% | `🚀 TĂNG TỐC 3 QUÝ` |
-| **VTZ** | `Q2/2026` | 1,413.2 tỷ | 1,204.8 tỷ | **1,712.9 tỷ** | 10.7 tỷ | 20.4 tỷ | **26.7 tỷ** | `+30.9%` ↗ | 5.0% | `🚀 TĂNG TỐC 3 QUÝ` |
+| **HSG** | `Q2/2026` | 8,610.1 tỷ | 9,230.0 tỷ | **10,267.5 tỷ** | 62.4 tỷ | 118.7 tỷ | **382.3 tỷ** | `+222.1%` ↗ | 14.9% | `🚀 TĂNG TỐC 3 QUÝ` |
 
 ### 📰 TIN TỨC DOANH NGHIỆP & LỊCH SỰ KIỆN MỚI NHẤT (SPOTLIGHT)
 > *Nguồn: Cổng công bố thông tin Fialda Real-time*
