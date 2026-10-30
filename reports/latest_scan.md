@@ -180,7 +180,7 @@
 - 📅 **[FRT - SỰ KIỆN]** Ngày: `2026-11-15` — *FRT: Lấy ý kiến cổ đông bằng văn bản và chuẩn bị chi trả cổ tức đợt 1*
 - **[VIC] VIC: Kỷ lục mới của Vingroup - Doanh thu tăng gấp 2, lợi nhuận tăng gấp 6** (2026-10-30 • *Vietnam Finance*)
   > Vingroup ghi nhận doanh thu 9 tháng năm 2026 đạt 372,5 nghìn tỷ đồng, gấp 2,2 lần cùng kỳ, còn lợi nhuận sau thuế đạt 43,7 nghìn tỷ đồng, gấp gần 6 lần, nhờ ô tô điện VinFast và bất động sản Vinhomes.
-- 📅 **[VIC - SỰ KIỆN]** Ngày: `2026-10-01` — *VIC: Báo cáo kết quả giao dịch cổ phiếu của người nội bộ Nguyễn Thế Anh*
+- 📅 **[VIC - SỰ KIỆN]** Ngày: `2026-11-15` — *VIC: Lấy ý kiến cổ đông bằng văn bản và chuẩn bị chi trả cổ tức đợt 1*
 - **[VIX] Chứng khoán VIX còn 1.000 tỷ đồng vốn huy động từ chào bán cổ phiếu chưa giải ngân** (2026-10-22 • *CafeF*)
   > Chứng khoán VIX đã giải ngân hơn 5.013 tỷ đồng cho tự doanh và 5.013 tỷ cho margin từ đợt chào bán, nhưng 1.000 tỷ góp vốn vào Sàn tài sản mã hóa VIX vẫn chưa thực hiện đến ngày 20/10/2026.
 - 📅 **[VIX - SỰ KIỆN]** Ngày: `2026-11-15` — *VIX: Lấy ý kiến cổ đông bằng văn bản và chuẩn bị chi trả cổ tức đợt 1*
