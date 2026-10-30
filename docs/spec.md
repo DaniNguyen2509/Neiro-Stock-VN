@@ -411,13 +411,14 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 
 ---
 
-### Tier 13: Cơ Chế Cập Nhật Giá Tự Động 5 Phút & Bảng Điện Tử Trực Tuyến (Live Dynamic Price Polling - ADR-010)
+### Tier 13: Cơ Chế Cập Nhật Giá Tự Động 5 Phút & Bảng Điện Tử Trực Tuyến (Live Dynamic Price Polling - ADR-010 & ADR-016)
 
 1. **Cập Nhật Giá Tự Động Phía Trình Duyệt (Browser Dynamic Live Ticker):**
    - Tận dụng Public Datafeed mở có hỗ trợ `Access-Control-Allow-Origin: *` từ Bảng giá VPS (`https://bgapidatafeed.vps.com.vn/getliststockdata/SYM1,SYM2,...`).
-   - Cứ mỗi 5 phút (300 giây) hoặc ngay khi mở trang, mã JavaScript siêu nhẹ (~40 dòng) tự động truy vấn giá khớp mới nhất của toàn bộ cổ phiếu trên bảng.
+   - Cứ mỗi 30 giây hoặc ngay khi mở trang, mã JavaScript tự động truy vấn giá khớp mới nhất của toàn bộ cổ phiếu trên bảng.
    - Tự động điền giá vào các ô `class="live-price"` và đổi màu sắc đúng chuẩn Sở Giao dịch (Xanh lá / Đỏ / Tím trần / Xanh lam sàn / Vàng tham chiếu).
-   - Hiển thị nhãn trạng thái trực tiếp: `🟢 Live 5m (HH:MM:SS)` phản ánh thời điểm kéo dữ liệu mới nhất.
+   - **Khử Lệch Dấu Biến Động Hai Tầng (ADR-016):** Xử lý triệt để đặc tính trả về số dương tuyệt đối (`ot`, `changePc`) của API VPS; chuẩn hóa dấu âm cho `% Biến động` khi giá khớp thấp hơn tham chiếu, kết hợp khóa dấu tại tầng hiển thị DOM, triệt tiêu hoàn toàn lỗi nhãn `(+1.2%)` trên nền màu đỏ.
+   - Hiển thị nhãn trạng thái trực tiếp: `🟢 Live VPS: HH:MM:SS (30s)` phản ánh thời điểm kéo dữ liệu mới nhất.
    - Bộ đếm ngược tự động nạp lại trang định kỳ 5 phút (`🔄 Tự làm mới: 300s`) cùng thẻ dự phòng `<meta http-equiv="refresh" content="300">`.
 
 2. **Chế Độ Local Watcher Daemon Cho Máy Trạm:**

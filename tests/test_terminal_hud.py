@@ -148,3 +148,48 @@ def test_terminal_hud_dynamic_synchronization_and_30s_interval(tmp_path: Path):
     assert 'class="live-change" data-sym="VIX"' in content
     assert 'id="sig-badge-VIX"' in content
 
+
+def test_terminal_hud_live_change_negative_sign_and_sync(tmp_path: Path):
+    """Kiem thu script client JS dong bo dung dau am/duong cho live % bien dong gia tu VPS."""
+    output_file = tmp_path / "exports" / "test_sign.html"
+    mock_candidates = [
+        FialdaCandidate(
+            symbol="HPG",
+            price=20.95,
+            signal_type="CHO_MUA_CHAN_SONG",
+            entry_low=20.5,
+            entry_high=21.2,
+            stop_loss=20.0,
+            target_1m=25.0,
+            rs_1m=80,
+            composite_rating=85,
+            acc_diss_rating="A",
+            rrg_r=100.0,
+            rrg_m=100.0,
+            foreign_net_value_billion=10.0,
+            ranking_score=85.0,
+            catalyst="Test",
+            adtv20_billion=100.0,
+            liquidity_score=90.0,
+            tp1=22.0,
+            tp2=25.0,
+        )
+    ]
+    result_path = generate_terminal_html(
+        output_path=str(output_file),
+        fialda_candidates=mock_candidates,
+        top_n=1,
+    )
+    content = Path(result_path).read_text(encoding="utf-8")
+    
+    # Kiem tra logic xu ly do lech VPS unsigned sang signed
+    assert "if (lp < r)" in content
+    assert "chgPc = chgPc !== 0 ? -Math.abs(chgPc)" in content
+    
+    # Kiem tra double-guard sign synchronization trong DOM update
+    assert "else if (p < info.ref)" in content
+    assert "changeEl.innerText = '(-' + pctStr + '%)'" in content
+    assert "else if (p > info.ref)" in content
+    assert "changeEl.innerText = '(+' + pctStr + '%)'" in content
+
+

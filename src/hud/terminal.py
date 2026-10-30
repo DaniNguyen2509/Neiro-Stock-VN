@@ -691,10 +691,25 @@ def generate_terminal_html(
                         const r = Number(item.r || 0);
                         const c = Number(item.c || 0);
                         const f = Number(item.f || 0);
-                        const chg = Number(item.ot || 0);
-                        const chgPc = Number(item.changePc || 0);
+                        let chg = Number(item.ot || 0);
+                        let chgPc = Number(item.changePc || 0);
                         const fb = Number(item.fBValue || 0);
                         const fs = Number(item.fSValue || 0);
+
+                        // Fix VPS API datafeed tra ve ot va changePc luon la so duong (tri tuyet doi)
+                        // Can dong bo dau am/duong chuan xac theo so sanh lastPrice (lp) voi tham chieu (r)
+                        if (lp > 0 && r > 0) {{
+                            if (lp < r) {{
+                                chg = chg !== 0 ? -Math.abs(chg) : (lp - r);
+                                chgPc = chgPc !== 0 ? -Math.abs(chgPc) : (((lp - r) / r) * 100);
+                            }} else if (lp > r) {{
+                                chg = chg !== 0 ? Math.abs(chg) : (lp - r);
+                                chgPc = chgPc !== 0 ? Math.abs(chgPc) : (((lp - r) / r) * 100);
+                            }} else {{
+                                chg = 0;
+                                chgPc = 0;
+                            }}
+                        }}
 
                         priceMap[item.sym] = {{
                             price: lp > 0 ? lp : r,
@@ -733,11 +748,19 @@ def generate_terminal_html(
                         else if (p < info.ref) color = '#ff5252';
                         el.style.color = color;
 
-                        // Dong bo live change %
+                        // Dong bo live change % (dam bao dau am/duong thong nhat 100% voi mau sac va chenh lech gia)
                         const changeEl = document.querySelector('.live-change[data-sym="' + sym + '"]');
                         if (changeEl) {{
-                            const sign = info.changePct > 0 ? '+' : '';
-                            changeEl.innerText = '(' + sign + info.changePct.toFixed(1) + '%)';
+                            let pctStr = Math.abs(info.changePct).toFixed(1);
+                            if (pctStr === '0.0' || p === info.ref) {{
+                                changeEl.innerText = '(0.0%)';
+                            }} else if (p > info.ref) {{
+                                changeEl.innerText = '(+' + pctStr + '%)';
+                            }} else if (p < info.ref) {{
+                                changeEl.innerText = '(-' + pctStr + '%)';
+                            }} else {{
+                                changeEl.innerText = '(' + (info.changePct > 0 ? '+' : '-') + pctStr + '%)';
+                            }}
                             changeEl.style.color = color;
                             changeEl.style.fontWeight = 'bold';
                         }}
