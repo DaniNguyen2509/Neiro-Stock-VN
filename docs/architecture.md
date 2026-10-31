@@ -60,16 +60,17 @@ flowchart TD
 ## 2. Chi Tiết Các Tầng Xử Lý (Layer Breakdown)
 
 ### 2.1. Tầng Thu Thập & Chuẩn Hóa Dữ Liệu (`src/collector/`)
-- **`vn_market_client.py`:** Đầu mối tích hợp API chuẩn hóa dữ liệu từ các nền tảng tài chính Việt Nam (VNDirect, Vietstock, TCBS, SSI, FiinTrade hoặc thư viện mã nguồn mở `vnstock`). Hỗ trợ cơ chế failover dự phòng và mock benchmark data cho unit tests.
+- **`vn_market_client.py`:** Đầu mối tích hợp API dữ liệu chỉ số cơ sở (`VN30`, `VNINDEX`), phái sinh (`VN30F1M`) và dòng tiền định chế qua `requests.Session` Keep-Alive kèm `HTTPAdapter` & `Retry` (ADR-018). Chỉ gọi đúng các endpoint hợp lệ trên DNSE Entrade và tự động failover sang VPS Live Datafeed cho `VN30F1M` khi cần.
 - **`data_loader.py`:** Làm sạch dữ liệu, xử lý các sự kiện chia tách cổ tức, tăng vốn, thưởng cổ phiếu; chuyển đổi cấu trúc BCTC chuẩn VAS về dataclasses định lượng nhất quán.
 - **`fialda_scanner.py`:** Khai thác chuyên sâu hệ thống **Fialda VIP Expert & Swagger API** (529 endpoints):
-  - Tự động xác thực JWT Token (`/api/TokenAuth/Authenticate`) với chu kỳ hiệu lực 24 giờ.
+  - Tự động xác thực JWT Token (`/api/TokenAuth/Authenticate`) với chu kỳ hiệu lực 24 giờ trên kết nối `requests.Session` Keep-Alive (`pool_maxsize=16`, tự động retry `429/5xx`).
   - **Cơ chế Chuẩn hóa Bí Mật & Lọc Ký Tự Ẩn (ADR-007):** Tự động loại bỏ khoảng trắng, dấu xuống dòng ẩn (`\r\n`) và ngoặc kép ngoài từ biến môi trường CI/CD, ngăn ngừa hoàn toàn lỗi xác thực giả.
-  - **Hệ thống Cảnh báo Đa Tầng & Fallback An Toàn (ADR-005 & ADR-007):** Khi Fialda API gián đoạn, tự động phát cảnh báo rõ ràng và kích hoạt luồng fallback lấy giá Real-time công khai (Entrade/DNSE) kết hợp dữ liệu BCTC dự phòng, đảm bảo Dashboard không bao giờ sập.
-  - Thu thập tín hiệu AI Expert: Chờ Mua Chân Sóng (`GetTinHieuChoMuaNew`), Đột biến Giá trị giao dịch (`GetTinHieuDotBienGiaTri`).
-  - Trích xuất bộ chỉ số định chế IBD O'Neil: Sức mạnh giá RS 1 tháng (`rS1M`), Điểm tổng hợp (`compositeRating`), Hệ số Tích lũy/Phân phối (`accDissRating`).
+  - **Hệ thống Cảnh báo Đa Tầng & Liên Thông Dự Phòng 3 Nguồn (ADR-005, ADR-007 & ADR-018):** Liên thông dự phòng hai chiều giữa Fialda (`GetStockInfos`, `TradingView/GetOHLC`), DNSE Entrade (`chart-api/v2/ohlcs`) và VPS Batch Datafeed (`getliststockdata`), đọc chuẩn `DailyStatistic.avgVol20D` đảm bảo dữ liệu OHLCV và thanh khoản ADTV20 luôn liền mạch.
+  - Thu thập tín hiệu AI Expert: Chờ Mua Chân Sóng (`GetTinHieuChoMuaNew`), Đột biến Giá trị giao dịch (`GetTinHieuDotBienGiaTri`), kết hợp dữ liệu Tự doanh thực tế toàn sàn & từng mã qua `Market/GetTuDoanhV2` (ADR-018).
+  - Trích xuất hàng loạt bộ chỉ số định chế IBD O'Neil qua `Expert/GetExpertAZ` (>310 mã trong 1 request `~0.1s`), chỉ gọi bổ sung `GetExpertRating` cho các mã ngoài danh sách, triệt tiêu hoàn toàn hiện tượng nghẽn TLS Handshake.
+  - Tự động phân luồng BCTC Kết quả kinh doanh 4 quý theo đúng chuẩn kế toán ngành (`GetFS_IncomeStatement_Bank` cho TOI/PPOP Ngân hàng, `_Security` cho CTCK, `_Insurance` cho Bảo hiểm, `_General` cho Sản xuất/Thương mại) và tra cứu liên hoàn `GetUpcomingEvents -> GetRecentEvents` không sinh sự kiện giả khi online (ADR-018).
   - Nạp toàn bộ ma trận luân chuyển dòng tiền RRG 1,530 mã toàn thị trường (`GetRRGData`).
-  - Lọc đa biến chọn lọc **Top 20 Siêu cổ phiếu bứt phá chân sóng** (khung 1 tháng, biên lợi nhuận kỳ vọng $+20\% - +35\%$, cắt lỗ chặt chẽ $-5.5\%$).
+  - Lọc đa biến chọn lọc **Top 20 Siêu cổ phiếu bứt phá chân sóng** (khung 1 tháng, biên lợi nhuận kỳ vọng $+20\% - +35\%$, cắt lỗ cấu trúc T+2.5 $[-4.5\%, -7.5\%]$).
 - **`ranking_history.py`:** Bộ theo dõi và lưu trữ lịch sử xếp hạng chuỗi thời gian (Ranking History Tracker):
   - Ghi nhận snapshot Top N vào `data/ranking_history.jsonl` với cơ chế Rolling Window tự động cắt tỉa (tối đa 500 bản ghi $\sim 35\text{ KB}$, Zero-Waste $< 15\text{MB}$).
   - Cơ chế **Session Debounce 30 phút**: tự động nhận diện các lần quét liên tiếp trong cùng phiên để tránh làm nhiễu dữ liệu, duy trì mốc so sánh với phiên giao dịch liền trước thực tế.
@@ -135,7 +136,7 @@ flowchart TD
   - **Cơ chế Cập Nhật Giá Live Ticker 30s & Đồng Bộ Hóa Toàn Diện (ADR-008, ADR-010, ADR-012 & ADR-016):**
     - **Live Dynamic Price & Stats Polling (Client-Side 30s):** Định kỳ mỗi 30 giây (`setInterval(fetchLivePrices, 30000)`), JavaScript tự động kéo dữ liệu khớp lệnh trực tiếp từ Public Datafeed VPS (`https://bgapidatafeed.vps.com.vn/getliststockdata/`, CORS `*`), tự động cập nhật số liệu giá khớp, `% Biến động` đổi màu chuẩn Sở Giao dịch (Xanh lá / Đỏ / Tím trần / Xanh lam sàn / Vàng tham chiếu), và cập nhật nhãn `🟢 Live VPS: HH:MM:SS (30s)`.
     - **Khử Lệch Dấu Biến Động Hai Tầng (ADR-016):** Khắc phục đặc thù API VPS trả về `ot` và `changePc` dưới dạng độ lớn tuyệt đối (luôn dương); chuẩn hóa dấu âm khi $lp < r$ ngay tại data mapper và khóa đồng bộ tuyệt đối tại tầng DOM presentation, ngăn chặn triệt để tình trạng cổ phiếu giảm điểm hiển thị tiền tố `+`.
-    - **Đồng Bộ Hóa Động 4 Thẻ Chỉ Số Header (ADR-012):** Xóa bỏ hoàn toàn hardcode; tính toán động Smart Money (Ngoại bán ròng / Nội gom cân hàng), Độ rộng danh mục và Ngành dẫn dắt RRG; tự động cập nhật thẻ qua DOM ID khi luồng giá VPS trả về.
+    - **Đồng Bộ Hóa Động 4 Thẻ Chỉ Số Header & Chuẩn Đơn Vị VPS `1e6` (ADR-012 & ADR-018):** Xóa bỏ hoàn toàn hardcode; chuẩn hóa phép chia `fBValue/fSValue` (đơn vị `1,000 VND`) cho `1e6` ra đúng `Tỷ VND` kèm `{ cache: 'no-store' }`, đồng bộ trực tiếp cả từng ô `.live-foreign` trên cột `Khối Ngoại` lẫn Thẻ Header Smart Money, Độ rộng danh mục và Ngành dẫn dắt RRG.
     - **Đánh Giá Lại Vùng Mua / Cắt Lỗ Thời Gian Thực:** Tự động kích hoạt cảnh báo `MUA ĐUỔI ⚠️`, `CHẠM SL 🔴`, `ĐẠT TP1 🎯` trực tiếp trên bảng khi thị giá biến động.
     - **Bộ Đếm Ngược 5 Phút (300s):** Hiển thị trực quan `🔄 Tự làm mới: 300s` cùng nút `⚡ Tải lại ngay` và cơ chế Cache-Busting (`_t=Date.now()`), kết hợp `<meta http-equiv="refresh" content="300">` dự phòng.
     - **Local Watcher Daemon (`--watch`):** Cung cấp cờ chạy ngầm trên máy trạm (`python -m src.hud.terminal --watch --interval 300`) tự động tái tạo dashboard mỗi 5 phút.
@@ -148,7 +149,7 @@ flowchart TD
 ### 2.8. Tầng Tự Động Hóa & Đám Mây CI/CD (`.github/workflows/`)
 - **`ci.yml` (CI Quality Gate):** Tự động kiểm định trên mọi Pull Request và Push to `main`:
   - Khắc phục triệt để lỗi type annotation trên Python 3.12 Linux runner (ADR-007).
-  - Kiểm thử 100% pytest suite (117/117 tests passed).
+  - Kiểm thử 100% pytest suite (128/128 tests passed).
   - Kiểm tra tự động giới hạn dung lượng Zero-Waste (< 15MB).
 - **`scanner_and_pages.yml` (Scanner & Pages Deploy):** Quy trình tự động hóa tác chiến 24/7 trên GitHub Actions:
   - **Tối ưu hóa Lập lịch POSIX (ADR-007):** Quét định kỳ 30 phút trong phiên và bổ sung 2 mốc đóng băng dữ liệu cuối ngày (`15,45 2,3,4 * * 1-5`, `15,45 6,7 * * 1-5`, `5 8 * * 1-5`, `30 10 * * 1-5` - 17:30 VN, `0 12 * * 1-5` - 19:00 VN EOD Final Smart Money), chống nghẽn hàng đợi scheduler.

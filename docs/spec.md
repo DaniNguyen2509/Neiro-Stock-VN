@@ -81,7 +81,7 @@ Neiro-Stock-VN/
 │   ├── thuat_ngu_quant_vn.md     # Từ điển thuật ngữ Quantamental & Vi cấu trúc TTCK VN
 │   ├── TRADER_PLAYBOOK_VN.md     # Cẩm nang tác chiến thực chiến cho Trader / Quỹ
 │   ├── google_sheets_setup.md    # Hướng dẫn thiết lập Google Sheets, Looker Studio & ML
-│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-014)
+│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-018)
 │       ├── ADR-001-quantamental-foundations-for-vn-equities.md
 │       ├── ADR-002-fialda-vip-expert-automated-scanner.md
 │       ├── ADR-003-liquidity-and-portfolio-capacity-sizer.md
@@ -95,7 +95,11 @@ Neiro-Stock-VN/
 │       ├── ADR-011-online-signal-ledger-and-ml-dataset-pipeline.md
 │       ├── ADR-012-realtime-dashboard-synchronization-and-live-ticker.md
 │       ├── ADR-013-multi-layer-dashboard-audit-and-column-domain-verification.md
-│       └── ADR-014-comprehensive-qa-audit-and-systemic-bug-remediation.md
+│       ├── ADR-014-comprehensive-qa-audit-and-systemic-bug-remediation.md
+│       ├── ADR-015-dashboard-freeze-diagnosis-scheduler-decollision-and-client-resilience.md
+│       ├── ADR-016-external-cron-dispatch-resilience.md
+│       ├── ADR-017-retail-t25-anti-chasing-and-risk-remediation-plan.md
+│       └── ADR-018-api-crawling-resilience-and-schema-alignment.md
 ├── src/
 │   ├── collector/                # Thu thập dữ liệu TTCK Việt Nam
 │   │   ├── __init__.py
@@ -513,5 +517,17 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 3. **Giai đoạn 3 (Unified Anti-FOMO Anchor & Retail Cold-Start Sizing):** Hợp nhất `active_signals.jsonl` trực tiếp lên bảng Top 20 (`latest_scan.md` & `exports/index.html`): khóa cứng vùng mua vào `entry_original` ngày `T0`, loại 100% mã vừa gãy `STOPPED_OUT` (cooldown 3 phiên), khóa `BULL_TRAP_REJECT` theo `MFE > +5%` và tách nhãn `STALE_SIGNAL` (`🟠 QUÁ HẠN T+3`); bổ sung `calculate_retail_t25_position_size` giới hạn `<= 20% NAV`/mã (`0% Margin`) khi `0%` đệm `T+0` và cảnh báo lô chẵn `100 cp` HOSE đối với cổ phiếu mệnh giá cao.
 4. **Giai đoạn 4 (Honest Floor-Lock Backtest & Tab 2 Walk-Forward):** Chặn khớp bán khi đóng cửa nằm sàn trắng bên mua (`price <= band.floor_price + 1e-4`), khớp cắt lỗ theo `min(bar.open, stop_loss_price)` cho phiên nhảy Gap-Down trong `T25BacktestEngine`, đồng bộ `WalkForwardCoordinator` và hiển thị minh bạch số lần khóa sàn / kẹt `T+2.5` trên Tab 2 của Web Terminal.
 5. **Giai đoạn 5 (3-Layer Column-by-Column Audit & Before/After Acceptance):** Hoàn tất kiểm định 3 tầng trên toàn bộ 15 cột dữ liệu `#top-stocks-table` và cập nhật 100% Ma trận Đối chiếu Nghiệm thu Trước & Sau.
+
+---
+
+### Tier 20 [ACCEPTED — ADR-018]: Đại Tu Tầng API & Data Crawling — Connection Pooling, Tự Doanh Thực Chứng, BCTC Đa Ngành & Chuẩn Hóa Đơn Vị VPS
+
+> **Trạng thái hiện tại:** `ACCEPTED & IMPLEMENTED (100% — 128/128 TESTS PASSING)` (Xem chi tiết tại [`ADR-018`](decisions/ADR-018-api-crawling-resilience-and-schema-alignment.md)).
+
+1. **HTTP Session Pooling, Retry & Batch `GetExpertAZ`:** Chuyển toàn bộ kết nối HTTP trong `FialdaScanner` và `VNMarketClient` sang `requests.Session` tái sử dụng kết nối TCP/TLS Keep-Alive kèm `HTTPAdapter` & `Retry`; nạp hàng loạt >310 mã qua `/api/services/app/Expert/GetExpertAZ` chỉ trong 1 request (`~0.1s`), triệt tiêu hoàn toàn lỗi nghẽn TLS Handshake làm sai lệch điểm RS/IBD về `50/'C'`.
+2. **Dòng Tiền Tự Doanh Thực Tế (`Market/GetTuDoanhV2`) & BCTC Đa Ngành:** Thay thế trường ảo `PropTrade` bằng dữ liệu thật từ `/api/services/app/Market/GetTuDoanhV2` (toàn sàn & từng cổ phiếu); phân luồng tự động BCTC KQKD theo đúng chuẩn kế toán Ngân hàng (`GetFS_IncomeStatement_Bank`: `isB38` TOI, `isB40` PPOP), Chứng khoán (`_Security`), Bảo hiểm (`_Insurance`) và Sản xuất (`_General`), khắc phục triệt để lỗi `0.0 tỷ` doanh thu ngân hàng; đồng bộ live `P/B` và `P/E` cho bảng CAMEL từ `BasicInfo`.
+3. **Chặn Sự Kiện Cổ Tức Giả Khi Online & Failover Đa Nguồn OHLCV/Giá:** Khi kết nối API thật (`HTTP 200`), nếu `GetUpcomingEvents` rỗng sẽ tự động fallback sang `GetRecentEvents` và trả về `[]` trung thực nếu không có sự kiện, tuyệt đối không chèn lịch cổ tức giả `2026-11-15`; chuẩn hóa trường `DailyStatistic.avgVol20D`, khóa số ít `"noChange"` trong `parse_market_breadth_dict`, bỏ request lỗi `HTTP 400` (`/ohlcs/stock?symbol=VN30F1M`), và liên thông dự phòng `Entrade <-> Fialda TradingView/GetOHLC <-> VPS Datafeed`.
+4. **Chuẩn Hóa Đơn Vị Live VPS (`1e6`) & Phòng Vệ Webhook Google Sheets:** Sửa phép chia giá trị mua/bán Khối ngoại từ VPS (`fBValue`/`fSValue` đơn vị `1,000 VND`) từ `/ 1e9` sang `/ 1e6` kèm `{ cache: 'no-store' }` và đồng bộ từng ô `.live-foreign` trên bảng Top 20; chặn false-positive khi Google Apps Script chuyển hướng về trang HTML đăng nhập `accounts.google.com`.
+
 
 

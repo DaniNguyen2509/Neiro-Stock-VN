@@ -1,8 +1,8 @@
-"""Module Dong Bo So Cai Tin Hieu & Du Lieu ML Len Google Sheets qua Webhook.
+"""Module Đồng Bộ Sổ Cái Tín Hiệu & Dữ Liệu ML Lên Google Sheets qua Webhook.
 
-Thiet ke toi gian (Zero-Waste, < 150 dong code), khong su dung dependency ngoai nang ne.
-Hoat dong qua Google Apps Script Webhook de cap nhat truc tiep len Google Sheets
-lam database truc tuyen phuc vu Google Looker Studio va huan luyen Machine Learning.
+Thiết kế tối giản (Zero-Waste, < 150 dòng code), không sử dụng dependency ngoài nặng nề.
+Hoạt động qua Google Apps Script Webhook để cập nhật trực tiếp lên Google Sheets
+làm database trực tuyến phục vụ Google Looker Studio và huấn luyện Machine Learning.
 """
 
 import logging
@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 class GoogleSheetsLedgerClient:
-    """Client dong bo nhat ky tin hieu sang Google Sheets qua Apps Script Webhook."""
+    """Client đồng bộ nhật ký tín hiệu sang Google Sheets qua Apps Script Webhook."""
 
     TIMEOUT = (3.05, 10.0)  # (connect_timeout, read_timeout)
 
@@ -23,14 +23,14 @@ class GoogleSheetsLedgerClient:
 
     @property
     def is_configured(self) -> bool:
-        """Kiem tra xem Webhook URL da duoc thiet lap hay chua."""
+        """Kiểm tra xem Webhook URL đã được thiết lập hay chưa."""
         return bool(self.webhook_url and self.webhook_url.startswith("http"))
 
     def format_signal_dict(self, sig: Any) -> Dict[str, Any]:
-        """Chuan hoa mot tin hieu ActiveSignal thanh dictionary phuc vu gui Google Sheets."""
+        """Chuẩn hóa một tín hiệu ActiveSignal thành dictionary phục vụ gửi Google Sheets."""
         if hasattr(sig, "__dataclass_fields__"):
-            # Dataclass instance
             from dataclasses import asdict
+
             data = asdict(sig)
         elif isinstance(sig, dict):
             data = dict(sig)
@@ -40,7 +40,7 @@ class GoogleSheetsLedgerClient:
                 "current_price": getattr(sig, "current_price", 0.0),
             }
 
-        # Tao signal_id dinh danh duy nhat neu chua co
+        # Tạo signal_id định danh duy nhất nếu chưa có
         sym = data.get("symbol", "")
         fdate = data.get("first_signal_date", "").replace(":", "").replace("-", "").replace(" ", "_")
         if not data.get("signal_id"):
@@ -49,13 +49,13 @@ class GoogleSheetsLedgerClient:
         return data
 
     def sync_signals(self, signals: List[Any]) -> bool:
-        """Gui danh sach tin hieu len Google Sheets qua HTTP POST.
-        
+        """Gửi danh sách tín hiệu lên Google Sheets qua HTTP POST.
+
         Args:
-            signals: Danh sach cac ActiveSignal hoac dict tin hieu.
-            
+            signals: Danh sách các ActiveSignal hoặc dict tín hiệu.
+
         Returns:
-            bool: True neu gui thanh cong (HTTP 200), False neu loi hoac chua cau hinh.
+            bool: True nếu gửi thành công (HTTP 200 JSON/Text hợp lệ), False nếu lỗi, bị chặn login HTML hoặc chưa cấu hình.
         """
         if not self.is_configured:
             logger.info("Google Sheets Webhook URL chua duoc cau hinh. Bo qua dong bo online.")
@@ -82,6 +82,15 @@ class GoogleSheetsLedgerClient:
                 timeout=self.TIMEOUT,
             )
             if 200 <= resp.status_code < 300:
+                raw_url = getattr(resp, "url", "")
+                resp_url = raw_url.lower() if isinstance(raw_url, str) else ""
+                raw_text = getattr(resp, "text", "")
+                body_head = raw_text.lstrip()[:64].lower() if isinstance(raw_text, str) else ""
+                if "accounts.google.com" in resp_url or body_head.startswith(("<!doctype html", "<html")):
+                    logger.warning(
+                        "Dong bo Google Sheets bi chan boi trang dang nhap HTML (kiem tra quyen 'Anyone' tren Apps Script)."
+                    )
+                    return False
                 logger.info(f"Dong bo thanh cong {len(formatted_records)} tin hieu len Google Sheets.")
                 return True
             else:

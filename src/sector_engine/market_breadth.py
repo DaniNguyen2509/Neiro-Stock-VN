@@ -100,7 +100,10 @@ def parse_market_breadth_dict(breadth_dict: Optional[Dict[str, Any]]) -> MarketB
 
     raw_adv = breadth_dict.get("advances")
     raw_dec = breadth_dict.get("declines")
-    raw_unch = breadth_dict.get("noChanges", breadth_dict.get("unchanged", 0))
+    raw_unch = breadth_dict.get(
+        "noChange",
+        breadth_dict.get("noChanges", breadth_dict.get("unchanged", 0)),
+    )
     raw_val = breadth_dict.get("totalValue", breadth_dict.get("total_value_billion", 0.0))
 
     try:

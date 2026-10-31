@@ -111,6 +111,11 @@ def generate_terminal_html(
             flow_badge_html = '<div style="font-size:9px;color:#4fc3f7;margin-top:2px;font-weight:bold;">🔵 NGOẠI ĐỠ GIÁ</div>'
         else:
             flow_badge_html = '<div style="font-size:9px;color:#ff5252;margin-top:2px;font-weight:bold;">🔴 NGUY HIỂM</div>'
+        if getattr(c, "has_actual_prop_flow", False):
+            prop_v = float(getattr(c, "prop_net_value_billion", 0.0) or 0.0)
+            if abs(prop_v) >= 0.05:
+                prop_c = "#00e676" if prop_v >= 0 else "#ffb300"
+                flow_badge_html += f'<div style="font-size:9px;color:{prop_c};margin-top:1px;">TD: {prop_v:+.1f}t</div>'
 
         if c.liquidity_score >= 90:
             liq_badge = '<span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span>'
@@ -155,7 +160,7 @@ def generate_terminal_html(
             <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">{c.rrg_r:.0f}/{c.rrg_m:.0f}</td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">{c.composite_rating}</td>
             <td style="padding:6px 5px;text-align:center;">{ad_badge}</td>
-            <td id="foreign-cell-{c.symbol}" style="padding:6px 5px;text-align:center;color:{foreign_color};font-weight:600;">{foreign_str}{flow_badge_html}</td>
+            <td id="foreign-cell-{c.symbol}" style="padding:6px 5px;text-align:center;color:{foreign_color};font-weight:600;"><span class="live-foreign" data-sym="{c.symbol}">{foreign_str}</span>{flow_badge_html}</td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">{c.ranking_score:.1f}</td>
             <td style="padding:6px 5px;text-align:center;white-space:nowrap;">{prev_rank_html}</td>
         </tr>
@@ -313,6 +318,11 @@ def generate_terminal_html(
         except Exception:
             news_list = scanner._fallback_mock_news(sym)[:1]
         for n in news_list:
+            short_body = (
+                f'<div style="font-size:12px;color:#90a4ae;line-height:1.4;">{n["short_content"]}</div>'
+                if n.get("short_content") and n["short_content"].strip() != n["title"].strip()
+                else ""
+            )
             news_items_html += f"""
             <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
@@ -320,7 +330,7 @@ def generate_terminal_html(
                     <span style="font-size:11px;color:#78909c;">{n['time']} • {n['source']}</span>
                 </div>
                 <div style="font-weight:600;font-size:13px;color:#eceff1;margin-bottom:4px;">{n['title']}</div>
-                <div style="font-size:12px;color:#90a4ae;line-height:1.4;">{n['short_content']}</div>
+                {short_body}
             </div>
             """
 
@@ -338,6 +348,13 @@ def generate_terminal_html(
                 <div style="font-size:13px;color:#d1d4dc;">{ev['event_name']}</div>
             </div>
             """
+
+    if not events_items_html:
+        events_items_html = """
+        <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;color:#90a4ae;font-size:12.5px;">
+            Chưa ghi nhận lịch chốt quyền / ĐHCĐ mới từ cổng CBTT Fialda cho nhóm Spotlight.
+        </div>
+        """
 
     regime_map = {
         "NORMAL_EQUILIBRIUM": "Cân Bằng Bình Thường",
@@ -851,7 +868,7 @@ def generate_terminal_html(
                 const symbols = Array.from(new Set(Array.from(priceEls).map(el => el.getAttribute('data-sym'))));
                 if (!symbols.length) return;
                 
-                const res = await fetch('https://bgapidatafeed.vps.com.vn/getliststockdata/' + symbols.join(','));
+                const res = await fetch('https://bgapidatafeed.vps.com.vn/getliststockdata/' + symbols.join(','), {{ cache: 'no-store' }});
                 if (!res.ok) return;
                 const rawText = await res.text();
                 if (!rawText || rawText.trim().startsWith('<')) return;
@@ -988,8 +1005,19 @@ def generate_terminal_html(
                     }}
                 }}
 
-                // Dong bo The Dong Tien Ca Map tu du lieu khop lenh Ngoai (Trung thuc, khong suy dien Tu doanh)
-                const netForeignBillion = (liveForeignBuyVal - liveForeignSellVal) / 1e9;
+                // Dong bo o Khoi Ngoai tung ma va The Dong Tien Ca Map (VPS fBValue/fSValue don vi 1,000 VND -> chia 1e6 ra Ty VND)
+                document.querySelectorAll('#top-stocks-table .live-foreign[data-sym]').forEach(fEl => {{
+                    const fSym = fEl.getAttribute('data-sym');
+                    const fInfo = priceMap[fSym];
+                    if (fInfo && (fInfo.fbVal > 0 || fInfo.fsVal > 0)) {{
+                        const symNetBil = (fInfo.fbVal - fInfo.fsVal) / 1e6;
+                        const symSign = symNetBil >= 0 ? '+' : '';
+                        fEl.innerText = symSign + symNetBil.toFixed(1) + ' tỷ';
+                        fEl.style.color = symNetBil >= 0 ? '#00e676' : '#ff5252';
+                    }}
+                }});
+
+                const netForeignBillion = (liveForeignBuyVal - liveForeignSellVal) / 1e6;
                 if (liveForeignBuyVal > 0 || liveForeignSellVal > 0) {{
                     const smValEl = document.getElementById('card-smart-money-val');
                     const smSubEl = document.getElementById('card-smart-money-sub');

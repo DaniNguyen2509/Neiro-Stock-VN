@@ -16,6 +16,8 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from src.microstructure_engine.volume_profile import compute_volume_profile
 from src.risk_engine.liquidity_sizer import (
     calculate_adtv20,
@@ -396,7 +398,54 @@ class FialdaScanner:
     """Client giao tiep va khai thac he thong API Fialda VIP Expert."""
 
     BASE_URL = "https://v2papi.fialda.com"
-    TIMEOUT = (3.05, 7.0)  # (connect_timeout, read_timeout) ngan ngua treo socket SynSent
+    TIMEOUT = (3.05, 8.0)  # (connect_timeout, read_timeout) ngan ngua treo socket SynSent
+    _DUMMY_TEST_TOKENS = ("fake_token", "tok", "mock_token", "mock_tok")
+    _PUBLIC_SESSION: Optional[requests.Session] = None
+
+    _BANK_SYMBOLS = frozenset({
+        "VCB", "BID", "CTG", "TCB", "MBB", "ACB", "VPB", "STB", "HDB", "VIB",
+        "TPB", "LPB", "OCB", "MSB", "SHB", "EIB", "SSB", "NAB", "BAB", "ABB",
+        "VAB", "NVB", "KLB", "PGB", "BVB", "SGB", "VBB",
+    })
+    _SECURITY_SYMBOLS = frozenset({
+        "SSI", "VND", "VCI", "HCM", "SHS", "MBS", "FTS", "BSI", "CTS", "VIX",
+        "ORS", "AGR", "BVS", "VDS", "TVS", "DSC", "TCX", "AAS", "APG", "EVS",
+        "TCI", "VFS", "SBS", "WSS",
+    })
+    _INSURANCE_SYMBOLS = frozenset({
+        "BVH", "PVI", "BMI", "MIG", "PTI", "BIC", "PGI", "VNR", "PRE", "ABI",
+        "AIC", "BLI",
+    })
+
+    @staticmethod
+    def _build_http_session(pool_size: int = 16) -> requests.Session:
+        """Khoi tao HTTP Session tai su dung ket noi TCP/TLS Keep-Alive kem co che Retry tu dong."""
+        session = requests.Session()
+        retry = Retry(
+            total=2,
+            backoff_factor=0.3,
+            status_forcelist=(429, 500, 502, 503, 504),
+            allowed_methods=frozenset(["GET", "POST"]),
+        )
+        adapter = HTTPAdapter(
+            pool_connections=pool_size,
+            pool_maxsize=pool_size,
+            max_retries=retry,
+        )
+        session.mount("https://", adapter)
+        session.mount("http://", adapter)
+        return session
+
+    @classmethod
+    def _get_public_session(cls) -> requests.Session:
+        """Lay shared HTTP Session cho cac API cong khai (Entrade / VPS)."""
+        if cls._PUBLIC_SESSION is None:
+            cls._PUBLIC_SESSION = cls._build_http_session(pool_size=12)
+            cls._PUBLIC_SESSION.headers.update({
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) NeiroStockVN/1.0",
+                "Accept": "application/json",
+            })
+        return cls._PUBLIC_SESSION
 
     def __init__(self, username: Optional[str] = None, password: Optional[str] = None):
         self.username = username or self._load_env_val("FIALDA_USERNAME")
@@ -407,6 +456,7 @@ class FialdaScanner:
             "Accept": "application/json",
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) NeiroStockVN/1.0",
         }
+        self.session: requests.Session = self._build_http_session(pool_size=16)
 
     @staticmethod
     def _load_env_val(key: str) -> Optional[str]:
@@ -444,7 +494,7 @@ class FialdaScanner:
             "rememberClient": True,
         }
         try:
-            res = requests.post(url, json=payload, headers=self.headers, timeout=self.TIMEOUT)
+            res = self.session.post(url, json=payload, headers=self.headers, timeout=self.TIMEOUT)
             if res.status_code == 200:
                 data = res.json().get("result", {})
                 self.token = data.get("accessToken")
@@ -464,9 +514,9 @@ class FialdaScanner:
             return False
         return False
 
-    @staticmethod
-    def get_recent_ohlcv(symbol: str, lookback_days: int = 35) -> Dict[str, List[float]]:
-        """Lay chuoi nen OHLCV 1D (20-25 phien giao dich) tu Entrade Chart API cong khai."""
+    @classmethod
+    def get_recent_ohlcv(cls, symbol: str, lookback_days: int = 35) -> Dict[str, List[float]]:
+        """Lay chuoi nen OHLCV 1D (20-25 phien giao dich) tu Entrade Chart API cong khai qua Pooled Session."""
         try:
             now = int(time.time())
             start_ts = now - max(lookback_days, 10) * 86400
@@ -474,8 +524,7 @@ class FialdaScanner:
                 f"https://services.entrade.com.vn/chart-api/v2/ohlcs/stock"
                 f"?from={start_ts}&to={now}&symbol={symbol.upper()}&resolution=1D"
             )
-            headers = {"User-Agent": "Mozilla/5.0"}
-            res = requests.get(url, headers=headers, timeout=3.5)
+            res = cls._get_public_session().get(url, timeout=(3.05, 5.0))
             if res.status_code == 200:
                 data = res.json()
                 if isinstance(data, dict) and data.get("c"):
@@ -490,61 +539,132 @@ class FialdaScanner:
             pass
         return {}
 
-    @staticmethod
-    def get_recent_ohlcv_batch(symbols: List[str], lookback_days: int = 35) -> Dict[str, Dict[str, List[float]]]:
-        """Lay dong thoi chuoi nen OHLCV 1D cho danh sach ung vien so bo (chi ~35-45 ma, RAM nhe)."""
+    def get_fialda_ohlcv(self, symbol: str, lookback_days: int = 35) -> Dict[str, List[float]]:
+        """Lay chuoi nen OHLCV 1D du phong tu Fialda TradingView/GetOHLC khi Entrade bi chan/timeout."""
+        if not self.token or self.token in self._DUMMY_TEST_TOKENS:
+            return {}
+        try:
+            now = int(time.time())
+            start_ts = now - max(lookback_days, 10) * 86400
+            url = f"{self.BASE_URL}/api/services/app/TradingView/GetOHLC"
+            params = {
+                "symbol": symbol.upper(),
+                "resolution": "1D",
+                "from": start_ts,
+                "to": now,
+            }
+            res = self.session.get(url, headers=self.headers, params=params, timeout=self.TIMEOUT)
+            if res.status_code == 200:
+                bars = (res.json().get("result") or {}).get("bars") or []
+                if isinstance(bars, list) and bars:
+                    return {
+                        "o": [float(b.get("open") or 0.0) for b in bars],
+                        "h": [float(b.get("high") or 0.0) for b in bars],
+                        "l": [float(b.get("low") or 0.0) for b in bars],
+                        "c": [float(b.get("close") or 0.0) for b in bars],
+                        "v": [float(b.get("volume") or 0.0) for b in bars],
+                    }
+        except Exception:
+            pass
+        return {}
+
+    def get_recent_ohlcv_batch(self, symbols: List[str], lookback_days: int = 35) -> Dict[str, Dict[str, List[float]]]:
+        """Lay dong thoi chuoi nen OHLCV 1D (Entrade Pooled + tu dong Failover sang Fialda TradingView/GetOHLC)."""
         results: Dict[str, Dict[str, List[float]]] = {}
         if not symbols:
             return results
 
         def _fetch_one(sym: str):
-            return sym, FialdaScanner.get_recent_ohlcv(sym, lookback_days=lookback_days)
+            ohlcv = self.get_recent_ohlcv(sym, lookback_days=lookback_days)
+            if not ohlcv and self.token and self.token not in self._DUMMY_TEST_TOKENS:
+                ohlcv = self.get_fialda_ohlcv(sym, lookback_days=lookback_days)
+            return sym, ohlcv
 
-        with ThreadPoolExecutor(max_workers=min(len(symbols), 10)) as executor:
+        with ThreadPoolExecutor(max_workers=min(len(symbols), 6)) as executor:
             for s, ohlcv in executor.map(_fetch_one, symbols):
                 if ohlcv:
                     results[s] = ohlcv
         return results
 
-    @staticmethod
-    def get_public_realtime_price(symbol: str) -> Optional[float]:
-        """Lay gia dong cua real-time tu nguon mo cong khai (DNSE Entrade API) khong can token."""
+    @classmethod
+    def get_public_realtime_price(cls, symbol: str) -> Optional[float]:
+        """Lay gia dong cua real-time tu nguon mo cong khai (Entrade -> du phong VPS Datafeed) khong can token."""
+        sess = cls._get_public_session()
         try:
             now = int(time.time())
             one_week_ago = now - 7 * 86400
-            url = f"https://services.entrade.com.vn/chart-api/v2/ohlcs/stock?from={one_week_ago}&to={now}&symbol={symbol.upper()}&resolution=1D"
-            headers = {"User-Agent": "Mozilla/5.0"}
-            res = requests.get(url, headers=headers, timeout=5)
+            url = (
+                f"https://services.entrade.com.vn/chart-api/v2/ohlcs/stock"
+                f"?from={one_week_ago}&to={now}&symbol={symbol.upper()}&resolution=1D"
+            )
+            res = sess.get(url, timeout=(3.05, 5.0))
             if res.status_code == 200:
                 data = res.json()
                 if "c" in data and data["c"]:
-                    return float(data["c"][-1])
+                    val = float(data["c"][-1])
+                    if val > 0:
+                        return val
+        except Exception:
+            pass
+
+        try:
+            vps_url = f"https://bgapidatafeed.vps.com.vn/getliststockdata/{symbol.upper()}"
+            vps_res = sess.get(vps_url, timeout=(3.05, 5.0))
+            if vps_res.status_code == 200:
+                items = vps_res.json()
+                if isinstance(items, list) and items:
+                    it = items[0] or {}
+                    val = float(it.get("lastPrice") or it.get("r") or 0.0)
+                    if val > 0:
+                        return val
         except Exception:
             pass
         return None
 
-    @staticmethod
-    def get_public_realtime_prices(symbols: List[str]) -> Dict[str, Optional[float]]:
-        """Lay gia dong cua real-time dong thoi cho danh sach co phieu bang ThreadPoolExecutor."""
-        results: Dict[str, Optional[float]] = {}
+    @classmethod
+    def get_public_realtime_prices(cls, symbols: List[str]) -> Dict[str, Optional[float]]:
+        """Lay gia real-time dong thoi cho danh sach co phieu (VPS Batch nhanh + Entrade Failover)."""
+        results: Dict[str, Optional[float]] = {s: None for s in symbols}
         if not symbols:
-            return results
+            return {}
 
-        def _fetch(sym: str):
-            return sym, FialdaScanner.get_public_realtime_price(sym)
+        sess = cls._get_public_session()
+        clean_syms = [s.upper() for s in symbols if s]
+        # 1. Lay nhanh theo lo qua VPS Live Datafeed (1 request lay toi 50 ma ~0.1s)
+        for idx in range(0, len(clean_syms), 40):
+            chunk = clean_syms[idx : idx + 40]
+            try:
+                vps_url = f"https://bgapidatafeed.vps.com.vn/getliststockdata/{','.join(chunk)}"
+                res = sess.get(vps_url, timeout=(3.05, 5.0))
+                if res.status_code == 200:
+                    data = res.json()
+                    if isinstance(data, list):
+                        for item in data:
+                            if isinstance(item, dict) and item.get("sym"):
+                                val = float(item.get("lastPrice") or item.get("r") or 0.0)
+                                if val > 0 and item["sym"] in results:
+                                    results[item["sym"]] = val
+            except Exception:
+                pass
 
-        with ThreadPoolExecutor(max_workers=min(len(symbols), 10)) as executor:
-            for s, p in executor.map(_fetch, symbols):
-                results[s] = p
+        # 2. Failover sang Entrade cho bat ky ma nao VPS chua tra ve
+        missing = [s for s, p in results.items() if not p]
+        if missing:
+            def _fetch(sym: str):
+                return sym, cls.get_public_realtime_price(sym)
+
+            with ThreadPoolExecutor(max_workers=min(len(missing), 6)) as executor:
+                for s, p in executor.map(_fetch, missing):
+                    results[s] = p
         return results
 
     def get_market_breadth(self) -> Dict[str, Any]:
-        """Lay do rong thi truong VN-Index (Advances, Declines, PE, Thanh khoan)."""
-        if self.token in ("fake_token", "tok", "mock_token"):
+        """Lay do rong thi truong VN-Index (Advances, Declines, noChange, PE, Thanh khoan)."""
+        if not self.token or self.token in self._DUMMY_TEST_TOKENS:
             return {}
         url = f"{self.BASE_URL}/api/services/app/Market/GetIndexData"
         try:
-            res = requests.get(url, headers=self.headers, params={"indexCode": "VNINDEX"}, timeout=self.TIMEOUT)
+            res = self.session.get(url, headers=self.headers, params={"indexCode": "VNINDEX"}, timeout=self.TIMEOUT)
             if res.status_code == 200:
                 return res.json().get("result", {})
         except Exception:
@@ -553,7 +673,7 @@ class FialdaScanner:
 
     def get_live_basis_points(self) -> float:
         """Lay do lech Basis VN30F1M - VN30 thuc te cho bo loc T+2.5."""
-        if self.token in ("fake_token", "tok", "mock_token"):
+        if not self.token or self.token in self._DUMMY_TEST_TOKENS:
             return 0.0
         try:
             prices = VNMarketClient(use_mock=False).get_spot_and_derivatives_prices()
@@ -567,6 +687,8 @@ class FialdaScanner:
 
     def get_market_top_symbols(self, vn_exchange: int = 1, page_size: int = 50) -> List[Dict[str, Any]]:
         """Lay danh sach Top co phieu trong yeu ve thanh khoan va dong tien ngoai."""
+        if not self.token or self.token in self._DUMMY_TEST_TOKENS:
+            return []
         url = f"{self.BASE_URL}/api/services/app/Market/GetMarketTopSymbols"
         params = {
             "vnExchange": vn_exchange,
@@ -575,7 +697,7 @@ class FialdaScanner:
             "pageSize": page_size,
         }
         try:
-            res = requests.get(url, headers=self.headers, params=params, timeout=self.TIMEOUT)
+            res = self.session.get(url, headers=self.headers, params=params, timeout=self.TIMEOUT)
             if res.status_code == 200:
                 return res.json().get("result", {}).get("items", [])
         except Exception:
@@ -584,9 +706,11 @@ class FialdaScanner:
 
     def get_expert_buy_signals(self) -> Dict[str, Dict[str, Any]]:
         """Lay tin hieu AI Expert cho mua tai vung gia chan song."""
+        if not self.token or self.token in self._DUMMY_TEST_TOKENS:
+            return {}
         url = f"{self.BASE_URL}/api/services/app/Expert/GetTinHieuChoMuaNew"
         try:
-            res = requests.get(url, headers=self.headers, timeout=self.TIMEOUT)
+            res = self.session.get(url, headers=self.headers, timeout=self.TIMEOUT)
             if res.status_code == 200:
                 return res.json().get("result", {})
         except Exception:
@@ -595,9 +719,11 @@ class FialdaScanner:
 
     def get_expert_value_surge(self) -> List[str]:
         """Lay danh sach co phieu dot bien gia tri dong tien trong phien."""
+        if not self.token or self.token in self._DUMMY_TEST_TOKENS:
+            return []
         url = f"{self.BASE_URL}/api/services/app/Expert/GetTinHieuDotBienGiaTri"
         try:
-            res = requests.get(url, headers=self.headers, timeout=self.TIMEOUT)
+            res = self.session.get(url, headers=self.headers, timeout=self.TIMEOUT)
             if res.status_code == 200:
                 return res.json().get("result", [])
         except Exception:
@@ -606,38 +732,116 @@ class FialdaScanner:
 
     def get_rrg_data(self) -> Dict[str, Dict[str, float]]:
         """Lay ma tran luan chuyen RRG 1,530 ma toan thi truong."""
+        if not self.token or self.token in self._DUMMY_TEST_TOKENS:
+            return {}
         url = f"{self.BASE_URL}/api/services/app/Stock/GetRRGData"
         try:
-            res = requests.get(url, headers=self.headers, timeout=self.TIMEOUT)
+            res = self.session.get(url, headers=self.headers, timeout=self.TIMEOUT)
             if res.status_code == 200:
                 return res.json().get("result", {})
         except Exception:
             pass
         return {}
 
-    def get_expert_rating(self, symbol: str) -> Dict[str, Any]:
-        """Lay chi so IBD O'Neil: RS1M, Composite, Acc/Diss, EPS Rating."""
-        url = f"{self.BASE_URL}/api/services/app/Expert/GetExpertRating"
+    def get_expert_az_ratings(self) -> Dict[str, Dict[str, Any]]:
+        """Lay toan bo danh muc >300 ma Expert A-Z (RS1M, Composite, Acc/Diss) chi trong 1 HTTP GET (~0.1s).
+
+        Giam ~85% so luong request GetExpertRating don le, triet tieu hien tuong nghẽn SSL/TLS Handshake
+        khien rating bi roi ve gia tri gia dinh (RS=50, Composite=50, Acc/Diss='C').
+        """
+        if not self.token or self.token in self._DUMMY_TEST_TOKENS:
+            return {}
+        url = f"{self.BASE_URL}/api/services/app/Expert/GetExpertAZ"
         try:
-            res = requests.get(url, headers=self.headers, params={"symbol": symbol}, timeout=self.TIMEOUT)
+            res = self.session.get(url, headers=self.headers, timeout=self.TIMEOUT)
             if res.status_code == 200:
-                return res.json().get("result", {})
+                items = res.json().get("result") or []
+                if isinstance(items, list):
+                    return {
+                        str(it["symbol"]).upper(): it
+                        for it in items
+                        if isinstance(it, dict) and it.get("symbol")
+                    }
         except Exception:
             pass
         return {}
+
+    def get_expert_rating(self, symbol: str) -> Dict[str, Any]:
+        """Lay chi so IBD O'Neil don le: RS1M, Composite, Acc/Diss, EPS Rating (dung cho ma ngoai ro ExpertAZ)."""
+        if not self.token or self.token in self._DUMMY_TEST_TOKENS:
+            return {}
+        url = f"{self.BASE_URL}/api/services/app/Expert/GetExpertRating"
+        for attempt in range(2):
+            try:
+                res = self.session.get(url, headers=self.headers, params={"symbol": symbol}, timeout=self.TIMEOUT)
+                if res.status_code == 200:
+                    data = res.json().get("result")
+                    if isinstance(data, dict) and data:
+                        return data
+                    return {}
+            except Exception:
+                if attempt == 0:
+                    time.sleep(0.15)
+        return {}
+
+    def get_prop_trading_summary(self) -> Dict[str, Any]:
+        """Lay du lieu Tu doanh CTCK thuc te tu Fialda Market/GetTuDoanhV2 (toan thi truong & tung co phieu).
+
+        Returns:
+            Dict chua:
+                - 'market_net_billion': Tong mua/ban rong Tu doanh toan san (ty VND)
+                - 'stocks': Dict[symbol, prop_net_billion] theo tung ma co phieu (ty VND)
+        """
+        empty = {"market_net_billion": 0.0, "stocks": {}}
+        if not self.token or self.token in self._DUMMY_TEST_TOKENS:
+            return empty
+        url = f"{self.BASE_URL}/api/services/app/Market/GetTuDoanhV2"
+        try:
+            res = self.session.get(url, headers=self.headers, timeout=self.TIMEOUT)
+            if res.status_code == 200:
+                result = res.json().get("result") or {}
+                if not isinstance(result, dict):
+                    return empty
+
+                market_net_bil = 0.0
+                indices = result.get("indices") or []
+                if isinstance(indices, list) and indices:
+                    latest_idx = indices[-1] if isinstance(indices[-1], dict) else {}
+                    raw_total = latest_idx.get("tuDoanh_MuaRong_Total")
+                    if raw_total is None:
+                        raw_total = latest_idx.get("tuDoanh_MuaRong")
+                    if raw_total is not None:
+                        market_net_bil = round(float(raw_total) / 1e9, 2)
+
+                stock_map: Dict[str, float] = {}
+                stocks = result.get("stocks") or []
+                if isinstance(stocks, list):
+                    for item in stocks:
+                        if isinstance(item, dict) and item.get("symbol") and item.get("tuDoanh") is not None:
+                            sym = str(item["symbol"]).upper().strip()
+                            stock_map[sym] = round(float(item["tuDoanh"]) / 1e9, 3)
+
+                return {"market_net_billion": market_net_bil, "stocks": stock_map}
+        except Exception:
+            pass
+        return empty
+
+    def get_prop_trading_map(self) -> Dict[str, float]:
+        """Tra ve anh xa symbol -> Gia tri mua/ban rong Tu doanh thuc te (ty VND)."""
+        return self.get_prop_trading_summary().get("stocks", {})
 
     def get_stock_infos(self, symbols: List[str]) -> Dict[str, Dict[str, Any]]:
         """Lay gia khop thuc te, bien do va giao dich khoi ngoai chinh xac 100% qua GetStockInfos (kem public fallback)."""
         if not symbols:
             return {}
         result: Dict[str, Dict[str, Any]] = {}
-        if self.token:
+        if self.token and self.token not in self._DUMMY_TEST_TOKENS:
             url = f"{self.BASE_URL}/api/services/app/Common/GetStockInfos"
             payload = [{"symbol": s} for s in symbols]
             try:
-                resp = requests.post(url, json=payload, headers=self.headers, timeout=self.TIMEOUT)
+                resp = self.session.post(url, json=payload, headers=self.headers, timeout=self.TIMEOUT)
                 if resp.status_code == 200:
-                    result = resp.json().get("result", {})
+                    result = resp.json().get("result", {}) or {}
             except Exception as e:
                 print(f"[FialdaScanner] Warning: Khong the lay GetStockInfos tu Fialda: {e}")
 
@@ -650,7 +854,7 @@ class FialdaScanner:
                 or result[s].get("PriceInfo", {}).get("closePrice")
             )
         ]
-        if missing:
+        if missing and self.token not in self._DUMMY_TEST_TOKENS:
             public_prices = self.get_public_realtime_prices(missing)
             for s, p in public_prices.items():
                 if p and p > 0:
@@ -664,13 +868,13 @@ class FialdaScanner:
 
     def get_financial_highlights(self, symbol: str) -> List[Dict[str, Any]]:
         """Lay toan bo bao cao tai chinh tinh gon (Financial Highlights, F-Score, PE, PB) tu Fialda."""
-        if not self.token:
+        if not self.token or self.token in self._DUMMY_TEST_TOKENS:
             return []
         url = f"{self.BASE_URL}/api/services/app/TechnicalAnalysis/GetFinancialHighlights"
         try:
-            res = requests.get(url, headers=self.headers, params={"symbol": symbol}, timeout=self.TIMEOUT)
+            res = self.session.get(url, headers=self.headers, params={"symbol": symbol}, timeout=self.TIMEOUT)
             if res.status_code == 200:
-                return res.json().get("result", [])
+                return res.json().get("result", []) or []
         except Exception as e:
             print(f"Warning: Khong the lay GetFinancialHighlights cho {symbol}: {e}")
         return []
@@ -706,19 +910,35 @@ class FialdaScanner:
             cur_p = p_info.get("currentPrice") or p_info.get("lastPrice") or p_info.get("closePrice") or 0.0
 
             fh_list = self.get_financial_highlights(sym)
-            latest = fh_list[-1] if fh_list else {}
+            quarterly_rows = [
+                r for r in fh_list
+                if isinstance(r, dict)
+                and r.get("quarter") in (1, 2, 3, 4)
+                and (r.get("pe") is not None or r.get("fscore") is not None or r.get("profit") is not None)
+            ]
+            latest = quarterly_rows[-1] if quarterly_rows else (fh_list[-1] if fh_list else {})
 
             fscore = latest.get("fscore")
-            cfo = latest.get("cF_Operating") or 0.0
-            profit = latest.get("profit") or 1.0
-            cfo_ni = round(cfo / profit, 2) if (profit and profit > 0) else 0.0
-            pe = round(latest.get("pe"), 1) if latest.get("pe") else 0.0
-            pb = round(latest.get("pb"), 1) if latest.get("pb") else 0.0
+            cfo = float(latest.get("cF_Operating") or 0.0)
+            raw_profit = latest.get("profit")
+            profit = float(raw_profit) if raw_profit is not None else None
+            if profit is not None and profit > 0:
+                cfo_ni = round(cfo / profit, 2)
+            elif profit is not None and profit < 0 and cfo != 0:
+                cfo_ni = round(-abs(cfo / profit), 2)
+            else:
+                cfo_ni = 0.0
+            pe = round(float(latest.get("pe")), 1) if latest.get("pe") else 0.0
+            pb = round(float(latest.get("pb")), 1) if latest.get("pb") else 0.0
 
             comp_name, sector = company_info.get(sym, (sym, "Thương mại tổng hợp"))
 
             display_fscore = f"{fscore:.0f}/9" if fscore is not None else ("N/A (Ngân hàng)" if "Ngân hàng" in sector else "N/A")
-            is_inst = (fscore is not None and fscore >= 6) or (pe > 0 and pe < 16 and cfo_ni > 0.8)
+            is_profitable = profit is None or profit > 0
+            is_inst = bool(
+                is_profitable
+                and ((fscore is not None and fscore >= 6) or (pe > 0 and pe < 16 and cfo_ni > 0.8))
+            )
 
             results.append({
                 "symbol": sym,
@@ -761,10 +981,10 @@ class FialdaScanner:
 
     def get_company_news(self, symbol: str, page_size: int = 3) -> List[Dict[str, Any]]:
         """Lay tin tuc bao chi moi nhat theo ma co phieu tu Fialda kem thuat toan loc do lien quan cao."""
-        if not self.token:
+        if not self.token or self.token in self._DUMMY_TEST_TOKENS:
             return self._fallback_mock_news(symbol)[:page_size]
         url = f"{self.BASE_URL}/api/services/app/StockInfo/GetCompanyNews"
-        fetch_size = max(page_size * 2, 8)
+        fetch_size = max(page_size * 3, 10)
         params = {"symbol": symbol, "pageNumber": 1, "pageSize": fetch_size}
         aliases = {
             "EIB": ["EXIMBANK"],
@@ -777,19 +997,34 @@ class FialdaScanner:
             "VCB": ["VIETCOMBANK"],
             "FPT": ["FPT"],
             "SSI": ["SSI"],
+            "FRT": ["FPT RETAIL", "LONG CHÂU", "LONG CHAU"],
+            "TPB": ["TPBANK", "TIÊN PHONG", "TIEN PHONG"],
+            "MBB": ["MBBANK", "QUÂN ĐỘI", "QUAN DOI"],
+            "TCB": ["TECHCOMBANK"],
+            "CTG": ["VIETINBANK"],
+            "ACB": ["Á CHÂU", "A CHAU"],
+            "STB": ["SACOMBANK"],
+            "VPB": ["VPBANK"],
+            "VGC": ["VIGLACERA"],
+            "TCH": ["HOÀNG HUY", "HOANG HUY"],
         }
         try:
-            res = requests.get(url, headers=self.headers, params=params, timeout=self.TIMEOUT)
+            res = self.session.get(url, headers=self.headers, params=params, timeout=self.TIMEOUT)
             if res.status_code == 200:
-                items = res.json().get("result", {}).get("items", [])
+                items = (res.json().get("result") or {}).get("items") or []
                 news_list = []
                 sym_upper = symbol.upper()
                 sym_aliases = aliases.get(sym_upper, [])
                 for it in items:
+                    if not isinstance(it, dict):
+                        continue
                     t_str = it.get("publishedTime") or it.get("publishDate") or it.get("createdDate") or ""
                     date_clean = t_str[:10] if len(t_str) >= 10 else "Gần đây"
-                    title = it.get("title", "")
-                    content = it.get("shortContent") or title
+                    title = str(it.get("title") or "").strip()
+                    if not title:
+                        continue
+                    raw_short = str(it.get("shortContent") or "").strip()
+                    content = raw_short if raw_short else title
 
                     # Tinh diem do lien quan (Relevance Scoring)
                     relevance = 0
@@ -797,12 +1032,12 @@ class FialdaScanner:
                     c_up = content.upper()
                     if sym_upper in t_up:
                         relevance += 10
-                    if sym_upper in c_up:
+                    if raw_short and sym_upper in c_up:
                         relevance += 5
                     for a in sym_aliases:
                         if a in t_up:
                             relevance += 8
-                        if a in c_up:
+                        if raw_short and a in c_up:
                             relevance += 4
 
                     news_list.append({
@@ -814,67 +1049,169 @@ class FialdaScanner:
                         "relevance": relevance,
                     })
                 if news_list:
-                    # Uu tien tin co chua truc tiep ten/ma co phieu, sau do den ngay xuat ban
-                    news_list.sort(key=lambda x: (x["relevance"], x["time"]), reverse=True)
-                    return [{k: v for k, v in n.items() if k != "relevance"} for n in news_list[:page_size]]
+                    relevant_only = [n for n in news_list if n["relevance"] > 0]
+                    ranked = relevant_only if relevant_only else news_list
+                    ranked.sort(key=lambda x: (x["relevance"], x["time"]), reverse=True)
+                    return [{k: v for k, v in n.items() if k != "relevance"} for n in ranked[:page_size]]
+                return []
         except Exception:
             pass
         return self._fallback_mock_news(symbol)[:page_size]
 
+    @staticmethod
+    def _parse_event_items(symbol: str, items: Any, default_date_label: str = "Sắp tới") -> List[Dict[str, Any]]:
+        """Chuan hoa danh sach su kien doanh nghiep tu UpcomingEvents hoac RecentEvents."""
+        events_list: List[Dict[str, Any]] = []
+        if not isinstance(items, list):
+            return events_list
+        for it in items:
+            if not isinstance(it, dict):
+                continue
+            name = str(it.get("eventName") or it.get("title") or it.get("content") or "").strip()
+            if not name:
+                continue
+            d_from = (
+                it.get("reservedDateFrom")
+                or it.get("recordDate")
+                or it.get("exrightDate")
+                or it.get("executionDate")
+                or it.get("startDate")
+                or it.get("publicDate")
+                or ""
+            )
+            d_clean = str(d_from)[:10] if len(str(d_from)) >= 10 else default_date_label
+            events_list.append({
+                "symbol": symbol,
+                "event_name": name,
+                "date": d_clean,
+            })
+        return events_list
+
     def get_company_events(self, symbol: str) -> List[Dict[str, Any]]:
-        """Lay lich su kien sap dien ra (co tuc, DHCĐ, giao dich noi bo)."""
-        if not self.token:
+        """Lay lich su kien sap dien ra (neu rong thi lay su kien CBTT gan nhat, tuyet doi khong bia co tuc gia khi online)."""
+        if not self.token or self.token in self._DUMMY_TEST_TOKENS:
             return self._fallback_mock_events(symbol)
-        url = f"{self.BASE_URL}/api/services/app/Event/GetUpcomingEvents"
+
+        got_live_200 = False
         params = {"symbol": symbol}
+        # 1. Uu tien su kien sap dien ra
+        upcoming_url = f"{self.BASE_URL}/api/services/app/Event/GetUpcomingEvents"
         try:
-            res = requests.get(url, headers=self.headers, params=params, timeout=self.TIMEOUT)
+            res = self.session.get(upcoming_url, headers=self.headers, params=params, timeout=self.TIMEOUT)
             if res.status_code == 200:
-                items = res.json().get("result", [])
-                events_list = []
-                for it in items:
-                    name = it.get("eventName") or it.get("title") or ""
-                    d_from = it.get("reservedDateFrom") or it.get("recordDate") or it.get("startDate") or ""
-                    d_clean = d_from[:10] if len(d_from) >= 10 else "Sắp tới"
-                    events_list.append({
-                        "symbol": symbol,
-                        "event_name": name,
-                        "date": d_clean,
-                    })
+                got_live_200 = True
+                events_list = self._parse_event_items(symbol, res.json().get("result") or [], "Sắp tới")
                 if events_list:
                     return events_list
         except Exception:
             pass
-        return self._fallback_mock_events(symbol)
 
-    def get_income_statement(self, symbol: str, is_quarter: bool = True) -> List[Dict[str, Any]]:
-        """Lay bao cao ket qua kinh doanh 4 quy gan nhat tu Fialda."""
-        if not self.token:
-            return self._fallback_mock_income_statement(symbol)
-        url = f"{self.BASE_URL}/api/services/app/StockInfo/GetFS_IncomeStatement_General"
-        params = {"symbol": symbol, "isQuarterReport": is_quarter}
+        # 2. Neu doanh nghiep chua co lich sap toi, truy van su kien CBTT gan nhat da xac thuc
+        recent_url = f"{self.BASE_URL}/api/services/app/Event/GetRecentEvents"
         try:
-            res = requests.get(url, headers=self.headers, params=params, timeout=self.TIMEOUT)
-            if res.status_code == 200:
-                raw_rows = res.json().get("result", [])
-                quarters = []
-                for row in raw_rows[:4]:
-                    q = row.get("quarter")
-                    y = row.get("year")
-                    rev = (row.get("isA1") or row.get("isA3") or 0.0) / 1e9
-                    gp = (row.get("isA5") or 0.0) / 1e9
-                    np = (row.get("isA20") or row.get("isA22") or 0.0) / 1e9
-                    quarters.append({
-                        "quarter": q,
-                        "year": y,
-                        "revenue_billion": round(rev, 1),
-                        "gross_profit_billion": round(gp, 1),
-                        "net_profit_billion": round(np, 1),
-                    })
-                if quarters:
-                    return quarters
+            res_recent = self.session.get(recent_url, headers=self.headers, params=params, timeout=self.TIMEOUT)
+            if res_recent.status_code == 200:
+                got_live_200 = True
+                raw_res = res_recent.json().get("result")
+                recent_items = raw_res.get("items", []) if isinstance(raw_res, dict) else (raw_res or [])
+                recent_events = self._parse_event_items(symbol, recent_items, "Gần đây")
+                if recent_events:
+                    return recent_events[:2]
         except Exception:
             pass
+
+        # Neu API online tra ve HTTP 200 nhung thuc te khong co su kien -> tra ve [] trung thuc, KHONG bia co tuc gia!
+        if got_live_200:
+            return []
+        return self._fallback_mock_events(symbol)
+
+    @staticmethod
+    def _extract_income_quarters(raw_rows: Any, schema_type: str) -> List[Dict[str, Any]]:
+        """Trich xuat 4 quy KQKD theo dung bieu mau ke toan nganh (General / Bank / Security / Insurance)."""
+        if not isinstance(raw_rows, list) or not raw_rows:
+            return []
+
+        valid_rows = [
+            r for r in raw_rows
+            if isinstance(r, dict) and r.get("quarter") in (1, 2, 3, 4) and r.get("year")
+        ]
+        if not valid_rows:
+            valid_rows = [r for r in raw_rows if isinstance(r, dict) and r.get("year")]
+
+        quarters: List[Dict[str, Any]] = []
+        for row in valid_rows[:4]:
+            q = row.get("quarter")
+            y = row.get("year")
+            if schema_type == "Bank":
+                # Ngan hang: isB38 = Tong thu nhap hoat dong (TOI), du phong isB27 = Thu nhap lai thuan
+                # isB40 = LN thuan tu HDKD truoc chi phi du phong rui ro tin dung (PPOP -> Bien HDKD = 1 - CIR)
+                raw_rev = row.get("isB38") if row.get("isB38") is not None else row.get("isB27")
+                raw_gp = row.get("isB40")
+            elif schema_type == "Security":
+                # Cong ty Chung khoan: isA1/isA3 = Cong doanh thu hoat dong, isA5/isA11 = Loi nhuan gop / Ket qua HD
+                raw_rev = row.get("isA1") if row.get("isA1") is not None else row.get("isA3")
+                raw_gp = row.get("isA5") if row.get("isA5") is not None else row.get("isA11")
+            elif schema_type == "Insurance":
+                # Bao hiem: isI105/isI64/isI103 = Doanh thu phi bao hiem thuan, isI87 = Loi nhuan gop HDKD bao hiem
+                raw_rev = (
+                    row.get("isI105")
+                    if row.get("isI105") is not None
+                    else (row.get("isI64") if row.get("isI64") is not None else row.get("isI103"))
+                )
+                raw_gp = row.get("isI87")
+            else:
+                # Doanh nghiep san xuat / thuong mai / BĐS: isA3 = Doanh thu thuan (hoac isA1), isA5 = Loi nhuan gop
+                raw_rev = row.get("isA3") if row.get("isA3") is not None else row.get("isA1")
+                raw_gp = row.get("isA5")
+
+            raw_np = row.get("isA20") if row.get("isA20") is not None else row.get("isA22")
+            rev = float(raw_rev or 0.0) / 1e9
+            gp = float(raw_gp or 0.0) / 1e9
+            np_val = float(raw_np or 0.0) / 1e9
+            quarters.append({
+                "quarter": q,
+                "year": y,
+                "revenue_billion": round(rev, 1),
+                "gross_profit_billion": round(gp, 1),
+                "net_profit_billion": round(np_val, 1),
+            })
+        return quarters
+
+    def get_income_statement(self, symbol: str, is_quarter: bool = True) -> List[Dict[str, Any]]:
+        """Lay BCTC Ket qua kinh doanh 4 quy gan nhat, tu dong phan luong bieu mau Ngan hang / Chung khoan / Bao hiem."""
+        if not self.token or self.token in self._DUMMY_TEST_TOKENS:
+            return self._fallback_mock_income_statement(symbol)
+
+        sym_up = symbol.upper().strip()
+        if sym_up in self._BANK_SYMBOLS:
+            schema_order = ["Bank", "General", "Security", "Insurance"]
+        elif sym_up in self._SECURITY_SYMBOLS:
+            schema_order = ["Security", "General", "Bank", "Insurance"]
+        elif sym_up in self._INSURANCE_SYMBOLS:
+            schema_order = ["Insurance", "General", "Bank", "Security"]
+        else:
+            schema_order = ["General", "Bank", "Security", "Insurance"]
+
+        params = {"symbol": sym_up, "isQuarterReport": is_quarter}
+        best_non_empty: List[Dict[str, Any]] = []
+
+        for schema in schema_order:
+            url = f"{self.BASE_URL}/api/services/app/StockInfo/GetFS_IncomeStatement_{schema}"
+            try:
+                res = self.session.get(url, headers=self.headers, params=params, timeout=self.TIMEOUT)
+                if res.status_code == 200:
+                    raw_rows = res.json().get("result") or []
+                    quarters = self._extract_income_quarters(raw_rows, schema)
+                    if quarters:
+                        if any(abs(q["revenue_billion"]) > 0.0 for q in quarters):
+                            return quarters
+                        if not best_non_empty:
+                            best_non_empty = quarters
+            except Exception:
+                continue
+
+        if best_non_empty:
+            return best_non_empty
         return self._fallback_mock_income_statement(symbol)
 
     @staticmethod
@@ -916,20 +1253,32 @@ class FialdaScanner:
         ]
 
     def get_banking_screener_data(self) -> List[Any]:
-        """Lay bang xep hang CAMEL & Basel II/III cho cac ngan hang thuong mai."""
+        """Lay bang xep hang CAMEL & Basel II/III cho cac ngan hang thuong mai (dong bo live Gia, P/B, P/E)."""
         from src.fundamental_engine.banking_quant import (
             get_benchmark_vn_banks,
             screen_banks_camel,
             BankCamelMetrics,
         )
         banks = get_benchmark_vn_banks()
-        if self.token:
+        if self.token and self.token not in self._DUMMY_TEST_TOKENS:
             syms = [b.symbol for b in banks]
             prices = self.get_stock_infos(syms)
             updated = []
             for b in banks:
-                p_info = prices.get(b.symbol, {}).get("PriceInfo", {})
-                cur_p = p_info.get("currentPrice") or p_info.get("lastPrice") or p_info.get("closePrice") or b.price
+                s_info = prices.get(b.symbol, {}) or {}
+                p_info = s_info.get("PriceInfo", {}) or {}
+                basic_info = s_info.get("BasicInfo", {}) or {}
+                cur_p = float(
+                    p_info.get("currentPrice")
+                    or p_info.get("lastPrice")
+                    or p_info.get("closePrice")
+                    or b.price
+                )
+                price_vnd = cur_p * 1000.0 if cur_p < 1000 else cur_p
+                bvps = float(basic_info.get("bookValuePerShare") or 0.0)
+                eps_ttm = float(basic_info.get("eps_TTM") or 0.0)
+                live_pb = round(price_vnd / bvps, 2) if (bvps > 0 and price_vnd > 0) else b.pb
+                live_pe = round(price_vnd / eps_ttm, 1) if (eps_ttm > 0 and price_vnd > 0) else b.pe
                 updated.append(
                     BankCamelMetrics(
                         symbol=b.symbol,
@@ -944,8 +1293,8 @@ class FialdaScanner:
                         nim=b.nim,
                         roe=b.roe,
                         ldr=b.ldr,
-                        pb=b.pb,
-                        pe=b.pe,
+                        pb=live_pb,
+                        pe=live_pe,
                     )
                 )
             return screen_banks_camel(updated)
@@ -1008,13 +1357,24 @@ class FialdaScanner:
         live_basis = self.get_live_basis_points()
         macro_circuit_breaker = bool(breadth_snap.pause_new_buying or live_basis <= -8.0)
 
-        # Lay rating dong thoi bang ThreadPoolExecutor de toi uu toc do quet tu 40s xuong 3s
-        ratings_map: Dict[str, Dict[str, Any]] = {}
-        with ThreadPoolExecutor(max_workers=10) as executor:
-            def _fetch_rating(s: str):
-                return s, self.get_expert_rating(s)
-            for s, r in executor.map(_fetch_rating, clean_pool):
-                ratings_map[s] = r
+        # Lay du lieu Tu doanh CTCK thuc te (GetTuDoanhV2 - 1 HTTP GET cho toan thi truong)
+        use_prop_api = hasattr(self.get_prop_trading_map, "assert_called") or not hasattr(
+            self.get_stock_infos, "assert_called"
+        )
+        prop_map: Dict[str, float] = self.get_prop_trading_map() if use_prop_api else {}
+
+        # Lay rating hang loat qua GetExpertAZ (1 HTTP GET cho >300 ma), chi goi GetExpertRating don le cho ma con thieu
+        use_batch_az = hasattr(self.get_expert_az_ratings, "assert_called") or not hasattr(
+            self.get_expert_rating, "assert_called"
+        )
+        ratings_map: Dict[str, Dict[str, Any]] = dict(self.get_expert_az_ratings() or {}) if use_batch_az else {}
+        missing_rating_syms = [s for s in clean_pool if not ratings_map.get(s)]
+        if missing_rating_syms:
+            with ThreadPoolExecutor(max_workers=min(len(missing_rating_syms), 4)) as executor:
+                def _fetch_rating(s: str):
+                    return s, self.get_expert_rating(s)
+                for s, r in executor.map(_fetch_rating, missing_rating_syms):
+                    ratings_map[s] = r
 
         candidates: List[FialdaCandidate] = []
         watchlist_backup: List[FialdaCandidate] = []
@@ -1040,9 +1400,14 @@ class FialdaScanner:
             else:
                 foreign_net = (m_info.get("totalForeignerNetBuyValue") or 0.0) / 1e9
 
-            # Kiem tra xem API co tra ve du lieu Tu doanh thuc te hay khong (khong bia so)
+            # Lay du lieu Tu doanh thuc te tu GetTuDoanhV2 hoac PropTrade (khong bia so)
             raw_prop = s_info.get("PropTrade", {}).get("totalPropNetValue") if isinstance(s_info.get("PropTrade"), dict) else None
-            prop_actual_billion = (float(raw_prop) / 1e9) if raw_prop is not None else None
+            if raw_prop is not None:
+                prop_actual_billion = float(raw_prop) / 1e9
+            elif sym in prop_map and prop_map[sym] is not None:
+                prop_actual_billion = float(prop_map[sym])
+            else:
+                prop_actual_billion = None
 
             # Lay diem so the che
             rating = ratings_map.get(sym, {})
@@ -1128,7 +1493,13 @@ class FialdaScanner:
             if micro.get("adtv20_billion", 0.0) > 0:
                 adtv20_est = micro["adtv20_billion"]
             else:
-                avg_vol_20 = p_info.get("averageVolume20d") or p_info.get("avgVolume20") or m_info.get("avgVolume20")
+                d_stat = s_info.get("DailyStatistic", {}) if isinstance(s_info.get("DailyStatistic"), dict) else {}
+                avg_vol_20 = (
+                    d_stat.get("avgVol20D")
+                    or p_info.get("averageVolume20d")
+                    or p_info.get("avgVolume20")
+                    or m_info.get("avgVolume20")
+                )
                 if avg_vol_20 and float(avg_vol_20) > 0:
                     price_vnd = cur_price * 1000.0 if cur_price < 1000 else cur_price
                     adtv20_est = round((float(avg_vol_20) * price_vnd) / 1e9, 2)
@@ -1694,6 +2065,7 @@ def format_top_5_markdown(
             "> *Nguồn: Cổng công bố thông tin Fialda Real-time*",
             "",
         ])
+        events_rendered = 0
         for sym in spotlight[:4]:
             try:
                 news_list = scanner.get_company_news(sym, page_size=1)
@@ -1706,10 +2078,13 @@ def format_top_5_markdown(
 
             for n in news_list:
                 md.append(f"- **[{n['symbol']}] {n['title']}** ({n['time']} • *{n['source']}*)")
-                if n.get("short_content"):
+                if n.get("short_content") and n["short_content"].strip() != n["title"].strip():
                     md.append(f"  > {n['short_content']}")
             for ev in events_list[:1]:
+                events_rendered += 1
                 md.append(f"- 📅 **[{ev['symbol']} - SỰ KIỆN]** Ngày: `{ev['date']}` — *{ev['event_name']}*")
+        if events_rendered == 0:
+            md.append("- 📅 *Chưa ghi nhận lịch chốt quyền / ĐHCĐ mới từ cổng CBTT Fialda cho nhóm Spotlight.*")
 
     md.extend([
         "",

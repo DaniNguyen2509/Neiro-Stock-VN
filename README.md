@@ -54,9 +54,9 @@ Neiro-Stock-VN/
 │   ├── TRADER_PLAYBOOK_VN.md     # Cẩm nang tác chiến thực chiến cho Trader / Quỹ
 │   ├── google_sheets_setup.md    # Hướng dẫn thiết lập Google Sheets, Looker Studio & ML
 │   ├── plans/                    # Kế hoạch triển khai & Ma trận đối chiếu Trước/Sau (PLAN-2026-T25-RETAIL)
-│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-017)
+│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-018)
 ├── src/
-│   ├── collector/                # Thu thập & chuẩn hóa dữ liệu TTCK VN, Google Sheets Client (ADR-011)
+│   ├── collector/                # Thu thập & chuẩn hóa dữ liệu TTCK VN, Google Sheets Client (ADR-011/018)
 │   ├── fundamental_engine/       # Bộ lọc Piotroski F-score, EPS, PE/PB Banding
 │   ├── microstructure_engine/    # Volume Profile (POC/HVN/LVN), OFI, Basis VN30F1M
 │   ├── sector_engine/            # Mô hình luân chuyển ngành RRG & Độ rộng thị trường
@@ -65,7 +65,7 @@ Neiro-Stock-VN/
 │   └── hud/                      # Giao diện Tactical Terminal Web Đa Tab (Auto-Reload, Dark Mode)
 ├── data/                         # Dữ liệu mẫu benchmark, ranking_history.jsonl, active_signals.jsonl, ml_signals_dataset.csv
 ├── exports/                      # Tệp HTML Terminal xuất bản (GitHub Pages)
-├── tests/                        # Kiểm thử tự động Unit & Math verification (117/117 passed 100%)
+├── tests/                        # Kiểm thử tự động Unit & Math verification (128/128 passed 100%)
 ├── AGENTS.md / GEMINI.md         # Quy tắc bắt buộc gọi Skill & Zero-Waste Mandate
 ├── requirements.txt              # Thư viện Python phụ thuộc
 ├── pyproject.toml                # Cấu hình ruff & pytest
@@ -92,7 +92,7 @@ pip install -r requirements.txt
 
 ### 4.2. Chạy kiểm thử tự động
 ```bash
-# Chạy 100% Unit Tests xác minh tính toán toán học & T+2.5 Backtest (117/117 passed 100%)
+# Chạy 100% Unit Tests xác minh tính toán toán học, API Resilience & T+2.5 Backtest (128/128 passed 100%)
 python -m pytest tests/ -v --tb=short
 
 # Kiểm tra quy chuẩn mã nguồn (Ruff)
@@ -181,6 +181,11 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
 - **Thanh lọc Dữ liệu & Cổng chặn Đu đỉnh Pre-T0:** Loại bỏ hoàn toàn ước lượng dòng tiền nội giả định (`1.5x`), khôi phục cảnh báo `🔴 NGUY HIỂM XẢ`, tính `ADTV20` trung bình 20 phiên thực chất (`>= 15 tỷ`) và chặn mua đỉnh phân phối (`Acc/Diss = E`, khoảng cách tới `Volume Profile POC > 2.5 * ATR(14)`).
 - **Cắt lỗ Cấu trúc Chịu nhiệt T+2.5 & Cầu chì Độ rộng Thị trường (`market_breadth.py`):** Mở biên SL cá thể hóa `[-4.5%, -7.5%]` theo $\sqrt{2.5} \times \text{ATR}_{14}$ và nền `VAL`, cộng bù `0.40%` phí/thuế hai chiều vào `TP1/TP2`; tự động bật banner đỏ `⛔ CẦU CHÌ T+2.5 KÍCH HOẠT: TẠM NGỪNG MUA MỚI` khi độ rộng VN-Index `< 35%` hoặc `Basis VN30F1M <= -8.0`.
 - **Hợp nhất Sổ cái Anti-FOMO lên Dashboard & Định cỡ Nhỏ lẻ Cold-Start:** Neo cứng `Vùng Mua` vào `entry_original` ngày `T0`, chặn 100% mã vừa gãy `STOPPED_OUT` (cooldown 3 phiên), khóa `BULL_TRAP_REJECT` theo `MFE`, áp trần `<= 20% NAV`/mã (`0% Margin`) cho tài khoản `0%` đệm `T+0` kèm cảnh báo lô chẵn `100 cp` HOSE, và trung thực hóa khóa sàn trắng bên mua (`Floor-Lock`) trên **Tab 2 Walk-Forward** (Xem đối chiếu Trước/Sau tại [`docs/plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md`](docs/plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md)).
+
+### 4.12. Đại Tu Tầng API & Data Crawling — Connection Pooling, Tự Doanh Thực Chứng & BCTC Đa Ngành (ADR-018 — Accepted)
+- **Triệt Tiêu Nghẽn SSL/TLS Handshake:** Toàn bộ HTTP Client (`FialdaScanner`, `VNMarketClient`) sử dụng `requests.Session` Keep-Alive kèm `HTTPAdapter` & `Retry`, kết hợp nạp hàng loạt `Expert/GetExpertAZ` (>310 mã trong 1 request `~0.1s`), kéo tổng thời gian quét toàn thị trường xuống `~3.6s` với `0%` timeout.
+- **Mở Khóa Dòng Tiền Tự Doanh Thực Tế & BCTC Đa Ngành:** Khai thác trực tiếp `Market/GetTuDoanhV2` cho Ma trận Dòng tiền Kép (`TD: +X.Xt`); tự động phân luồng BCTC chuẩn kế toán Ngân hàng (`TOI`/`PPOP` qua `GetFS_IncomeStatement_Bank`), Chứng khoán (`_Security`), Bảo hiểm (`_Insurance`) và Sản xuất (`_General`), chấm dứt triệt để lỗi `0.0 tỷ` doanh thu ngân hàng và loại bỏ hoàn toàn lịch cổ tức giả khi online (`Event/GetRecentEvents` fallback).
+- **Chuẩn Hóa Đơn Vị Live VPS (`1e6`) & Đa Nguồn Failover:** Sửa lỗi chia sai `1,000` lần cho `fBValue/fSValue` (đơn vị `1,000 VND`) trên Client JS, đồng bộ trực tiếp từng dòng cột `Khối Ngoại` khớp với Thẻ Header Smart Money; bổ sung failover hai chiều `Entrade <-> Fialda TradingView/GetOHLC <-> VPS Datafeed` và chặn false-positive trang đăng nhập HTML trên `GoogleSheetsLedgerClient`.
 
 ---
 
