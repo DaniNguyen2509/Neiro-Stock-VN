@@ -531,3 +531,14 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 
 
 
+
+
+### Tier 21 [ACCEPTED - ADR-019]: Cổng Mua Mới Chặt Chẽ & Sổ Cái Tín Hiệu ML v2
+
+> **Trạng thái:** `ACCEPTED & IMPLEMENTED` (xem [`ADR-019`](decisions/ADR-019-airtight-new-buy-gates-and-ml-signal-ledger-v2.md), test: `tests/test_new_buy_gates_and_ml_ledger.py`).
+
+1. **Điều kiện được MUA MỚI:** không gãy nền (`-2.0 <= ATR-dist-POC <= +2.5`, giá `>= VAL - 1.2 ATR`), EPS TTM >= 0, Ngân hàng không CAMEL < 50 (trừ chân sóng A/B), exposure `SAFE/MODERATE`, sau T0 giá trong `-1.5% .. +3.0%` và `< 3` phiên giao dịch thực.
+2. **Thăm dò <= 30% (`BUY_CAUTION`):** `+3% .. +5%`, `-2.5% .. -1.5%`, hoặc exposure `HIGH`.
+3. **CẤM MUA MỚI:** `> +5%`, Bull-Trap (MFE > 5% rồi xìu), `< -2.5%` dưới T0, quá `3` phiên thực, `CRITICAL`, Cầu chì vĩ mô, hoặc đã `STOPPED_OUT` trong 3 phiên thực.
+4. **Bất biến vùng giá:** `SL < Entry_Low <= Entry_High < TP1 < TP2`.
+5. **Sổ cái ML v2:** `signal_id`, `schema_version`, `trading_days`, khóa trạng thái đóng, archive `data/signal_history_ml.jsonl`, làm mới giá live cho mã rớt Top 20, `is_ml_ready`.

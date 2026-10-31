@@ -203,3 +203,21 @@ flowchart TD
 - **Zero Memory Leak:** Toàn bộ các cấu trúc dữ liệu chuỗi thời gian đều được ép kiểu `float32` hoặc `int32` trong Pandas/NumPy, tránh phát sinh overhead bộ nhớ.
 - **Tự động dọn dẹp Cache:** Các tệp cache dữ liệu tạm thời trong `data/` được giới hạn kích thước và tự động dọn sạch sau khi hoàn tất pipeline kiểm thử.
 - **Tổng dung lượng toàn bộ repository:** Đảm bảo duy trì dưới mức **~2.06MB** (vượt xa tiêu chuẩn tối đa 15MB), bảo vệ tối đa dung lượng ổ cứng của người dùng.
+
+
+## Cập nhật ADR-019: Sổ Cái Tín Hiệu ML v2 & Cổng Mua Mới
+
+- **`signal_tracker.py`:** thêm `count_vn_trading_days()`, `ActiveSignal` v2 (`signal_id`, `schema_version`, `trading_days`, vector T0 mở rộng, `is_closed`, `is_ml_ready`), khóa trạng thái đóng, archive `data/signal_history_ml.jsonl` (rolling 2,000), `update_signals(live_prices, macro_pause_buying)`.
+- **`fialda_scanner.py`:** cổng gãy nền (-2.0 ATR POC / VAL), cổng EPS TTM và CAMEL, chuẩn hóa vùng mua, lấy giá live cho mã rớt Top 20 từ `stock_infos` (không thêm HTTP) rồi mới gọi VPS batch.
+- **`market_breadth.py` / `trailing_stop.py`:** `DATA_UNAVAILABLE_CAUTION` (40% NAV), ngưỡng `HIGH`/`MODERATE` đồng bộ với `DISTRIBUTION_DANGER`.
+
+```mermaid
+flowchart LR
+    SCAN[scan_top_rockets] --> GATES[6 New-Buy Gates]
+    GATES --> TRK[SignalTracker.update_signals]
+    LIVE[live_prices mã rớt Top 20] --> TRK
+    TRK --> ACT[(active_signals.jsonl)]
+    TRK --> ARC[(signal_history_ml.jsonl)]
+    ACT --> CSV[ml_signals_dataset.csv]
+    ARC --> CSV
+```

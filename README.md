@@ -195,3 +195,9 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
 - **Tiêu chuẩn Zero-Waste:** Toàn bộ dự án luôn được giữ siêu nhẹ (< 15MB), tự động thu hồi RAM, xóa cache tạm thời sau khi xử lý dữ liệu.
 - **Đồng bộ tài liệu (Documentation-First):** Bất kỳ nâng cấp tính năng hoặc thay đổi logic nào đều phải được cập nhật ngay vào `docs/spec.md` và `docs/architecture.md`.
 
+
+
+### 4.13. Cổng Mua Mới Chặt Chẽ & Sổ Cái ML v2 (ADR-019 - Accepted)
+
+- **6 cổng Mua Mới:** chặn gãy nền dưới POC/VAL, bất biến vùng giá `SL < Entry <= TP1 < TP2`, cấm bắt dao rơi sau T0 (`< -2.5%`), đồng bộ Cầu chì vĩ mô xuống Sổ cái/Scorecard, `HIGH` hạ xuống thăm dò, đếm phiên giao dịch thực (loại T7/CN/lễ), Fail-Caution khi mất dữ liệu độ rộng, chặn doanh nghiệp lỗ (EPS TTM < 0) và Ngân hàng CAMEL yếu.
+- **Dữ liệu ML:** `data/ml_signals_dataset.csv` hợp nhất `active_signals.jsonl` và `data/signal_history_ml.jsonl` theo `signal_id`. Khi huấn luyện, lọc `is_ml_ready == True`. Chi tiết: [`docs/google_sheets_setup.md`](docs/google_sheets_setup.md).

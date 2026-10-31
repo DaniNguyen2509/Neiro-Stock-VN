@@ -46,7 +46,12 @@ function doPost(e) {
       "catalyst", "adtv20_billion", "adv20_shares", "liquidity_score", "t25_exposure_level",
       // ML Ground Truth Labels
       "max_price_reached", "min_price_reached", "mfe_pct", "mae_pct",
-      "pnl_t25_pct", "pnl_t5_pct", "outcome_label", "target_win_binary"
+      "pnl_t25_pct", "pnl_t5_pct", "pnl_t10_pct", "outcome_label", "target_win_binary",
+      // ADR-019: v2 metadata, T0 features mo rong, co san sang ML
+      "schema_version", "trading_days", "is_closed", "closed_at", "is_ml_ready",
+      "has_actual_prop_flow_t0", "atr_pct_t0", "atr_dist_from_poc_t0", "poc_price_t0", "val_price_t0",
+      "slippage_est_pct_t0", "market_breadth_pct_t0", "vn30_basis_t0",
+      "pe_t0", "pb_t0", "eps_ttm_t0", "camel_score_t0"
     ];
 
     // Tạo dòng tiêu đề nếu trang tính còn trống
@@ -147,13 +152,15 @@ url = "https://raw.githubusercontent.com/<YOUR_USER>/Neiro-Stock-VN/main/data/ml
 df = pd.read_csv(url)
 
 # 2. Lọc các vị thế đã có kết quả (loại bỏ vị thế mới mở ACTIVE)
-closed_df = df[df["outcome_label"].isin(["WIN_TP1", "WIN_TP2", "STOP_LOSS", "TIME_OUT"])].copy()
+closed_df = df[(df["is_ml_ready"] == True) & (df["schema_version"] == "v2")].copy()
 
 # 3. Chọn tập thuộc tính Feature Vector tại T0 (X)
 feature_cols = [
     "composite_rating", "rs_1m", "rrg_r", "rrg_m",
     "foreign_net_value_billion", "ranking_score",
-    "adtv20_billion", "liquidity_score"
+    "adtv20_billion", "liquidity_score",
+    "atr_pct_t0", "atr_dist_from_poc_t0", "slippage_est_pct_t0",
+    "market_breadth_pct_t0", "vn30_basis_t0", "pe_t0", "pb_t0"
 ]
 X = closed_df[feature_cols]
 

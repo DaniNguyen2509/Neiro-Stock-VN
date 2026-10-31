@@ -693,7 +693,7 @@ def generate_terminal_html(
     <div id="hud-tab-radar">
     <!-- PHẦN 1: BẢNG TOP SIÊU CỔ PHIẾU CHÂN SÓNG -->
     <div class="section-header">
-        <div class="section-title">TOP {len(fialda_candidates)} SIÊU CỔ PHIẾU CHÂN SÓNG & ĐỘT BIẾN DÒNG TIỀN (1 THÁNG | MỤC TIÊU +20% - +35%)</div>
+        <div class="section-title" style="{'color:#ff8a80;' if circuit_breaker_active else ''}">{'⛔ WATCHLIST QUAN SÁT TOP ' + str(len(fialda_candidates)) + ' CỔ PHIẾU THANH KHOẢN (ĐANG KHÓA MUA MỚI T+2.5 — CHỜ TẠO ĐÁY)' if circuit_breaker_active else 'TOP ' + str(len(fialda_candidates)) + ' SIÊU CỔ PHIẾU CHÂN SÓNG & ĐỘT BIẾN DÒNG TIỀN (1 THÁNG | MỤC TIÊU +20% - +35%)'}</div>
         <span style="font-size:11px;color:#78909c;">Nguồn: Fialda VIP Expert & Tích Lũy Khối Lượng Order Flow & Quản Trị Sức Chứa Thanh Khoản</span>
     </div>
     <div class="table-container">
@@ -981,7 +981,9 @@ def generate_terminal_html(
                                 sigBadge.innerHTML = '<span style="background:#004d40;color:#64ffda;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐẠT TP1 🎯</span>';
                             }} else if (!isLockedNoBuy && entryHigh > 0 && p > entryHigh * 1.03) {{
                                 sigBadge.innerHTML = '<span style="background:#e65100;color:#ffe0b2;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">MUA ĐUỔI ⚠️</span>';
-                            }} else if (!isLockedNoBuy && entryLow > 0 && p >= entryLow * 0.98 && p <= entryHigh * 1.03) {{
+                            }} else if (!isLockedNoBuy && entryLow > 0 && p < entryLow * 0.985) {{
+                                sigBadge.innerHTML = '<span style="background:#bf360c;color:#ffccbc;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">SUY YẾU ⚠️</span>';
+                            }} else if (!isLockedNoBuy && entryLow > 0 && p >= entryLow * 0.985 && p <= entryHigh * 1.03) {{
                                 sigBadge.innerHTML = '<span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">VÙNG MUA 🟢</span>';
                             }}
                         }}

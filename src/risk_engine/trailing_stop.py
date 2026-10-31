@@ -312,20 +312,20 @@ def evaluate_t25_exposure(
                 f"(Độ rộng {market_breadth_pct:.1f}%, Basis {basis_points:+.1f}đ). "
                 f"Tuyệt đối KHÔNG mở mua mới! Hạ tỷ trọng hàng khả dụng, nâng tiền mặt >= 70%."
             )
-        elif basis_points < -6.0 or market_breadth_pct < 50.0:
+        elif basis_points <= -6.0 or market_breadth_pct < 45.0:
             exposure_level = "HIGH"
             pause_new_buying = True
             cash_pct = 50.0
             action_msg = (
-                f"⚠️ PHƠI NHIỄM CAO ({t_stage}): Basis am {basis_points:+.1f}d cho thấy Big Boy phòng thủ. "
-                f"Tạm dừng mở mua mới, chờ hàng về chiều T+2 mới xử lý."
+                f"⚠️ PHƠI NHIỄM CAO ({t_stage}): Độ rộng {market_breadth_pct:.1f}% / Basis {basis_points:+.1f}đ "
+                f"cho thấy dòng tiền lớn phòng thủ. Hạ tỷ trọng thăm dò <= 30%, hạn chế mở mua mới."
             )
-        elif basis_points < 0.0:
+        elif basis_points < 0.0 or market_breadth_pct < 55.0:
             exposure_level = "MODERATE"
             pause_new_buying = False
             cash_pct = 35.0
             action_msg = (
-                f"🟡 PHƠI NHIỄM VỪA PHẢI ({t_stage}): Thị trường rung lắc nhẹ (Basis {basis_points:+.1f}d). "
+                f"🟡 PHƠI NHIỄM VỪA PHẢI ({t_stage}): Thị trường phân hóa (Độ rộng {market_breadth_pct:.1f}%, Basis {basis_points:+.1f}đ). "
                 f"Chỉ giải ngân đợt 1 tối đa 50% vị thế tại vùng gom an toàn."
             )
         else:

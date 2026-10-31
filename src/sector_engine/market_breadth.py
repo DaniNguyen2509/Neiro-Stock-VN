@@ -48,12 +48,15 @@ def analyze_market_breadth(
             advances=0,
             declines=0,
             unchanged=unch,
-            breadth_pct=70.0,
+            breadth_pct=55.0,
             total_value_billion=round(val_bil, 1),
-            regime="BULLISH_EXPANSION",
+            regime="DATA_UNAVAILABLE_CAUTION",
             pause_new_buying=False,
-            max_total_nav_exposure_pct=80.0,
-            warning_banner="",
+            max_total_nav_exposure_pct=40.0,
+            warning_banner=(
+                "⚠️ DỮ LIỆU ĐỘ RỘNG CHƯA SẴN SÀNG (Ngoài giờ / API trễ): "
+                "Kích hoạt chế độ Thận trọng (Fail-Caution), giới hạn tổng cổ phiếu <= 40% NAV."
+            ),
         )
 
     breadth_pct = round((adv / max(adv + dec, 1)) * 100.0, 1)

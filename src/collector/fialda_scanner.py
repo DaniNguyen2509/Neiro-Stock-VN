@@ -33,8 +33,13 @@ from src.risk_engine.trailing_stop import (
 )
 from src.collector.ranking_history import RankingHistoryTracker
 from src.collector.vn_market_client import VNMarketClient
+from src.fundamental_engine.banking_quant import get_benchmark_vn_banks, screen_banks_camel
 from src.risk_engine.position_sizer import calculate_retail_t25_position_size
-from src.risk_engine.signal_tracker import SignalTracker, format_public_anti_fomo_badge
+from src.risk_engine.signal_tracker import (
+    SignalTracker,
+    count_vn_trading_days,
+    format_public_anti_fomo_badge,
+)
 from src.sector_engine.market_breadth import parse_market_breadth_dict
 
 # Dam bao terminal Windows in tieng Viet UTF-8 muot ma
@@ -93,6 +98,13 @@ class FialdaCandidate:
     buy_permission: str = "BUY_OK"       # BUY_OK, BUY_CAUTION, EXTENDED_NO_CHASING, BULL_TRAP_REJECT, STALE_SIGNAL
     anti_fomo_badge: str = "🟢 VÙNG MUA CHUẨN"
     retail_lot_note: str = ""            # Kiem tra lo chan 100 cp HOSE cho von nho le 100tr
+    is_watchlist_only: bool = False      # True khi chi dua vao Watchlist quan sat trong phien Cau chi Vi mo
+    market_breadth_pct_t0: float = 55.0  # % Do rong thi truong tai thoi diem T0 (ML Feature)
+    vn30_basis_t0: float = 0.0           # Do lech Basis VN30F1M - VN30 tai T0 (ML Feature)
+    pe_t0: float = 0.0                   # P/E tai T0 (ML Feature)
+    pb_t0: float = 0.0                   # P/B tai T0 (ML Feature)
+    eps_ttm_t0: float = 0.0              # EPS TTM 4 quy gan nhat tai T0 (ML Feature)
+    camel_score_t0: float = 0.0          # Diem CAMEL dinh luong (rieng nganh Ngan hang, 0.0 voi phi ngan hang)
 
 
 VN_TZ = timezone(timedelta(hours=7))
@@ -296,20 +308,26 @@ def enrich_candidates_with_trailing_stop_and_history(
         c.tp2 = tp2
         c.rr_ratio = rr
         c.t0_entry_original = c.price
+        if c.market_breadth_pct_t0 == 55.0 and market_breadth_pct != 70.0:
+            c.market_breadth_pct_t0 = round(float(market_breadth_pct), 1)
+        if c.vn30_basis_t0 == 0.0 and basis_points != 0.0:
+            c.vn30_basis_t0 = round(float(basis_points), 2)
 
         # 3. Neo vung mua va Quyen Mua Moi vao So Cai Tin Hieu Goc T0 (BM-01 Single Source of Truth)
+        has_t0_anchor = False
         existing = active_ledger.get(c.symbol)
-        if existing is not None and existing.status != "STOPPED_OUT":
+        if existing is not None and not existing.is_closed and existing.status != "STOPPED_OUT":
             first_dt = st.parse_time(existing.first_signal_date) or now_dt
             holding_days = max(0, (now_dt.date() - first_dt.date()).days)
-            if holding_days <= st.MAX_HOLDING_DAYS and existing.entry_original > 0:
+            trading_days = count_vn_trading_days(first_dt.date(), now_dt.date())
+            if trading_days <= st.MAX_HOLDING_DAYS and existing.entry_original > 0:
                 pnl_t0 = round(((c.price - existing.entry_original) / existing.entry_original) * 100.0, 2)
                 cur_max = max(existing.max_price_reached or existing.entry_original, c.price)
                 mfe_t0 = max(
                     existing.mfe_pct,
                     round(((cur_max - existing.entry_original) / existing.entry_original) * 100.0, 2),
                 )
-                status_t0, buy_perm, _, new_sl = st.evaluate_status_and_advice(
+                status_t0, buy_perm, advice_t0, new_sl = st.evaluate_status_and_advice(
                     entry_orig=existing.entry_original,
                     cur_price=c.price,
                     cur_stop=existing.current_stop_loss,
@@ -317,6 +335,7 @@ def enrich_candidates_with_trailing_stop_and_history(
                     tp2=existing.tp2,
                     holding_days=holding_days,
                     mfe_pct=mfe_t0,
+                    trading_days=trading_days,
                 )
                 if status_t0 == "STOPPED_OUT":
                     if record_history or signal_tracker is not None:
@@ -326,17 +345,43 @@ def enrich_candidates_with_trailing_stop_and_history(
                             pass
                     continue
 
+                has_t0_anchor = True
                 c.t0_entry_original = existing.entry_original
                 c.pnl_from_t0_pct = pnl_t0
                 c.holding_days_t0 = holding_days
                 c.buy_permission = buy_perm
-                c.anti_fomo_badge = format_public_anti_fomo_badge(buy_perm, pnl_t0, holding_days)
+                c.anti_fomo_badge = format_public_anti_fomo_badge(
+                    buy_perm, pnl_t0, holding_days, status=status_t0, advice_note=advice_t0
+                )
                 # Khoa vung mua goc T0, tuyet doi khong truot duoi theo thi gia
                 c.entry_low = round(existing.entry_original * 0.985, 2)
                 c.entry_high = round(existing.entry_original * 1.015, 2)
                 c.stop_loss = round(max(new_sl, existing.initial_stop_loss), 2)
                 c.tp1 = existing.tp1
                 c.tp2 = existing.tp2
+
+        # 3b. Bat bien toan hoc SL < Entry_Low <= Entry_High < TP1 < TP2 (chan triet de loi Entry > TP1 do cho_mua cu treo cao)
+        if not has_t0_anchor:
+            if (
+                c.entry_low <= c.stop_loss
+                or c.entry_high >= c.tp1
+                or c.entry_low > c.price * 1.02
+                or c.entry_high < c.price * 0.96
+                or c.entry_low > c.entry_high
+            ):
+                c.entry_low = round(max(c.price * 0.985, c.stop_loss + 0.01), 2)
+                c.entry_high = round(min(max(c.price * 1.015, c.entry_low), c.tp1 - 0.01), 2)
+            else:
+                c.entry_low = round(max(c.entry_low, c.stop_loss + 0.01), 2)
+                c.entry_high = round(min(max(c.entry_high, c.entry_low), c.tp1 - 0.01), 2)
+            if c.entry_low > c.entry_high:
+                mid_p = round(min(max(c.price, c.stop_loss + 0.01), c.tp1 - 0.01), 2)
+                c.entry_low = mid_p
+                c.entry_high = mid_p
+
+        if getattr(c, "is_watchlist_only", False):
+            c.buy_permission = "EXTENDED_NO_CHASING"
+            c.anti_fomo_badge = "⛔ WATCHLIST QUAN SÁT (CHƯA ĐỦ ĐIỂM MUA)"
 
         # Gan bien dong thu hang tu phien truoc
         ch = rank_changes.get(c.symbol, {})
@@ -359,7 +404,10 @@ def enrich_candidates_with_trailing_stop_and_history(
                 c.buy_permission = "EXTENDED_NO_CHASING"
                 c.anti_fomo_badge = "⛔ CẦU CHÌ T+2.5: NGỪNG MUA"
             elif exp.exposure_level == "HIGH":
-                c.t25_status_badge = "⚠️ TẠM DỪNG MUA (T+2.5 HIGH)"
+                c.t25_status_badge = "⚠️ THẬN TRỌNG CAO (T+2.5 HIGH)"
+                if c.buy_permission == "BUY_OK":
+                    c.buy_permission = "BUY_CAUTION"
+                    c.anti_fomo_badge = "🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN)"
             elif exp.exposure_level == "MODERATE":
                 c.t25_status_badge = "🟡 THĂM DÒ <=30% (T+2.5 MODERATE)"
             else:
@@ -1378,12 +1426,16 @@ class FialdaScanner:
 
         candidates: List[FialdaCandidate] = []
         watchlist_backup: List[FialdaCandidate] = []
+        camel_map: Dict[str, float] = {
+            b.symbol: b.total_score for b in screen_banks_camel(get_benchmark_vn_banks())
+        }
 
         for sym in clean_pool:
             # Lay thong tin gia khop that 100% tu GetStockInfos
             s_info = stock_infos.get(sym, {})
             p_info = s_info.get("PriceInfo", {})
             f_trade = s_info.get("ForeignTrade", {})
+            b_info = s_info.get("BasicInfo", {}) if isinstance(s_info.get("BasicInfo"), dict) else {}
             m_info = market_sym_map.get(sym, {})
 
             cur_price = p_info.get("currentPrice") or p_info.get("lastPrice") or p_info.get("closePrice")
@@ -1391,6 +1443,19 @@ class FialdaScanner:
                 cur_price = m_info.get("currentPrice") or 0.0
 
             if cur_price <= 0:
+                continue
+
+            # Trich xuat Chi so Co ban Dinh luong (EPS TTM, P/E, P/B & CAMEL Ngan hang) cho Cong loc Fundamental + ML Feature Vector T0
+            raw_eps = b_info.get("eps_TTM") if b_info.get("eps_TTM") is not None else (b_info.get("eps") if b_info.get("eps") is not None else p_info.get("eps"))
+            eps_ttm_val = round(float(raw_eps), 2) if raw_eps is not None else 0.0
+            raw_pe = b_info.get("pe") if b_info.get("pe") is not None else p_info.get("pe")
+            pe_val = round(float(raw_pe), 2) if raw_pe is not None else 0.0
+            raw_pb = b_info.get("pb") if b_info.get("pb") is not None else p_info.get("pb")
+            pb_val = round(float(raw_pb), 2) if raw_pb is not None else 0.0
+            camel_val = round(float(camel_map.get(sym, 0.0)), 1)
+
+            # CONG CHAN CO BAN DINH LUONG: Tu choi 100% doanh nghiep dang thua lo (EPS TTM < 0) khoi khuyen nghi Mua Moi
+            if eps_ttm_val < 0.0:
                 continue
 
             # Lay gia tri khoi ngoai that tu ForeignTrade
@@ -1448,6 +1513,11 @@ class FialdaScanner:
             elif sym in dot_bien_list:
                 signal_type = "DOT_BIEN_GIA_TRI"
 
+            # Chuan hoa vung mua neu tin hieu cho_mua cu bi treo cao/thap bat thuong so voi thi gia hien tai
+            if entry_low > cur_price * 1.02 or entry_high < cur_price * 0.96 or entry_low > entry_high:
+                entry_low = cur_price * 0.985
+                entry_high = cur_price * 1.015
+
             # Phan loai dong tien kep trung thuc (Task 1.1)
             flow_regime, flow_badge, prop_verified = classify_dual_flow(
                 foreign_net_val=foreign_net,
@@ -1464,9 +1534,21 @@ class FialdaScanner:
             if cur_price < 6.0 and not (acc_diss in ["A", "B"] and composite >= 70):
                 continue
 
-            # CONG CHAN DU DINH PRE-T0 & PHAN PHOI CLIMAX (Task 1.3 - BM-02):
-            # 1. Loai bo co phieu da keo nong qua xa vung can bang Volume Profile POC (> 2.5 * ATR14) truoc T0
+            # CONG CHAN NGAN HANG CAMEL HANG C YEU (< 50 diem): Chi cho phep neu co tin hieu chan song tich luy A/B ro ret
+            if sym in camel_map and camel_val < 50.0 and not (
+                signal_type == "CHO_MUA_CHAN_SONG" and acc_diss in ["A", "B"] and composite >= 75
+            ):
+                continue
+
+            # CONG CHAN DU DINH PRE-T0, PHAN PHOI CLIMAX & GAY NEN CAU TRUC (BM-02 + ADR-019):
+            # 1. Loai bo co phieu da keo nong qua xa vung can bang Volume Profile POC (> +2.5 * ATR14) truoc T0
             if poc_price > 0 and atr_dist_poc > 2.5:
+                continue
+            # 2. Loai bo co phieu da gay nen roi sau duoi POC (< -2.0 * ATR14) hoac thung sau VAL (cam bat dao roi)
+            eff_atr_scan = atr_14_val if atr_14_val > 0 else cur_price * 0.035
+            if poc_price > 0 and atr_dist_poc < -2.0:
+                continue
+            if val_price > 0 and cur_price < val_price - 1.2 * eff_atr_scan:
                 continue
 
             is_distribution_blocked = (
@@ -1547,6 +1629,10 @@ class FialdaScanner:
                 score -= round((atr_dist_poc - 1.8) * 8.0, 1)
             if is_morning_fomo_window and signal_type == "DOT_BIEN_GIA_TRI" and acc_diss != "A":
                 score -= 5.0
+            if camel_val >= 80.0:
+                score += 4.0
+            elif 0.0 < camel_val < 55.0:
+                score -= 10.0
 
             # Tinh diem Cat lo so bo & Muc tieu 1 thang (+20% den +35%)
             stop_loss = round(entry_low * 0.945, 2)
@@ -1563,6 +1649,8 @@ class FialdaScanner:
             catalyst = f"RRG(r={rrg_r:.1f}, m={rrg_m:.1f}), IBD={composite}, Acc/Diss={acc_diss} | {flow_badge}"
             if poc_price > 0:
                 catalyst += f" | POC={poc_price:.2f} ({atr_dist_poc:+.1f} ATR)"
+            if camel_val > 0:
+                catalyst += f" | CAMEL={camel_val:.0f}/100"
             if is_morning_fomo_window:
                 catalyst += " | ⏱️ Phiên sáng: Thăm dò <= 30%, chờ sau 13:45 xác nhận cung T+2.5"
 
@@ -1598,6 +1686,13 @@ class FialdaScanner:
                 vah_price=vah_price,
                 atr_dist_from_poc=atr_dist_poc,
                 swing_low_10d=swing_low_10d,
+                is_watchlist_only=bool(is_distribution_blocked),
+                market_breadth_pct_t0=round(breadth_snap.breadth_pct, 1),
+                vn30_basis_t0=round(live_basis, 2),
+                pe_t0=pe_val,
+                pb_t0=pb_val,
+                eps_ttm_t0=eps_ttm_val,
+                camel_score_t0=camel_val,
             )
             if is_distribution_blocked:
                 if adtv20_est >= 25.0:
@@ -1627,7 +1722,41 @@ class FialdaScanner:
             except Exception:
                 pass
             try:
-                SignalTracker().update_signals(top_final, current_time=now_vn)
+                st_live = SignalTracker()
+                top_syms = {c.symbol for c in top_final}
+                open_missing = [
+                    s
+                    for s, sig in st_live.load_active_signals().items()
+                    if not sig.is_closed and s not in top_syms
+                ]
+                open_live_prices: Dict[str, float] = {}
+                still_unpriced: List[str] = []
+                for s in open_missing:
+                    si = stock_infos.get(s, {})
+                    pi = si.get("PriceInfo", {}) if isinstance(si, dict) else {}
+                    mi = market_sym_map.get(s, {})
+                    p_found = float(
+                        pi.get("currentPrice")
+                        or pi.get("lastPrice")
+                        or pi.get("closePrice")
+                        or mi.get("currentPrice")
+                        or 0.0
+                    )
+                    if p_found > 0:
+                        open_live_prices[s] = round(p_found, 2)
+                    else:
+                        still_unpriced.append(s)
+                if still_unpriced and self.token and self.token not in self._DUMMY_TEST_TOKENS:
+                    batch_quotes = self.get_public_realtime_prices(still_unpriced)
+                    for s, qp in batch_quotes.items():
+                        if qp and float(qp) > 0:
+                            open_live_prices[s] = round(float(qp), 2)
+                st_live.update_signals(
+                    top_final,
+                    current_time=now_vn,
+                    live_prices=open_live_prices,
+                    macro_pause_buying=macro_circuit_breaker,
+                )
             except Exception:
                 pass
         return top_final
