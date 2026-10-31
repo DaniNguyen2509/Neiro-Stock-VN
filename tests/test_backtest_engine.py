@@ -249,3 +249,42 @@ def test_walk_forward_coordinator_execution():
     # Kiem tra toan bo giao dich deu thoa man T+2.5 (holding_days >= 2)
     for t in res_full.trades:
         assert t.holding_days >= 2
+
+
+def test_floor_lock_consecutive_t2_t3_limit_down_liquidates_on_t4():
+    """BM-08 Scorecard: Mua T0 -> T+2 va T+3 nam san trang ben mua (close == floor_price) -> T+4 moi tat toan duoc."""
+    from src.backtesting.models import MarketBar
+
+    cfg = BacktestConfig(initial_capital=100_000_000.0, min_holding_bars=2)
+    engine = T25BacktestEngine(cfg)
+
+    batch = engine.execute_buy(
+        symbol="DIG",
+        price=20.00,
+        date="2026-10-26",
+        day_idx=0,
+        exchange=Exchange.HOSE,
+        allocated_capital=20_000_000.0,
+        reference_price=20.00,
+    )
+    assert batch is not None
+    stop_loss = 18.80  # -6.0%
+
+    # T+2: Tham chieu 18.60 -> San HOSE = 17.30, dong cua nam san cung 17.30 -> Khong the khop ban!
+    bar_t2 = MarketBar("DIG", "2026-10-28", 17.60, 17.60, 17.30, 17.30, 150_000, reference_price=18.60, exchange=Exchange.HOSE)
+    assert engine.check_and_execute_stop_loss("DIG", bar_t2, day_idx=2, stop_loss_price=stop_loss) is None
+
+    # T+3: Tham chieu 17.30 -> San HOSE = 16.09, tiep tuc nam san trang ben mua 16.09 -> Van ket hang!
+    bar_t3 = MarketBar("DIG", "2026-10-29", 16.09, 16.09, 16.09, 16.09, 80_000, reference_price=17.30, exchange=Exchange.HOSE)
+    assert engine.check_and_execute_stop_loss("DIG", bar_t3, day_idx=3, stop_loss_price=stop_loss) is None
+    assert engine.floor_lock_blocked_count == 2
+    assert "DIG" in engine.positions
+
+    # T+4: Co cau giai cuu tai 15.80 (tren gia san 14.96 cua ref 16.09) -> Tat toan thuc te tai 15.80!
+    bar_t4 = MarketBar("DIG", "2026-10-30", 15.80, 16.20, 15.50, 16.00, 12_000_000, reference_price=16.09, exchange=Exchange.HOSE)
+    trade = engine.check_and_execute_stop_loss("DIG", bar_t4, day_idx=4, stop_loss_price=stop_loss)
+    assert trade is not None
+    assert trade.exit_price == 15.80
+    assert trade.holding_days == 4
+    assert trade.return_pct < -20.0
+

@@ -2,19 +2,43 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 from src.collector.data_loader import get_mock_vietnam_stocks
+from src.collector.vn_market_client import VNMarketClient
 from src.fundamental_engine.screener import screen_stocks
 from src.microstructure_engine.basis_tracker import analyze_vn30_basis
 from src.collector.fialda_scanner import FialdaCandidate, FialdaScanner
+from src.risk_engine.position_sizer import calculate_retail_t25_position_size
+from src.sector_engine.market_breadth import parse_market_breadth_dict
+from src.backtesting.walk_forward import WalkForwardCoordinator
+
+_CACHED_WF_SUMMARY: Optional[Dict[str, Any]] = None
+
+
+def _get_cached_walk_forward_summary() -> Dict[str, Any]:
+    """Chạy kiểm định Walk-Forward T+2.5 trung thực (có cache trên RAM để xuất HTML tức thì)."""
+    global _CACHED_WF_SUMMARY
+    if _CACHED_WF_SUMMARY is None:
+        _CACHED_WF_SUMMARY = WalkForwardCoordinator().run_full_walk_forward()
+    return _CACHED_WF_SUMMARY
 
 
 def generate_terminal_html(
     output_path: str = "exports/vn_stock_terminal.html",
     fialda_candidates: Optional[List[FialdaCandidate]] = None,
     top_n: int = 20,
+    spot_deriv_override: Optional[Dict[str, float]] = None,
+    market_breadth: Optional[Dict[str, Any]] = None,
+    scanner: Optional[FialdaScanner] = None,
 ) -> str:
-    """Sinh ma nguon giao dien Web Terminal Plotly tuong tac doc lap (Continuous Dashboard)."""
-    basis = analyze_vn30_basis(1312.20, 1315.50)
-    scanner = FialdaScanner()
+    """Sinh mã nguồn giao diện Web Terminal tương tác độc lập (Continuous Dashboard)."""
+    scanner = scanner or FialdaScanner()
+
+    if spot_deriv_override is not None:
+        prices_map = spot_deriv_override
+    else:
+        prices_map = VNMarketClient(use_mock=False).get_spot_and_derivatives_prices()
+    vn30_spot = float(prices_map.get("VN30_INDEX") or 1300.0)
+    vn30f1m_fut = float(prices_map.get("VN30F1M") or vn30_spot)
+    basis = analyze_vn30_basis(vn30f1m_fut, vn30_spot)
 
     if fialda_candidates is None:
         if scanner.username and scanner.password:
@@ -25,6 +49,14 @@ def generate_terminal_html(
         else:
             fialda_candidates = scanner._fallback_mock_top_20()[:top_n]
 
+    if market_breadth is None and scanner.token:
+        try:
+            market_breadth = scanner.get_market_breadth()
+        except Exception:
+            market_breadth = None
+    mb_snap = parse_market_breadth_dict(market_breadth)
+    circuit_breaker_active = bool(mb_snap.pause_new_buying or basis.basis_points <= -8.0)
+
     # Lay du lieu co ban that 100% tu Fialda TechnicalAnalysis & GetStockInfos
     try:
         fund_data = scanner.get_fundamental_screener_data()
@@ -34,10 +66,39 @@ def generate_terminal_html(
     # Chuan bi bang du lieu Fialda Top N
     fialda_rows_html = ""
     for idx, c in enumerate(fialda_candidates, 1):
-        sig_badge = (
+        base_sig_badge = (
             '<span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHÂN SÓNG</span>'
             if "CHO_MUA" in c.signal_type
             else '<span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span>'
+        )
+        buy_perm = getattr(c, "buy_permission", "BUY_OK")
+        fomo_text = getattr(c, "anti_fomo_badge", "🟢 VÙNG MUA CHUẨN")
+        if circuit_breaker_active:
+            buy_perm = "EXTENDED_NO_CHASING"
+            fomo_text = "⛔ NGỪNG MUA MỚI — QUAN SÁT"
+        if buy_perm in ("EXTENDED_NO_CHASING", "BULL_TRAP_REJECT"):
+            fomo_sub_html = f'<div style="margin-top:3px;"><span style="background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">{fomo_text}</span></div>'
+        elif buy_perm == "STALE_SIGNAL":
+            fomo_sub_html = f'<div style="margin-top:3px;"><span style="background:#7c2d12;color:#fed7aa;border:1px solid #f97316;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">{fomo_text}</span></div>'
+        elif buy_perm == "BUY_CAUTION":
+            fomo_sub_html = f'<div style="margin-top:3px;"><span style="background:#78350f;color:#fde68a;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">{fomo_text}</span></div>'
+        else:
+            fomo_sub_html = ""
+        sig_badge = f"{base_sig_badge}{fomo_sub_html}"
+
+        lot_note = getattr(c, "retail_lot_note", "")
+        if not lot_note and c.price > 100.0:
+            lot_note = calculate_retail_t25_position_size(
+                equity_vnd=100_000_000.0,
+                current_price_vnd=c.price,
+                stop_loss_price_vnd=c.stop_loss,
+                available_t0_ratio=0.0,
+                symbol=c.symbol,
+            ).lot_warning
+        lot_badge_html = (
+            f'<div title="{lot_note}" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div>'
+            if lot_note
+            else ""
         )
         foreign_str = f"{c.foreign_net_value_billion:+.1f} tỷ"
         foreign_color = "#00e676" if c.foreign_net_value_billion >= 0 else "#ff5252"
@@ -83,9 +144,9 @@ def generate_terminal_html(
         fialda_rows_html += f"""
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">{idx}</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">{c.symbol}</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">{c.symbol}{lot_badge_html}</td>
             <td style="padding:6px 5px;text-align:center;"><span id="sig-badge-{c.symbol}">{sig_badge}</span></td>
-            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="{c.symbol}" data-ref="{c.price}" data-entry-high="{c.entry_high}" data-entry-low="{c.entry_low}" data-sl="{c.stop_loss}" data-tp1="{tp1_val}" data-tp2="{tp2_val}">{c.price:,.2f}</span> <span class="live-change" data-sym="{c.symbol}" style="font-size:11px;margin-left:3px;"></span></td>
+            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="{c.symbol}" data-ref="{c.price}" data-entry-high="{c.entry_high}" data-entry-low="{c.entry_low}" data-sl="{c.stop_loss}" data-tp1="{tp1_val}" data-tp2="{tp2_val}" data-buy-perm="{buy_perm}">{c.price:,.2f}</span> <span class="live-change" data-sym="{c.symbol}" style="font-size:11px;margin-left:3px;"></span></td>
             <td style="padding:6px 5px;color:#00e676;font-weight:600;">{c.entry_low:.2f} - {c.entry_high:.2f}</td>
             <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">{c.stop_loss:.2f}</td>
             <td style="padding:6px 5px;text-align:center;">{tp_html}</td>
@@ -285,19 +346,34 @@ def generate_terminal_html(
     }
     regime_vn = regime_map.get(basis.regime, basis.regime)
 
-    # 1. Tinh dong tien Ca map (Foreign Net Value) dong bo that tu danh muc Top
+    # 1. Tinh dong tien Ca map (Foreign Net Value) dong bo that tu danh muc Top (Khong bia dat Tu doanh)
+    total_cands = len(fialda_candidates) if fialda_candidates else 0
     total_foreign = sum(getattr(c, "foreign_net_value_billion", 0.0) for c in fialda_candidates) if fialda_candidates else 0.0
+    absorbed_cnt = sum(
+        1
+        for c in (fialda_candidates or [])
+        if getattr(c, "flow_regime", "NOI_CAN_HANG") in ("SIEU_SONG", "NOI_CAN_HANG")
+        and getattr(c, "acc_diss_rating", "C") in ("A", "B", "C")
+    )
+    dist_cnt = sum(
+        1
+        for c in (fialda_candidates or [])
+        if getattr(c, "flow_regime", "") == "RUI_RO_XA" or getattr(c, "acc_diss_rating", "C") in ("D", "E")
+    )
     if total_foreign >= 0:
         smart_money_val = f"+{total_foreign:.1f} Tỷ VND"
         smart_money_color = "#00e676"
-        smart_money_sub = "Khối ngoại + Tự doanh mua ròng đồng thuận"
-    else:
+        smart_money_sub = f"Khối ngoại mua ròng • {absorbed_cnt}/{max(total_cands, 1)} mã giữ cấu trúc tích lũy"
+    elif absorbed_cnt > dist_cnt and not circuit_breaker_active:
         smart_money_val = f"{total_foreign:.1f} Tỷ VND"
         smart_money_color = "#ffb300"
-        smart_money_sub = "Ngoại bán ròng • Dòng tiền Nội gom cân hàng (Pha chân sóng)"
+        smart_money_sub = f"Ngoại bán ròng • Dòng tiền Nội gom cân hàng ({absorbed_cnt}/{max(total_cands, 1)} mã nền A/B)"
+    else:
+        smart_money_val = f"{total_foreign:.1f} Tỷ VND"
+        smart_money_color = "#ff5252"
+        smart_money_sub = f"Khối ngoại bán ròng • Cảnh báo {dist_cnt}/{max(total_cands, 1)} mã áp lực xả (Thận trọng T+2.5)"
 
     # 2. Do rong danh muc sieu co phieu (Market Breadth / Momentum)
-    total_cands = len(fialda_candidates) if fialda_candidates else 0
     if total_cands > 0:
         strong_cands = sum(1 for c in fialda_candidates if getattr(c, "composite_rating", 0) >= 70 or getattr(c, "rs_1m", 0) >= 70)
         breadth_pct = (strong_cands / total_cands) * 100.0
@@ -308,6 +384,58 @@ def generate_terminal_html(
         breadth_val = "75.0%"
         breadth_sub = "Cân bằng bình thường"
         breadth_color = "#ffb300"
+
+    macro_breadth_suffix = ""
+    if mb_snap.advances > 0 or mb_snap.declines > 0:
+        macro_breadth_suffix = f"VN-Index: Tăng {mb_snap.advances} / Giảm {mb_snap.declines} ({mb_snap.breadth_pct:.1f}%)"
+        breadth_sub = f"{breadth_sub} • {macro_breadth_suffix}"
+        if mb_snap.pause_new_buying:
+            breadth_color = "#ff5252"
+
+    # Chuan bi du lieu Tab 2: Kiem dinh Walk-Forward T+2.5 Trung thuc (Floor-Lock + 0.40% Fee/Tax + <= 20% NAV)
+    wf_summary = _get_cached_walk_forward_summary()
+    wf_is = wf_summary["in_sample"]
+    wf_oos = wf_summary["out_of_sample"]
+    wf_full = wf_summary["full"]
+    wf_wfe = wf_summary["walk_forward_efficiency_pct"]
+    wf_rows_html = ""
+    for wf_label, wf_res in [
+        ("In-Sample (2021 - 2023 • Bull & Bear)", wf_is),
+        ("Out-of-Sample (2024 - 2026 • Kiểm Chứng Mù)", wf_oos),
+        ("Toàn Chu Kỳ (2021 - 2026 • Hợp Nhất)", wf_full),
+    ]:
+        ret_color = "#00e676" if wf_res.total_return_pct >= 0 else "#ff5252"
+        alpha_color = "#00e676" if wf_res.alpha_pct >= 0 else "#ffb300"
+        wf_rows_html += f"""
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;">{wf_label}</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:{ret_color};">{wf_res.total_return_pct:+.2f}%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">{wf_res.cagr_pct:+.2f}%</td>
+            <td style="padding:10px;text-align:center;color:#ff5252;font-weight:bold;">-{abs(wf_res.max_drawdown_pct):.2f}%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">{wf_res.sharpe_ratio:.2f}</td>
+            <td style="padding:10px;text-align:center;">{wf_res.win_rate_pct:.1f}% ({wf_res.total_trades} lệnh)</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:{alpha_color};">{wf_res.alpha_pct:+.2f}%</td>
+            <td style="padding:10px;text-align:center;color:#fbbf24;font-weight:bold;">{wf_res.floor_lock_blocked_count} lần sàn / {wf_res.t25_blocked_count} lần T+2.5</td>
+        </tr>
+        """
+
+    basis_color = "#ff5252" if basis.basis_points <= -8.0 else ("#ffb300" if basis.basis_points < 0 else "#29b6f6")
+    circuit_breaker_html = ""
+    if mb_snap.pause_new_buying or basis.basis_points <= -8.0:
+        reasons: List[str] = []
+        if mb_snap.pause_new_buying:
+            reasons.append(
+                f"Độ rộng VN-Index suy yếu {mb_snap.breadth_pct:.1f}% (Tăng {mb_snap.advances} / Giảm {mb_snap.declines} — Xanh vỏ đỏ lòng)"
+            )
+        if basis.basis_points <= -8.0:
+            reasons.append(f"Phái sinh VN30F1M chiết khấu âm sâu ({basis.basis_points:+.2f} điểm)")
+        reason_str = " | ".join(reasons)
+        circuit_breaker_html = f"""
+    <div id="t25-circuit-breaker-banner" style="background:linear-gradient(90deg,#450a0a,#7f1d1d);border:2px solid #ef4444;border-radius:8px;padding:12px 16px;margin-bottom:18px;color:#fee2e2;font-size:13px;line-height:1.5;">
+        <div style="font-weight:800;font-size:14px;color:#fca5a5;">⛔ CẦU CHÌ T+2.5 KÍCH HOẠT: TẠM NGỪNG MUA MỚI TOÀN BỘ VỊ THẾ CỔ PHIẾU</div>
+        <div><b>Nguyên nhân vĩ mô:</b> {reason_str}. Tuyệt đối không mở mua mới hoặc bình quân giá xuống để tránh kẹp chu kỳ thanh toán T+2.5; ưu tiên giữ tỷ trọng tiền mặt &ge; 70% NAV.</div>
+    </div>
+        """
 
     # 3. Nganh dan dat tu toa do RRG (Leading Sector)
     SECTOR_MAP = {
@@ -491,7 +619,7 @@ def generate_terminal_html(
     <div class="grid">
         <div class="card" id="card-basis-container">
             <div class="card-title">Chênh Lệch Basis VN30F1M</div>
-            <div class="card-value" id="card-basis-val" style="color:#29b6f6;">{basis.basis_points:+.2f} ĐIỂM</div>
+            <div class="card-value" id="card-basis-val" style="color:{basis_color};">{basis.basis_points:+.2f} ĐIỂM</div>
             <div id="card-basis-sub" style="font-size:11px;color:#78909c;margin-top:4px;">Trạng thái: {regime_vn}</div>
         </div>
         <div class="card" id="card-smart-money-container">
@@ -502,7 +630,7 @@ def generate_terminal_html(
         <div class="card" id="card-breadth-container">
             <div class="card-title">Độ Rộng Danh Mục Dẫn Dắt</div>
             <div class="card-value" id="card-breadth-val" style="color:{breadth_color};">{breadth_val}</div>
-            <div id="card-breadth-sub" style="font-size:11px;color:#78909c;margin-top:4px;">{breadth_sub}</div>
+            <div id="card-breadth-sub" data-macro-breadth="{macro_breadth_suffix}" style="font-size:11px;color:#78909c;margin-top:4px;">{breadth_sub}</div>
         </div>
         <div class="card" id="card-sector-container">
             <div class="card-title">Ngành Dẫn Dắt (Động Lượng RRG)</div>
@@ -511,6 +639,41 @@ def generate_terminal_html(
         </div>
     </div>
 
+    {circuit_breaker_html}
+
+    <!-- THANH CHUYỂN TAB CHIẾN THUẬT: TAB 1 (RADAR THỰC CHIẾN) & TAB 2 (WALK-FORWARD T+2.5 TRUNG THỰC) -->
+    <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;">
+        <button id="btn-tab-radar" onclick="switchHudTab('radar')" style="background:#ffb300;color:#0b0e14;border:none;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:800;cursor:pointer;">📡 TAB 1: RADAR THỰC CHIẾN & BẢNG ĐỊNH LƯỢNG</button>
+        <button id="btn-tab-wf" onclick="switchHudTab('wf')" style="background:#151a23;color:#90a4ae;border:1px solid #263238;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">🧪 TAB 2: KIỂM ĐỊNH WALK-FORWARD T+2.5 TRUNG THỰC (FLOOR-LOCK)</button>
+    </div>
+
+    <div id="hud-tab-wf" style="display:none;margin-bottom:25px;">
+        <div class="section-header">
+            <div class="section-title" style="color:#38bdf8;">🧪 BÁO CÁO KIỂM ĐỊNH WALK-FORWARD T+2.5 TRUNG THỰC (KHÓA SÀN TRẮNG BÊN MUA & TRẦN 20% NAV)</div>
+            <span style="font-size:11px;color:#78909c;">WFE: <b style="color:#00e676;">{wf_wfe:.1f}%</b> • Phí &amp; Thuế toàn vòng: <b style="color:#ffb300;">0.40%</b> • Trần Cold-Start: <b style="color:#4fc3f7;">&le; 20% NAV/mã</b> • Cắt lỗ Gap-Down T+2.5</span>
+        </div>
+        <div class="table-container">
+            <table id="walk-forward-table">
+                <thead>
+                    <tr>
+                        <th>Giai Đoạn Kiểm Định</th>
+                        <th style="text-align:center;">Tổng Lợi Nhuận Ròng</th>
+                        <th style="text-align:center;">CAGR / Năm</th>
+                        <th style="text-align:center;">Max Drawdown</th>
+                        <th style="text-align:center;">Sharpe Ratio</th>
+                        <th style="text-align:center;">Win Rate</th>
+                        <th style="text-align:center;">Alpha vs VN-Index</th>
+                        <th style="text-align:center;">Khóa Bán (Sàn / T+2.5)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {wf_rows_html}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="hud-tab-radar">
     <!-- PHẦN 1: BẢNG TOP SIÊU CỔ PHIẾU CHÂN SÓNG -->
     <div class="section-header">
         <div class="section-title">TOP {len(fialda_candidates)} SIÊU CỔ PHIẾU CHÂN SÓNG & ĐỘT BIẾN DÒNG TIỀN (1 THÁNG | MỤC TIÊU +20% - +35%)</div>
@@ -644,6 +807,7 @@ def generate_terminal_html(
             {events_items_html}
         </div>
     </div>
+    </div>
 
     <div class="footer">
         Neiro-Stock-VN • Tự động quét và cập nhật qua GitHub Actions • Vận hành 24/7 trên Cloud • Xem được trên mọi thiết bị di động
@@ -653,6 +817,25 @@ def generate_terminal_html(
         let secondsLeft = 300;
         const countdownEl = document.getElementById('countdown');
         const liveStatusEl = document.getElementById('live-status');
+
+        function switchHudTab(tabName) {{
+            const radarEl = document.getElementById('hud-tab-radar');
+            const wfEl = document.getElementById('hud-tab-wf');
+            const btnRadar = document.getElementById('btn-tab-radar');
+            const btnWf = document.getElementById('btn-tab-wf');
+            if (!radarEl || !wfEl) return;
+            if (tabName === 'wf') {{
+                radarEl.style.display = 'none';
+                wfEl.style.display = 'block';
+                if (btnWf) {{ btnWf.style.background = '#ffb300'; btnWf.style.color = '#0b0e14'; }}
+                if (btnRadar) {{ btnRadar.style.background = '#151a23'; btnRadar.style.color = '#90a4ae'; }}
+            }} else {{
+                radarEl.style.display = 'block';
+                wfEl.style.display = 'none';
+                if (btnRadar) {{ btnRadar.style.background = '#ffb300'; btnRadar.style.color = '#0b0e14'; }}
+                if (btnWf) {{ btnWf.style.background = '#151a23'; btnWf.style.color = '#90a4ae'; }}
+            }}
+        }}
 
         function reloadDashboard() {{
             if (countdownEl) countdownEl.innerText = 'Đang nạp...';
@@ -765,11 +948,13 @@ def generate_terminal_html(
                             changeEl.style.fontWeight = 'bold';
                         }}
 
-                        // Danh gia lai vung mua / cat lo thoi gian thuc
+                        // Danh gia lai vung mua / cat lo thoi gian thuc (Ton trong khoa Anti-FOMO T0)
                         const entryLow = Number(el.getAttribute('data-entry-low') || 0);
                         const entryHigh = Number(el.getAttribute('data-entry-high') || 0);
                         const stopLoss = Number(el.getAttribute('data-sl') || 0);
                         const tp1 = Number(el.getAttribute('data-tp1') || 0);
+                        const buyPerm = el.getAttribute('data-buy-perm') || 'BUY_OK';
+                        const isLockedNoBuy = (buyPerm === 'EXTENDED_NO_CHASING' || buyPerm === 'BULL_TRAP_REJECT' || buyPerm === 'STALE_SIGNAL');
                         const sigBadge = document.getElementById('sig-badge-' + sym);
 
                         if (sigBadge) {{
@@ -777,9 +962,9 @@ def generate_terminal_html(
                                 sigBadge.innerHTML = '<span style="background:#b71c1c;color:#ff8a80;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHẠM SL 🔴</span>';
                             }} else if (tp1 > 0 && p >= tp1) {{
                                 sigBadge.innerHTML = '<span style="background:#004d40;color:#64ffda;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐẠT TP1 🎯</span>';
-                            }} else if (entryHigh > 0 && p > entryHigh * 1.03) {{
+                            }} else if (!isLockedNoBuy && entryHigh > 0 && p > entryHigh * 1.03) {{
                                 sigBadge.innerHTML = '<span style="background:#e65100;color:#ffe0b2;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">MUA ĐUỔI ⚠️</span>';
-                            }} else if (entryLow > 0 && p >= entryLow * 0.98 && p <= entryHigh * 1.03) {{
+                            }} else if (!isLockedNoBuy && entryLow > 0 && p >= entryLow * 0.98 && p <= entryHigh * 1.03) {{
                                 sigBadge.innerHTML = '<span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">VÙNG MUA 🟢</span>';
                             }}
                         }}
@@ -797,11 +982,13 @@ def generate_terminal_html(
                         breadthEl.style.color = pct >= 50 ? '#00e676' : '#ffb300';
                     }}
                     if (breadthSubEl) {{
-                        breadthSubEl.innerText = liveGreenCount + '/' + totalMonitored + ' Cổ phiếu tăng (' + liveRedCount + ' giảm, ' + liveRefCount + ' tham chiếu)';
+                        const macroSuffix = breadthSubEl.getAttribute('data-macro-breadth') || '';
+                        const liveText = liveGreenCount + '/' + totalMonitored + ' Cổ phiếu tăng (' + liveRedCount + ' giảm, ' + liveRefCount + ' tham chiếu)';
+                        breadthSubEl.innerText = macroSuffix ? (liveText + ' • ' + macroSuffix) : liveText;
                     }}
                 }}
 
-                // Dong bo The Dong Tien Ca Map tu du lieu khop lenh Ngoai
+                // Dong bo The Dong Tien Ca Map tu du lieu khop lenh Ngoai (Trung thuc, khong suy dien Tu doanh)
                 const netForeignBillion = (liveForeignBuyVal - liveForeignSellVal) / 1e9;
                 if (liveForeignBuyVal > 0 || liveForeignSellVal > 0) {{
                     const smValEl = document.getElementById('card-smart-money-val');
@@ -813,9 +1000,9 @@ def generate_terminal_html(
                     }}
                     if (smSubEl) {{
                         if (netForeignBillion < 0) {{
-                            smSubEl.innerText = 'Ngoại bán ròng • Dòng tiền Nội gom cân hàng (Pha chân sóng)';
+                            smSubEl.innerText = 'Khối ngoại bán ròng trực tiếp trên rổ Top • Kiểm tra cột Tích Luỹ A/B';
                         }} else {{
-                            smSubEl.innerText = 'Khối ngoại + Tự doanh mua ròng đồng thuận';
+                            smSubEl.innerText = 'Khối ngoại mua ròng trực tiếp trên rổ Top (Live VPS)';
                         }}
                     }}
                 }}

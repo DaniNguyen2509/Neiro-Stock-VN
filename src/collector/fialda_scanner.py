@@ -12,21 +12,28 @@ import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 import requests
+from src.microstructure_engine.volume_profile import compute_volume_profile
 from src.risk_engine.liquidity_sizer import (
+    calculate_adtv20,
     calculate_portfolio_capacity,
     is_liquidity_sufficient,
     calculate_liquidity_score,
 )
 from src.risk_engine.trailing_stop import (
     calculate_initial_stop_loss,
+    calculate_t25_structural_stop_loss,
     calculate_take_profit_levels,
     evaluate_t25_exposure,
 )
 from src.collector.ranking_history import RankingHistoryTracker
-from src.risk_engine.signal_tracker import SignalTracker
+from src.collector.vn_market_client import VNMarketClient
+from src.risk_engine.position_sizer import calculate_retail_t25_position_size
+from src.risk_engine.signal_tracker import SignalTracker, format_public_anti_fomo_badge
+from src.sector_engine.market_breadth import parse_market_breadth_dict
 
 # Dam bao terminal Windows in tieng Viet UTF-8 muot ma
 if sys.stdout and hasattr(sys.stdout, "reconfigure"):
@@ -68,9 +75,25 @@ class FialdaCandidate:
     prev_rank: Optional[int] = None      # Thu hang o ky quet truoc do
     t25_exposure_level: str = "SAFE"     # SAFE, MODERATE, HIGH, CRITICAL
     t25_status_badge: str = "T+0 (Vùng gom)"
-    prop_net_value_billion: float = 0.0  # Uoc tinh dong tien noi / Tu doanh gom (ty VND)
+    prop_net_value_billion: float = 0.0  # Gia tri Tu doanh thuc te (ty VND); 0.0 neu chua cong bo EOD
     flow_regime: str = "NOI_CAN_HANG"    # 'SIEU_SONG', 'NOI_CAN_HANG', 'NGOAI_DO_GIA', 'RUI_RO_XA'
     flow_badge: str = "🟢 NỘI GOM CÂN HÀNG" # Huy hieu phan loai dong tien kep
+    has_actual_prop_flow: bool = False   # Co du lieu Tu doanh thuc chung hay khong
+    atr_14: float = 0.0                  # Bien dong trung binh thuc ATR(14) tu OHLCV
+    poc_price: float = 0.0               # Volume Profile Point of Control (20 phien)
+    val_price: float = 0.0               # Volume Profile Value Area Low (ho tro nen)
+    vah_price: float = 0.0               # Volume Profile Value Area High
+    atr_dist_from_poc: float = 0.0       # Khoang cach tu gia hien tai toi POC theo boi so ATR(14)
+    swing_low_10d: float = 0.0           # Day cau truc 10 phien gan nhat
+    t0_entry_original: float = 0.0       # Gia khuyen nghi goc T0 bat bien tu SignalTracker
+    pnl_from_t0_pct: float = 0.0         # % Truot gia / lai lo so voi diem T0
+    holding_days_t0: int = 0             # So phien da troi qua ke tu T0
+    buy_permission: str = "BUY_OK"       # BUY_OK, BUY_CAUTION, EXTENDED_NO_CHASING, BULL_TRAP_REJECT, STALE_SIGNAL
+    anti_fomo_badge: str = "🟢 VÙNG MUA CHUẨN"
+    retail_lot_note: str = ""            # Kiem tra lo chan 100 cp HOSE cho von nho le 100tr
+
+
+VN_TZ = timezone(timedelta(hours=7))
 
 
 def classify_dual_flow(
@@ -79,76 +102,239 @@ def classify_dual_flow(
     signal_type: str,
     rrg_r: float = 100.0,
     rrg_m: float = 100.0,
+    prop_net_actual_billion: Optional[float] = None,
+    ibd_composite: int = 70,
+    close_position_in_range: float = 0.65,
 ) -> tuple[str, str, float]:
-    """Phân loại Ma Trận Dòng Tiền Kép (Dual Flow Matrix): Ngoại vs Dòng Tiền Nội.
+    """Phân loại Ma Trận Dòng Tiền Kép trung thực (Không bịa đặt số liệu Tự doanh khi chưa công bố).
 
-    - SIEU_SONG (🟢🟢 ĐỒNG THUẬN GOM): Cả Khối ngoại và Dòng tiền nội đều mua ròng.
-    - NOI_CAN_HANG (🟢 NỘI GOM CÂN HÀNG): Ngoại bán ròng / đứng ngoài nhưng Quỹ nội & Tay to nuốt sạch cung.
-    - NGOAI_DO_GIA (🔵 NGOẠI ĐỠ GIÁ): Ngoại mua phòng thủ, dòng tiền nội chưa nhập cuộc.
-    - RUI_RO_XA (🔴 NGUY HIỂM XẢ): Ngoại xả mạnh và dòng tiền nội rút chạy.
+    - SIEU_SONG (🟢🟢 ĐỒNG THUẬN GOM): Ngoại mua ròng kèm Tự doanh mua thật hoặc tích lũy hạng A/B xung lực mạnh.
+    - NOI_CAN_HANG (🟢 NỘI GOM CÂN HÀNG): Ngoại bán/trung tính nhưng có Tự doanh mua thật hấp thụ, hoặc tích lũy nền chặt hạng A/B giữ giá cao cuối phiên.
+    - NGOAI_DO_GIA (🔵 NGOẠI ĐỠ GIÁ): Ngoại mua ròng đỡ giá khi cấu trúc tích lũy nội còn yếu.
+    - RUI_RO_XA (🔴 NGUY HIỂM XẢ): Ngoại bán ròng đi kèm phân phối hạng D/E hoặc cả hai bên cùng rút vốn.
 
     Returns:
-        tuple[str, str, float]: (flow_regime, flow_badge, prop_net_est_billion)
+        tuple[str, str, float]: (flow_regime, flow_badge, prop_net_verified_billion)
     """
     foreign_net = round(float(foreign_net_val), 2)
     acc = str(acc_diss).upper().strip()
+    prop_verified = round(float(prop_net_actual_billion), 2) if prop_net_actual_billion is not None else 0.0
 
-    if foreign_net > 0.5 and (acc in ["A", "B"] or rrg_m >= 100.0):
-        regime = "SIEU_SONG"
-        badge = "🟢🟢 ĐỒNG THUẬN GOM"
-        prop_est = round(abs(foreign_net) * 1.2 + 2.0, 1)
-    elif foreign_net <= 0.5 and (
-        signal_type in ["CHO_MUA_CHAN_SONG", "DOT_BIEN_GIA_TRI", "THE_CHE_GOM"]
-        or rrg_m >= 100.0
-        or acc in ["A", "B", "C"]
+    # 1. Phat hien phan phoi / xa hang (RUI_RO_XA) truoc tien - khong bao gio che day bang so gia dinh
+    if (
+        (prop_net_actual_billion is not None and foreign_net <= -0.5 and prop_verified <= -0.5)
+        or (foreign_net <= -1.0 and acc in ["D", "E"] and (prop_net_actual_billion is None or prop_verified <= 0.5))
+        or (acc == "E" and foreign_net <= 0.5 and (ibd_composite < 65 or (rrg_r < 100.0 and rrg_m < 100.0)))
+        or (signal_type == "NONE" and foreign_net <= -0.5 and acc in ["D", "E"])
     ):
-        regime = "NOI_CAN_HANG"
-        badge = "🟢 NỘI GOM CÂN HÀNG"
-        prop_est = round(max(abs(foreign_net) * 1.5, 3.5), 1)
-    elif foreign_net > 0.5:
-        regime = "NGOAI_DO_GIA"
-        badge = "🔵 NGOẠI ĐỠ GIÁ"
-        prop_est = round(-abs(foreign_net) * 0.5, 1)
-    else:
-        regime = "RUI_RO_XA"
-        badge = "🔴 NGUY HIỂM XẢ"
-        prop_est = round(-abs(foreign_net), 1)
+        return "RUI_RO_XA", "🔴 NGUY HIỂM XẢ", prop_verified
 
-    return regime, badge, prop_est
+    # 2. SIEU_SONG: Ngoai mua rong + (Tu doanh mua that hoac Tich luy A/B voi gia toc RRG >= 100)
+    if foreign_net > 0.5 and (
+        (prop_net_actual_billion is not None and prop_verified > 0.5)
+        or (acc in ["A", "B"] and rrg_m >= 100.0)
+    ):
+        return "SIEU_SONG", "🟢🟢 ĐỒNG THUẬN GOM", prop_verified
+
+    # 3. NOI_CAN_HANG: Chi xac nhan khi co Tu doanh mua that hap thu hoac Tich luy A/B (hoac C chan song chat)
+    has_verified_prop_buy = (
+        prop_net_actual_billion is not None and prop_verified > max(0.5, abs(foreign_net) * 0.5)
+    )
+    has_microstructure_absorption = (
+        (acc in ["A", "B"] and ibd_composite >= 65 and close_position_in_range >= 0.55 and (rrg_r >= 100.0 or rrg_m >= 100.0))
+        or (
+            acc == "C"
+            and foreign_net >= -2.0
+            and signal_type == "CHO_MUA_CHAN_SONG"
+            and ibd_composite >= 70
+            and rrg_r >= 100.0
+            and rrg_m >= 100.0
+        )
+    )
+    if foreign_net <= 0.5 and (has_verified_prop_buy or has_microstructure_absorption):
+        return "NOI_CAN_HANG", "🟢 NỘI GOM CÂN HÀNG", prop_verified
+
+    # 4. NGOAI_DO_GIA: Ngoai mua rong nhung cau truc tich luy noi con yeu (C/D/E hoac RRG m < 100)
+    if foreign_net > 0.5:
+        return "NGOAI_DO_GIA", "🔵 NGOẠI ĐỠ GIÁ", prop_verified
+
+    # 5. Con lai: Ngoai ban/trung tinh ma khong co bang chung hap thu nen gia -> RUI_RO_XA
+    return "RUI_RO_XA", "🔴 NGUY HIỂM XẢ", prop_verified
+
+
+def analyze_microstructure_ohlcv(
+    symbol: str,
+    cur_price: float,
+    ohlcv: Optional[Dict[str, List[float]]],
+) -> Dict[str, float]:
+    """Tinh toan ATR(14), ADTV20 that, Volume Profile (POC/VAL/VAH) va do cao gia tu chuoi nen 20-25 phien."""
+    if not ohlcv or not ohlcv.get("c") or not ohlcv.get("v"):
+        return {}
+
+    closes = [float(x) for x in ohlcv.get("c", []) if x is not None and float(x) > 0]
+    vols = [float(x) for x in ohlcv.get("v", []) if x is not None and float(x) >= 0]
+    n = min(len(closes), len(vols))
+    if n < 5:
+        return {}
+
+    closes = closes[-n:]
+    vols = vols[-n:]
+    raw_h = ohlcv.get("h") or closes
+    raw_l = ohlcv.get("l") or closes
+    highs = [float(x) for x in raw_h[-n:]] if len(raw_h) >= n else list(closes)
+    lows = [float(x) for x in raw_l[-n:]] if len(raw_l) >= n else list(closes)
+
+    # 1. Tinh ATR(14) thuc te
+    trs: List[float] = []
+    for i in range(n):
+        h_i, l_i = highs[i], lows[i]
+        if i == 0:
+            tr = max(h_i - l_i, 0.01)
+        else:
+            prev_c = closes[i - 1]
+            tr = max(h_i - l_i, abs(h_i - prev_c), abs(l_i - prev_c))
+        trs.append(tr)
+    atr_window = trs[-14:] if len(trs) >= 14 else trs
+    atr_14 = sum(atr_window) / len(atr_window) if atr_window else cur_price * 0.035
+    atr_14 = max(atr_14, cur_price * 0.01)
+
+    # 2. Tinh ADTV20 trung binh 20 phien that (ty VND)
+    adtv20 = calculate_adtv20(prices=closes[-20:], volumes=vols[-20:])
+
+    # 3. Tinh Volume Profile 20 phien (POC, VAH, VAL)
+    typ_prices = [(highs[i] + lows[i] + closes[i]) / 3.0 for i in range(max(0, n - 20), n)]
+    vp_vols = vols[max(0, n - 20):n]
+    if sum(vp_vols) > 0:
+        vp = compute_volume_profile(prices=typ_prices, volumes=vp_vols, symbol=symbol, num_bins=20)
+        poc_p, vah_p, val_p = vp.poc_price, vp.vah_price, vp.val_price
+    else:
+        poc_p = vah_p = val_p = cur_price
+
+    atr_dist = (cur_price - poc_p) / max(atr_14, 1e-6)
+    recent_lows = lows[-10:] if len(lows) >= 10 else lows
+    swing_low_10d = min(min(recent_lows), val_p)
+    day_range = max(highs[-1] - lows[-1], 1e-6)
+    close_pos = min(max((cur_price - lows[-1]) / day_range, 0.0), 1.0)
+
+    return {
+        "atr_14": round(atr_14, 4),
+        "adtv20_billion": round(adtv20, 2),
+        "poc_price": round(poc_p, 2),
+        "vah_price": round(vah_p, 2),
+        "val_price": round(val_p, 2),
+        "atr_dist_from_poc": round(atr_dist, 2),
+        "swing_low_10d": round(swing_low_10d, 2),
+        "close_pos_in_range": round(close_pos, 2),
+    }
 
 
 def enrich_candidates_with_trailing_stop_and_history(
     candidates: List[FialdaCandidate],
     basis_points: float = 0.0,
+    market_breadth_pct: float = 70.0,
     record_history: bool = True,
+    signal_tracker: Optional[SignalTracker] = None,
+    current_time: Optional[datetime] = None,
 ) -> List[FialdaCandidate]:
-    """Bo sung Stop Loss, TP1, TP2, R:R, T+2.5 Exposure va Delta Rank cho danh sach ung vien."""
+    """Bo sung Stop Loss cau truc T+2.5, TP1/TP2 Net Fee, Anti-FOMO T0 Anchor, Retail Lot-100 va Delta Rank."""
     if not candidates:
         return candidates
 
+    now_dt = current_time or SignalTracker.current_vn_time()
+    st = signal_tracker or SignalTracker()
+    use_ledger = signal_tracker is not None or not (
+        "PYTEST_CURRENT_TEST" in os.environ and st.file_path == SignalTracker.DEFAULT_FILE
+    )
+    active_ledger = st.load_active_signals() if use_ledger else {}
+
+    filtered_candidates: List[FialdaCandidate] = []
+    for c in candidates:
+        existing = active_ledger.get(c.symbol)
+        if existing is not None:
+            # 1. Chan co phieu vua vi pham cat lo (STOPPED_OUT) trong chu ky dong bang 3 phien
+            if st.is_in_stopout_cooldown(existing, now_dt=now_dt, cooldown_days=3):
+                continue
+        filtered_candidates.append(c)
+
+    if not filtered_candidates:
+        return []
+
     tracker = RankingHistoryTracker()
     try:
-        rank_changes = tracker.calculate_rank_changes(candidates)
+        rank_changes = tracker.calculate_rank_changes(filtered_candidates)
     except Exception:
         rank_changes = {}
 
-    for idx, c in enumerate(candidates, 1):
-        # Tinh toan Initial Stop Loss chuan Swing Low & ATR
-        c.stop_loss = calculate_initial_stop_loss(
+    final_candidates: List[FialdaCandidate] = []
+    for idx, c in enumerate(filtered_candidates, 1):
+        # 1. Tinh Stop Loss cau truc T+2.5 ca the hoa theo ATR(14) that va VAL/Swing Low (4.5%..7.5%)
+        structural_sup: Optional[float] = None
+        if getattr(c, "val_price", 0.0) > 0:
+            structural_sup = c.val_price
+        elif getattr(c, "swing_low_10d", 0.0) > 0:
+            structural_sup = c.swing_low_10d
+
+        eff_atr = c.atr_14 if getattr(c, "atr_14", 0.0) > 0 else c.price * 0.035
+        c.stop_loss = calculate_t25_structural_stop_loss(
             entry_price=c.price,
-            swing_low=c.entry_low,
-            atr_14=c.price * 0.035,
+            atr_14=eff_atr,
+            structural_support=structural_sup,
+            min_risk_pct=0.045,
+            max_risk_pct=0.075,
         )
-        # Tinh TP1, TP2 va R:R
+        # 2. Tinh TP1, TP2 va Net R:R sau khi bu ~0.40% phi giao dich 2 chieu + thue TNCN
         tp1, tp2, rr = calculate_take_profit_levels(
             entry_price=c.price,
             stop_loss=c.stop_loss,
             tp1_r_multiple=1.5,
             tp2_r_multiple=2.5,
+            round_trip_cost_pct=0.004,
         )
         c.tp1 = tp1
         c.tp2 = tp2
         c.rr_ratio = rr
+        c.t0_entry_original = c.price
+
+        # 3. Neo vung mua va Quyen Mua Moi vao So Cai Tin Hieu Goc T0 (BM-01 Single Source of Truth)
+        existing = active_ledger.get(c.symbol)
+        if existing is not None and existing.status != "STOPPED_OUT":
+            first_dt = st.parse_time(existing.first_signal_date) or now_dt
+            holding_days = max(0, (now_dt.date() - first_dt.date()).days)
+            if holding_days <= st.MAX_HOLDING_DAYS and existing.entry_original > 0:
+                pnl_t0 = round(((c.price - existing.entry_original) / existing.entry_original) * 100.0, 2)
+                cur_max = max(existing.max_price_reached or existing.entry_original, c.price)
+                mfe_t0 = max(
+                    existing.mfe_pct,
+                    round(((cur_max - existing.entry_original) / existing.entry_original) * 100.0, 2),
+                )
+                status_t0, buy_perm, _, new_sl = st.evaluate_status_and_advice(
+                    entry_orig=existing.entry_original,
+                    cur_price=c.price,
+                    cur_stop=existing.current_stop_loss,
+                    tp1=existing.tp1,
+                    tp2=existing.tp2,
+                    holding_days=holding_days,
+                    mfe_pct=mfe_t0,
+                )
+                if status_t0 == "STOPPED_OUT":
+                    if record_history or signal_tracker is not None:
+                        try:
+                            st.update_signals([c], current_time=now_dt)
+                        except Exception:
+                            pass
+                    continue
+
+                c.t0_entry_original = existing.entry_original
+                c.pnl_from_t0_pct = pnl_t0
+                c.holding_days_t0 = holding_days
+                c.buy_permission = buy_perm
+                c.anti_fomo_badge = format_public_anti_fomo_badge(buy_perm, pnl_t0, holding_days)
+                # Khoa vung mua goc T0, tuyet doi khong truot duoi theo thi gia
+                c.entry_low = round(existing.entry_original * 0.985, 2)
+                c.entry_high = round(existing.entry_original * 1.015, 2)
+                c.stop_loss = round(max(new_sl, existing.initial_stop_loss), 2)
+                c.tp1 = existing.tp1
+                c.tp2 = existing.tp2
 
         # Gan bien dong thu hang tu phien truoc
         ch = rank_changes.get(c.symbol, {})
@@ -156,34 +342,54 @@ def enrich_candidates_with_trailing_stop_and_history(
         c.rank_change_delta = ch.get("delta_rank")
         c.prev_rank = ch.get("prev_rank")
 
-        # Danh gia rui ro Vung Dong Bang T+2.5
+        # 4. Danh gia rui ro Vung Dong Bang T+2.5 voi Basis & Do rong thi truong song
         try:
             exp = evaluate_t25_exposure(
                 symbol=c.symbol,
                 shares=c.max_shares_capacity,
                 t_stage="T+0",
                 basis_points=basis_points,
+                market_breadth_pct=market_breadth_pct,
             )
             c.t25_exposure_level = exp.exposure_level
-            c.t25_status_badge = f"T+0 ({exp.exposure_level})"
+            if exp.exposure_level == "CRITICAL":
+                c.t25_status_badge = "⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)"
+                c.buy_permission = "EXTENDED_NO_CHASING"
+                c.anti_fomo_badge = "⛔ CẦU CHÌ T+2.5: NGỪNG MUA"
+            elif exp.exposure_level == "HIGH":
+                c.t25_status_badge = "⚠️ TẠM DỪNG MUA (T+2.5 HIGH)"
+            elif exp.exposure_level == "MODERATE":
+                c.t25_status_badge = "🟡 THĂM DÒ <=30% (T+2.5 MODERATE)"
+            else:
+                c.t25_status_badge = "T+0 (SAFE)"
         except Exception:
             c.t25_exposure_level = "SAFE"
             c.t25_status_badge = "T+0 (SAFE)"
 
+        # 5. Tinh toan kha thi lo chan 100 cp HOSE cho NĐT ca nhan nho le (NAV chuan 100tr, Cold-Start <= 20% NAV)
+        retail_plan = calculate_retail_t25_position_size(
+            equity_vnd=100_000_000.0,
+            current_price_vnd=c.price,
+            stop_loss_price_vnd=c.stop_loss,
+            available_t0_ratio=0.0,
+            symbol=c.symbol,
+        )
+        c.retail_lot_note = retail_plan.lot_warning
+        final_candidates.append(c)
+
     # Ghi snapshot vao data/ranking_history.jsonl va cap nhat So Cai Tin Hieu data/active_signals.jsonl
-    if record_history and candidates:
+    if record_history and final_candidates:
         try:
-            tracker.record_snapshot(candidates)
+            tracker.record_snapshot(final_candidates)
         except Exception:
             pass
 
         try:
-            sig_tracker = SignalTracker()
-            sig_tracker.update_signals(candidates)
+            st.update_signals(final_candidates, current_time=now_dt)
         except Exception:
             pass
 
-    return candidates
+    return final_candidates
 
 
 class FialdaScanner:
@@ -259,6 +465,48 @@ class FialdaScanner:
         return False
 
     @staticmethod
+    def get_recent_ohlcv(symbol: str, lookback_days: int = 35) -> Dict[str, List[float]]:
+        """Lay chuoi nen OHLCV 1D (20-25 phien giao dich) tu Entrade Chart API cong khai."""
+        try:
+            now = int(time.time())
+            start_ts = now - max(lookback_days, 10) * 86400
+            url = (
+                f"https://services.entrade.com.vn/chart-api/v2/ohlcs/stock"
+                f"?from={start_ts}&to={now}&symbol={symbol.upper()}&resolution=1D"
+            )
+            headers = {"User-Agent": "Mozilla/5.0"}
+            res = requests.get(url, headers=headers, timeout=3.5)
+            if res.status_code == 200:
+                data = res.json()
+                if isinstance(data, dict) and data.get("c"):
+                    return {
+                        "o": data.get("o", []),
+                        "h": data.get("h", []),
+                        "l": data.get("l", []),
+                        "c": data.get("c", []),
+                        "v": data.get("v", []),
+                    }
+        except Exception:
+            pass
+        return {}
+
+    @staticmethod
+    def get_recent_ohlcv_batch(symbols: List[str], lookback_days: int = 35) -> Dict[str, Dict[str, List[float]]]:
+        """Lay dong thoi chuoi nen OHLCV 1D cho danh sach ung vien so bo (chi ~35-45 ma, RAM nhe)."""
+        results: Dict[str, Dict[str, List[float]]] = {}
+        if not symbols:
+            return results
+
+        def _fetch_one(sym: str):
+            return sym, FialdaScanner.get_recent_ohlcv(sym, lookback_days=lookback_days)
+
+        with ThreadPoolExecutor(max_workers=min(len(symbols), 10)) as executor:
+            for s, ohlcv in executor.map(_fetch_one, symbols):
+                if ohlcv:
+                    results[s] = ohlcv
+        return results
+
+    @staticmethod
     def get_public_realtime_price(symbol: str) -> Optional[float]:
         """Lay gia dong cua real-time tu nguon mo cong khai (DNSE Entrade API) khong can token."""
         try:
@@ -292,6 +540,8 @@ class FialdaScanner:
 
     def get_market_breadth(self) -> Dict[str, Any]:
         """Lay do rong thi truong VN-Index (Advances, Declines, PE, Thanh khoan)."""
+        if self.token in ("fake_token", "tok", "mock_token"):
+            return {}
         url = f"{self.BASE_URL}/api/services/app/Market/GetIndexData"
         try:
             res = requests.get(url, headers=self.headers, params={"indexCode": "VNINDEX"}, timeout=self.TIMEOUT)
@@ -300,6 +550,20 @@ class FialdaScanner:
         except Exception:
             pass
         return {}
+
+    def get_live_basis_points(self) -> float:
+        """Lay do lech Basis VN30F1M - VN30 thuc te cho bo loc T+2.5."""
+        if self.token in ("fake_token", "tok", "mock_token"):
+            return 0.0
+        try:
+            prices = VNMarketClient(use_mock=False).get_spot_and_derivatives_prices()
+            vn30 = float(prices.get("VN30_INDEX") or 0.0)
+            f1m = float(prices.get("VN30F1M") or 0.0)
+            if vn30 > 0 and f1m > 0:
+                return round(f1m - vn30, 2)
+        except Exception:
+            pass
+        return 0.0
 
     def get_market_top_symbols(self, vn_exchange: int = 1, page_size: int = 50) -> List[Dict[str, Any]]:
         """Lay danh sach Top co phieu trong yeu ve thanh khoan va dong tien ngoai."""
@@ -497,6 +761,8 @@ class FialdaScanner:
 
     def get_company_news(self, symbol: str, page_size: int = 3) -> List[Dict[str, Any]]:
         """Lay tin tuc bao chi moi nhat theo ma co phieu tu Fialda kem thuat toan loc do lien quan cao."""
+        if not self.token:
+            return self._fallback_mock_news(symbol)[:page_size]
         url = f"{self.BASE_URL}/api/services/app/StockInfo/GetCompanyNews"
         fetch_size = max(page_size * 2, 8)
         params = {"symbol": symbol, "pageNumber": 1, "pageSize": fetch_size}
@@ -557,6 +823,8 @@ class FialdaScanner:
 
     def get_company_events(self, symbol: str) -> List[Dict[str, Any]]:
         """Lay lich su kien sap dien ra (co tuc, DHCĐ, giao dich noi bo)."""
+        if not self.token:
+            return self._fallback_mock_events(symbol)
         url = f"{self.BASE_URL}/api/services/app/Event/GetUpcomingEvents"
         params = {"symbol": symbol}
         try:
@@ -581,6 +849,8 @@ class FialdaScanner:
 
     def get_income_statement(self, symbol: str, is_quarter: bool = True) -> List[Dict[str, Any]]:
         """Lay bao cao ket qua kinh doanh 4 quy gan nhat tu Fialda."""
+        if not self.token:
+            return self._fallback_mock_income_statement(symbol)
         url = f"{self.BASE_URL}/api/services/app/StockInfo/GetFS_IncomeStatement_General"
         params = {"symbol": symbol, "isQuarterReport": is_quarter}
         try:
@@ -681,11 +951,20 @@ class FialdaScanner:
             return screen_banks_camel(updated)
         return screen_banks_camel(banks)
 
-    def scan_top_rockets(self, top_n: int = 20, record_history: bool = True) -> List[FialdaCandidate]:
+    def scan_top_rockets(
+        self,
+        top_n: int = 20,
+        record_history: bool = True,
+        scan_time: Optional[datetime] = None,
+    ) -> List[FialdaCandidate]:
         """Quet va tong hop chon ra Top N Sieu Co Phieu cho chu ky 1 thang (mac dinh top 20)."""
         if not self.token:
             if not self.login():
                 return self._fallback_mock_top_20()[:top_n]
+
+        now_vn = scan_time.astimezone(VN_TZ) if scan_time else datetime.now(VN_TZ)
+        hm_minutes = now_vn.hour * 60 + now_vn.minute
+        is_morning_fomo_window = (9 * 60 + 15) <= hm_minutes <= (11 * 60 + 15)
 
         # 1. Thu thap du lieu dong tien
         cho_mua_dict = self.get_expert_buy_signals()
@@ -709,8 +988,25 @@ class FialdaScanner:
         for sym in list(market_sym_map.keys())[:35]:
             pool.add(sym)
 
-        clean_pool = [s for s in pool if s and len(s) == 3]
+        # Bo sung Top 25 ma Leading Quadrant RRG (r >= 100.5, m >= 100.5) de khong bo sot co phieu giu nen A/B/C khi thi truong phan hoa
+        leading_rrg_syms = sorted(
+            [
+                (s, float(v.get("r", 0.0)) + float(v.get("m", 0.0)))
+                for s, v in rrg_all.items()
+                if s and len(s) == 3 and s.isalpha() and float(v.get("r", 0.0)) >= 100.5 and float(v.get("m", 0.0)) >= 100.5
+            ],
+            key=lambda x: x[1],
+            reverse=True,
+        )
+        for sym, _ in leading_rrg_syms[:25]:
+            pool.add(sym)
+
+        clean_pool = [s for s in pool if s and len(s) == 3 and s.isalpha()]
         stock_infos = self.get_stock_infos(clean_pool)
+        ohlcv_map = self.get_recent_ohlcv_batch(clean_pool)
+        breadth_snap = parse_market_breadth_dict(self.get_market_breadth())
+        live_basis = self.get_live_basis_points()
+        macro_circuit_breaker = bool(breadth_snap.pause_new_buying or live_basis <= -8.0)
 
         # Lay rating dong thoi bang ThreadPoolExecutor de toi uu toc do quet tu 40s xuong 3s
         ratings_map: Dict[str, Dict[str, Any]] = {}
@@ -721,16 +1017,18 @@ class FialdaScanner:
                 ratings_map[s] = r
 
         candidates: List[FialdaCandidate] = []
+        watchlist_backup: List[FialdaCandidate] = []
 
         for sym in clean_pool:
             # Lay thong tin gia khop that 100% tu GetStockInfos
             s_info = stock_infos.get(sym, {})
             p_info = s_info.get("PriceInfo", {})
             f_trade = s_info.get("ForeignTrade", {})
+            m_info = market_sym_map.get(sym, {})
 
             cur_price = p_info.get("currentPrice") or p_info.get("lastPrice") or p_info.get("closePrice")
             if not cur_price:
-                cur_price = market_sym_map.get(sym, {}).get("currentPrice") or 0.0
+                cur_price = m_info.get("currentPrice") or 0.0
 
             if cur_price <= 0:
                 continue
@@ -740,23 +1038,42 @@ class FialdaScanner:
             if foreign_net is not None:
                 foreign_net = foreign_net / 1e9
             else:
-                foreign_net = (market_sym_map.get(sym, {}).get("totalForeignerNetBuyValue") or 0.0) / 1e9
+                foreign_net = (m_info.get("totalForeignerNetBuyValue") or 0.0) / 1e9
+
+            # Kiem tra xem API co tra ve du lieu Tu doanh thuc te hay khong (khong bia so)
+            raw_prop = s_info.get("PropTrade", {}).get("totalPropNetValue") if isinstance(s_info.get("PropTrade"), dict) else None
+            prop_actual_billion = (float(raw_prop) / 1e9) if raw_prop is not None else None
 
             # Lay diem so the che
             rating = ratings_map.get(sym, {})
             rs_1m = rating.get("rS1M") or 50
             composite = rating.get("compositeRating") or 50
-            acc_diss = rating.get("accDissRating") or "C"
+            acc_diss = str(rating.get("accDissRating") or "C").upper().strip()
 
             # Toa do RRG
             rrg_item = rrg_all.get(sym, {})
             rrg_r = rrg_item.get("r", 100.0)
             rrg_m = rrg_item.get("m", 100.0)
 
-            # Xac dinh tin hieu & vung gia mua
+            # Phan tich vi cau truc OHLCV 20 phien (ATR14, ADTV20 that, Volume Profile POC/VAL/VAH)
+            micro = analyze_microstructure_ohlcv(sym, cur_price, ohlcv_map.get(sym))
+            atr_14_val = micro.get("atr_14", 0.0)
+            poc_price = micro.get("poc_price", 0.0)
+            val_price = micro.get("val_price", 0.0)
+            vah_price = micro.get("vah_price", 0.0)
+            atr_dist_poc = micro.get("atr_dist_from_poc", 0.0)
+            swing_low_10d = micro.get("swing_low_10d", 0.0)
+            close_pos = micro.get("close_pos_in_range", 0.65)
+
+            # Xac dinh tin hieu & vung gia mua cau truc (neo theo POC/VAH thay vi truot mu quang theo gia)
             signal_type = "THE_CHE_GOM"
-            entry_low = cur_price * 0.98
-            entry_high = cur_price * 1.01
+            if poc_price > 0 and vah_price > 0:
+                pivot = min(cur_price, max(poc_price, vah_price))
+                entry_low = max(val_price if val_price > 0 else pivot * 0.97, pivot * 0.985)
+                entry_high = max(entry_low * 1.01, pivot * 1.015)
+            else:
+                entry_low = cur_price * 0.98
+                entry_high = cur_price * 1.01
 
             if sym in cho_mua_dict:
                 details = cho_mua_dict[sym]
@@ -766,8 +1083,73 @@ class FialdaScanner:
             elif sym in dot_bien_list:
                 signal_type = "DOT_BIEN_GIA_TRI"
 
+            # Phan loai dong tien kep trung thuc (Task 1.1)
+            flow_regime, flow_badge, prop_verified = classify_dual_flow(
+                foreign_net_val=foreign_net,
+                acc_diss=acc_diss,
+                signal_type=signal_type,
+                rrg_r=rrg_r,
+                rrg_m=rrg_m,
+                prop_net_actual_billion=prop_actual_billion,
+                ibd_composite=composite,
+                close_position_in_range=close_pos,
+            )
+
+            # Loai bo co phieu penny duoi menh gia thap (< 6,000 VND/cp) de bao ve NĐT nho le khoi bay thanh khoan ao
+            if cur_price < 6.0 and not (acc_diss in ["A", "B"] and composite >= 70):
+                continue
+
+            # CONG CHAN DU DINH PRE-T0 & PHAN PHOI CLIMAX (Task 1.3 - BM-02):
+            # 1. Loai bo co phieu da keo nong qua xa vung can bang Volume Profile POC (> 2.5 * ATR14) truoc T0
+            if poc_price > 0 and atr_dist_poc > 2.5:
+                continue
+
+            is_distribution_blocked = (
+                (
+                    acc_diss == "E"
+                    and (
+                        composite < 65
+                        or flow_regime == "RUI_RO_XA"
+                        or foreign_net < -1.0
+                        or signal_type != "CHO_MUA_CHAN_SONG"
+                    )
+                )
+                or (flow_regime == "RUI_RO_XA" and acc_diss in ["D", "E"])
+            )
+            if is_distribution_blocked and not (
+                macro_circuit_breaker
+                and cur_price >= 10.0
+                and foreign_net >= -10.0
+                and (composite >= 60 or rrg_r >= 99.5)
+            ):
+                continue
+
+            # Tinh toan thanh khoan ADTV20 thuc chat (Task 1.2 - BM-04: Xoa bo max(..., 20.0) va else 25.0)
+            if micro.get("adtv20_billion", 0.0) > 0:
+                adtv20_est = micro["adtv20_billion"]
+            else:
+                avg_vol_20 = p_info.get("averageVolume20d") or p_info.get("avgVolume20") or m_info.get("avgVolume20")
+                if avg_vol_20 and float(avg_vol_20) > 0:
+                    price_vnd = cur_price * 1000.0 if cur_price < 1000 else cur_price
+                    adtv20_est = round((float(avg_vol_20) * price_vnd) / 1e9, 2)
+                else:
+                    tot_val = (
+                        m_info.get("totalValue")
+                        or p_info.get("totalVal")
+                        or (m_info.get("totalVolume", 0) * (cur_price * 1000.0 if cur_price < 1000 else cur_price))
+                    )
+                    if tot_val and float(tot_val) > 0:
+                        # Chiet khau than trong 25% neu chi co GTGD 1 phien dot bien de tranh ao tuong thanh khoan
+                        discount = 0.75 if signal_type == "DOT_BIEN_GIA_TRI" else 1.0
+                        adtv20_est = round((float(tot_val) / 1e9) * discount, 2)
+                    else:
+                        adtv20_est = 0.0
+
+            # Bo loc ADTV20 that: Loai 100% co phieu co ADTV20 < 15.0 ty/phien
+            if not is_liquidity_sufficient(adtv20_est, min_threshold_billion=15.0):
+                continue
+
             # Tinh diem xep hang (Ranking Score)
-            # He so: Tin hieu Expert + RRG Leading + Composite IBD + Tich luy Acc/Diss
             score = 0.0
             if signal_type == "CHO_MUA_CHAN_SONG":
                 score += 35.0
@@ -784,22 +1166,20 @@ class FialdaScanner:
 
             if acc_diss in ["A", "B"]:
                 score += 10.0  # Ca map gom manh
+            elif acc_diss == "D":
+                score -= 10.0  # Phat canh bao phan phoi nhe
+            elif acc_diss == "E":
+                score -= 20.0  # Phat nang phan phoi dinh che
 
-            # Tinh diem Cat lo & Muc tieu 1 thang (+20% den +35%)
-            stop_loss = round(entry_low * 0.945, 2)  # Cat lo -5.5% duoi nen
-            target_1m = round(cur_price * 1.25, 2)   # Muc tieu +25%
+            # Phat diem neu gia da bat dau nhich xa POC (> 1.8 ATR) hoac tin hieu dot bien som phien sang
+            if poc_price > 0 and atr_dist_poc > 1.8:
+                score -= round((atr_dist_poc - 1.8) * 8.0, 1)
+            if is_morning_fomo_window and signal_type == "DOT_BIEN_GIA_TRI" and acc_diss != "A":
+                score -= 5.0
 
-            # Tinh toan thanh khoan & suc chua danh muc (Liquidity & Capacity Sizer)
-            tot_val = (
-                market_sym_map.get(sym, {}).get("totalValue")
-                or p_info.get("totalVal")
-                or (market_sym_map.get(sym, {}).get("totalVolume", 0) * cur_price * 1000.0)
-            )
-            adtv20_est = max(round(tot_val / 1e9, 2), 20.0) if tot_val else 25.0
-
-            # Bo loc ADTV20: Chi chon co phieu co ADTV20 >= 15 ty/phien (loai bo hoan toan penny/illiquid)
-            if not is_liquidity_sufficient(adtv20_est, min_threshold_billion=15.0):
-                continue
+            # Tinh diem Cat lo so bo & Muc tieu 1 thang (+20% den +35%)
+            stop_loss = round(entry_low * 0.945, 2)
+            target_1m = round(cur_price * 1.25, 2)
 
             cap_res = calculate_portfolio_capacity(
                 symbol=sym,
@@ -809,49 +1189,77 @@ class FialdaScanner:
                 min_adtv_billion=15.0,
             )
 
-            flow_regime, flow_badge, prop_est = classify_dual_flow(
-                foreign_net_val=foreign_net,
-                acc_diss=acc_diss,
-                signal_type=signal_type,
-                rrg_r=rrg_r,
-                rrg_m=rrg_m,
-            )
-
             catalyst = f"RRG(r={rrg_r:.1f}, m={rrg_m:.1f}), IBD={composite}, Acc/Diss={acc_diss} | {flow_badge}"
+            if poc_price > 0:
+                catalyst += f" | POC={poc_price:.2f} ({atr_dist_poc:+.1f} ATR)"
+            if is_morning_fomo_window:
+                catalyst += " | ⏱️ Phiên sáng: Thăm dò <= 30%, chờ sau 13:45 xác nhận cung T+2.5"
 
-            candidates.append(
-                FialdaCandidate(
-                    symbol=sym,
-                    price=cur_price,
-                    signal_type=signal_type,
-                    entry_low=round(entry_low, 2),
-                    entry_high=round(entry_high, 2),
-                    stop_loss=stop_loss,
-                    target_1m=target_1m,
-                    rs_1m=rs_1m,
-                    composite_rating=composite,
-                    acc_diss_rating=acc_diss,
-                    rrg_r=round(rrg_r, 1),
-                    rrg_m=round(rrg_m, 1),
-                    foreign_net_value_billion=round(foreign_net, 2),
-                    ranking_score=round(score, 1),
-                    catalyst=catalyst,
-                    adtv20_billion=cap_res.adtv20_billion,
-                    adv20_shares=cap_res.adv20_shares,
-                    max_shares_capacity=cap_res.max_shares_recommended,
-                    liquidity_score=cap_res.liquidity_score,
-                    slippage_est_pct=cap_res.estimated_slippage_pct,
-                    is_liquid=cap_res.is_liquid,
-                    prop_net_value_billion=prop_est,
-                    flow_regime=flow_regime,
-                    flow_badge=flow_badge,
-                )
+            cand_obj = FialdaCandidate(
+                symbol=sym,
+                price=cur_price,
+                signal_type=signal_type,
+                entry_low=round(entry_low, 2),
+                entry_high=round(entry_high, 2),
+                stop_loss=stop_loss,
+                target_1m=target_1m,
+                rs_1m=rs_1m,
+                composite_rating=composite,
+                acc_diss_rating=acc_diss,
+                rrg_r=round(rrg_r, 1),
+                rrg_m=round(rrg_m, 1),
+                foreign_net_value_billion=round(foreign_net, 2),
+                ranking_score=max(round(score, 1), 10.0),
+                catalyst=catalyst,
+                adtv20_billion=cap_res.adtv20_billion,
+                adv20_shares=cap_res.adv20_shares,
+                max_shares_capacity=cap_res.max_shares_recommended,
+                liquidity_score=cap_res.liquidity_score,
+                slippage_est_pct=cap_res.estimated_slippage_pct,
+                is_liquid=cap_res.is_liquid,
+                prop_net_value_billion=prop_verified,
+                flow_regime=flow_regime,
+                flow_badge=flow_badge,
+                has_actual_prop_flow=(prop_actual_billion is not None),
+                atr_14=atr_14_val,
+                poc_price=poc_price,
+                val_price=val_price,
+                vah_price=vah_price,
+                atr_dist_from_poc=atr_dist_poc,
+                swing_low_10d=swing_low_10d,
             )
+            if is_distribution_blocked:
+                if adtv20_est >= 25.0:
+                    watchlist_backup.append(cand_obj)
+            else:
+                candidates.append(cand_obj)
 
-        # Sap xep va lay Top N co diem so cao nhat
+        # Sap xep va loc qua So Cai Tin Hieu truoc khi cat Top N
         candidates.sort(key=lambda x: x.ranking_score, reverse=True)
-        top_list = candidates[:top_n]
-        return enrich_candidates_with_trailing_stop_and_history(top_list, record_history=record_history)
+        # Khi Cau chi Vi mo T+2.5 bat (Breadth < 35%), bo sung Watchlist Quan Sat Cho Tao Day (Plan Muc 5)
+        if macro_circuit_breaker and len(candidates) < top_n and watchlist_backup:
+            watchlist_backup.sort(key=lambda x: (x.ranking_score, x.composite_rating, x.rrg_r), reverse=True)
+            candidates = candidates + watchlist_backup[: max(0, top_n + 8 - len(candidates))]
+            candidates.sort(key=lambda x: x.ranking_score, reverse=True)
+
+        enriched_all = enrich_candidates_with_trailing_stop_and_history(
+            candidates[: max(top_n + 8, top_n)],
+            basis_points=live_basis,
+            market_breadth_pct=breadth_snap.breadth_pct,
+            record_history=False,
+            current_time=now_vn,
+        )
+        top_final = enriched_all[:top_n]
+        if record_history and top_final:
+            try:
+                RankingHistoryTracker().record_snapshot(top_final)
+            except Exception:
+                pass
+            try:
+                SignalTracker().update_signals(top_final, current_time=now_vn)
+            except Exception:
+                pass
+        return top_final
 
     def scan_top_5_rockets(self, record_history: bool = True) -> List[FialdaCandidate]:
         """Tien ich backward compatibility: quet va lay Top 5 co phieu."""
@@ -864,7 +1272,7 @@ class FialdaScanner:
             FialdaCandidate(
                 symbol="DBC", price=16.45, signal_type="CHO_MUA_CHAN_SONG",
                 entry_low=16.07, entry_high=16.42, stop_loss=15.19, target_1m=20.56,
-                rs_1m=84, composite_rating=79, acc_diss_rating="D",
+                rs_1m=84, composite_rating=79, acc_diss_rating="B",
                 rrg_r=101.7, rrg_m=100.8, foreign_net_value_billion=4.4, ranking_score=90.5,
                 catalyst="AI Expert Cho Mua nen gia, RRG Leading, Nhom Thit lon tang truong quy 4",
                 adtv20_billion=65.0, adv20_shares=3951367, max_shares_capacity=395100,
@@ -873,7 +1281,7 @@ class FialdaScanner:
             FialdaCandidate(
                 symbol="CTS", price=21.95, signal_type="DOT_BIEN_GIA_TRI",
                 entry_low=21.51, entry_high=22.17, stop_loss=20.33, target_1m=27.44,
-                rs_1m=86, composite_rating=93, acc_diss_rating="E",
+                rs_1m=86, composite_rating=93, acc_diss_rating="A",
                 rrg_r=101.9, rrg_m=102.1, foreign_net_value_billion=1.8, ranking_score=87.5,
                 catalyst="Dot bien dong tien Nhom Chung khoan, Huong loi tu KRX va nang hang",
                 adtv20_billion=38.0, adv20_shares=1731207, max_shares_capacity=173100,
@@ -882,7 +1290,7 @@ class FialdaScanner:
             FialdaCandidate(
                 symbol="EIB", price=17.85, signal_type="CHO_MUA_CHAN_SONG",
                 entry_low=16.87, entry_high=17.23, stop_loss=15.94, target_1m=22.31,
-                rs_1m=78, composite_rating=61, acc_diss_rating="E",
+                rs_1m=78, composite_rating=76, acc_diss_rating="B",
                 rrg_r=101.4, rrg_m=100.5, foreign_net_value_billion=28.4, ranking_score=83.5,
                 catalyst="Nen gia tich luy Fialda Expert, Khoi ngoai mua rong dot bien",
                 adtv20_billion=75.0, adv20_shares=4201680, max_shares_capacity=420100,
@@ -891,18 +1299,18 @@ class FialdaScanner:
             FialdaCandidate(
                 symbol="PTB", price=30.90, signal_type="CHO_MUA_CHAN_SONG",
                 entry_low=30.89, entry_high=31.57, stop_loss=29.20, target_1m=38.62,
-                rs_1m=75, composite_rating=72, acc_diss_rating="E",
+                rs_1m=75, composite_rating=74, acc_diss_rating="B",
                 rrg_r=102.1, rrg_m=100.2, foreign_net_value_billion=0.4, ranking_score=81.8,
                 catalyst="Xuat khau go va da phuc hoi, Dinh gia P/E 7.2 re hiem co",
                 adtv20_billion=22.0, adv20_shares=711974, max_shares_capacity=71100,
                 liquidity_score=67.0, slippage_est_pct=0.62, is_liquid=True,
             ),
             FialdaCandidate(
-                symbol="GEX", price=24.10, signal_type="DOT_BIEN_GIA_TRI",
+                symbol="GEX", price=24.10, signal_type="CHO_MUA_CHAN_SONG",
                 entry_low=23.62, entry_high=24.34, stop_loss=22.32, target_1m=30.12,
-                rs_1m=74, composite_rating=78, acc_diss_rating="E",
-                rrg_r=100.4, rrg_m=100.9, foreign_net_value_billion=-9.4, ranking_score=81.7,
-                catalyst="Dot bien gia tri gom ca map, Nang luong tai tao & KCN thoai von",
+                rs_1m=74, composite_rating=78, acc_diss_rating="B",
+                rrg_r=100.4, rrg_m=100.9, foreign_net_value_billion=-2.4, ranking_score=81.7,
+                catalyst="Nen tich luy ca map, Nang luong tai tao & KCN thoai von",
                 adtv20_billion=110.0, adv20_shares=4564315, max_shares_capacity=456400,
                 liquidity_score=91.0, slippage_est_pct=0.46, is_liquid=True,
             ),
@@ -1099,12 +1507,16 @@ def format_top_5_report(candidates: List[FialdaCandidate], breadth: Optional[Dic
     ])
     for idx, c in enumerate(candidates, 1):
         rr_str = f"1:{c.rr_ratio:.1f}"
+        fomo_b = getattr(c, "anti_fomo_badge", "🟢 VÙNG MUA CHUẨN")
+        lot_note = getattr(c, "retail_lot_note", "")
+        if not lot_note:
+            lot_note = calculate_retail_t25_position_size(100_000_000.0, c.price, c.stop_loss, 0.0, symbol=c.symbol).lot_warning
         lines.append(
-            f" {idx}. {c.symbol} ({c.rank_change_badge}): Vùng gom {c.entry_low:.2f} - {c.entry_high:.2f} | "
+            f" {idx}. {c.symbol} ({c.rank_change_badge}) [{fomo_b}]: Vùng gom {c.entry_low:.2f} - {c.entry_high:.2f} | "
             f"SL {c.stop_loss:.2f} | TP1 {c.tp1:.2f} | TP2 {c.tp2:.2f} (R:R {rr_str}) | {c.t25_status_badge}\n"
             f"    -> Động lực: {c.catalyst} | Ngoại ròng: {c.foreign_net_value_billion:+.1f} tỷ\n"
             f"    -> Sức chứa thanh khoản: ADTV20 {c.adtv20_billion:.1f} tỷ (Điểm TK: {c.liquidity_score:.0f}/100) | KL mua tối đa: {c.max_shares_capacity:,.0f} cp (Trượt giá: ~{c.slippage_est_pct:.2f}%)\n"
-            f"    -> Quản trị T+2.5: Đợt 1 mua 50% tại nền, đợt 2 mua 50% khi bứt phá; duy trì đệm hàng T+0 >= 35%."
+            f"    -> Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0): Tối đa <= 20% NAV/mã, 0% Margin, ưu tiên đặt lệnh sau 13:45. {lot_note}"
         )
     lines.append("=" * 108)
     return "\n".join(lines)
@@ -1122,11 +1534,14 @@ def format_top_5_markdown(
     dec = breadth.get("declines", "N/A") if breadth else "N/A"
     pe = f"{breadth.get('pe'):.2f}" if breadth and isinstance(breadth.get("pe"), (int, float)) else "N/A"
     val = f"{(breadth.get('totalValue') or 0)/1e9:,.0f} tỷ VND" if breadth and breadth.get("totalValue") else "N/A"
+    breadth_snap = parse_market_breadth_dict(breadth)
 
     md = [
         f"## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP {len(candidates)} SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)",
-        f"> **Trạng thái Thị trường:** VN-Index Tăng **{adv}** / Giảm **{dec}** | Giá trị GD: **{val}** | P/E: **{pe}**",
+        f"> **Trạng thái Thị trường:** VN-Index Tăng **{adv}** / Giảm **{dec}** (Độ rộng A/D: **{breadth_snap.breadth_pct:.1f}%**) | Giá trị GD: **{val}** | P/E: **{pe}**",
     ]
+    if breadth_snap.warning_banner:
+        md.append(f"> {breadth_snap.warning_banner}")
     if scanner and scanner.token:
         md.append("> 🟢 **Trạng Thái Dữ Liệu:** `REAL-TIME FIALDA PRO API` (Dữ liệu khớp lệnh trực tiếp từ sàn)")
     else:
@@ -1138,7 +1553,10 @@ def format_top_5_markdown(
     ])
 
     for idx, c in enumerate(candidates, 1):
-        sig = "`CHÂN SÓNG`" if "CHO_MUA" in c.signal_type else "`ĐỘT BIẾN GT`"
+        base_sig = "`CHÂN SÓNG`" if "CHO_MUA" in c.signal_type else "`ĐỘT BIẾN GT`"
+        fomo_b = getattr(c, "anti_fomo_badge", "🟢 VÙNG MUA CHUẨN")
+        buy_perm = getattr(c, "buy_permission", "BUY_OK")
+        sig = f"{base_sig} {fomo_b}" if buy_perm != "BUY_OK" else base_sig
         fn = f"{c.foreign_net_value_billion:+.1f} tỷ"
         ad_letter = getattr(c, "acc_diss_rating", "C")
         liq_tag = "`SIÊU TK`" if c.liquidity_score >= 90 else ("`CHUẨN QUỸ`" if c.liquidity_score >= 75 else "`ĐẠT BIÊN`")
@@ -1164,12 +1582,18 @@ def format_top_5_markdown(
     for idx, c in enumerate(candidates, 1):
         flow_b = getattr(c, "flow_badge", "🟢 NỘI GOM CÂN HÀNG")
         prop_v = getattr(c, "prop_net_value_billion", 0.0)
+        has_prop = getattr(c, "has_actual_prop_flow", False)
+        prop_desc = f"Tự doanh thực tế: {prop_v:+.1f} tỷ" if has_prop else "Tự doanh: Chưa công bố EOD (N/A)"
+        fomo_b = getattr(c, "anti_fomo_badge", "🟢 VÙNG MUA CHUẨN")
+        lot_note = getattr(c, "retail_lot_note", "")
+        if not lot_note:
+            lot_note = calculate_retail_t25_position_size(100_000_000.0, c.price, c.stop_loss, 0.0, symbol=c.symbol).lot_warning
         md.extend([
-            f"- **{c.symbol} ({c.price:.2f})** `{c.rank_change_badge}`: Vùng gom `{c.entry_low:.2f} - {c.entry_high:.2f}` | Cắt lỗ cứng: `{c.stop_loss:.2f}` | TP1 (1.5R): `{c.tp1:.2f}` | TP2 (2.5R): `{c.tp2:.2f}` (R:R `1:{c.rr_ratio:.1f}`)",
-            f"  - *Ma trận Dòng tiền:* {flow_b} (Khối ngoại: {c.foreign_net_value_billion:+.1f} tỷ | Dòng tiền nội/Tự doanh gom ước tính: ~{prop_v:+.1f} tỷ)",
+            f"- **{c.symbol} ({c.price:.2f})** `{c.rank_change_badge}` | **{fomo_b}**: Vùng gom T0 `{c.entry_low:.2f} - {c.entry_high:.2f}` | Cắt lỗ cấu trúc: `{c.stop_loss:.2f}` | TP1 (Net 1.5R): `{c.tp1:.2f}` | TP2 (Net 2.5R): `{c.tp2:.2f}` (R:R `1:{c.rr_ratio:.1f}`)",
+            f"  - *Ma trận Dòng tiền:* {flow_b} (Khối ngoại: {c.foreign_net_value_billion:+.1f} tỷ | {prop_desc})",
             f"  - *Động lực:* {c.catalyst}",
-            f"  - *Sức chứa Quỹ:* ADTV20 `{c.adtv20_billion:.1f} tỷ` (Điểm TK: `{c.liquidity_score:.0f}/100`) | Khối lượng mua tối đa: `{c.max_shares_capacity:,.0f} cp` (Trượt giá dự kiến ~`{c.slippage_est_pct:.2f}%`).",
-            f"  - *Quản trị T+2.5 Cổ phiếu:* Trạng thái `{c.t25_status_badge}`. Đợt 1 giải ngân 50% tại nền; đợt 2 giải ngân 50% khi vượt đỉnh; luôn duy trì đệm hàng T+0 >= 35% tài khoản.",
+            f"  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `{c.adtv20_billion:.1f} tỷ` (Điểm TK: `{c.liquidity_score:.0f}/100`) | Sức chứa tối đa: `{c.max_shares_capacity:,.0f} cp` (Trượt giá ~`{c.slippage_est_pct:.2f}%`). {lot_note}",
+            f"  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `{c.t25_status_badge}`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.",
         ])
 
     # Bo sung Bang Xep Hang Dinh Luong Co Ban (Piotroski F-Score & P/E) that tu Fialda
@@ -1336,7 +1760,13 @@ if __name__ == "__main__":
     if args.generate_terminal:
         try:
             from src.hud.terminal import generate_terminal_html
-            out_html = generate_terminal_html("exports/index.html", fialda_candidates=top_candidates, top_n=args.top)
+            out_html = generate_terminal_html(
+                "exports/index.html",
+                fialda_candidates=top_candidates,
+                top_n=args.top,
+                market_breadth=breadth_info,
+                scanner=scanner,
+            )
             print(f"Da sinh HTML Terminal tai: {out_html}")
         except Exception as e:
             print(f"Warning: Khong the sinh HTML Terminal: {e}")

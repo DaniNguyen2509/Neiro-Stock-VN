@@ -504,14 +504,14 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 
 ---
 
-### Tier 19 [PROPOSED — ADR-017]: Lộ Trình Khắc Phục Điểm Mù Rủi Ro T+2.5 & Chống Mua Đuổi Nhỏ Lẻ
+### Tier 19 [ACCEPTED — ADR-017]: Hệ Thống Bảo Vệ Nhà Đầu Tư Nhỏ Lẻ T+2.5, Chống Mua Đuổi & Khóa Sàn Trung Thực
 
-> **Trạng thái hiện tại:** `PROPOSED — ĐÃ KHÓA MỐC BASELINE TRƯỚC KHI SỬA CODE` (Xem bản kế hoạch 5 giai đoạn và Ma trận đối chiếu Trước/Sau đầy đủ tại [`docs/plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md`](plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md) và [`ADR-017`](decisions/ADR-017-retail-t25-anti-chasing-and-risk-remediation-plan.md)).
+> **Trạng thái hiện tại:** `ACCEPTED & IMPLEMENTED (100% — 117/117 TESTS PASSING)` (Xem báo cáo nghiệm thu Trước/Sau đầy đủ tại [`docs/plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md`](plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md) và [`ADR-017`](decisions/ADR-017-retail-t25-anti-chasing-and-risk-remediation-plan.md)).
 
-1. **Giai đoạn 1 (Data Integrity & Anti-Climax Gate):** Xóa bỏ ước lượng dòng tiền nội giả định `abs(foreign_net) * 1.5`, khôi phục bộ lọc `ADTV20 >= 15 tỷ` thực chất và chặn mua đỉnh phân phối (`Acc/Diss = D/E`, khoảng cách tới `Volume Profile POC > 2.5 * ATR(14)`).
-2. **Giai đoạn 2 (T+2.5 Structural SL & Market Breadth Circuit Breaker):** Mở biên cắt lỗ theo `ATR(14)` thực tế và hỗ trợ `VAL` (`-4.5%` đến `-7.5%`), bổ sung `src/sector_engine/market_breadth.py` và nối Basis sống để kích hoạt cầu chì `PAUSE_NEW_BUYING` khi độ rộng thị trường `< 35%`.
-3. **Giai đoạn 3 (Unified Anti-FOMO Anchor & Retail Cold-Start Sizing):** Hợp nhất `active_signals.jsonl` trực tiếp lên bảng Top 20 (neo cứng vùng mua gốc `T0`, chặn mã `STOPPED_OUT`, khóa `MFE Bull-Trap`), áp trần `<= 20% NAV`/mã cho tài khoản `0%` đệm `T+0` và cảnh báo lô chẵn `100 cp` HOSE.
-4. **Giai đoạn 4 (Honest Floor-Lock Backtest):** Khóa khớp bán tại giá sàn trắng bên mua (`price <= floor_price`) trong `T25BacktestEngine` và đồng bộ `WalkForwardCoordinator`.
-5. **Giai đoạn 5 (3-Layer Audit & Before/After Acceptance):** Kiểm định từng cột dữ liệu và điền số liệu thực tế vào Ma trận Đối chiếu Nghiệm thu Trước & Sau.
+1. **Giai đoạn 1 (Data Integrity & Anti-Climax Gate):** Xóa bỏ hoàn toàn công thức ước lượng dòng tiền nội giả định `abs(foreign_net) * 1.5` trong `classify_dual_flow`, mở khóa cảnh báo `🔴 NGUY HIỂM XẢ` (`RUI_RO_XA`); tính `ADTV20` trung bình 20 phiên thực tế từ OHLCV Entrade (loại 100% mã `< 15.0 tỷ`); kết nối `compute_volume_profile` (`POC/VAL/VAH`) và `ATR(14)` thật để loại các mã phân phối nặng `Acc/Diss = E` và khóa mua đuổi khi giá vượt `POC > 2.5 * ATR(14)`, kèm cảnh báo bẫy kéo sớm phiên sáng `09:15–11:15`.
+2. **Giai đoạn 2 (T+2.5 Structural SL & Market Breadth Circuit Breaker):** Bổ sung `calculate_t25_structural_stop_loss` mở biên chịu nhiễu đóng băng $\sqrt{2.5} \times \text{ATR}_{14}$ và nền `VAL` trong dải `[-4.5%, -7.5%]`, cộng bù `0.40%` phí/thuế hai chiều vào `TP1/TP2`; triển khai `src/sector_engine/market_breadth.py` và kéo giá thực `VN30F1M / VN30` để tự động bật cầu chì đỏ `⛔ CẦU CHÌ T+2.5: TẠM NGỪNG MUA MỚI` khi độ rộng thị trường `< 35%` hoặc `Basis <= -8.0`.
+3. **Giai đoạn 3 (Unified Anti-FOMO Anchor & Retail Cold-Start Sizing):** Hợp nhất `active_signals.jsonl` trực tiếp lên bảng Top 20 (`latest_scan.md` & `exports/index.html`): khóa cứng vùng mua vào `entry_original` ngày `T0`, loại 100% mã vừa gãy `STOPPED_OUT` (cooldown 3 phiên), khóa `BULL_TRAP_REJECT` theo `MFE > +5%` và tách nhãn `STALE_SIGNAL` (`🟠 QUÁ HẠN T+3`); bổ sung `calculate_retail_t25_position_size` giới hạn `<= 20% NAV`/mã (`0% Margin`) khi `0%` đệm `T+0` và cảnh báo lô chẵn `100 cp` HOSE đối với cổ phiếu mệnh giá cao.
+4. **Giai đoạn 4 (Honest Floor-Lock Backtest & Tab 2 Walk-Forward):** Chặn khớp bán khi đóng cửa nằm sàn trắng bên mua (`price <= band.floor_price + 1e-4`), khớp cắt lỗ theo `min(bar.open, stop_loss_price)` cho phiên nhảy Gap-Down trong `T25BacktestEngine`, đồng bộ `WalkForwardCoordinator` và hiển thị minh bạch số lần khóa sàn / kẹt `T+2.5` trên Tab 2 của Web Terminal.
+5. **Giai đoạn 5 (3-Layer Column-by-Column Audit & Before/After Acceptance):** Hoàn tất kiểm định 3 tầng trên toàn bộ 15 cột dữ liệu `#top-stocks-table` và cập nhật 100% Ma trận Đối chiếu Nghiệm thu Trước & Sau.
 
 

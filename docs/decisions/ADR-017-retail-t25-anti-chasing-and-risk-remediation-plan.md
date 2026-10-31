@@ -1,7 +1,7 @@
 # ADR-017: Lộ Trình Khắc Phục Điểm Mù Rủi Ro T+2.5, Chống Mua Đuổi & Định Cỡ Vị Thế Nhỏ Lẻ
 
 ## 1. Trạng thái (Status)
-**Proposed** *(Pre-Implementation Baseline Locked — Chờ phê duyệt triển khai 5 Giai đoạn tại [`docs/plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md`](../plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md))*
+**Accepted** *(Đã triển khai & nghiệm thu toàn bộ 5 Giai đoạn tại [`docs/plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md`](../plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md) — `117 / 117` Unit & Integration Tests Passing 100%)*
 
 ## 2. Ngày lập (Date)
 `2026-10-31`
@@ -48,7 +48,8 @@ Qua đợt kiểm định phản biện độc lập (`doubt-driven-development`
 
 ---
 
-## 6. Hệ quả Dự kiến (Expected Consequences)
+## 6. Hệ quả Thực tế Sau Triển khai (Consequences)
 
-- Toàn bộ 8 điểm mù được định lượng hóa thành 12 tiêu chí nghiệm thu rõ ràng trong [`docs/plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md`](../plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md).
-- Khi `ADR-017` được triển khai và chuyển sang `Accepted`, nó sẽ cập nhật/kế thừa một phần `ADR-009` (mở rộng từ theo dõi ngầm sang bảo vệ trực tiếp trên HUD Terminal).
+- Toàn bộ 8 điểm mù (`BM-01`..`BM-08`) đã được khắc phục triệt để và đối chiếu định lượng Trước/Sau qua 12 chỉ số nghiệm thu trong [`docs/plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md`](../plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md).
+- `ADR-017` chính thức kế thừa và nâng cấp `ADR-009`: Sổ cái [`SignalTracker`](../../src/risk_engine/signal_tracker.py) không còn chạy ngầm tách biệt mà đồng bộ trực tiếp lên Bảng Top 20 (`reports/latest_scan.md` và `exports/index.html`), khóa bất biến vùng mua gốc `T0`, chặn 100% mã đang `STOPPED_OUT` trong 3 phiên cooldown, khóa `BULL_TRAP_REJECT` theo `MFE`, kích hoạt cầu chì độ rộng thị trường `< 35%` qua [`market_breadth.py`](../../src/sector_engine/market_breadth.py) và trung thực hóa khóa sàn trắng bên mua (`Floor-Lock`) trên Tab 2 Walk-Forward.
+

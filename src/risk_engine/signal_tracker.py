@@ -25,6 +25,30 @@ from src.collector.google_sheets_client import GoogleSheetsLedgerClient
 logger = logging.getLogger(__name__)
 
 
+def format_public_anti_fomo_badge(
+    buy_permission: str,
+    pnl_pct: float = 0.0,
+    holding_days: int = 0,
+    status: str = "ACTIVE",
+) -> str:
+    """Định dạng nhãn Quyền Mua Mới thống nhất giữa Sổ cái ngầm, Báo cáo Markdown và Web Dashboard."""
+    if status == "STOPPED_OUT":
+        return "⛔ VI PHẠM SL (CẤM BẮT DAO RƠI)"
+    if buy_permission == "EXTENDED_NO_CHASING":
+        if pnl_pct < 0.0:
+            return "⛔ ĐÃ SUY YẾU (CẤM BẮT DAO RƠI)"
+        if pnl_pct <= 5.0 and holding_days >= 3:
+            return f"🟠 QUÁ HẠN T+{holding_days} (NGỪNG MUA)"
+        return f"🔴 CẤM MUA ĐUỔI ({pnl_pct:+.1f}% TỪ T0)"
+    if buy_permission == "BULL_TRAP_REJECT":
+        return "🔴 CẤM MUA (BẪY BULL-TRAP)"
+    if buy_permission == "STALE_SIGNAL":
+        return f"🟠 QUÁ HẠN T+{max(holding_days, 3)} (NGỪNG MUA)"
+    if buy_permission == "BUY_CAUTION":
+        return f"🟡 VÙNG VỚI ({pnl_pct:+.1f}% • <=30%)"
+    return "🟢 VÙNG MUA CHUẨN"
+
+
 @dataclass
 class ActiveSignal:
     """Cấu trúc dữ liệu một vị thế tín hiệu đang được theo dõi trong sổ cái ngầm."""
@@ -169,6 +193,22 @@ class SignalTracker:
         client = GoogleSheetsLedgerClient()
         return client.sync_signals(list(signals.values()))
 
+    def is_in_stopout_cooldown(
+        self,
+        sig: ActiveSignal,
+        now_dt: Optional[datetime] = None,
+        cooldown_days: int = 3,
+    ) -> bool:
+        """Kiểm tra mã vừa vi phạm cắt lỗ (STOPPED_OUT) trong chu kỳ đóng băng 3 phiên gần nhất."""
+        if sig.status != "STOPPED_OUT":
+            return False
+        ref_now = now_dt or self.current_vn_time()
+        stopped_dt = self.parse_time(sig.last_updated) or self.parse_time(sig.first_signal_date)
+        if stopped_dt is None:
+            return True
+        days_since = (ref_now.date() - stopped_dt.date()).days
+        return days_since <= cooldown_days
+
     def evaluate_status_and_advice(
         self,
         entry_orig: float,
@@ -177,12 +217,14 @@ class SignalTracker:
         tp1: float,
         tp2: float,
         holding_days: int,
+        mfe_pct: float = 0.0,
     ) -> tuple[str, str, str, float]:
         """Đánh giá trạng thái vị thế, quyền mở mua và câu tư vấn hành động."""
         if entry_orig <= 0:
             pnl_pct = 0.0
         else:
             pnl_pct = round(((cur_price - entry_orig) / entry_orig) * 100.0, 2)
+        effective_mfe = max(float(mfe_pct or 0.0), pnl_pct)
         new_stop = cur_stop
 
         # 1. Cơ chế Trailing Stop / Nâng chặn lỗ bảo toàn vốn
@@ -221,13 +263,25 @@ class SignalTracker:
 
         status = "ACTIVE"
 
-        # 3. Rada Kiểm Soát Quyền Mua (Anti-FOMO / Chasing Rule)
-        if pnl_pct > 5.0 or holding_days >= 3:
+        # 3. Rada Kiểm Soát Quyền Mua (Anti-FOMO / Bull-Trap Lock / Stale Signal Guard)
+        if pnl_pct > 5.0:
             buy_permission = "EXTENDED_NO_CHASING"
             advice_note = (
                 f"🔴 QUÁ ĐIỂM MUA - CẤM MUA ĐUỔI (Đã tăng {pnl_pct:+.1f}% từ điểm kích hoạt ban đầu {entry_orig:.2f}, nắm giữ {holding_days} phiên). "
                 "Chỉ ưu tiên người đã có sẵn hàng tiếp tục gồng lãi. "
                 "Người chưa có hàng TUYỆT ĐỐI KHÔNG ĐƯỢC MUA ĐUỔI để tránh bẫy điều chỉnh kẹp T+2.5."
+            )
+        elif effective_mfe > 5.0:
+            buy_permission = "BULL_TRAP_REJECT"
+            advice_note = (
+                f"🔴 CẤM MUA (BẪY XẢ SAU KÉO RƯỚN): Mã từng kéo tăng +{effective_mfe:.1f}% từ T0 ({entry_orig:.2f}) "
+                f"rồi suy yếu ngược về {cur_price:.2f} ({pnl_pct:+.1f}%). Tuyệt đối không bắt dao rơi T+2.5."
+            )
+        elif holding_days >= 3:
+            buy_permission = "STALE_SIGNAL"
+            advice_note = (
+                f"🟠 QUÁ HẠN T+{holding_days} (Biến động {pnl_pct:+.1f}% so với T0 {entry_orig:.2f} sau {holding_days} phiên): "
+                "Động lượng bứt phá đầu sóng suy yếu, KHÔNG MỞ MUA MỚI."
             )
         elif 3.0 < pnl_pct <= 5.0:
             buy_permission = "BUY_CAUTION"
@@ -254,11 +308,13 @@ class SignalTracker:
         now_str = self.format_time(now_dt)
 
         active_signals = self.load_active_signals()
+        updated_syms: set[str] = set()
 
         for c in current_candidates:
             sym = getattr(c, "symbol", "")
             if not sym:
                 continue
+            updated_syms.add(sym)
 
             price = round(float(getattr(c, "price", 0.0)), 2)
             sl = round(float(getattr(c, "stop_loss", price * 0.945)), 2)
@@ -289,6 +345,13 @@ class SignalTracker:
                 first_dt = self.parse_time(existing.first_signal_date) or now_dt
                 holding_days = max(0, (now_dt.date() - first_dt.date()).days)
 
+                entry_ref = existing.entry_original if existing.entry_original > 0 else (price if price > 0 else 1.0)
+                pnl = round(((price - entry_ref) / entry_ref) * 100.0, 2)
+                cur_max = max(existing.max_price_reached or entry_ref, price)
+                cur_min = min(existing.min_price_reached or entry_ref, price)
+                mfe = round(((cur_max - entry_ref) / entry_ref) * 100.0, 2)
+                mae = round(((cur_min - entry_ref) / entry_ref) * 100.0, 2)
+
                 status, buy_perm, advice, new_sl = self.evaluate_status_and_advice(
                     entry_orig=existing.entry_original,
                     cur_price=price,
@@ -296,10 +359,9 @@ class SignalTracker:
                     tp1=existing.tp1,
                     tp2=existing.tp2,
                     holding_days=holding_days,
+                    mfe_pct=max(existing.mfe_pct, mfe),
                 )
 
-                entry_ref = existing.entry_original if existing.entry_original > 0 else (price if price > 0 else 1.0)
-                pnl = round(((price - entry_ref) / entry_ref) * 100.0, 2)
                 existing.current_price = price
                 existing.last_updated = now_str
                 existing.pnl_pct = pnl
@@ -310,13 +372,9 @@ class SignalTracker:
                 existing.advice_note = advice
 
                 # Cập nhật Ground Truth Labels (ML)
-                cur_max = max(existing.max_price_reached or entry_ref, price)
-                cur_min = min(existing.min_price_reached or entry_ref, price)
-                mfe = round(((cur_max - entry_ref) / entry_ref) * 100.0, 2)
-                mae = round(((cur_min - entry_ref) / entry_ref) * 100.0, 2)
                 existing.max_price_reached = cur_max
                 existing.min_price_reached = cur_min
-                existing.mfe_pct = mfe
+                existing.mfe_pct = max(existing.mfe_pct, mfe)
                 existing.mae_pct = mae
 
                 # Ghi nhận PnL chu kỳ T+2.5 (phiên 2 hoặc 3)
@@ -344,6 +402,9 @@ class SignalTracker:
                     existing.target_win_binary = 0
 
             else:
+                # Khóa cầu chì T+2.5 CRITICAL hoặc không có quyền Mua mới: Không ghi nhận kèo T0 giả vào sổ cái
+                if t25_exp == "CRITICAL" or str(getattr(c, "buy_permission", "BUY_OK")) != "BUY_OK":
+                    continue
                 # Cổ phiếu MỚI TOANH xuất hiện lần đầu (T0)
                 status, buy_perm, advice, new_sl = self.evaluate_status_and_advice(
                     entry_orig=price,
@@ -394,6 +455,28 @@ class SignalTracker:
                     target_win_binary=0,
                 )
 
+        # Đồng bộ chuẩn hóa các vị thế cũ không nằm trong danh sách quét phiên này (chống tồn đọng nhãn cũ sai ngữ nghĩa)
+        for sym, existing in active_signals.items():
+            if sym in updated_syms:
+                continue
+            first_dt = self.parse_time(existing.first_signal_date) or now_dt
+            holding_days = max(existing.holding_days, (now_dt.date() - first_dt.date()).days)
+            status, buy_perm, advice, new_sl = self.evaluate_status_and_advice(
+                entry_orig=existing.entry_original,
+                cur_price=existing.current_price,
+                cur_stop=existing.current_stop_loss,
+                tp1=existing.tp1,
+                tp2=existing.tp2,
+                holding_days=holding_days,
+                mfe_pct=existing.mfe_pct,
+            )
+            existing.holding_days = holding_days
+            if existing.status != "STOPPED_OUT":
+                existing.status = status
+            existing.buy_permission = buy_perm
+            existing.advice_note = advice
+            existing.current_stop_loss = new_sl
+
         self.save_active_signals(active_signals)
         self.generate_scorecard_markdown(active_signals, now_str)
         self.export_ml_dataset(active_signals)
@@ -416,13 +499,14 @@ class SignalTracker:
             )
 
         sig = active_signals[sym]
-        badge = (
-            "🟢 MUA ĐƯỢC"
-            if sig.buy_permission == "BUY_OK"
-            else ("🟡 VÙNG VỚI" if sig.buy_permission == "BUY_CAUTION" else "🔴 CẤM MUA ĐUỔI")
-        )
+        badge = format_public_anti_fomo_badge(sig.buy_permission, sig.pnl_pct, sig.holding_days, status=sig.status)
 
-        flow_info = f"{sig.flow_badge} (Khối ngoại: {sig.foreign_net_value_billion:+.1f} tỷ | Dòng tiền nội ước tính: ~{sig.prop_net_value_billion:+.1f} tỷ)"
+        prop_part = (
+            f"Tự doanh thực tế: {sig.prop_net_value_billion:+.1f} tỷ"
+            if sig.prop_net_value_billion != 0.0
+            else "Tự doanh: Chưa công bố EOD"
+        )
+        flow_info = f"{sig.flow_badge} (Khối ngoại: {sig.foreign_net_value_billion:+.1f} tỷ | {prop_part})"
 
         return (
             f"**[TƯ VẤN ĐỊNH LƯỢNG {sym}]** - {badge}\n"
@@ -444,11 +528,7 @@ class SignalTracker:
 
         rows = []
         for s in sorted(signals.values(), key=lambda x: x.pnl_pct, reverse=True):
-            badge = (
-                "🟢 MUA ĐƯỢC"
-                if s.buy_permission == "BUY_OK"
-                else ("🟡 VÙNG VỚI" if s.buy_permission == "BUY_CAUTION" else "🔴 CẤM MUA ĐUỔI")
-            )
+            badge = format_public_anti_fomo_badge(s.buy_permission, s.pnl_pct, s.holding_days, status=s.status)
             pnl_str = f"**{s.pnl_pct:+.1f}%**"
             rows.append(
                 f"| **{s.symbol}** | {s.first_signal_date[:10]} | {s.entry_original:.2f} | {s.current_price:.2f} | "

@@ -33,6 +33,8 @@ class T25BacktestEngine:
         self.closed_trades: List[TradeRecord] = []
         self.equity_curve: List[DailyEquity] = []
         self._trade_counter = 0
+        self.floor_lock_blocked_count = 0
+        self.t25_blocked_count = 0
 
     def reset(self):
         """Khoi tao lai trang thai ban dau cua engine."""
@@ -41,6 +43,8 @@ class T25BacktestEngine:
         self.closed_trades.clear()
         self.equity_curve.clear()
         self._trade_counter = 0
+        self.floor_lock_blocked_count = 0
+        self.t25_blocked_count = 0
 
     def can_sell_shares(self, symbol: str, current_day_idx: int) -> int:
         """Kiem tra so luong co phieu da du T+2.5 de co the ban.
@@ -163,14 +167,20 @@ class T25BacktestEngine:
         available_shares = pos.available_shares
         if available_shares <= 0:
             # Hang chua ve tai khoan, bi khoa hoan toan khong the cat lo hoac chot loi
+            self.t25_blocked_count += 1
             return None
 
-        # 2. Kiem tra bien do san
-        ref = reference_price if reference_price and reference_price > 0 else price
-        band = PriceBand.calculate(ref, exchange)
-        if price < band.floor_price:
-            # Gia khop duoi san (hoac trang ben mua), lenh khong the thuc hien
-            return None
+        # 2. Kiem tra bien do san & mat thanh khoan trang ben mua (Floor Lock <= floor_price)
+        if reference_price is not None and reference_price > 0:
+            band = PriceBand.calculate(reference_price, exchange)
+            if price <= band.floor_price + 1e-4:
+                # Co phieu nam san trang ben mua (Floor Lock), NĐT nho le khong the khop lenh ban!
+                self.floor_lock_blocked_count += 1
+                return None
+        else:
+            band = PriceBand.calculate(price, exchange)
+            if price < band.floor_price:
+                return None
 
         # 3. Thuc hien ban toan bo luong hang da ve (FIFO)
         shares_to_sell = available_shares
@@ -251,6 +261,47 @@ class T25BacktestEngine:
         )
         self.closed_trades.append(trade)
         return trade
+
+    def check_and_execute_stop_loss(
+        self,
+        symbol: str,
+        bar: MarketBar,
+        day_idx: int,
+        stop_loss_price: float,
+    ) -> Optional[TradeRecord]:
+        """Kiểm tra và thực thi cắt lỗ trung thực theo Low/Open Gap-Down & Khóa Sàn Trắng Bên Mua.
+
+        - Nếu hàng chưa đủ T+2.5: Không thể cắt lỗ (trả về None).
+        - Nếu bar đóng cửa nằm sàn cứng (bar.close <= floor_price + 1e-4): Mất thanh khoản trắng bên mua,
+          lệnh bán bị kẹt không khớp được, buộc lăn sang T+3 / T+4 cho tới khi có cầu giải cứu.
+        - Khi có thanh khoản và bar.low <= stop_loss_price: Khớp tại min(bar.open, stop_loss_price)
+          (mô phỏng trung thực trượt giá mở cửa Gap-Down thay vì khớp ảo tại giá đóng cửa).
+        """
+        if bar.low > stop_loss_price:
+            return None
+
+        if self.can_sell_shares(symbol, day_idx) <= 0:
+            self.t25_blocked_count += 1
+            return None
+
+        ref = bar.reference_price if bar.reference_price > 0 else bar.open
+        band = PriceBand.calculate(ref, bar.exchange)
+
+        # Phien chat san trang ben mua -> Khong the thoat hang
+        if bar.close <= band.floor_price + 1e-4:
+            self.floor_lock_blocked_count += 1
+            return None
+
+        exec_price = round(max(min(bar.open, stop_loss_price), bar.low), 2)
+        return self.execute_sell(
+            symbol=symbol,
+            price=exec_price,
+            date=bar.date,
+            day_idx=day_idx,
+            exchange=bar.exchange,
+            reference_price=ref,
+            reason="STOP_LOSS",
+        )
 
     def record_daily_equity(
         self,
@@ -345,4 +396,6 @@ class T25BacktestEngine:
             benchmark_mdd_pct=bench_mdd,
             alpha_pct=alpha,
             period_label=period_label,
+            floor_lock_blocked_count=self.floor_lock_blocked_count,
+            t25_blocked_count=self.t25_blocked_count,
         )

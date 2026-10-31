@@ -79,3 +79,18 @@ $$N_{\text{HĐ Short}} = \text{Round}\left( \frac{\text{Giá trị Danh mục} \
 - Ví dụ: Danh mục 1 tỷ VND, $\beta = 1.2$, VN30F1M ở mức 1,300 điểm:
   $$N_{\text{HĐ Short}} = \frac{1,000,000,000 \times 1.2}{1,300 \times 100,000} = \frac{1,200,000,000}{130,000,000} \approx 9 \text{ Hợp Đồng VN30F1M}$$
 - Mở ngay vị thế **Short 9 HĐ VN30F1M**. Lợi nhuận từ vị thế Short phái sinh sẽ bù đắp toàn bộ mức sụt giảm của danh mục cơ sở trong thời gian chờ cổ phiếu về tài khoản ở chu kỳ T+2.5!
+
+---
+
+## 6. Setup 6: Kỷ Luật Sống Còn Cho Nhà Đầu Tư Cá Nhân Nhỏ Lẻ Cold-Start (`0%` Đệm `T+0` — ADR-017)
+
+### Bối cảnh thực tế (`NAV 50 – 300 triệu VND`)
+- Tài khoản cá nhân nhỏ lẻ khởi đầu giải ngân mới hoàn toàn (`Cold-Start T+0 Cushion = 0%`), không đủ ký quỹ để Short phòng hộ `VN30F1M` (hoặc danh mục nắm Midcap không đồng pha chỉ số VN30) và chịu ràng buộc lô chẵn tối thiểu `100 cp` trên sàn HOSE.
+
+### 5 Quy tắc kỷ luật bắt buộc
+1. **Tuyệt đối không mua đuổi quá nền gốc `T0`:** Chỉ giải ngân khi huy hiệu trên Dashboard là `🟢 VÙNG MUA CHUẨN` (giá cách `entry_original` ngày `T0` không quá `+3.0%` và cách `Volume Profile POC` không quá `2.5 * ATR(14)`). Nếu xuất hiện `🔴 CẤM MUA ĐUỔI`, `🔴 CẤM MUA (BẪY BULL-TRAP)` hoặc `🟠 QUÁ HẠN T+3`, đứng ngoài 100%.
+2. **Trần tỷ trọng Cold-Start `<= 20% NAV` & `0% Margin`:** Khi chưa có sẵn hàng `T+0` trong kho, mỗi cổ phiếu chỉ được giải ngân tối đa `15% – 20% NAV` tiền mặt thuần (`0% Margin`) để dù gặp rủi ro khóa sàn trắng bên mua `T+2.5` thì thiệt hại trên tổng tài sản vẫn nằm trong ngưỡng kiểm soát.
+3. **Ưu tiên khung giờ xác nhận sau `13:45` chiều:** Trong khung giờ sáng `09:15 – 11:15`, nếu muốn lấy vị thế chỉ được đi lệnh thăm dò `<= 30%` kế hoạch; chờ lượng hàng `T+2.5` về tài khoản lúc `13:00 – 13:45` được hấp thụ xong không gãy `VAL/POC` mới hoàn tất vị thế.
+4. **Kiểm tra Lô chẵn `100 cp` HOSE trước khi vào lệnh:** Tránh các mã thị giá quá cao làm `1 lô 100 cp` vượt quá `20% NAV` hoặc chỉ mua được đúng `100 cp` (hiển thị cảnh báo `⚠️ LÔ 100CP CAO` trên bảng Top 20) khiến không thể chia đôi chốt lời `50%` tại `TP1` và `50%` tại `TP2`.
+5. **Tuân thủ tuyệt đối Cầu chì Vĩ mô `T+2.5`:** Khi Banner đỏ `⛔ CẦU CHÌ T+2.5 KÍCH HOẠT: TẠM NGỪNG MUA MỚI` bật sáng (Độ rộng VN-Index `< 35%` hoặc `Basis VN30F1M <= -8.0`), dừng 100% lệnh mua mới, nâng tỷ trọng tiền mặt `>= 70% NAV`.
+

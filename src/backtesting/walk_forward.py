@@ -13,6 +13,7 @@ from src.backtesting.historical_data import generate_benchmark_market_data
 from src.backtesting.metrics import calculate_walk_forward_efficiency
 from src.backtesting.models import BacktestConfig, BacktestResult, Exchange, MarketBar
 from src.backtesting.point_in_time import PointInTimeDatabase
+from src.risk_engine.trailing_stop import calculate_t25_structural_stop_loss
 
 
 class WalkForwardCoordinator:
@@ -57,22 +58,39 @@ class WalkForwardCoordinator:
         bench_sub = self.vnindex_bars[start_idx:end_idx]
         initial_bench_price = bench_sub[0].close if bench_sub else 1100.0
 
-        # Tinh toan MA20 cho tung co phieu tren toan chuoi
+        # Tinh toan MA20 va ATR(14) cho tung co phieu tren toan chuoi
         ma20_close: Dict[str, np.ndarray] = {}
         ma20_vol: Dict[str, np.ndarray] = {}
+        atr14_map: Dict[str, np.ndarray] = {}
         for sym in symbols:
-            closes = np.array([b.close for b in self.stock_bars[sym]])
-            vols = np.array([b.volume for b in self.stock_bars[sym]])
-            # Su dung rolling window 20 bars
+            bars_sym = self.stock_bars[sym]
+            closes = np.array([b.close for b in bars_sym])
+            highs = np.array([b.high for b in bars_sym])
+            lows = np.array([b.low for b in bars_sym])
+            vols = np.array([b.volume for b in bars_sym])
             ma_c = np.zeros(len(closes))
             ma_v = np.zeros(len(vols))
+            trs = np.zeros(len(closes))
+            atrs = np.zeros(len(closes))
             for i in range(len(closes)):
                 w_start = max(0, i - 19)
                 ma_c[i] = np.mean(closes[w_start:i + 1])
                 ma_v[i] = np.mean(vols[w_start:i + 1])
+                if i == 0:
+                    trs[i] = max(highs[i] - lows[i], closes[i] * 0.01)
+                else:
+                    trs[i] = max(
+                        highs[i] - lows[i],
+                        abs(highs[i] - closes[i - 1]),
+                        abs(lows[i] - closes[i - 1]),
+                    )
+                atr_start = max(0, i - 13)
+                atrs[i] = max(float(np.mean(trs[atr_start:i + 1])), closes[i] * 0.01)
             ma20_close[sym] = ma_c
             ma20_vol[sym] = ma_v
+            atr14_map[sym] = atrs
 
+        effective_alloc_pct = min(self.config.position_allocation_pct, 0.20)
         pending_buy_orders: List[Tuple[str, float, Exchange, float]] = []
 
         for i in range(start_idx, end_idx):
@@ -82,6 +100,9 @@ class WalkForwardCoordinator:
             # 1. KHOP LENH MUA CHO TU PHIEN TRUOC (Khop tai gia Open cua phien i -> Triet tieu Look-ahead Bias)
             for sym, alloc_cap, exch, ref_p in pending_buy_orders:
                 bar = self.stock_bars[sym][i]
+                # Kiem tra lai khong mua duoi neu phien khop Open nhay Gap qua xa nen (> 2.5 * ATR)
+                if (bar.open - ma20_close[sym][i]) > 2.5 * atr14_map[sym][i]:
+                    continue
                 engine.execute_buy(
                     symbol=sym,
                     price=bar.open,
@@ -93,7 +114,7 @@ class WalkForwardCoordinator:
                 )
             pending_buy_orders.clear()
 
-            # 2. KIEM TRA TIN HIEU BAN CHO CAC VI THE DANG NAM GIU
+            # 2. KIEM TRA TIN HIEU BAN CHO CAC VI THE DANG NAM GIU (Uu tien Cat lo Gap-Down & Khoa San)
             symbols_to_evaluate = list(engine.positions.keys())
             for sym in symbols_to_evaluate:
                 pos = engine.positions.get(sym)
@@ -101,8 +122,20 @@ class WalkForwardCoordinator:
                     continue
 
                 bar = self.stock_bars[sym][i]
-                gain_pct = ((bar.close - pos.avg_cost) / pos.avg_cost) * 100.0 if pos.avg_cost > 0 else 0.0
+                pos_sl = calculate_t25_structural_stop_loss(
+                    entry_price=pos.avg_cost,
+                    atr_14=float(atr14_map[sym][i]),
+                )
+                if bar.low <= pos_sl:
+                    engine.check_and_execute_stop_loss(
+                        symbol=sym,
+                        bar=bar,
+                        day_idx=i,
+                        stop_loss_price=pos_sl,
+                    )
+                    continue
 
+                gain_pct = ((bar.close - pos.avg_cost) / pos.avg_cost) * 100.0 if pos.avg_cost > 0 else 0.0
                 should_sell = False
                 reason = "SIGNAL"
 
@@ -110,17 +143,12 @@ class WalkForwardCoordinator:
                 if gain_pct >= 20.0:
                     should_sell = True
                     reason = "TAKE_PROFIT"
-                # Cat lo khi vi pham -7%
-                elif gain_pct <= -7.0:
-                    should_sell = True
-                    reason = "STOP_LOSS"
                 # Dao chieu dong tien (OFI am kem gia duoi MA20)
                 elif bar.close < ma20_close[sym][i] and bar.ofi < -0.20:
                     should_sell = True
                     reason = "TREND_REVERSAL"
 
                 if should_sell:
-                    # Kiem tra xem co phieu da ve tai khoan chieu T+2 hay chua
                     engine.execute_sell(
                         symbol=sym,
                         price=bar.close,
@@ -131,29 +159,38 @@ class WalkForwardCoordinator:
                         reason=reason,
                     )
 
-            # 3. QUET TIN HIEU MUA MOI TAI CUOI PHIEN i (Luu lenh cho khop tai phien i+1)
-            # Tieu chuan Quantamental: BCTC Point-in-Time + OFI duong + Breakout MA20
-            if i < end_idx - 1:  # Khong dat lenh o phien cuoi cung
-                for sym in symbols:
-                    if sym in engine.positions:
-                        continue
-                    if len(engine.positions) + len(pending_buy_orders) >= self.config.max_portfolio_positions:
-                        break
+            # 3. QUET TIN HIEU MUA MOI TAI CUOI PHIEN i (Dong bo Live Safeguards: Breadth + Anti-Chasing <= 2.5*ATR + <= 20% NAV)
+            if i < end_idx - 1:
+                macro_pause = False
+                if len(symbols) >= 4:
+                    adv_cnt = sum(
+                        1 for s in symbols if self.stock_bars[s][i].close >= self.stock_bars[s][i].reference_price
+                    )
+                    universe_breadth_pct = (adv_cnt / len(symbols)) * 100.0
+                    if universe_breadth_pct < 35.0 and bench_bar.ofi < -0.15:
+                        macro_pause = True
 
-                    bar = self.stock_bars[sym][i]
-                    # Kiem tra Point-in-Time BCTC hop le
-                    is_quant = self.pit_db.is_quantamental_qualified(sym, current_date)
-                    if not is_quant:
-                        continue
+                if not macro_pause:
+                    for sym in symbols:
+                        if sym in engine.positions:
+                            continue
+                        if len(engine.positions) + len(pending_buy_orders) >= self.config.max_portfolio_positions:
+                            break
 
-                    # Kiem tra Order Flow Imbalance & Breakout Khối lượng
-                    is_ofi_positive = bar.ofi > 0.15
-                    is_breakout_vol = bar.volume >= 1.25 * ma20_vol[sym][i]
-                    is_price_above_ma = bar.close >= ma20_close[sym][i]
+                        bar = self.stock_bars[sym][i]
+                        is_quant = self.pit_db.is_quantamental_qualified(sym, current_date)
+                        if not is_quant:
+                            continue
 
-                    if is_ofi_positive and is_breakout_vol and is_price_above_ma:
-                        alloc = self.config.initial_capital * self.config.position_allocation_pct
-                        pending_buy_orders.append((sym, alloc, bar.exchange, bar.close))
+                        is_ofi_positive = bar.ofi > 0.15
+                        is_breakout_vol = bar.volume >= 1.25 * ma20_vol[sym][i]
+                        is_price_above_ma = bar.close >= ma20_close[sym][i]
+                        # Cong Anti-Chasing BM-02: Khong mua duoi khi gia da keo > 2.5 * ATR(14) xa MA20
+                        is_not_overextended = (bar.close - ma20_close[sym][i]) <= (2.5 * atr14_map[sym][i])
+
+                        if is_ofi_positive and is_breakout_vol and is_price_above_ma and is_not_overextended:
+                            alloc = self.config.initial_capital * effective_alloc_pct
+                            pending_buy_orders.append((sym, alloc, bar.exchange, bar.close))
 
             # 4. GHI NHAN GIA TRI TAI SAN RONG (NAV) CUOI PHIEN
             current_close_prices = {sym: self.stock_bars[sym][i].close for sym in symbols}

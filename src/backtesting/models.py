@@ -181,3 +181,5 @@ class BacktestResult:
     benchmark_mdd_pct: float
     alpha_pct: float  # Total return - Benchmark return
     period_label: str = "FULL"  # IN_SAMPLE, OUT_OF_SAMPLE, FULL
+    floor_lock_blocked_count: int = 0
+    t25_blocked_count: int = 0

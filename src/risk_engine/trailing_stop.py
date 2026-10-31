@@ -97,29 +97,67 @@ def calculate_initial_stop_loss(
     return round(final_stop, 2)
 
 
+def calculate_t25_structural_stop_loss(
+    entry_price: float,
+    atr_14: Optional[float] = None,
+    structural_support: Optional[float] = None,
+    min_risk_pct: float = 0.045,
+    max_risk_pct: float = 0.075,
+) -> float:
+    """Tính toán ngưỡng Cắt Lỗ Cấu Trúc Sinh Tồn qua chu kỳ T+2.5 (4.5% đến 7.5%).
+
+    Khắc phục điểm mù kẹp cứng SL -3.0% (BM-05):
+    - Nhân biên độ biến động 14 phiên với căn bậc hai thời gian đóng băng T+2.5 (~1.581 * ATR_14).
+    - Đặt dưới hỗ trợ cấu trúc Volume Profile VAL / Swing Low 10 phiên một khoảng đệm 0.35 * ATR_14
+      để tránh bị quét râu nến rũ bỏ (stop-hunt) khi hàng chưa về tài khoản.
+    """
+    if entry_price <= 0:
+        raise ValueError("entry_price phải lớn hơn 0")
+
+    effective_atr = atr_14 if (atr_14 is not None and atr_14 > 0) else entry_price * 0.035
+    # Căn bậc hai của 2.5 phiên đóng băng: sqrt(2.5) ~ 1.5811
+    atr_stop = entry_price - (1.5811 * effective_atr)
+
+    if structural_support is not None and 0 < structural_support < entry_price:
+        support_stop = structural_support - (0.35 * effective_atr)
+        raw_stop = min(atr_stop, support_stop)
+    else:
+        raw_stop = atr_stop
+
+    hard_lower_limit = entry_price * (1.0 - max_risk_pct)
+    hard_upper_limit = entry_price * (1.0 - min_risk_pct)
+
+    final_stop = max(hard_lower_limit, min(raw_stop, hard_upper_limit))
+    return round(final_stop, 2)
+
+
 def calculate_take_profit_levels(
     entry_price: float,
     stop_loss: float,
     tp1_r_multiple: float = 1.5,
     tp2_r_multiple: float = 2.5,
+    round_trip_cost_pct: float = 0.0,
 ) -> Tuple[float, float, float]:
     """Tính toán các mốc Chốt Lời TP1, TP2 theo bội số đơn vị rủi ro R (Risk Unit).
 
     Công thức:
         R = entry_price - stop_loss
-        TP1 = entry_price + (tp1_r_multiple * R)  -> Khuyến nghị chốt lời 50%
-        TP2 = entry_price + (tp2_r_multiple * R)  -> Gồng lãi 50% còn lại với R:R >= 1:2.5
+        fee_buffer = entry_price * round_trip_cost_pct (mặc định 0.0; thực chiến VN ~0.004 = 0.40%)
+        TP1 = entry_price + (tp1_r_multiple * R) + fee_buffer -> Chốt lời 50% (Net >= 1.5R sau phí/thuế)
+        TP2 = entry_price + (tp2_r_multiple * R) + fee_buffer -> Gồng lãi 50% còn lại với Net R:R >= 1:2.5
 
     Returns:
-        Tuple gồm (TP1, TP2, Tỷ lệ R:R của TP2).
+        Tuple gồm (TP1, TP2, Tỷ lệ Net R:R của TP2).
     """
     if entry_price <= stop_loss:
         raise ValueError(f"entry_price ({entry_price}) phải lớn hơn stop_loss ({stop_loss})")
 
     r_unit = entry_price - stop_loss
-    tp1 = entry_price + (r_unit * tp1_r_multiple)
-    tp2 = entry_price + (r_unit * tp2_r_multiple)
-    rr_ratio = round((tp2 - entry_price) / r_unit, 2)
+    fee_buffer = max(round_trip_cost_pct, 0.0) * entry_price
+    tp1 = entry_price + (r_unit * tp1_r_multiple) + fee_buffer
+    tp2 = entry_price + (r_unit * tp2_r_multiple) + fee_buffer
+    net_tp2_reward = (tp2 - entry_price) - fee_buffer
+    rr_ratio = round(net_tp2_reward / r_unit, 2)
 
     return round(tp1, 2), round(tp2, 2), rr_ratio
 
@@ -261,14 +299,18 @@ def evaluate_t25_exposure(
 
     # Đánh giá cấp độ rủi ro dựa trên Basis và độ rộng thị trường khi hàng đang đóng băng
     if is_frozen:
-        if basis_points < -12.0 or (basis_points < -8.0 and market_breadth_pct < 40.0):
+        if (
+            market_breadth_pct < 35.0
+            or basis_points < -12.0
+            or (basis_points < -8.0 and market_breadth_pct < 45.0)
+        ):
             exposure_level = "CRITICAL"
             pause_new_buying = True
-            cash_pct = 60.0
+            cash_pct = 70.0
             action_msg = (
-                f"🚨 CẢNH BÁO ĐÓNG BĂNG CAO ĐIỂM ({t_stage}): Phái sinh bán tháo cực mạnh "
-                f"(Basis am {basis_points:+.1f}d). Tuyệt đối KHÔNG mở mua mới! "
-                f"Bán hạ tỷ trọng các mã sẵn có để nâng tiền mặt >= 60%."
+                f"🚨 CẢNH BÁO ĐÓNG BĂNG CAO ĐIỂM ({t_stage}): Cầu chì T+2.5 kích hoạt "
+                f"(Độ rộng {market_breadth_pct:.1f}%, Basis {basis_points:+.1f}đ). "
+                f"Tuyệt đối KHÔNG mở mua mới! Hạ tỷ trọng hàng khả dụng, nâng tiền mặt >= 70%."
             )
         elif basis_points < -6.0 or market_breadth_pct < 50.0:
             exposure_level = "HIGH"

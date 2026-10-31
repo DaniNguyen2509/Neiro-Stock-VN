@@ -65,7 +65,7 @@ Neiro-Stock-VN/
 │   └── hud/                      # Giao diện Tactical Terminal Web Đa Tab (Auto-Reload, Dark Mode)
 ├── data/                         # Dữ liệu mẫu benchmark, ranking_history.jsonl, active_signals.jsonl, ml_signals_dataset.csv
 ├── exports/                      # Tệp HTML Terminal xuất bản (GitHub Pages)
-├── tests/                        # Kiểm thử tự động Unit & Math verification (97/97 passed 100%)
+├── tests/                        # Kiểm thử tự động Unit & Math verification (117/117 passed 100%)
 ├── AGENTS.md / GEMINI.md         # Quy tắc bắt buộc gọi Skill & Zero-Waste Mandate
 ├── requirements.txt              # Thư viện Python phụ thuộc
 ├── pyproject.toml                # Cấu hình ruff & pytest
@@ -92,7 +92,7 @@ pip install -r requirements.txt
 
 ### 4.2. Chạy kiểm thử tự động
 ```bash
-# Chạy 100% Unit Tests xác minh tính toán toán học & T+2.5 Backtest (96/96 passed 100%)
+# Chạy 100% Unit Tests xác minh tính toán toán học & T+2.5 Backtest (117/117 passed 100%)
 python -m pytest tests/ -v --tb=short
 
 # Kiểm tra quy chuẩn mã nguồn (Ruff)
@@ -177,8 +177,10 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
 - **CLI Dispatch Độc Lập (`scripts/trigger_scan.py`):** Cung cấp công cụ dòng lệnh tiêu chuẩn (zero dependencies) hỗ trợ gửi yêu cầu dispatch qua cả 2 giao thức `repository_dispatch` và `workflow_dispatch`.
 - **Hướng Dẫn Cấu Hình Webhook 0-Code (`docs/guides/EXTERNAL_CRON_SETUP.md`):** Tài liệu hóa chi tiết cách kết nối dịch vụ `cron-job.org` với GitHub Fine-Grained Personal Access Token (PAT).
 
-### 4.11. Lộ Trình Khắc Phục Điểm Mù Rủi Ro T+2.5 & Bảo Vệ Nhà Đầu Tư Nhỏ Lẻ (ADR-017 — Proposed Baseline)
-- **Hợp Đồng Đặc Tả & Mốc Đối Chiếu Trước - Sau (`docs/plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md`):** Khóa chặt bảng số liệu hiện trạng (**Before**) của 8 điểm mù rủi ro `T+2.5` và chia thành 5 giai đoạn triển khai độc lập (Thanh lọc dữ liệu & Chặn đu đỉnh Pre-T0 bằng Volume Profile -> Cắt lỗ cấu trúc T+2.5 & Cầu chì Độ rộng thị trường -> Hợp nhất Sổ cái Anti-FOMO lên Dashboard & Định cỡ vị thế Nhỏ lẻ lô 100 cp -> Trung thực hóa Backtest khóa sàn -> Nghiệm thu Ma trận Trước/Sau).
+### 4.11. Hệ Thống Bảo Vệ Nhà Đầu Tư Nhỏ Lẻ T+2.5, Hợp Nhất Neo T0 Anti-FOMO & Khóa Sàn Trung Thực (ADR-017 — Accepted)
+- **Thanh lọc Dữ liệu & Cổng chặn Đu đỉnh Pre-T0:** Loại bỏ hoàn toàn ước lượng dòng tiền nội giả định (`1.5x`), khôi phục cảnh báo `🔴 NGUY HIỂM XẢ`, tính `ADTV20` trung bình 20 phiên thực chất (`>= 15 tỷ`) và chặn mua đỉnh phân phối (`Acc/Diss = E`, khoảng cách tới `Volume Profile POC > 2.5 * ATR(14)`).
+- **Cắt lỗ Cấu trúc Chịu nhiệt T+2.5 & Cầu chì Độ rộng Thị trường (`market_breadth.py`):** Mở biên SL cá thể hóa `[-4.5%, -7.5%]` theo $\sqrt{2.5} \times \text{ATR}_{14}$ và nền `VAL`, cộng bù `0.40%` phí/thuế hai chiều vào `TP1/TP2`; tự động bật banner đỏ `⛔ CẦU CHÌ T+2.5 KÍCH HOẠT: TẠM NGỪNG MUA MỚI` khi độ rộng VN-Index `< 35%` hoặc `Basis VN30F1M <= -8.0`.
+- **Hợp nhất Sổ cái Anti-FOMO lên Dashboard & Định cỡ Nhỏ lẻ Cold-Start:** Neo cứng `Vùng Mua` vào `entry_original` ngày `T0`, chặn 100% mã vừa gãy `STOPPED_OUT` (cooldown 3 phiên), khóa `BULL_TRAP_REJECT` theo `MFE`, áp trần `<= 20% NAV`/mã (`0% Margin`) cho tài khoản `0%` đệm `T+0` kèm cảnh báo lô chẵn `100 cp` HOSE, và trung thực hóa khóa sàn trắng bên mua (`Floor-Lock`) trên **Tab 2 Walk-Forward** (Xem đối chiếu Trước/Sau tại [`docs/plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md`](docs/plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md)).
 
 ---
 

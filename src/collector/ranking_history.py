@@ -204,6 +204,7 @@ class RankingHistoryTracker:
         self,
         current_candidates: List[Any],
         use_last_batch: bool = True,
+        current_time: Optional[datetime] = None,
     ) -> Dict[str, Dict[str, Any]]:
         """Tính toán biến động thứ hạng (Delta Rank) giữa danh sách hiện tại và phiên trước.
 
@@ -215,11 +216,12 @@ class RankingHistoryTracker:
         Args:
             current_candidates: Danh sách ứng viên hiện tại.
             use_last_batch: True để so sánh với phiên gần nhất đã lưu.
+            current_time: Thời điểm tham chiếu để kiểm tra Session Debounce 30 phút.
 
         Returns:
             Dictionary map: {symbol: {'delta_rank': int|None, 'status': str, 'badge': str, 'prev_rank': int|None}}.
         """
-        prev_ranks = self.get_last_scan_ranks() if use_last_batch else {}
+        prev_ranks = self.get_last_scan_ranks(current_time=current_time) if use_last_batch else {}
 
         # Xay dung ban do thu hang gan nhat cho TAT CA ma tu toan bo lich su
         # (fallback khi ma tam rot khoi Top20 phien truoc nhung da tung xuat hien)

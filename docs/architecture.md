@@ -148,7 +148,7 @@ flowchart TD
 ### 2.8. Tầng Tự Động Hóa & Đám Mây CI/CD (`.github/workflows/`)
 - **`ci.yml` (CI Quality Gate):** Tự động kiểm định trên mọi Pull Request và Push to `main`:
   - Khắc phục triệt để lỗi type annotation trên Python 3.12 Linux runner (ADR-007).
-  - Kiểm thử 100% pytest suite (85/85 tests passed).
+  - Kiểm thử 100% pytest suite (117/117 tests passed).
   - Kiểm tra tự động giới hạn dung lượng Zero-Waste (< 15MB).
 - **`scanner_and_pages.yml` (Scanner & Pages Deploy):** Quy trình tự động hóa tác chiến 24/7 trên GitHub Actions:
   - **Tối ưu hóa Lập lịch POSIX (ADR-007):** Quét định kỳ 30 phút trong phiên và bổ sung 2 mốc đóng băng dữ liệu cuối ngày (`15,45 2,3,4 * * 1-5`, `15,45 6,7 * * 1-5`, `5 8 * * 1-5`, `30 10 * * 1-5` - 17:30 VN, `0 12 * * 1-5` - 19:00 VN EOD Final Smart Money), chống nghẽn hàng đợi scheduler.
@@ -187,8 +187,11 @@ flowchart TD
 - **CLI Dispatch Độc Lập (`scripts/trigger_scan.py`):** Cung cấp công cụ dòng lệnh tiêu chuẩn (zero dependencies) hỗ trợ gửi yêu cầu dispatch qua cả 2 giao thức `repository_dispatch` và `workflow_dispatch`.
 - **Bộ Hướng Dẫn Cấu Hình Webhook 0-Code (`docs/guides/EXTERNAL_CRON_SETUP.md`):** Tài liệu hóa chi tiết cách kết nối dịch vụ `cron-job.org` với GitHub Fine-Grained Personal Access Token (PAT).
 
-### 2.13. Lộ Trình Quy Hoạch Khắc Phục Điểm Mù T+2.5 Cho Nhà Đầu Tư Nhỏ Lẻ (ADR-017 — Proposed Baseline)
-- **Tài Liệu Đặc Tả & Mốc Đối Chiếu Trước - Sau (`docs/plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md`):** Ghi nhận và khóa cứng số liệu hiện trạng (**Before**) của 8 điểm mù rủi ro `T+2.5` trước khi chỉnh sửa mã nguồn `src/`, phân rã thành 5 giai đoạn độc lập (12 tasks cỡ `S`/`M`) cùng Ma trận Nghiệm thu Trước & Sau để đối chiếu khách quan sau khi thực thi.
+### 2.13. Tầng Bảo Vệ Nhà Đầu Tư Nhỏ Lẻ T+2.5, Hợp Nhất Neo T0 Anti-FOMO & Khóa Sàn Trung Thực (ADR-017 — Accepted)
+- **Thanh lọc Dữ liệu & Cổng chặn Đu đỉnh Pre-T0 (`fialda_scanner.py`, `volume_profile.py`):** Xóa bỏ số liệu dòng tiền nội tự nhân `1.5x`, khôi phục cảnh báo `RUI_RO_XA`, tính `ADTV20` 20 phiên thực tế và loại bỏ các mã phân phối nặng `Acc/Diss = E` hoặc đã kéo quá xa `POC > 2.5 * ATR(14)`.
+- **Cắt lỗ Cấu trúc Chịu nhiệt T+2.5 & Cầu chì Độ rộng Vĩ mô (`trailing_stop.py`, `market_breadth.py`, `vn_market_client.py`):** Cá thể hóa SL trong biên `[-4.5%, -7.5%]` theo $\sqrt{2.5} \times \text{ATR}_{14}$ và nền `VAL`, bù phí/thuế `0.40%` vào `TP1/TP2`; tự động kích hoạt banner đỏ `⛔ CẦU CHÌ T+2.5: TẠM NGỪNG MUA MỚI` và khóa cột Quyết nghị trên toàn bảng khi độ rộng VN-Index `< 35%` hoặc `Basis VN30F1M <= -8.0`.
+- **Hợp nhất Sổ cái `SignalTracker` lên Dashboard & Định cỡ Nhỏ lẻ (`signal_tracker.py`, `position_sizer.py`, `terminal.py`):** Neo cứng `Vùng Mua` vào `entry_original` ngày `T0` qua các chu kỳ quét 30 phút, chặn 100% mã đang `STOPPED_OUT` trong 3 phiên cooldown, khóa `BULL_TRAP_REJECT` theo `MFE`, áp trần Cold-Start `<= 20% NAV` (`0% Margin`) và cảnh báo lô chẵn `100 cp` HOSE.
+- **Trung thực hóa Backtest Khóa Sàn (`backtesting/engine.py`, `walk_forward.py`):** Chặn bán thoát ảo tại giá sàn trắng bên mua (`price <= floor_price + 1e-4`), khớp cắt lỗ Gap-Down theo `min(bar.open, stop_loss_price)` và xuất bản trực tiếp thống kê khóa sàn trên **Tab 2** của Web Terminal.
 
 
 
