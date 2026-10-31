@@ -53,7 +53,8 @@ Neiro-Stock-VN/
 │   ├── thuat_ngu_quant_vn.md     # Từ điển thuật ngữ Quantamental & Vi cấu trúc TTCK VN
 │   ├── TRADER_PLAYBOOK_VN.md     # Cẩm nang tác chiến thực chiến cho Trader / Quỹ
 │   ├── google_sheets_setup.md    # Hướng dẫn thiết lập Google Sheets, Looker Studio & ML
-│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-014)
+│   ├── plans/                    # Kế hoạch triển khai & Ma trận đối chiếu Trước/Sau (PLAN-2026-T25-RETAIL)
+│   └── decisions/                # Architecture Decision Records (ADRs: ADR-001 -> ADR-017)
 ├── src/
 │   ├── collector/                # Thu thập & chuẩn hóa dữ liệu TTCK VN, Google Sheets Client (ADR-011)
 │   ├── fundamental_engine/       # Bộ lọc Piotroski F-score, EPS, PE/PB Banding
@@ -64,7 +65,7 @@ Neiro-Stock-VN/
 │   └── hud/                      # Giao diện Tactical Terminal Web Đa Tab (Auto-Reload, Dark Mode)
 ├── data/                         # Dữ liệu mẫu benchmark, ranking_history.jsonl, active_signals.jsonl, ml_signals_dataset.csv
 ├── exports/                      # Tệp HTML Terminal xuất bản (GitHub Pages)
-├── tests/                        # Kiểm thử tự động Unit & Math verification (96/96 passed 100%)
+├── tests/                        # Kiểm thử tự động Unit & Math verification (97/97 passed 100%)
 ├── AGENTS.md / GEMINI.md         # Quy tắc bắt buộc gọi Skill & Zero-Waste Mandate
 ├── requirements.txt              # Thư viện Python phụ thuộc
 ├── pyproject.toml                # Cấu hình ruff & pytest
@@ -175,6 +176,9 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
 - **Cloudflare Worker Serverless Cron (`scripts/cloudflare_worker_cron.js`):** Script serverless miễn phí 100% (100.000 req/ngày), kích hoạt đúng từng giây với độ trễ 0s và không phụ thuộc vào hạ tầng native scheduler của GitHub.
 - **CLI Dispatch Độc Lập (`scripts/trigger_scan.py`):** Cung cấp công cụ dòng lệnh tiêu chuẩn (zero dependencies) hỗ trợ gửi yêu cầu dispatch qua cả 2 giao thức `repository_dispatch` và `workflow_dispatch`.
 - **Hướng Dẫn Cấu Hình Webhook 0-Code (`docs/guides/EXTERNAL_CRON_SETUP.md`):** Tài liệu hóa chi tiết cách kết nối dịch vụ `cron-job.org` với GitHub Fine-Grained Personal Access Token (PAT).
+
+### 4.11. Lộ Trình Khắc Phục Điểm Mù Rủi Ro T+2.5 & Bảo Vệ Nhà Đầu Tư Nhỏ Lẻ (ADR-017 — Proposed Baseline)
+- **Hợp Đồng Đặc Tả & Mốc Đối Chiếu Trước - Sau (`docs/plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md`):** Khóa chặt bảng số liệu hiện trạng (**Before**) của 8 điểm mù rủi ro `T+2.5` và chia thành 5 giai đoạn triển khai độc lập (Thanh lọc dữ liệu & Chặn đu đỉnh Pre-T0 bằng Volume Profile -> Cắt lỗ cấu trúc T+2.5 & Cầu chì Độ rộng thị trường -> Hợp nhất Sổ cái Anti-FOMO lên Dashboard & Định cỡ vị thế Nhỏ lẻ lô 100 cp -> Trung thực hóa Backtest khóa sàn -> Nghiệm thu Ma trận Trước/Sau).
 
 ---
 

@@ -187,6 +187,10 @@ flowchart TD
 - **CLI Dispatch Độc Lập (`scripts/trigger_scan.py`):** Cung cấp công cụ dòng lệnh tiêu chuẩn (zero dependencies) hỗ trợ gửi yêu cầu dispatch qua cả 2 giao thức `repository_dispatch` và `workflow_dispatch`.
 - **Bộ Hướng Dẫn Cấu Hình Webhook 0-Code (`docs/guides/EXTERNAL_CRON_SETUP.md`):** Tài liệu hóa chi tiết cách kết nối dịch vụ `cron-job.org` với GitHub Fine-Grained Personal Access Token (PAT).
 
+### 2.13. Lộ Trình Quy Hoạch Khắc Phục Điểm Mù T+2.5 Cho Nhà Đầu Tư Nhỏ Lẻ (ADR-017 — Proposed Baseline)
+- **Tài Liệu Đặc Tả & Mốc Đối Chiếu Trước - Sau (`docs/plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md`):** Ghi nhận và khóa cứng số liệu hiện trạng (**Before**) của 8 điểm mù rủi ro `T+2.5` trước khi chỉnh sửa mã nguồn `src/`, phân rã thành 5 giai đoạn độc lập (12 tasks cỡ `S`/`M`) cùng Ma trận Nghiệm thu Trước & Sau để đối chiếu khách quan sau khi thực thi.
+
+
 
 ---
 

@@ -502,4 +502,16 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
    - Tích hợp Cloudflare Worker script `scripts/cloudflare_worker_cron.js` tận dụng Cron Triggers serverless chạy miễn phí 100%, độ trễ 0 giây.
    - Tài liệu hóa quy trình cấu hình webhook 0-code trên `cron-job.org` (`docs/guides/EXTERNAL_CRON_SETUP.md`) với Fine-Grained GitHub PAT đảm bảo bảo mật và kích hoạt quét đúng từng giây trong giờ giao dịch.
 
+---
+
+### Tier 19 [PROPOSED — ADR-017]: Lộ Trình Khắc Phục Điểm Mù Rủi Ro T+2.5 & Chống Mua Đuổi Nhỏ Lẻ
+
+> **Trạng thái hiện tại:** `PROPOSED — ĐÃ KHÓA MỐC BASELINE TRƯỚC KHI SỬA CODE` (Xem bản kế hoạch 5 giai đoạn và Ma trận đối chiếu Trước/Sau đầy đủ tại [`docs/plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md`](plans/RETAIL_T25_BLINDSPOT_REMEDIATION_PLAN.md) và [`ADR-017`](decisions/ADR-017-retail-t25-anti-chasing-and-risk-remediation-plan.md)).
+
+1. **Giai đoạn 1 (Data Integrity & Anti-Climax Gate):** Xóa bỏ ước lượng dòng tiền nội giả định `abs(foreign_net) * 1.5`, khôi phục bộ lọc `ADTV20 >= 15 tỷ` thực chất và chặn mua đỉnh phân phối (`Acc/Diss = D/E`, khoảng cách tới `Volume Profile POC > 2.5 * ATR(14)`).
+2. **Giai đoạn 2 (T+2.5 Structural SL & Market Breadth Circuit Breaker):** Mở biên cắt lỗ theo `ATR(14)` thực tế và hỗ trợ `VAL` (`-4.5%` đến `-7.5%`), bổ sung `src/sector_engine/market_breadth.py` và nối Basis sống để kích hoạt cầu chì `PAUSE_NEW_BUYING` khi độ rộng thị trường `< 35%`.
+3. **Giai đoạn 3 (Unified Anti-FOMO Anchor & Retail Cold-Start Sizing):** Hợp nhất `active_signals.jsonl` trực tiếp lên bảng Top 20 (neo cứng vùng mua gốc `T0`, chặn mã `STOPPED_OUT`, khóa `MFE Bull-Trap`), áp trần `<= 20% NAV`/mã cho tài khoản `0%` đệm `T+0` và cảnh báo lô chẵn `100 cp` HOSE.
+4. **Giai đoạn 4 (Honest Floor-Lock Backtest):** Khóa khớp bán tại giá sàn trắng bên mua (`price <= floor_price`) trong `T25BacktestEngine` và đồng bộ `WalkForwardCoordinator`.
+5. **Giai đoạn 5 (3-Layer Audit & Before/After Acceptance):** Kiểm định từng cột dữ liệu và điền số liệu thực tế vào Ma trận Đối chiếu Nghiệm thu Trước & Sau.
+
 
