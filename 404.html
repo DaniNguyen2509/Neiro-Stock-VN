@@ -120,7 +120,7 @@
             <div style="font-size:11px;color:#78909c;margin-top:4px;">Cập nhật theo chu kỳ giao dịch thực tế</div>
             <div style="display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-top:6px;flex-wrap:wrap;">
                 <span id="live-status" style="font-size:11px;color:#00e676;background:#1b5e20;padding:2px 7px;border-radius:4px;font-weight:bold;">🟢 Live VPS: Đang kết nối...</span>
-                <span style="font-size:11px;color:#90a4ae;">🕒 Cập nhật: <b id="scan-time" style="color:#ffb300;">09:16:26 • 02/11/2026</b></span>
+                <span style="font-size:11px;color:#90a4ae;">🕒 Cập nhật: <b id="scan-time" style="color:#ffb300;">09:46:23 • 02/11/2026</b></span>
                 <span style="font-size:11px;color:#546e7a;">•</span>
                 <span style="font-size:11px;color:#90a4ae;">🔄 Tự làm mới: <b id="countdown" style="color:#00e676;">300</b>s</span>
                 <button onclick="reloadDashboard()" style="background:#1e293b;color:#38bdf8;border:1px solid #0284c7;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer;">⚡ Tải lại ngay</button>
@@ -137,25 +137,25 @@
         </div>
         <div class="card" id="card-smart-money-container">
             <div class="card-title">Dòng Tiền Cá Mập Định Chế</div>
-            <div class="card-value" id="card-smart-money-val" style="color:#00e676;">+0.0 Tỷ VND</div>
-            <div id="card-smart-money-sub" style="font-size:11px;color:#78909c;margin-top:4px;">Khối ngoại mua ròng • 0/13 mã giữ cấu trúc tích lũy</div>
+            <div class="card-value" id="card-smart-money-val" style="color:#ff5252;">-15.5 Tỷ VND</div>
+            <div id="card-smart-money-sub" style="font-size:11px;color:#78909c;margin-top:4px;">Khối ngoại bán ròng • Cảnh báo 9/9 mã áp lực xả (Thận trọng T+2.5)</div>
         </div>
         <div class="card" id="card-breadth-container">
             <div class="card-title">Độ Rộng Danh Mục Dẫn Dắt</div>
-            <div class="card-value" id="card-breadth-val" style="color:#ff5252;">30.8%</div>
-            <div id="card-breadth-sub" data-macro-breadth="VN-Index: Tăng 49 / Giảm 153 (24.3%)" style="font-size:11px;color:#78909c;margin-top:4px;">4/13 Cổ phiếu giữ xung lực dẫn dắt (RS/Composite ≥ 70) • VN-Index: Tăng 49 / Giảm 153 (24.3%)</div>
+            <div class="card-value" id="card-breadth-val" style="color:#ff5252;">44.4%</div>
+            <div id="card-breadth-sub" data-macro-breadth="VN-Index: Tăng 75 / Giảm 187 (28.6%)" style="font-size:11px;color:#78909c;margin-top:4px;">4/9 Cổ phiếu giữ xung lực dẫn dắt (RS/Composite ≥ 70) • VN-Index: Tăng 75 / Giảm 187 (28.6%)</div>
         </div>
         <div class="card" id="card-sector-container">
             <div class="card-title">Ngành Dẫn Dắt (Động Lượng RRG)</div>
-            <div class="card-value" id="card-sector-val" style="color:#00e676;">SẢN XUẤT & THƯƠNG MẠI & BẤT ĐỘNG SẢN</div>
-            <div id="card-sector-sub" style="font-size:11px;color:#78909c;margin-top:4px;">ACB, VPI, CTG, TCH dẫn sóng dòng tiền</div>
+            <div class="card-value" id="card-sector-val" style="color:#00e676;">NGÂN HÀNG & VẬT LIỆU XÂY DỰNG</div>
+            <div id="card-sector-sub" style="font-size:11px;color:#78909c;margin-top:4px;">TPB, VIB, MBB, VTZ dẫn sóng dòng tiền</div>
         </div>
     </div>
 
     
     <div id="t25-circuit-breaker-banner" style="background:linear-gradient(90deg,#450a0a,#7f1d1d);border:2px solid #ef4444;border-radius:8px;padding:12px 16px;margin-bottom:18px;color:#fee2e2;font-size:13px;line-height:1.5;">
         <div style="font-weight:800;font-size:14px;color:#fca5a5;">⛔ CẦU CHÌ T+2.5 KÍCH HOẠT: TẠM NGỪNG MUA MỚI TOÀN BỘ VỊ THẾ CỔ PHIẾU</div>
-        <div><b>Nguyên nhân vĩ mô:</b> Độ rộng VN-Index suy yếu 24.3% (Tăng 49 / Giảm 153 — Xanh vỏ đỏ lòng). Tuyệt đối không mở mua mới hoặc bình quân giá xuống để tránh kẹp chu kỳ thanh toán T+2.5; ưu tiên giữ tỷ trọng tiền mặt &ge; 70% NAV.</div>
+        <div><b>Nguyên nhân vĩ mô:</b> Độ rộng VN-Index suy yếu 28.6% (Tăng 75 / Giảm 187 — Xanh vỏ đỏ lòng). Tuyệt đối không mở mua mới hoặc bình quân giá xuống để tránh kẹp chu kỳ thanh toán T+2.5; ưu tiên giữ tỷ trọng tiền mặt &ge; 70% NAV.</div>
     </div>
         
 
@@ -227,7 +227,7 @@
     <div id="hud-tab-radar">
     <!-- PHẦN 1: BẢNG TOP SIÊU CỔ PHIẾU CHÂN SÓNG -->
     <div class="section-header">
-        <div class="section-title" style="color:#ff8a80;">⛔ WATCHLIST QUAN SÁT TOP 13 CỔ PHIẾU THANH KHOẢN (ĐANG KHÓA MUA MỚI T+2.5 — CHỜ TẠO ĐÁY)</div>
+        <div class="section-title" style="color:#ff8a80;">⛔ WATCHLIST QUAN SÁT TOP 9 CỔ PHIẾU THANH KHOẢN (ĐANG KHÓA MUA MỚI T+2.5 — CHỜ TẠO ĐÁY)</div>
         <span style="font-size:11px;color:#78909c;">Nguồn: Fialda VIP Expert & Tích Lũy Khối Lượng Order Flow & Quản Trị Sức Chứa Thanh Khoản</span>
     </div>
     <div class="table-container">
@@ -273,9 +273,9 @@
         
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">2</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">TCH<div title="✅ Vốn 100tr: Tối đa 1,700 cp (~20.0tr, 20.0% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">TCH<div title="✅ Vốn 100tr: Tối đa 1,600 cp (~19.1tr, 19.1% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
             <td style="padding:6px 5px;text-align:center;"><span id="sig-badge-TCH"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span><div style="margin-top:3px;"><span style="background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">⛔ NGỪNG MUA MỚI — QUAN SÁT</span></div></span></td>
-            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="TCH" data-ref="11.75" data-entry-high="12.08" data-entry-low="11.72" data-sl="11.54" data-tp1="12.44" data-tp2="12.8" data-buy-perm="EXTENDED_NO_CHASING">11.75</span> <span class="live-change" data-sym="TCH" style="font-size:11px;margin-left:3px;"></span></td>
+            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="TCH" data-ref="11.95" data-entry-high="12.08" data-entry-low="11.72" data-sl="11.54" data-tp1="12.44" data-tp2="12.8" data-buy-perm="EXTENDED_NO_CHASING">11.95</span> <span class="live-change" data-sym="TCH" style="font-size:11px;margin-left:3px;"></span></td>
             <td style="padding:6px 5px;color:#00e676;font-weight:600;">11.72 - 12.08</td>
             <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">11.54</td>
             <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">12.44</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">12.80</span></td>
@@ -284,34 +284,16 @@
             <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">102/100</td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">82</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td id="foreign-cell-TCH" style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;"><span class="live-foreign" data-sym="TCH">+0.0 tỷ</span><div style="font-size:9px;color:#ff5252;margin-top:2px;font-weight:bold;">🔴 NGUY HIỂM</div></td>
+            <td id="foreign-cell-TCH" style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;"><span class="live-foreign" data-sym="TCH">+2.6 tỷ</span><div style="font-size:9px;color:#4fc3f7;margin-top:2px;font-weight:bold;">🔵 NGOẠI ĐỠ GIÁ</div></td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">34.8</td>
             <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#3</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">3</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">BAF<div title="✅ Vốn 100tr: Tối đa 600 cp (~18.0tr, 18.0% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
-            <td style="padding:6px 5px;text-align:center;"><span id="sig-badge-BAF"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span><div style="margin-top:3px;"><span style="background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">⛔ NGỪNG MUA MỚI — QUAN SÁT</span></div></span></td>
-            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="BAF" data-ref="30.0" data-entry-high="30.15" data-entry-low="29.25" data-sl="28.81" data-tp1="31.04" data-tp2="31.93" data-buy-perm="EXTENDED_NO_CHASING">30.00</span> <span class="live-change" data-sym="BAF" style="font-size:11px;margin-left:3px;"></span></td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">29.25 - 30.15</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">28.81</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">31.04</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">31.93</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">57.1t</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/100</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">77</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">D</span></td>
-            <td id="foreign-cell-BAF" style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;"><span class="live-foreign" data-sym="BAF">+0.0 tỷ</span><div style="font-size:9px;color:#ff5252;margin-top:2px;font-weight:bold;">🔴 NGUY HIỂM</div><div style="font-size:9px;color:#00e676;margin-top:1px;">TD: +0.3t</div></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">31.9</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="background:#e65100;color:#ffe0b2;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">MỚI</span></td>
-        </tr>
-        
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">4</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">TPB<div title="✅ Vốn 100tr: Tối đa 1,500 cp (~19.0tr, 19.0% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">TPB<div title="✅ Vốn 100tr: Tối đa 1,500 cp (~19.1tr, 19.1% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
             <td style="padding:6px 5px;text-align:center;"><span id="sig-badge-TPB"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span><div style="margin-top:3px;"><span style="background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">⛔ NGỪNG MUA MỚI — QUAN SÁT</span></div></span></td>
-            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="TPB" data-ref="12.65" data-entry-high="13.04" data-entry-low="12.66" data-sl="12.46" data-tp1="13.43" data-tp2="13.82" data-buy-perm="EXTENDED_NO_CHASING">12.65</span> <span class="live-change" data-sym="TPB" style="font-size:11px;margin-left:3px;"></span></td>
+            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="TPB" data-ref="12.7" data-entry-high="13.04" data-entry-low="12.66" data-sl="12.46" data-tp1="13.43" data-tp2="13.82" data-buy-perm="EXTENDED_NO_CHASING">12.70</span> <span class="live-change" data-sym="TPB" style="font-size:11px;margin-left:3px;"></span></td>
             <td style="padding:6px 5px;color:#00e676;font-weight:600;">12.66 - 13.04</td>
             <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">12.46</td>
             <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">13.43</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">13.82</span></td>
@@ -320,52 +302,34 @@
             <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">102/100</td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">68</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td id="foreign-cell-TPB" style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;"><span class="live-foreign" data-sym="TPB">+0.0 tỷ</span><div style="font-size:9px;color:#ff5252;margin-top:2px;font-weight:bold;">🔴 NGUY HIỂM</div><div style="font-size:9px;color:#ffb300;margin-top:1px;">TD: -1.4t</div></td>
+            <td id="foreign-cell-TPB" style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;"><span class="live-foreign" data-sym="TPB">-3.9 tỷ</span><div style="font-size:9px;color:#ff5252;margin-top:2px;font-weight:bold;">🔴 NGUY HIỂM</div><div style="font-size:9px;color:#ffb300;margin-top:1px;">TD: -1.4t</div></td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">24.5</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#5</span> <span style="background:#b71c1c;color:#ff8a80;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">-1</span></td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#5</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">4</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">CII<div title="✅ Vốn 100tr: Tối đa 1,500 cp (~19.8tr, 19.8% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
+            <td style="padding:6px 5px;text-align:center;"><span id="sig-badge-CII"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span><div style="margin-top:3px;"><span style="background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">⛔ NGỪNG MUA MỚI — QUAN SÁT</span></div></span></td>
+            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="CII" data-ref="13.2" data-entry-high="13.8" data-entry-low="13.4" data-sl="13.19" data-tp1="14.21" data-tp2="14.62" data-buy-perm="EXTENDED_NO_CHASING">13.20</span> <span class="live-change" data-sym="CII" style="font-size:11px;margin-left:3px;"></span></td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">13.40 - 13.80</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">13.19</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">14.21</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">14.62</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">122.8t</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">103/100</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">51</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
+            <td id="foreign-cell-CII" style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;"><span class="live-foreign" data-sym="CII">+0.0 tỷ</span><div style="font-size:9px;color:#ff5252;margin-top:2px;font-weight:bold;">🔴 NGUY HIỂM</div><div style="font-size:9px;color:#ffb300;margin-top:1px;">TD: -0.7t</div></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">17.4</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#4</span> <span style="background:#b71c1c;color:#ff8a80;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">-2</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">5</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">ACB<div title="✅ Vốn 100tr: Tối đa 900 cp (~18.7tr, 18.7% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
-            <td style="padding:6px 5px;text-align:center;"><span id="sig-badge-ACB"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span><div style="margin-top:3px;"><span style="background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">⛔ NGỪNG MUA MỚI — QUAN SÁT</span></div></span></td>
-            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="ACB" data-ref="20.8" data-entry-high="21.67" data-entry-low="21.03" data-sl="20.71" data-tp1="22.31" data-tp2="22.95" data-buy-perm="EXTENDED_NO_CHASING">20.80</span> <span class="live-change" data-sym="ACB" style="font-size:11px;margin-left:3px;"></span></td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">21.03 - 21.67</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">20.71</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">22.31</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">22.95</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">192.1t</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/100</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">38</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td id="foreign-cell-ACB" style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;"><span class="live-foreign" data-sym="ACB">+0.0 tỷ</span><div style="font-size:9px;color:#ff5252;margin-top:2px;font-weight:bold;">🔴 NGUY HIỂM</div><div style="font-size:9px;color:#ffb300;margin-top:1px;">TD: -17.0t</div></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">20.7</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#15</span> <span style="background:#1b5e20;color:#00e676;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">+8</span></td>
-        </tr>
-        
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">6</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">VPI<div title="✅ Vốn 100tr: Tối đa 200 cp (~11.3tr, 11.3% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
-            <td style="padding:6px 5px;text-align:center;"><span id="sig-badge-VPI"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span><div style="margin-top:3px;"><span style="background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">⛔ NGỪNG MUA MỚI — QUAN SÁT</span></div></span></td>
-            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="VPI" data-ref="56.7" data-entry-high="57.55" data-entry-low="55.85" data-sl="52.45" data-tp1="63.3" data-tp2="67.55" data-buy-perm="EXTENDED_NO_CHASING">56.70</span> <span class="live-change" data-sym="VPI" style="font-size:11px;margin-left:3px;"></span></td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">55.85 - 57.55</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">52.45</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">63.30</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">67.55</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">109.0t</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">101/102</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">45</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td id="foreign-cell-VPI" style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;"><span class="live-foreign" data-sym="VPI">+0.0 tỷ</span><div style="font-size:9px;color:#ff5252;margin-top:2px;font-weight:bold;">🔴 NGUY HIỂM</div></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">19.4</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="background:#e65100;color:#ffe0b2;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">MỚI</span></td>
-        </tr>
-        
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">7</td>
             <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">HPG<div title="✅ Vốn 100tr: Tối đa 900 cp (~18.9tr, 18.9% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
             <td style="padding:6px 5px;text-align:center;"><span id="sig-badge-HPG"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span><div style="margin-top:3px;"><span style="background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">⛔ NGỪNG MUA MỚI — QUAN SÁT</span></div></span></td>
-            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="HPG" data-ref="21.05" data-entry-high="21.21" data-entry-low="20.59" data-sl="20.27" data-tp1="21.84" data-tp2="22.47" data-buy-perm="EXTENDED_NO_CHASING">21.05</span> <span class="live-change" data-sym="HPG" style="font-size:11px;margin-left:3px;"></span></td>
+            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="HPG" data-ref="20.95" data-entry-high="21.21" data-entry-low="20.59" data-sl="20.27" data-tp1="21.84" data-tp2="22.47" data-buy-perm="EXTENDED_NO_CHASING">20.95</span> <span class="live-change" data-sym="HPG" style="font-size:11px;margin-left:3px;"></span></td>
             <td style="padding:6px 5px;color:#00e676;font-weight:600;">20.59 - 21.21</td>
             <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">20.27</td>
             <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">21.84</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">22.47</span></td>
@@ -374,70 +338,70 @@
             <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/99</td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">57</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td id="foreign-cell-HPG" style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;"><span class="live-foreign" data-sym="HPG">+0.0 tỷ</span><div style="font-size:9px;color:#ff5252;margin-top:2px;font-weight:bold;">🔴 NGUY HIỂM</div><div style="font-size:9px;color:#ffb300;margin-top:1px;">TD: -39.1t</div></td>
+            <td id="foreign-cell-HPG" style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;"><span class="live-foreign" data-sym="HPG">-3.8 tỷ</span><div style="font-size:9px;color:#ff5252;margin-top:2px;font-weight:bold;">🔴 NGUY HIỂM</div><div style="font-size:9px;color:#ffb300;margin-top:1px;">TD: -39.1t</div></td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">16.4</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#8</span> <span style="background:#b71c1c;color:#ff8a80;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">-1</span></td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#8</span> <span style="background:#1b5e20;color:#00e676;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">+1</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">8</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">PVD<div title="✅ Vốn 100tr: Tối đa 1,100 cp (~19.9tr, 19.9% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
-            <td style="padding:6px 5px;text-align:center;"><span id="sig-badge-PVD"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span><div style="margin-top:3px;"><span style="background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">⛔ NGỪNG MUA MỚI — QUAN SÁT</span></div></span></td>
-            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="PVD" data-ref="18.05" data-entry-high="18.63" data-entry-low="18.07" data-sl="17.8" data-tp1="19.18" data-tp2="19.73" data-buy-perm="EXTENDED_NO_CHASING">18.05</span> <span class="live-change" data-sym="PVD" style="font-size:11px;margin-left:3px;"></span></td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">18.07 - 18.63</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">17.80</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">19.18</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">19.73</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">69.5t</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#01579b;color:#29b6f6;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/100</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">40</td>
+            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">6</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">VIB<div title="✅ Vốn 100tr: Tối đa 1,400 cp (~19.2tr, 19.2% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
+            <td style="padding:6px 5px;text-align:center;"><span id="sig-badge-VIB"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span><div style="margin-top:3px;"><span style="background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">⛔ NGỪNG MUA MỚI — QUAN SÁT</span></div></span></td>
+            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="VIB" data-ref="13.7" data-entry-high="14.31" data-entry-low="13.89" data-sl="13.68" data-tp1="14.73" data-tp2="15.15" data-buy-perm="EXTENDED_NO_CHASING">13.70</span> <span class="live-change" data-sym="VIB" style="font-size:11px;margin-left:3px;"></span></td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">13.89 - 14.31</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">13.68</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">14.73</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">15.15</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">93.5t</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span></td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/99</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">51</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td id="foreign-cell-PVD" style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;"><span class="live-foreign" data-sym="PVD">+0.0 tỷ</span><div style="font-size:9px;color:#ff5252;margin-top:2px;font-weight:bold;">🔴 NGUY HIỂM</div></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">15.0</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#20</span> <span style="background:#1b5e20;color:#00e676;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">+10</span></td>
+            <td id="foreign-cell-VIB" style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;"><span class="live-foreign" data-sym="VIB">+1.7 tỷ</span><div style="font-size:9px;color:#4fc3f7;margin-top:2px;font-weight:bold;">🔵 NGOẠI ĐỠ GIÁ</div><div style="font-size:9px;color:#ffb300;margin-top:1px;">TD: -0.2t</div></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">12.9</td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#9</span> <span style="background:#1b5e20;color:#00e676;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">+1</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">9</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">BSR<div title="✅ Vốn 100tr: Tối đa 700 cp (~19.8tr, 19.8% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
+            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">7</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">BSR<div title="✅ Vốn 100tr: Tối đa 700 cp (~19.6tr, 19.6% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
             <td style="padding:6px 5px;text-align:center;"><span id="sig-badge-BSR"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span><div style="margin-top:3px;"><span style="background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">⛔ NGỪNG MUA MỚI — QUAN SÁT</span></div></span></td>
-            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="BSR" data-ref="28.3" data-entry-high="28.72" data-entry-low="28.23" data-sl="26.66" data-tp1="30.87" data-tp2="32.51" data-buy-perm="EXTENDED_NO_CHASING">28.30</span> <span class="live-change" data-sym="BSR" style="font-size:11px;margin-left:3px;"></span></td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">28.23 - 28.72</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">26.66</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">30.87</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">32.51</span></td>
+            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="BSR" data-ref="27.95" data-entry-high="28.51" data-entry-low="28.23" data-sl="26.31" data-tp1="30.52" data-tp2="32.16" data-buy-perm="EXTENDED_NO_CHASING">27.95</span> <span class="live-change" data-sym="BSR" style="font-size:11px;margin-left:3px;"></span></td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">28.23 - 28.51</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">26.31</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">30.52</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">32.16</span></td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">252.6t</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span></td>
             <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">97/99</td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">70</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td id="foreign-cell-BSR" style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;"><span class="live-foreign" data-sym="BSR">+0.0 tỷ</span><div style="font-size:9px;color:#ff5252;margin-top:2px;font-weight:bold;">🔴 NGUY HIỂM</div><div style="font-size:9px;color:#ffb300;margin-top:1px;">TD: -1.4t</div></td>
+            <td id="foreign-cell-BSR" style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;"><span class="live-foreign" data-sym="BSR">-7.2 tỷ</span><div style="font-size:9px;color:#ff5252;margin-top:2px;font-weight:bold;">🔴 NGUY HIỂM</div><div style="font-size:9px;color:#ffb300;margin-top:1px;">TD: -1.4t</div></td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">10.0</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#11</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#11</span> <span style="background:#1b5e20;color:#00e676;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">+2</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">10</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">DXG<div title="✅ Vốn 100tr: Tối đa 1,900 cp (~19.2tr, 19.2% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
-            <td style="padding:6px 5px;text-align:center;"><span id="sig-badge-DXG"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span><div style="margin-top:3px;"><span style="background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">⛔ NGỪNG MUA MỚI — QUAN SÁT</span></div></span></td>
-            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="DXG" data-ref="10.1" data-entry-high="10.25" data-entry-low="9.95" data-sl="9.8" data-tp1="10.55" data-tp2="10.85" data-buy-perm="EXTENDED_NO_CHASING">10.10</span> <span class="live-change" data-sym="DXG" style="font-size:11px;margin-left:3px;"></span></td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">9.95 - 10.25</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">9.80</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">10.55</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">10.85</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">102.8t</td>
+            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">8</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">VND<div title="✅ Vốn 100tr: Tối đa 1,400 cp (~18.7tr, 18.7% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
+            <td style="padding:6px 5px;text-align:center;"><span id="sig-badge-VND"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span><div style="margin-top:3px;"><span style="background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">⛔ NGỪNG MUA MỚI — QUAN SÁT</span></div></span></td>
+            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="VND" data-ref="13.35" data-entry-high="13.75" data-entry-low="13.35" data-sl="13.14" data-tp1="14.17" data-tp2="14.58" data-buy-perm="EXTENDED_NO_CHASING">13.35</span> <span class="live-change" data-sym="VND" style="font-size:11px;margin-left:3px;"></span></td>
+            <td style="padding:6px 5px;color:#00e676;font-weight:600;">13.35 - 13.75</td>
+            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">13.14</td>
+            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">14.17</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">14.58</span></td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">125.0t</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/99</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">65</td>
+            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/100</td>
+            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">68</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td id="foreign-cell-DXG" style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;"><span class="live-foreign" data-sym="DXG">+0.0 tỷ</span><div style="font-size:9px;color:#ff5252;margin-top:2px;font-weight:bold;">🔴 NGUY HIỂM</div><div style="font-size:9px;color:#ffb300;margin-top:1px;">TD: -0.5t</div></td>
+            <td id="foreign-cell-VND" style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;"><span class="live-foreign" data-sym="VND">+1.1 tỷ</span><div style="font-size:9px;color:#4fc3f7;margin-top:2px;font-weight:bold;">🔵 NGOẠI ĐỠ GIÁ</div></td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">10.0</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#6</span> <span style="background:#b71c1c;color:#ff8a80;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">-6</span></td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#7</span> <span style="background:#b71c1c;color:#ff8a80;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">-3</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">11</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">MBB<div title="✅ Vốn 100tr: Tối đa 1,000 cp (~19.1tr, 19.1% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
+            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">9</td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">MBB<div title="✅ Vốn 100tr: Tối đa 1,000 cp (~19.2tr, 19.2% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
             <td style="padding:6px 5px;text-align:center;"><span id="sig-badge-MBB"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span><div style="margin-top:3px;"><span style="background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">⛔ NGỪNG MUA MỚI — QUAN SÁT</span></div></span></td>
-            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="MBB" data-ref="19.15" data-entry-high="19.84" data-entry-low="19.26" data-sl="18.96" data-tp1="20.44" data-tp2="21.02" data-buy-perm="EXTENDED_NO_CHASING">19.15</span> <span class="live-change" data-sym="MBB" style="font-size:11px;margin-left:3px;"></span></td>
+            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="MBB" data-ref="19.2" data-entry-high="19.84" data-entry-low="19.26" data-sl="18.96" data-tp1="20.44" data-tp2="21.02" data-buy-perm="EXTENDED_NO_CHASING">19.20</span> <span class="live-change" data-sym="MBB" style="font-size:11px;margin-left:3px;"></span></td>
             <td style="padding:6px 5px;color:#00e676;font-weight:600;">19.26 - 19.84</td>
             <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">18.96</td>
             <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">20.44</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">21.02</span></td>
@@ -446,45 +410,9 @@
             <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/99</td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">52</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td id="foreign-cell-MBB" style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;"><span class="live-foreign" data-sym="MBB">+0.0 tỷ</span><div style="font-size:9px;color:#ff5252;margin-top:2px;font-weight:bold;">🔴 NGUY HIỂM</div><div style="font-size:9px;color:#ffb300;margin-top:1px;">TD: -30.2t</div></td>
+            <td id="foreign-cell-MBB" style="padding:6px 5px;text-align:center;color:#ff5252;font-weight:600;"><span class="live-foreign" data-sym="MBB">-6.1 tỷ</span><div style="font-size:9px;color:#ff5252;margin-top:2px;font-weight:bold;">🔴 NGUY HIỂM</div><div style="font-size:9px;color:#ffb300;margin-top:1px;">TD: -30.2t</div></td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">10.0</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#18</span> <span style="background:#1b5e20;color:#00e676;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">+5</span></td>
-        </tr>
-        
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">12</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">CTG<div title="✅ Vốn 100tr: Tối đa 600 cp (~18.2tr, 18.2% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
-            <td style="padding:6px 5px;text-align:center;"><span id="sig-badge-CTG"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span><div style="margin-top:3px;"><span style="background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">⛔ NGỪNG MUA MỚI — QUAN SÁT</span></div></span></td>
-            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="CTG" data-ref="30.35" data-entry-high="31.31" data-entry-low="30.39" data-sl="29.92" data-tp1="32.25" data-tp2="33.17" data-buy-perm="EXTENDED_NO_CHASING">30.35</span> <span class="live-change" data-sym="CTG" style="font-size:11px;margin-left:3px;"></span></td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">30.39 - 31.31</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">29.92</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">32.25</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">33.17</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">212.9t</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/99</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">26</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td id="foreign-cell-CTG" style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;"><span class="live-foreign" data-sym="CTG">+0.0 tỷ</span><div style="font-size:9px;color:#ff5252;margin-top:2px;font-weight:bold;">🔴 NGUY HIỂM</div><div style="font-size:9px;color:#ffb300;margin-top:1px;">TD: -15.9t</div></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">10.0</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#14</span> <span style="background:#b71c1c;color:#ff8a80;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">-1</span></td>
-        </tr>
-        
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">13</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">VJC<div title="ℹ️ Vốn 100tr mua tối đa 100 cp (~13.2tr, 13.2% NAV) — 1 lô chẵn HOSE duy nhất: Chốt gọn 1 lần tại TP1/Trailing, không chia 50/50" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
-            <td style="padding:6px 5px;text-align:center;"><span id="sig-badge-VJC"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span><div style="margin-top:3px;"><span style="background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">⛔ NGỪNG MUA MỚI — QUAN SÁT</span></div></span></td>
-            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="VJC" data-ref="131.6" data-entry-high="133.98" data-entry-low="130.02" data-sl="128.04" data-tp1="137.94" data-tp2="141.9" data-buy-perm="EXTENDED_NO_CHASING">131.60</span> <span class="live-change" data-sym="VJC" style="font-size:11px;margin-left:3px;"></span></td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">130.02 - 133.98</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">128.04</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">137.94</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">141.90</span></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">122.0t</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span></td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/100</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">8</td>
-            <td style="padding:6px 5px;text-align:center;"><span style="background:#450a0a;color:#ff5252;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">E</span></td>
-            <td id="foreign-cell-VJC" style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;"><span class="live-foreign" data-sym="VJC">+0.0 tỷ</span><div style="font-size:9px;color:#ff5252;margin-top:2px;font-weight:bold;">🔴 NGUY HIỂM</div><div style="font-size:9px;color:#ffb300;margin-top:1px;">TD: -4.6t</div></td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">10.0</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="background:#e65100;color:#ffe0b2;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">MỚI</span></td>
+            <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#18</span> <span style="background:#1b5e20;color:#00e676;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">+7</span></td>
         </tr>
         
             </tbody>
@@ -517,7 +445,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">HPG</td>
             <td style="padding:10px;">Tập đoàn Hòa Phát</td>
             <td style="padding:10px;color:#aaa;">Thép & Vật liệu xây dựng</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="HPG">21.10</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="HPG">20.95</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">8/9</td>
             <td style="padding:10px;text-align:center;">6.2</td>
             <td style="padding:10px;text-align:center;">1.1</td>
@@ -529,7 +457,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">GEX</td>
             <td style="padding:10px;">Tập đoàn GELEX</td>
             <td style="padding:10px;color:#aaa;">Thiết bị điện & KCN</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="GEX">22.15</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="GEX">22.30</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">7/9</td>
             <td style="padding:10px;text-align:center;">31.6</td>
             <td style="padding:10px;text-align:center;">0.9</td>
@@ -541,7 +469,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">PTB</td>
             <td style="padding:10px;">Phú Tài</td>
             <td style="padding:10px;color:#aaa;">Gỗ & Đá xuất khẩu</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="PTB">30.00</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="PTB">29.50</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">6/9</td>
             <td style="padding:10px;text-align:center;">7.2</td>
             <td style="padding:10px;text-align:center;">1.0</td>
@@ -553,7 +481,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">VHM</td>
             <td style="padding:10px;">Vinhomes</td>
             <td style="padding:10px;color:#aaa;">Bất động sản dân cư</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="VHM">63.00</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="VHM">63.80</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">6/9</td>
             <td style="padding:10px;text-align:center;">15.8</td>
             <td style="padding:10px;text-align:center;">4.4</td>
@@ -565,7 +493,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">DBC</td>
             <td style="padding:10px;">Dabaco Việt Nam</td>
             <td style="padding:10px;color:#aaa;">Nông nghiệp & Chăn nuôi</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="DBC">15.35</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="DBC">15.30</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">5/9</td>
             <td style="padding:10px;text-align:center;">6.5</td>
             <td style="padding:10px;text-align:center;">0.8</td>
@@ -577,7 +505,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">FPT</td>
             <td style="padding:10px;">Tập đoàn FPT</td>
             <td style="padding:10px;color:#aaa;">Công nghệ thông tin</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="FPT">52.10</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="FPT">52.20</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">5/9</td>
             <td style="padding:10px;text-align:center;">11.6</td>
             <td style="padding:10px;text-align:center;">2.7</td>
@@ -589,7 +517,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">SSI</td>
             <td style="padding:10px;">Chứng khoán SSI</td>
             <td style="padding:10px;color:#aaa;">Dịch vụ tài chính & CK</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="SSI">19.25</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="SSI">19.35</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">5/9</td>
             <td style="padding:10px;text-align:center;">16.7</td>
             <td style="padding:10px;text-align:center;">2.0</td>
@@ -601,7 +529,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">CTS</td>
             <td style="padding:10px;">Chứng khoán VietinBank</td>
             <td style="padding:10px;color:#aaa;">Dịch vụ tài chính & CK</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="CTS">20.95</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="CTS">21.05</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">4/9</td>
             <td style="padding:10px;text-align:center;">49.9</td>
             <td style="padding:10px;text-align:center;">1.9</td>
@@ -613,7 +541,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">MBB</td>
             <td style="padding:10px;">Ngân hàng Quân Đội</td>
             <td style="padding:10px;color:#aaa;">Ngân hàng thương mại</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="MBB">19.20</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="MBB">19.15</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#78909c;">N/A (Ngân hàng)</td>
             <td style="padding:10px;text-align:center;">8.4</td>
             <td style="padding:10px;text-align:center;">1.6</td>
@@ -625,7 +553,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">VCB</td>
             <td style="padding:10px;">Vietcombank</td>
             <td style="padding:10px;color:#aaa;">Ngân hàng thương mại</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="VCB">56.10</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="VCB">55.70</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#78909c;">N/A (Ngân hàng)</td>
             <td style="padding:10px;text-align:center;">12.5</td>
             <td style="padding:10px;text-align:center;">2.1</td>
@@ -668,7 +596,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">VCB</td>
             <td style="padding:10px;">Vietcombank</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="VCB">56.10</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="VCB">55.70</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#00e676;font-size:14px;">88/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">34.2%</td>
             <td style="padding:10px;text-align:center;">3.2%</td>
@@ -698,7 +626,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">TCB</td>
             <td style="padding:10px;">Techcombank</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="TCB">21.50</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="TCB">21.20</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#00e676;font-size:14px;">83/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">40.2%</td>
             <td style="padding:10px;text-align:center;">4.4%</td>
@@ -706,14 +634,14 @@
             <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">110%</td>
             <td style="padding:10px;text-align:center;">33.5%</td>
             <td style="padding:10px;text-align:center;color:#4fc3f7;">16.8%</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;">1.2</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">1.1</td>
             <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">HẠNG A (TINH HOA)</span></td>
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">ACB</td>
             <td style="padding:10px;">Ngân hàng Á Châu</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="ACB">20.80</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="ACB">20.40</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#00e676;font-size:14px;">81/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">24.1%</td>
             <td style="padding:10px;text-align:center;">4.1%</td>
@@ -721,7 +649,7 @@
             <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">135%</td>
             <td style="padding:10px;text-align:center;">32.0%</td>
             <td style="padding:10px;text-align:center;color:#4fc3f7;">23.1%</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;">1.2</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">1.1</td>
             <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">HẠNG A (TINH HOA)</span></td>
         </tr>
         
@@ -743,7 +671,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">CTG</td>
             <td style="padding:10px;">VietinBank</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="CTG">30.35</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="CTG">30.25</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#ffb300;font-size:14px;">63/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">22.8%</td>
             <td style="padding:10px;text-align:center;">3.0%</td>
@@ -758,7 +686,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">VPB</td>
             <td style="padding:10px;">VPBank</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="VPB">22.75</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="VPB">22.60</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#ffb300;font-size:14px;">61/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">18.2%</td>
             <td style="padding:10px;text-align:center;">5.6%</td>
@@ -773,7 +701,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">BID</td>
             <td style="padding:10px;">BIDV</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="BID">33.20</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="BID">33.25</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#ffb300;font-size:14px;">56/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">21.5%</td>
             <td style="padding:10px;text-align:center;">2.8%</td>
@@ -788,7 +716,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">STB</td>
             <td style="padding:10px;">Sacombank</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="STB">65.90</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="STB">66.30</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#ffb300;font-size:14px;">39/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">19.5%</td>
             <td style="padding:10px;text-align:center;">3.6%</td>
@@ -803,7 +731,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">EIB</td>
             <td style="padding:10px;">Eximbank</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="EIB">16.15</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="EIB">16.10</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#ffb300;font-size:14px;">39/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">15.2%</td>
             <td style="padding:10px;text-align:center;">2.8%</td>
@@ -884,24 +812,6 @@
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">BAF</td>
-            <td style="padding:10px;text-align:center;"><span style="background:#263238;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;">Q2/2026</span></td>
-            <td style="padding:10px;text-align:right;color:#78909c;border-left:1px solid #1f2937;">1,391.1 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#90a4ae;">1,762.2 tỷ</td>
-            <td style="padding:10px;text-align:right;font-weight:700;color:#ffb300;border-right:1px solid #1f2937;">2,126.5 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#ff5252;">-238.2 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#00e676;">206.2 tỷ</td>
-            <td style="padding:10px;text-align:right;font-weight:700;color:#00e676;border-right:1px solid #1f2937;">103.7 tỷ</td>
-            <td style="padding:10px;text-align:center;">
-                <span style="background:#b71c1c;color:#ff8a80;padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">-49.7%</span>
-            </td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">16.5%</td>
-            <td style="padding:10px;text-align:center;">
-                <span style="background:#37474f;color:#b0bec5;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">↘ CHẬM LẠI</span>
-            </td>
-        </tr>
-        
-        <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">TPB</td>
             <td style="padding:10px;text-align:center;"><span style="background:#263238;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;">Q2/2026</span></td>
             <td style="padding:10px;text-align:right;color:#78909c;border-left:1px solid #1f2937;">5,371.5 tỷ</td>
@@ -920,18 +830,36 @@
         </tr>
         
         <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">ACB</td>
-            <td style="padding:10px;text-align:center;"><span style="background:#263238;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;">Q3/2026</span></td>
-            <td style="padding:10px;text-align:right;color:#78909c;border-left:1px solid #1f2937;">8,904.7 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#90a4ae;">9,142.9 tỷ</td>
-            <td style="padding:10px;text-align:right;font-weight:700;color:#ffb300;border-right:1px solid #1f2937;">9,898.1 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#00e676;">4,320.4 tỷ</td>
-            <td style="padding:10px;text-align:right;color:#00e676;">4,292.5 tỷ</td>
-            <td style="padding:10px;text-align:right;font-weight:700;color:#00e676;border-right:1px solid #1f2937;">4,698.8 tỷ</td>
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">CII</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#263238;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;">Q2/2026</span></td>
+            <td style="padding:10px;text-align:right;color:#78909c;border-left:1px solid #1f2937;">824.7 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#90a4ae;">833.5 tỷ</td>
+            <td style="padding:10px;text-align:right;font-weight:700;color:#ffb300;border-right:1px solid #1f2937;">750.9 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#00e676;">135.8 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#00e676;">40.8 tỷ</td>
+            <td style="padding:10px;text-align:right;font-weight:700;color:#00e676;border-right:1px solid #1f2937;">54.8 tỷ</td>
             <td style="padding:10px;text-align:center;">
-                <span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">+9.5%</span>
+                <span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">+34.3%</span>
             </td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">68.8%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">62.0%</td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#004d40;color:#4db6ac;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">↗ TĂNG TRƯỞNG DƯƠNG</span>
+            </td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:10px;font-weight:bold;color:#ffb300;font-size:14px;">HPG</td>
+            <td style="padding:10px;text-align:center;"><span style="background:#263238;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;">Q3/2026</span></td>
+            <td style="padding:10px;text-align:right;color:#78909c;border-left:1px solid #1f2937;">52,900.8 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#90a4ae;">55,158.9 tỷ</td>
+            <td style="padding:10px;text-align:right;font-weight:700;color:#ffb300;border-right:1px solid #1f2937;">62,214.2 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#00e676;">9,055.9 tỷ</td>
+            <td style="padding:10px;text-align:right;color:#00e676;">6,424.5 tỷ</td>
+            <td style="padding:10px;text-align:right;font-weight:700;color:#00e676;border-right:1px solid #1f2937;">8,265.5 tỷ</td>
+            <td style="padding:10px;text-align:center;">
+                <span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-weight:bold;font-size:12px;">+28.7%</span>
+            </td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">19.2%</td>
             <td style="padding:10px;text-align:center;">
                 <span style="background:#004d40;color:#4db6ac;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">↗ TĂNG TRƯỞNG DƯƠNG</span>
             </td>
@@ -966,20 +894,20 @@
             
             <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-                    <span style="font-weight:bold;color:#ffb300;font-size:13px;">BAF</span>
-                    <span style="font-size:11px;color:#78909c;">2026-11-01 • Nhà đầu tư</span>
-                </div>
-                <div style="font-weight:600;font-size:13px;color:#eceff1;margin-bottom:4px;">BAF: Tăng trưởng 'lệch pha' trong cuộc đua mở rộng chuỗi chăn nuôi</div>
-                <div style="font-size:12px;color:#90a4ae;line-height:1.4;">BAF tiếp tục mở rộng chuỗi chăn nuôi, chế biến tại Gia Lai và nhiều địa phương khác. Doanh thu 9 tháng tăng mạnh nhưng lợi nhuận sau thuế giảm do chi phí mở rộng và lãi vay tăng.</div>
-            </div>
-            
-            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
                     <span style="font-weight:bold;color:#ffb300;font-size:13px;">TPB</span>
                     <span style="font-size:11px;color:#78909c;">2026-10-30 • An ninh tiền tệ</span>
                 </div>
                 <div style="font-weight:600;font-size:13px;color:#eceff1;margin-bottom:4px;">TPB: Thêm 1 lô trái phiếu 'đổ' về TPBank</div>
                 <div style="font-size:12px;color:#90a4ae;line-height:1.4;">TPBank vừa phát hành lô trái phiếu TPBL12617 trị giá 300 tỷ đồng, kỳ hạn 10 năm, đồng thời có kế hoạch phát hành trái phiếu cấp 2 tối đa 15.000 tỷ đồng giai đoạn 2026-2027.</div>
+            </div>
+            
+            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span style="font-weight:bold;color:#ffb300;font-size:13px;">CII</span>
+                    <span style="font-size:11px;color:#78909c;">2026-11-01 • Người đưa tin</span>
+                </div>
+                <div style="font-weight:600;font-size:13px;color:#eceff1;margin-bottom:4px;">CII: Tăng trưởng nguồn thu BOT, áp lực tài chính gia tăng</div>
+                <div style="font-size:12px;color:#90a4ae;line-height:1.4;">CII ghi nhận doanh thu quý III/2026 tăng 28% nhờ lưu lượng xe và điều chỉnh giá vé BOT, nhưng chi phí tài chính tăng mạnh và lợi nhuận sau thuế 9 tháng giảm 40%.</div>
             </div>
             
         </div>
@@ -1004,18 +932,18 @@
             
             <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-                    <span style="font-weight:bold;color:#00e676;font-size:13px;">BAF</span>
-                    <span style="font-size:11px;color:#ffb300;background:#263238;padding:2px 6px;border-radius:4px;">Thời gian: 2026-11-05</span>
-                </div>
-                <div style="font-size:13px;color:#d1d4dc;">Phát hành thêm</div>
-            </div>
-            
-            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
                     <span style="font-weight:bold;color:#00e676;font-size:13px;">TPB</span>
                     <span style="font-size:11px;color:#ffb300;background:#263238;padding:2px 6px;border-radius:4px;">Thời gian: Sắp tới</span>
                 </div>
                 <div style="font-size:13px;color:#d1d4dc;">Giao dịch bổ sung - 416,088,023 CP</div>
+            </div>
+            
+            <div style="background:#151a23;border:1px solid #263238;border-radius:6px;padding:12px;margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span style="font-weight:bold;color:#00e676;font-size:13px;">CII</span>
+                    <span style="font-size:11px;color:#ffb300;background:#263238;padding:2px 6px;border-radius:4px;">Thời gian: 2026-11-05</span>
+                </div>
+                <div style="font-size:13px;color:#d1d4dc;">Họp ĐHĐCĐ bất thường năm 2026</div>
             </div>
             
         </div>
