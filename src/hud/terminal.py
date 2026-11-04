@@ -9,6 +9,7 @@ from src.collector.fialda_scanner import FialdaCandidate, FialdaScanner
 from src.risk_engine.position_sizer import calculate_retail_t25_position_size
 from src.sector_engine.market_breadth import parse_market_breadth_dict
 from src.backtesting.walk_forward import WalkForwardCoordinator
+from src.hud.quant_search import build_quant_search_snapshot, generate_quant_search_cockpit_html
 
 _CACHED_WF_SUMMARY: Optional[Dict[str, Any]] = None
 
@@ -578,6 +579,15 @@ def generate_terminal_html(
     </div>
         """
 
+    # Chuan bi du lieu Tim Kiem Dinh Luong & Danh Gia Co Phieu Tuc Thi (Tier 23 / ADR-021)
+    quant_search_snapshot = build_quant_search_snapshot(
+        fialda_candidates=fialda_candidates,
+        active_signals=active_signals,
+        scanner=scanner,
+        circuit_breaker_active=circuit_breaker_active,
+    )
+    quant_search_cockpit_html = generate_quant_search_cockpit_html(quant_search_snapshot)
+
     # 3. Nganh dan dat tu toa do RRG (Leading Sector)
     SECTOR_MAP = {
         "CTS": "Chứng khoán", "VIX": "Chứng khoán", "SSI": "Chứng khoán", "VCI": "Chứng khoán", "VND": "Chứng khoán", "BVS": "Chứng khoán", "ORS": "Chứng khoán", "TCX": "Chứng khoán",
@@ -781,6 +791,8 @@ def generate_terminal_html(
     </div>
 
     {circuit_breaker_html}
+
+    {quant_search_cockpit_html}
 
     <!-- THANH CHUYỂN TAB CHIẾN THUẬT: TAB 1 (RADAR THỰC CHIẾN) & TAB 2 (SỔ CÁI VỊ THẾ KHUYẾN NGHỊ & T+ TRACKER) -->
     <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;">

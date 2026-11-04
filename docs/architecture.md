@@ -145,6 +145,10 @@ flowchart TD
   - Tab 3: Bảng Định Lượng Ngân Hàng Thương Mại CAMEL & Basel II/III.
   - Tab 4: Báo Cáo Kết QuẢ Kinh Doanh BCTC & Tin Tức Doanh Nghiệp Spotlight.
   - Hệ thống Tab Navigation tương tác chuyển đổi mượt mà không cần tải lại trang.
+- **`quant_search.py` (Quant Quick-Check Search Engine — ADR-021):**
+  - **Kiến trúc Pre-Computed Snapshot Client-Side JS:** Khi sinh HTML Terminal, tự động xuất sẵn snapshot dữ liệu siêu nhẹ (`QUANT_SEARCH_SNAPSHOT`) chứa toàn bộ vũ trụ cổ phiếu theo dõi và track record.
+  - **Tìm kiếm tức thì trên RAM trình duyệt (< 1ms, 0% tải server):** Khách hàng nhập bất kỳ mã cổ phiếu nào (hoặc click các nút gợi ý TCH, SSI, HPG, FPT...) để xem chẩn đoán Cổng mua Tier 21, RS 1M, F-Score, IBD Composite, Tích lũy Order Flow, Động lượng RRG, Dòng tiền Cá mập và Thống kê Thắng/Thua quá khứ.
+  - **Anti-Junk Guard:** Cảnh báo đỏ đối với mã ngoài danh mục hoặc thanh khoản yếu (< 15 tỷ), bảo vệ an toàn vốn tuyệt đối.
 
 ### 2.8. Tầng Tự Động Hóa & Đám Mây CI/CD (`.github/workflows/`)
 - **`ci.yml` (CI Quality Gate):** Tự động kiểm định trên mọi Pull Request và Push to `main`:

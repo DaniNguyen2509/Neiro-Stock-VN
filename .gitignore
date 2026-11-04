@@ -2,6 +2,7 @@
 __pycache__/
 *.pyc
 .pytest_cache/
+tests_temp/
 .ruff_cache/
 data/*.tmp
 data/*.cache

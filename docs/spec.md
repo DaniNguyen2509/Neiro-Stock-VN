@@ -556,3 +556,23 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
    - Cảnh báo triệt để tâm lý FOMO mua đuổi: nhà đầu tư mở Tab 2 thấy mã đã bùng nổ từ trước và đang gồng lãi thì tuyệt đối không mua đuổi.
 4. **Đồng Bộ Live PnL VPS Thời Gian Thực:** Client-side JS tự động nạp giá live từ VPS qua `.live-price[data-sym]` và tính toán lại `.live-pnl[data-sym]` (`data-entry`) mỗi 30 giây, tự động đổi màu theo thị giá (tím trần, xanh sàn, xanh lãi, đỏ lỗ) và chuyển đổi huy hiệu khuyến nghị (`.pos-badge`).
 5. **Tối Ưu Hiệu Năng Terminal:** Loại bỏ việc chạy lại toàn bộ Walk-Forward Coordinator nặng khi sinh HTML, giảm thời gian render Terminal xuống ~0.5 giây.
+
+---
+
+### Tier 23 [ACCEPTED - ADR-021]: Tìm Kiếm Định Lượng & Đánh Giá Cổ Phiếu Tức Thì (Quant Quick-Check Search) — Pre-Computed Snapshot Client-Side JS
+
+> **Trạng thái:** `ACCEPTED & IMPLEMENTED` (xem [`ADR-021`](decisions/ADR-021-quant-quick-check-search-instant-evaluation.md), test: `tests/test_quant_quick_check_search.py`).
+
+1. **Kiến Trúc Pre-Computed Snapshot Search:**
+   - Khi `generate_terminal_html()` thực thi, hệ thống tự động tổng hợp bộ dữ liệu `QUANT_SEARCH_SNAPSHOT` nhúng trực tiếp vào mã nguồn HTML.
+   - Cung cấp khả năng tìm kiếm tức thì cho >310 mã cổ phiếu trên thị trường trực tiếp trên RAM trình duyệt (`< 1ms`), triệt tiêu 100% rủi ro nghẽn mạng hoặc dính rate-limit do tuyệt đối không dùng Dynamic Server-side Search.
+2. **Đánh Giá Cổng Mua Tier 21 Tức Thì:**
+   - Phân loại rõ ràng 5 trạng thái hành động thực chiến: `VÙNG MUA CHUẨN 🟢`, `THĂM DÒ <=30% 🟡`, `CẤM MUA ĐUỔI ⛔`, `SUY YẾU/CHỜ TẠO ĐÁY 🛑`, hoặc `CẦU CHÌ VĨ MÔ 🛑`.
+3. **Bộ Chỉ Số Quantamental Cốt Lõi:**
+   - Hiển thị đầy đủ: Sức mạnh giá RS 1M (1-99), Piotroski F-Score (0-9), William O'Neil IBD Composite Rating (1-99), Hạng tích lũy Order Flow (A-E), Động lượng RRG (Leading/Weakening/Lagging/Improving), và Dòng tiền Cá mập Dual Flow (Khối ngoại & Tự doanh).
+4. **Thống Kê Quá Khứ (Bot Track Record):**
+   - Tự động trích xuất lịch sử khuyến nghị từ `data/active_signals.jsonl`, `data/signal_history_ml.jsonl`, và `data/ml_signals_dataset.csv`.
+   - Báo cáo số lần khuyến nghị, tỷ lệ Thắng/Thua (Wins/Losses), Win Rate %, và Lợi nhuận trung bình % (% Avg PnL).
+5. **Cảnh Báo Hàng Rác & An Toàn Vốn (Anti-Junk Guard):**
+   - Tự động cảnh báo đỏ đối với các cổ phiếu thanh khoản yếu (ADTV20 < 15 tỷ) hoặc F-Score thấp (< 4/9), giải thích rõ nguy cơ kẹp vốn để bảo vệ an toàn cho nhà đầu tư cá nhân.
+

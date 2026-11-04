@@ -201,3 +201,9 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
 
 - **6 cổng Mua Mới:** chặn gãy nền dưới POC/VAL, bất biến vùng giá `SL < Entry <= TP1 < TP2`, cấm bắt dao rơi sau T0 (`< -2.5%`), đồng bộ Cầu chì vĩ mô xuống Sổ cái/Scorecard, `HIGH` hạ xuống thăm dò, đếm phiên giao dịch thực (loại T7/CN/lễ), Fail-Caution khi mất dữ liệu độ rộng, chặn doanh nghiệp lỗ (EPS TTM < 0) và Ngân hàng CAMEL yếu.
 - **Dữ liệu ML:** `data/ml_signals_dataset.csv` hợp nhất `active_signals.jsonl` và `data/signal_history_ml.jsonl` theo `signal_id`. Khi huấn luyện, lọc `is_ml_ready == True`. Chi tiết: [`docs/google_sheets_setup.md`](docs/google_sheets_setup.md).
+
+### 4.14. Tìm Kiếm Định Lượng & Đánh Giá Cổ Phiếu Tức Thì (Quant Quick-Check Search) (ADR-021 — Accepted)
+- **Kiến Trúc Pre-Computed Snapshot Search (Client-Side JS):** Khi sinh Terminal Dashboard, nhúng sẵn snapshot `QUANT_SEARCH_SNAPSHOT` gọn nhẹ chứa thông tin toàn bộ cổ phiếu theo dõi và track record quá khứ.
+- **Tìm Kiếm Tức Thì Trên RAM Trình Duyệt (< 1ms, 0% Tải Server):** Người dùng nhập bất kỳ mã cổ phiếu nào (hoặc bấm các pill gợi ý TCH, SSI, HPG, FPT...) để xem ngay chẩn đoán Cổng mua Tier 21 (`VÙNG MUA CHUẨN 🟢`, `THĂM DÒ <=30% 🟡`, `CẤM MUA ĐUỔI ⛔`, `SUY YẾU/CHỜ TẠO ĐÁY 🛑`, hoặc `CẦU CHÌ VĨ MÔ 🛑`).
+- **Bộ Chỉ Số Quantamental & Thống Kê Quá Khứ (Track Record):** Đánh giá RS 1M, Piotroski F-Score, IBD Composite, Tích lũy Order Flow A-E, Động lượng RRG, Dòng tiền Cá mập Dual Flow; trích xuất trực tiếp số lần khuyến nghị, tỷ lệ Thắng/Thua, Win Rate % và Lợi nhuận trung bình % từ `data/active_signals.jsonl` và `data/ml_signals_dataset.csv`.
+- **Anti-Junk Guard:** Cảnh báo đỏ bảo vệ vốn trước các mã thanh khoản yếu (< 15 tỷ) hoặc ngoài danh mục định lượng. Chi tiết tại [`docs/decisions/ADR-021-quant-quick-check-search-instant-evaluation.md`](docs/decisions/ADR-021-quant-quick-check-search-instant-evaluation.md).
