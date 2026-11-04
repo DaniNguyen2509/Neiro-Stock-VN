@@ -212,3 +212,12 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
 - **Tìm Kiếm Tức Thì Trên RAM Trình Duyệt (< 1ms, 0% Tải Server):** Người dùng nhập bất kỳ mã cổ phiếu nào (hoặc bấm các pill gợi ý TCH, SSI, HPG, FPT...) để xem ngay chẩn đoán Cổng mua Tier 21 (`VÙNG MUA CHUẨN 🟢`, `THĂM DÒ <=30% 🟡`, `CẤM MUA ĐUỔI ⛔`, `SUY YẾU/CHỜ TẠO ĐÁY 🛑`, hoặc `CẦU CHÌ VĨ MÔ 🛑`).
 - **Bộ Chỉ Số Quantamental & Thống Kê Quá Khứ (Track Record):** Đánh giá RS 1M, Piotroski F-Score, IBD Composite, Tích lũy Order Flow A-E, Động lượng RRG, Dòng tiền Cá mập Dual Flow; trích xuất trực tiếp số lần khuyến nghị, tỷ lệ Thắng/Thua, Win Rate % và Lợi nhuận trung bình % từ `data/active_signals.jsonl` và `data/ml_signals_dataset.csv`.
 - **Anti-Junk Guard:** Cảnh báo đỏ bảo vệ vốn trước các mã thanh khoản yếu (< 15 tỷ) hoặc ngoài danh mục định lượng. Chi tiết tại [`docs/decisions/ADR-021-quant-quick-check-search-instant-evaluation.md`](docs/decisions/ADR-021-quant-quick-check-search-instant-evaluation.md).
+
+### 4.15. Cơ Chế Duy Trì Vị Thế Trong Ngày & Chuyển Giao Tab 2 (ADR-023 — Accepted)
+- **Duy trì trong ngày trên Tab 1 (Same-Day Retention):** Giữ chân các mã khuyến nghị trong ngày $T_0$ và còn hiệu lực trên Bảng Khuyến Nghị Tab 1 trong suốt phiên, bất kể biến động ranking buổi chiều; tự động cập nhật cấm mua đuổi nếu giá bứt phá $> +1.5\%$.
+- **Chuyển giao $T+1$ sang Tab 2:** Khi bước sang ngày tiếp theo ($T \ge 1$), nhường chỗ cho cơ hội mới trên Tab 1 và chuyển toàn bộ theo dõi sang Tab 2 (T+ Tracker). Chi tiết tại [`docs/decisions/ADR-023-intraday-signal-retention-policy.md`](docs/decisions/ADR-023-intraday-signal-retention-policy.md).
+
+### 4.16. Kiểm Soát Cắt Lỗ Đáy Chu Kỳ & Tất Toán Hết Sóng (ADR-024 — Accepted)
+- **True Low Stop Loss:** So sánh ngưỡng cắt lỗ với đáy thực tế chu kỳ nắm giữ `min(cur_price, low_price, min_price_reached)` thay vì chỉ snapshot giá 30 phút, triệt tiêu 100% thiên kiến sống sót và lãi ảo (như ca VCI thủng đáy 18.05 vi phạm stop 18.58).
+- **Time-Stop T+7 Capital Rotation:** Tự động tất toán sau 7 phiên giao dịch thực tế nếu $PnL < +3.0\%$ để thu hồi sức mua luân chuyển dòng vốn.
+- **Sổ Cái Tab 2 Tinh Gọn (Anti-Clutter UI):** Bảng chính chỉ giữ các vị thế đang chạy thực chiến (~12 mã); toàn bộ mã đã đóng (TP2, Cắt lỗ, Hết sóng T+7) được chuyển vào ngăn collapsible lưu trữ lịch sử minh bạch. Chi tiết tại [`docs/decisions/ADR-024-true-low-stop-loss-and-time-stop-rotation.md`](docs/decisions/ADR-024-true-low-stop-loss-and-time-stop-rotation.md).

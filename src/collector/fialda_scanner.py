@@ -1855,10 +1855,13 @@ class FialdaScanner:
                     if not sig.is_closed and s not in top_syms
                 ]
                 open_live_prices: Dict[str, float] = {}
+                open_live_lows: Dict[str, float] = {}
                 still_unpriced: List[str] = []
+                loaded_signals = st_live.load_active_signals()
                 for s in open_missing:
                     si = stock_infos.get(s, {})
                     pi = si.get("PriceInfo", {}) if isinstance(si, dict) else {}
+                    rs = si.get("RealtimeStatistic", {}) if isinstance(si, dict) else {}
                     mi = market_sym_map.get(s, {})
                     p_found = float(
                         pi.get("currentPrice")
@@ -1871,6 +1874,22 @@ class FialdaScanner:
                         open_live_prices[s] = round(p_found, 2)
                     else:
                         still_unpriced.append(s)
+
+                    # ADR-024: Trich xuat day thuc te tu PriceInfo & RealtimeStatistic
+                    sig_obj = loaded_signals.get(s)
+                    first_dt = st_live.parse_time(sig_obj.first_signal_date) if sig_obj else None
+                    trading_days = count_vn_trading_days(first_dt.date(), now_vn.date()) if first_dt else 0
+
+                    low_val = float(pi.get("lowPrice") or 0.0)
+                    if trading_days >= 1:
+                        low_5d = float(rs.get("adjLow5DCandle") or 0.0)
+                        effective_cand_low = min(v for v in [low_val, low_5d] if v > 0) if (low_val > 0 or low_5d > 0) else low_val
+                    else:
+                        effective_cand_low = low_val
+
+                    if effective_cand_low > 0:
+                        open_live_lows[s] = round(effective_cand_low, 2)
+
                 if still_unpriced and self.token and self.token not in self._DUMMY_TEST_TOKENS:
                     batch_quotes = self.get_public_realtime_prices(still_unpriced)
                     for s, qp in batch_quotes.items():
@@ -1881,6 +1900,7 @@ class FialdaScanner:
                     current_time=now_vn,
                     live_prices=open_live_prices,
                     macro_pause_buying=macro_circuit_breaker,
+                    live_lows=open_live_lows,
                 )
             except Exception:
                 pass

@@ -434,7 +434,7 @@ def generate_terminal_html(
         for s in active_signals.values():
             st_val = getattr(s, "status", "")
             is_cl = getattr(s, "is_closed", False)
-            if is_cl or st_val == "TP2_REACHED" or st_val == "STOPPED_OUT":
+            if is_cl or st_val in ("TP2_REACHED", "STOPPED_OUT", "TIME_OUT"):
                 closed_signals.append(s)
             else:
                 active_running.append(s)
@@ -559,9 +559,17 @@ def generate_terminal_html(
         if c_status == "TP2_REACHED":
             status_badge = '<span style="background:#004d40;color:#64ffda;padding:2px 6px;border-radius:4px;font-weight:bold;">🏆 ĐẠT TP2</span>'
             reason = f'Đạt mục tiêu TP2 ({c_tp2:.2f}) • Hoàn tất chốt lời 100%'
+        elif c_status == "TIME_OUT":
+            status_badge = '<span style="background:#374151;color:#fbbf24;padding:2px 6px;border-radius:4px;font-weight:bold;">⏱️ HẾT SÓNG T+7</span>'
+            reason = f'Tất toán cơ cấu danh mục sau {c_t} phiên (thu hồi sức mua)'
         else:
             status_badge = '<span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span>'
-            reason = 'Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5'
+            c_low = getattr(c_sig, "min_price_reached", 0.0) or getattr(c_sig, "current_price", 0.0)
+            c_sl = getattr(c_sig, "current_stop_loss", 0.0)
+            if c_low > 0 and c_sl > 0:
+                reason = f'Chạm đáy chu kỳ {c_low:.2f} &le; Ngưỡng Stop {c_sl:.2f}'
+            else:
+                reason = 'Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5'
 
         closed_rows_html += f"""
         <tr style="border-bottom:1px solid #1f2937;">
@@ -817,7 +825,7 @@ def generate_terminal_html(
     <div id="hud-tab-positions" style="display:none;margin-bottom:25px;">
         <div class="section-header">
             <div class="section-title" style="color:#38bdf8;">📋 SỔ CÁI VỊ THẾ KHUYẾN NGHỊ ĐANG NẮM GIỮ & THEO DÕI LÃI/LỖ PnL (T+ TRACKER)</div>
-            <span style="font-size:11px;color:#78909c;">Chu kỳ: <b style="color:#4fc3f7;">T+2.5</b> • Sắp xếp mặc định: <b style="color:#ffb300;">Ngày mua mới nhất (T0)</b> • Giới hạn vị thế: <b style="color:#00e676;">&le; 20% NAV/mã</b> • Phí &amp; Thuế: <b style="color:#ffb300;">0.40%</b> • Đang nắm giữ: <b style="color:#00e676;">{len(active_running)} mã</b> • Đạt TP1: <b style="color:#64ffda;">{tp1_count} mã</b> • Đã chốt lời toàn bộ TP2 &amp; rời bảng: <b style="color:#ffb300;">{tp2_count} mã</b></span>
+            <span style="font-size:11px;color:#78909c;">Chu kỳ: <b style="color:#4fc3f7;">T+2.5</b> • Sắp xếp mặc định: <b style="color:#ffb300;">Ngày mua mới nhất (T0)</b> • Giới hạn vị thế: <b style="color:#00e676;">&le; 20% NAV/mã</b> • Phí &amp; Thuế: <b style="color:#ffb300;">0.40%</b> • Đang nắm giữ: <b style="color:#00e676;">{len(active_running)} mã</b> • Đạt TP1: <b style="color:#64ffda;">{tp1_count} mã</b> • Đã chốt lời toàn bộ TP2 &amp; rời bảng: <b style="color:#ffb300;">{tp2_count} mã</b> (Đã đóng/Cơ cấu: {len(closed_signals)} mã)</span>
         </div>
         <div class="table-container">
             <table id="active-positions-table">
@@ -843,7 +851,7 @@ def generate_terminal_html(
 
         <details style="margin-top:14px;background:#151a23;border:1px solid #1f2937;border-radius:6px;padding:8px 12px;">
             <summary style="font-size:12px;color:#38bdf8;font-weight:bold;cursor:pointer;">
-                🏆 Lịch Sử Vị Thế Đã Hoàn Thành Toàn Vòng TP2 / Đã Đóng Bảo Toàn Vốn ({len(closed_signals)} mã — Click để mở rộng)
+                🏆 Lịch Sử Vị Thế Đã Hoàn Thành Toàn Vòng TP2 / Hết Sóng Cơ Cấu / Đã Đóng Bảo Toàn Vốn ({len(closed_signals)} mã — Click để mở rộng)
             </summary>
             <div style="margin-top:10px;overflow-x:auto;">
                 <table style="width:100%;font-size:11px;border-collapse:collapse;">

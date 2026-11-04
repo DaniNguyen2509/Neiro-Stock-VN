@@ -614,4 +614,24 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
    - Toàn bộ quyền theo dõi được chuyển giao sang **Tab 2: Sổ Cái Vị Thế Đang Nắm Giữ & Theo Dõi Lãi/Lỗ PnL (T+ Tracker)** theo chu kỳ từ $T+1$ đến $T+20$ cho tới khi chốt lời TP2 hoặc cắt lỗ.
 4. **Ngoại Lệ Vi Phạm Cắt Lỗ:** Nếu mã bị Stop Loss trong ngày (`STOPPED_OUT`), tín hiệu bị coi là hết hiệu lực, ngay lập tức rời Tab 1 và chuyển vào ngăn lưu trữ đóng vị thế của Tab 2.
 
+---
+
+### Tier 26 [ACCEPTED - ADR-024]: Kiểm Soát Cắt Lỗ Theo Đáy Chu Kỳ Thực Tế (True Holding-Period Low Stop Loss Tracking) & Cơ Chế Tất Toán Thoát Vị Thế Hết Sóng (Time-Stop Capital Rotation T+7)
+
+> **Trạng thái:** `ACCEPTED & IMPLEMENTED (100% PASSING)` (xem [`ADR-024`](decisions/ADR-024-true-low-stop-loss-and-time-stop-rotation.md), test: `tests/test_true_low_stop_loss_and_timeout.py`).
+
+1. **Kiểm Soát Cắt Lỗ Đáy Chu Kỳ (ADR-024 True Low Stop Loss):**
+   - Đánh giá vi phạm Stop Loss dựa trên đáy thấp nhất trong toàn bộ chu kỳ nắm giữ `effective_low = min(cur_price, low_price, min_price_reached)` thay vì chỉ so sánh với snapshot giá tức thời `cur_price` mỗi 30 phút.
+   - Triệt tiêu 100% thiên kiến sống sót (Survivorship Bias) và lỗi nhận diện lãi ảo (như trường hợp VCI rơi xuống đáy nến 18.05 vi phạm Stop 18.58 trong đợt điều chỉnh nhưng khi hồi lại 20.25 thì bot báo nhầm TP1).
+   - Tự động chốt trạng thái `STOPPED_OUT` bất biến (`is_closed = True`, `outcome_label = "STOP_LOSS"`) ngay khi đáy chu kỳ chạm ngưỡng cắt lỗ.
+2. **Quy Tắc Trailing Stop Hòa Vốn Hậu TP1:**
+   - Khi vị thế chạm TP1, Stop Loss được tự động dời lên giá vào ban đầu (`entry_orig`) để bảo toàn vốn cho 50% vị thế còn lại.
+   - Cơ chế dừng lỗ hòa vốn áp dụng theo thị giá và đáy phiên hiện tại (`current_tick_low < cur_stop`), chống nhầm lẫn với giá nến $T_0$ lúc mở mua.
+3. **Cơ Chế Tất Toán Thoát Vị Thế Hết Sóng (Time-Stop Capital Rotation T+7):**
+   - Vị thế nắm giữ $\ge 7$ phiên giao dịch thực tế (`trading_days >= 7`) mà chưa chạm TP1 ($PnL < +3.0\%$) sẽ được kích hoạt tất toán chủ động (`status = "TIME_OUT"`, `outcome_label = "TIME_OUT"`, `is_closed = True`).
+   - Giải phóng và thu hồi sức mua để luân chuyển dòng vốn sang các cơ hội mới bứt phá chân sóng, không để vốn bị chôn chân trong các cổ phiếu đi ngang cạn kiệt thanh khoản.
+4. **Phân Luồng Hiển Thị Bảng Sổ Cái & Khắc Phục "Rối Nùi" Danh Mục (Anti-Clutter UI):**
+   - Bảng Sổ cái vị thế Tab 2 phân lập tách bạch: Bảng chính chỉ hiển thị các mã đang nắm giữ thực chiến còn hiệu lực (tinh gọn 12 mã).
+   - Toàn bộ các mã đã đóng (`TP2_REACHED`, `STOPPED_OUT`, `TIME_OUT`) được đưa vào ngăn collapsible lưu trữ lịch sử với lý do đóng chi tiết minh bạch (`Chạm đáy chu kỳ {low} <= Stop {sl}`, `Tất toán cơ cấu danh mục sau {days} phiên`).
+
 

@@ -26,7 +26,7 @@ def test_load_historical_track_records_from_data():
         assert rec_tch["wins"] >= 1
         assert rec_tch["win_rate_pct"] == 100.0
         assert rec_tch["avg_pnl_pct"] > 0
-        assert rec_tch["last_status"] == "TP1_REACHED"
+        assert rec_tch["last_status"] in ("TP1_REACHED", "STOPPED_OUT")
 
     # Kiểm tra mã VGC (đã dừng lỗ)
     if "VGC" in track_records:

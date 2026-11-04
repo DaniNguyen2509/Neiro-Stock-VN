@@ -411,8 +411,10 @@ class SignalTracker:
         holding_days: int,
         mfe_pct: float = 0.0,
         trading_days: Optional[int] = None,
+        low_price: Optional[float] = None,
+        min_price_reached: Optional[float] = None,
     ) -> tuple[str, str, str, float]:
-        """Đánh giá trạng thái vị thế, quyền mở mua mới (cả chiều lên lẫn chiều suy yếu dưới nền) và câu tư vấn."""
+        """Đánh giá trạng thái vị thế, quyền mở mua mới (cả chiều lên lẫn chiều suy yếu dưới nền) và câu tư vấn (ADR-024)."""
         if entry_orig <= 0:
             pnl_pct = 0.0
         else:
@@ -420,22 +422,34 @@ class SignalTracker:
         effective_mfe = max(float(mfe_pct or 0.0), pnl_pct)
         eff_sessions = trading_days if trading_days is not None else holding_days
         display_days = max(holding_days, eff_sessions)
-        new_stop = cur_stop
+        # 1. Đánh giá trạng thái vi phạm Cắt Lỗ (ADR-024 True Low Stop Loss)
+        effective_low = min(
+            cur_price,
+            low_price if low_price and low_price > 0 else cur_price,
+            min_price_reached if min_price_reached and min_price_reached > 0 else cur_price,
+        )
 
-        # 1. Cơ chế Trailing Stop / Nâng chặn lỗ bảo toàn vốn
-        if tp1 > 0 and cur_price >= tp1:
-            new_stop = max(new_stop, entry_orig)
+        if cur_stop >= entry_orig and entry_orig > 0:
+            current_tick_low = min(cur_price, low_price if low_price and low_price > 0 else cur_price)
+            if current_tick_low < cur_stop:
+                status = "STOPPED_OUT"
+                buy_permission = "EXTENDED_NO_CHASING"
+                advice_note = (
+                    f"❌ THỦNG ĐIỂM HÒA VỐN (Thị giá {current_tick_low:.2f} < Stop hòa vốn {cur_stop:.2f}). "
+                    "Bán chốt bảo toàn lợi nhuận / hòa vốn 50% còn lại."
+                )
+                return status, buy_permission, advice_note, cur_stop
+        else:
+            if effective_low <= cur_stop:
+                status = "STOPPED_OUT"
+                buy_permission = "EXTENDED_NO_CHASING"
+                advice_note = (
+                    f"❌ VI PHẠM CẮT LỖ (Đáy {effective_low:.2f} <= Stop {cur_stop:.2f}). "
+                    "Bán dứt khoát thoát vị thế, bảo toàn vốn tối đa."
+                )
+                return status, buy_permission, advice_note, cur_stop
 
-        # 2. Đánh giá trạng thái vị thế (status)
-        if cur_price <= new_stop:
-            status = "STOPPED_OUT"
-            buy_permission = "EXTENDED_NO_CHASING"
-            advice_note = (
-                f"❌ VI PHẠM CẮT LỖ (Giá {cur_price:.2f} <= Stop {new_stop:.2f}). "
-                "Bán dứt khoát thoát vị thế, bảo toàn vốn tối đa."
-            )
-            return status, buy_permission, advice_note, new_stop
-
+        # 2. Đạt mục tiêu chốt lời
         if tp2 > 0 and cur_price >= tp2:
             status = "TP2_REACHED"
             buy_permission = "EXTENDED_NO_CHASING"
@@ -443,15 +457,28 @@ class SignalTracker:
                 f"🎯 ĐẠT MỤC TIÊU LỚN TP2 ({tp2:.2f}, Lãi {pnl_pct:+.1f}%). "
                 "Khuyến nghị chốt lời toàn bộ phần vị thế còn lại, TUYỆT ĐỐI CẤM MUA MỚI."
             )
-            return status, buy_permission, advice_note, new_stop
+            return status, buy_permission, advice_note, cur_stop
 
         if tp1 > 0 and cur_price >= tp1:
             status = "TP1_REACHED"
             buy_permission = "EXTENDED_NO_CHASING"
+            new_stop = max(cur_stop, entry_orig)
             advice_note = (
                 f"🚀 ĐẠT MỤC TIÊU 1 TP1 ({tp1:.2f}, Lãi {pnl_pct:+.1f}%). "
                 f"Chốt lời 50% tiền tươi, dời Stop Loss lên giá mua {entry_orig:.2f} (Hòa vốn) để gồng lãi 50% còn lại. "
                 "CẤM MUA ĐUỔI vì rủi ro rung lắc T+2.5 rất cao."
+            )
+            return status, buy_permission, advice_note, new_stop
+
+        new_stop = cur_stop
+
+        # 2b. Time-Stop Policy (ADR-024): Tất toán cơ cấu vốn sau 7 phiên giao dịch thực tế không bứt phá
+        if eff_sessions >= 7 and pnl_pct < 3.0:
+            status = "TIME_OUT"
+            buy_permission = "STALE_SIGNAL"
+            advice_note = (
+                f"⏱️ TẤT TOÁN VỊ THẾ QUÁ HẠN T+{max(display_days, 7)} (Biến động {pnl_pct:+.1f}% sau {eff_sessions} phiên): "
+                "Động lượng dòng tiền suy kiệt, tất toán cơ cấu danh mục thu hồi vốn."
             )
             return status, buy_permission, advice_note, new_stop
 
@@ -512,8 +539,9 @@ class SignalTracker:
         now_dt: datetime,
         now_str: str,
         macro_pause_buying: bool = False,
+        low_price: Optional[float] = None,
     ) -> None:
-        """Cập nhật giá, MFE/MAE, nhãn PnL T+2.5/T+5/T+10 và chốt trạng thái đóng (Terminal Latch) cho 1 vị thế."""
+        """Cập nhật giá, MFE/MAE, nhãn PnL T+2.5/T+5/T+10 và chốt trạng thái đóng (Terminal Latch) cho 1 vị thế (ADR-024)."""
         first_dt = self.parse_time(existing.first_signal_date) or now_dt
         holding_days = max(0, (now_dt.date() - first_dt.date()).days)
         trading_days = count_vn_trading_days(first_dt.date(), now_dt.date())
@@ -532,7 +560,12 @@ class SignalTracker:
         entry_ref = existing.entry_original if existing.entry_original > 0 else (price if price > 0 else 1.0)
         pnl = round(((price - entry_ref) / entry_ref) * 100.0, 2)
         cur_max = max(existing.max_price_reached or entry_ref, price)
-        cur_min = min(existing.min_price_reached or entry_ref, price)
+
+        effective_tick_low = price
+        if low_price and low_price > 0:
+            effective_tick_low = min(price, low_price)
+
+        cur_min = min(existing.min_price_reached or entry_ref, effective_tick_low)
         mfe = max(existing.mfe_pct, round(((cur_max - entry_ref) / entry_ref) * 100.0, 2))
         mae = min(existing.mae_pct, round(((cur_min - entry_ref) / entry_ref) * 100.0, 2))
 
@@ -545,10 +578,12 @@ class SignalTracker:
             holding_days=holding_days,
             mfe_pct=mfe,
             trading_days=trading_days,
+            low_price=effective_tick_low,
+            min_price_reached=cur_min,
         )
 
         # Đồng bộ Cầu chì Vĩ mô T+2.5 xuống sổ cái & bảng đối chiếu
-        if macro_pause_buying and status not in ("STOPPED_OUT", "TP2_REACHED"):
+        if macro_pause_buying and status not in ("STOPPED_OUT", "TP2_REACHED", "TIME_OUT"):
             buy_perm = "EXTENDED_NO_CHASING"
             advice = (
                 f"⛔ CẦU CHÌ VĨ MÔ T+2.5 ĐANG KÍCH HOẠT: Tạm ngừng mở mua mới / gia tăng tỷ trọng mã {existing.symbol}. "
@@ -596,9 +631,9 @@ class SignalTracker:
             existing.outcome_label = "WIN_TP2"
             existing.is_closed = True
             existing.closed_at = now_str
-        elif trading_days >= self.MAX_HOLDING_DAYS:
+        elif status == "TIME_OUT" or trading_days >= self.MAX_HOLDING_DAYS:
             existing.status = "TIME_OUT"
-            existing.buy_permission = "EXTENDED_NO_CHASING"
+            existing.buy_permission = "STALE_SIGNAL"
             existing.outcome_label = "WIN_TP1" if mfe >= 5.0 else "TIME_OUT"
             existing.is_closed = True
             existing.closed_at = now_str
@@ -615,11 +650,13 @@ class SignalTracker:
         current_time: Optional[datetime] = None,
         live_prices: Optional[Dict[str, float]] = None,
         macro_pause_buying: bool = False,
+        live_lows: Optional[Dict[str, float]] = None,
     ) -> Dict[str, ActiveSignal]:
-        """Cập nhật sổ cái tín hiệu, làm mới giá các mã rớt Top 20, đồng bộ cầu chì vĩ mô và xuất ML Dataset v2."""
+        """Cập nhật sổ cái tín hiệu, làm mới giá các mã rớt Top 20, đồng bộ cầu chì vĩ mô và xuất ML Dataset v2 (ADR-024)."""
         now_dt = current_time or self.current_vn_time()
         now_str = self.format_time(now_dt)
         extra_prices = live_prices or {}
+        extra_lows = live_lows or {}
 
         active_signals = self.load_active_signals()
         updated_syms: set[str] = set()
@@ -652,6 +689,9 @@ class SignalTracker:
                     self._archive_closed_signal(old_sig)
                     del active_signals[sym]
 
+            c_low = float(getattr(c, "low_price", 0.0) or getattr(c, "price", 0.0))
+            cand_low = extra_lows.get(sym, c_low) if extra_lows else c_low
+
             if sym in active_signals:
                 updated_syms.add(sym)
                 self._apply_price_tick_to_existing(
@@ -660,6 +700,7 @@ class SignalTracker:
                     now_dt=now_dt,
                     now_str=now_str,
                     macro_pause_buying=macro_pause_buying,
+                    low_price=cand_low,
                 )
             else:
                 # Chặn ghi khống tín hiệu T0 mới khi Cầu chì Vĩ mô bật, mã thuộc Watchlist tạm, hoặc đã bị khóa quyền mua mới
@@ -781,6 +822,7 @@ class SignalTracker:
             if sym in updated_syms:
                 continue
             live_p = float(extra_prices.get(sym) or 0.0)
+            live_l = float(extra_lows.get(sym) or 0.0)
             tick_price = round(live_p, 2) if live_p > 0 else existing.current_price
             self._apply_price_tick_to_existing(
                 existing=existing,
@@ -788,6 +830,7 @@ class SignalTracker:
                 now_dt=now_dt,
                 now_str=now_str if live_p > 0 else existing.last_updated,
                 macro_pause_buying=macro_pause_buying,
+                low_price=live_l if live_l > 0 else None,
             )
 
         self.save_active_signals(active_signals)

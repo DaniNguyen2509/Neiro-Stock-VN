@@ -240,3 +240,11 @@ flowchart LR
 
 - **`fialda_scanner.py` (`retain_same_day_active_signals`, `candidate_from_active_signal`):** Giữ chân các mã cổ phiếu đã phát sinh tín hiệu khuyến nghị mua trong ngày $T_0$ (`first_signal_date[:10] == today`) và vẫn còn hiệu lực (`is_closed == False`, `status != "STOPPED_OUT"`) trên Bảng Khuyến Nghị Tab 1 trong suốt phiên giao dịch, bất kể biến động thứ hạng tức thời. Cập nhật thị giá live và huy hiệu chống FOMO (`⛔ ĐÃ CHẠY > 1.5% — CẤM MUA ĐUỔI`).
 - **Chuyển giao $T+1$:** Khi bước sang ngày tiếp theo ($T \ge 1$), mã hoàn thành giai đoạn mở vị thế mới và rời khỏi Tab 1, chuyển giao toàn phần sang Tab 2 (Sổ Cái Vị Thế Đang Nắm Giữ & Theo Dõi Lãi/Lỗ PnL) theo dõi đến hết chu kỳ $T+20$ (TP2 hoặc Stop Loss).
+
+## Cập nhật ADR-024: Kiểm Soát Cắt Lỗ Đáy Chu Kỳ (True Low Stop Loss) & Tất Toán Hết Sóng (Time-Stop Capital Rotation T+7)
+
+- **`signal_tracker.py` (`evaluate_status_and_advice`, `update_signals`):**
+  - **True Low Stop Loss:** Kiểm tra vi phạm cắt lỗ theo `effective_low = min(cur_price, low_price, min_price_reached)` thay vì chỉ snapshot giá 30 phút, triệt tiêu 100% thiên kiến sống sót và lãi ảo (như ca VCI rơi 18.05 vi phạm stop 18.58). Chốt `STOPPED_OUT` và `is_closed = True` bất biến.
+  - **Trailing Stop Hòa Vốn:** Khi chạm TP1, dời Stop lên `entry_orig`. Kiểm tra hòa vốn theo giá/đáy phiên hiện tại (`current_tick_low < cur_stop`), không nhầm với giá vào $T_0$.
+  - **Time-Stop Policy:** Tất toán vị thế sau 7 phiên giao dịch (`trading_days >= 7`) nếu $PnL < +3.0\%$ (`TIME_OUT`, `is_closed = True`), giải phóng sức mua luân chuyển dòng vốn.
+- **`terminal.py`:** Phân luồng Tab 2 tinh gọn: Bảng chính chỉ hiển thị 12 vị thế đang nắm giữ; ngăn collapsible lưu trữ lịch sử các vị thế đã chốt TP2, cắt lỗ hoặc tất toán T+7 kèm lý do chi tiết.
