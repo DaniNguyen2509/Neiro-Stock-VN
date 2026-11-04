@@ -151,7 +151,7 @@ flowchart TD
     - **Bộ Đếm Ngược 5 Phút (300s):** Hiển thị trực quan `🔄 Tự làm mới: 300s` cùng nút `⚡ Tải lại ngay` và cơ chế Cache-Busting (`_t=Date.now()`), kết hợp `<meta http-equiv="refresh" content="300">` dự phòng.
     - **Local Watcher Daemon (`--watch`):** Cung cấp cờ chạy ngầm trên máy trạm (`python -m src.hud.terminal --watch --interval 300`) tự động tái tạo dashboard mỗi 5 phút.
   - Tab 1: Top 20 Siêu Cổ Phiếu Chân Sóng với thiết kế 15 cột trực quan vừa vặn 100% màn hình không cần cuộn ngang: tách biệt hoàn toàn giữa `Thanh Khoản (ADTV20)`, `Chuẩn Quỹ (Lô Max/Trượt)`, `Điểm IBD`, và `Tích Luỹ (A-E)`; Cột `Kỳ Trước` hiển thị ổn định `#cũ (+N)` dựa trên cơ chế Session Debounce 30 phút kết hợp Fallback Lịch Sử (mã tạm rớt khỏi Top 20 sẽ so sánh với rank lần xuất hiện cuối cùng thay vì gán nhãn MỚI sai lệch). Bảng Xếp Hạng Định Lượng Cơ Bản (Piotroski F-Score).
-  - Tab 2: Sổ Cái Vị Thế Khuyến Nghị & Theo Dõi Lãi/Lỗ PnL T+ Tracker (Theo dõi trực tiếp % lãi/lỗ theo chu kỳ T+0 đến T+k, giá vốn bất biến, trailing stop hòa vốn khi đạt TP1; cơ chế tự động rời bảng khi hoàn thành mục tiêu toàn vòng TP2; đồng bộ live PnL thời gian thực từ VPS).
+  - Tab 2: Sổ Cái Vị Thế Khuyến Nghị & Theo Dõi Lãi/Lỗ PnL T+ Tracker (Sắp xếp mặc định theo ngày mua gần nhất T0 lên đầu để bám sát chu kỳ hàng về; theo dõi trực tiếp % lãi/lỗ theo chu kỳ T+0 đến T+k, giá vốn bất biến, trailing stop hòa vốn khi đạt TP1; cơ chế tự động rời bảng khi hoàn thành mục tiêu toàn vòng TP2; đồng bộ live PnL thời gian thực từ VPS).
   - Tab 3: Bảng Định Lượng Ngân Hàng Thương Mại CAMEL & Basel II/III.
   - Tab 4: Báo Cáo Kết QuẢ Kinh Doanh BCTC & Tin Tức Doanh Nghiệp Spotlight.
   - Hệ thống Tab Navigation tương tác chuyển đổi mượt mà không cần tải lại trang.

@@ -126,3 +126,83 @@ def test_empty_active_positions_graceful_display(tmp_path):
     )
     html = out_html_path.read_text(encoding="utf-8")
     assert "Hiện không có vị thế nào đang nắm giữ" in html
+
+
+def test_active_positions_sorted_by_buy_date_descending(tmp_path):
+    """Ki?m tra Tab 2 s?p x?p m?c ??nh theo ng?y mua (T0) g?n nh?t l?n ??u danh m?c."""
+    out_html_path = tmp_path / "test_sort_buy_date.html"
+
+    mock_signals = {
+        "TCH": ActiveSignal(
+            symbol="TCH",
+            first_signal_date="2026-10-26 14:44:14",
+            last_updated="2026-11-04 10:30:00",
+            entry_original=11.90,
+            current_price=12.55,
+            pnl_pct=5.46,
+            holding_days=9,
+            trading_days=7,
+            initial_stop_loss=11.50,
+            current_stop_loss=11.90,
+            tp1=12.44,
+            tp2=12.80,
+            status="TP1_REACHED",
+            buy_permission="EXTENDED_NO_CHASING",
+            advice_note="Ch?t 50% TP1",
+            is_closed=False,
+        ),
+        "BAF": ActiveSignal(
+            symbol="BAF",
+            first_signal_date="2026-10-27 09:15:00",
+            last_updated="2026-11-04 10:30:00",
+            entry_original=29.70,
+            current_price=30.85,
+            pnl_pct=3.87,
+            holding_days=8,
+            trading_days=6,
+            initial_stop_loss=28.81,
+            current_stop_loss=28.81,
+            tp1=31.04,
+            tp2=31.93,
+            status="ACTIVE",
+            buy_permission="STALE_SIGNAL",
+            advice_note="?ang theo d?i",
+            is_closed=False,
+        ),
+        "VCK": ActiveSignal(
+            symbol="VCK",
+            first_signal_date="2026-11-04 10:12:03",
+            last_updated="2026-11-04 13:50:00",
+            entry_original=28.10,
+            current_price=28.60,
+            pnl_pct=1.78,
+            holding_days=0,
+            trading_days=0,
+            initial_stop_loss=26.84,
+            current_stop_loss=26.84,
+            tp1=30.10,
+            tp2=31.36,
+            status="ACTIVE",
+            buy_permission="BUY_OK",
+            advice_note="V?ng mua chu?n",
+            is_closed=False,
+        ),
+    }
+
+    generate_terminal_html(
+        output_path=str(out_html_path),
+        fialda_candidates=[],
+        top_n=0,
+        active_signals=mock_signals,
+    )
+
+    html = out_html_path.read_text(encoding="utf-8")
+    table_start = html.index('id="active-positions-table"')
+    table_end = html.index('</table>', table_start)
+    table_content = html[table_start:table_end]
+
+    idx_vck = table_content.index("VCK")
+    idx_baf = table_content.index("BAF")
+    idx_tch = table_content.index("TCH")
+
+    assert idx_vck < idx_baf < idx_tch, f"Th? t? ng?y mua b? sai: VCK({idx_vck}), BAF({idx_baf}), TCH({idx_tch})"

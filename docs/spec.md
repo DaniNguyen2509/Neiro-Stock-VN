@@ -549,7 +549,7 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 
 > **Trạng thái:** `ACCEPTED & IMPLEMENTED (100% — 138/138 TESTS PASSING)` (xem [`ADR-020`](decisions/ADR-020-tab2-active-positions-tracker-and-tp-lifecycle.md), test: `tests/test_positions_tracker_tab.py`).
 
-1. **Thay Thế Tab 2 Walk-Forward:** Chuyển đổi Tab 2 từ báo cáo kiểm định lịch sử sang bảng thực chiến **"SỔ CÁI VỊ THẾ KHUYẾN NGHỊ ĐANG NẮM GIỮ & THEO DÕI LÃI/LỖ PnL (T+ TRACKER)"** (`#active-positions-table`).
+1. **Thay Thế Tab 2 Walk-Forward & Sắp Xếp Theo Ngày Mua T0:** Chuyển đổi Tab 2 từ báo cáo kiểm định lịch sử sang bảng thực chiến **"SỔ CÁI VỊ THẾ KHUYẾN NGHỊ ĐANG NẮM GIỮ & THEO DÕI LÃI/LỖ PnL (T+ TRACKER)"** (`#active-positions-table`). Bảng được sắp xếp mặc định theo ngày mua gần nhất (`first_signal_date` descending — mã mới mua $T_0$ hiển thị trên đầu để nhà đầu tư theo dõi sát chu kỳ hàng về), thứ cấp theo % PnL giảm dần.
 2. **Quy Tắc Rời Bảng Khi Hoàn Thành Mục Tiêu TP2:** Các vị thế đã đạt mục tiêu chốt lời toàn phần (`status == "TP2_REACHED"`, như HDC +12.5%) hoặc đã đóng bảo toàn vốn (`STOPPED_OUT`) đã kết thúc sứ mệnh và tự động biến mất khỏi bảng chính đang chạy, được gom vào ngăn collapsible lưu trữ lịch sử để giữ bảng luôn tinh gọn.
 3. **Phân Loại & Quyết Nghị Thực Chiến:**
    - Mã đã đạt TP1 và đang gồng lãi 50% còn lại tới TP2 (như TCH +5.5% / +7.1% tím trần, trailing stop hòa vốn 11.90) hiển thị nổi bật với huy hiệu `🎯 ĐÃ CHỐT 50% TP1 — GỒNG LÃI TỚI TP2 (CẤM MUA ĐUỔI)`.

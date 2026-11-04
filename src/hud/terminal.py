@@ -431,9 +431,15 @@ def generate_terminal_html(
             else:
                 active_running.append(s)
 
-    # Sap xep vi the dang chay theo PnL giam dan (ma lai cao nhat len dau)
-    active_running.sort(key=lambda x: getattr(x, "pnl_pct", 0.0), reverse=True)
-    closed_signals.sort(key=lambda x: (getattr(x, "status", "") != "TP2_REACHED", -getattr(x, "pnl_pct", 0.0)))
+    # Sap xep vi the dang chay mac dinh theo ngay mua gan nhat (T0 len dau), thu cap theo PnL giam dan
+    active_running.sort(
+        key=lambda x: (str(getattr(x, "first_signal_date", "") or ""), getattr(x, "pnl_pct", 0.0)),
+        reverse=True,
+    )
+    closed_signals.sort(
+        key=lambda x: (str(getattr(x, "first_signal_date", "") or getattr(x, "closed_at", "") or ""), getattr(x, "pnl_pct", 0.0)),
+        reverse=True,
+    )
 
     tp1_count = sum(1 for s in active_running if getattr(s, "status", "") == "TP1_REACHED")
     tp2_count = sum(1 for s in closed_signals if getattr(s, "status", "") == "TP2_REACHED")
@@ -803,7 +809,7 @@ def generate_terminal_html(
     <div id="hud-tab-positions" style="display:none;margin-bottom:25px;">
         <div class="section-header">
             <div class="section-title" style="color:#38bdf8;">📋 SỔ CÁI VỊ THẾ KHUYẾN NGHỊ ĐANG NẮM GIỮ & THEO DÕI LÃI/LỖ PnL (T+ TRACKER)</div>
-            <span style="font-size:11px;color:#78909c;">Chu kỳ: <b style="color:#4fc3f7;">T+2.5</b> • Giới hạn vị thế: <b style="color:#00e676;">&le; 20% NAV/mã</b> • Phí &amp; Thuế: <b style="color:#ffb300;">0.40%</b> • Đang nắm giữ: <b style="color:#00e676;">{len(active_running)} mã</b> • Đạt TP1: <b style="color:#64ffda;">{tp1_count} mã</b> • Đã chốt lời toàn bộ TP2 &amp; rời bảng: <b style="color:#ffb300;">{tp2_count} mã</b></span>
+            <span style="font-size:11px;color:#78909c;">Chu kỳ: <b style="color:#4fc3f7;">T+2.5</b> • Sắp xếp mặc định: <b style="color:#ffb300;">Ngày mua mới nhất (T0)</b> • Giới hạn vị thế: <b style="color:#00e676;">&le; 20% NAV/mã</b> • Phí &amp; Thuế: <b style="color:#ffb300;">0.40%</b> • Đang nắm giữ: <b style="color:#00e676;">{len(active_running)} mã</b> • Đạt TP1: <b style="color:#64ffda;">{tp1_count} mã</b> • Đã chốt lời toàn bộ TP2 &amp; rời bảng: <b style="color:#ffb300;">{tp2_count} mã</b></span>
         </div>
         <div class="table-container">
             <table id="active-positions-table">
