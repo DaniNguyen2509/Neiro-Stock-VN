@@ -496,5 +496,5 @@
 {"timestamp": "2026-10-31 13:23:01", "symbol": "FPT", "rank": 12, "score": 10.0, "price": 52.7, "signal_type": "THE_CHE_GOM", "stop_loss": 50.33, "tp1": 56.47, "tp2": 58.84, "rr_ratio": 2.5, "adtv20_billion": 413.7}
 {"timestamp": "2026-10-31 13:23:01", "symbol": "HDB", "rank": 13, "score": 10.0, "price": 22.4, "signal_type": "THE_CHE_GOM", "stop_loss": 22.16, "tp1": 23.89, "tp2": 24.58, "rr_ratio": 2.5, "adtv20_billion": 383.9}
 {"timestamp": "2026-10-31 13:23:01", "symbol": "CTG", "rank": 14, "score": 10.0, "price": 30.3, "signal_type": "THE_CHE_GOM", "stop_loss": 29.92, "tp1": 32.25, "tp2": 33.17, "rr_ratio": 2.5, "adtv20_billion": 212.9}
-{"timestamp": "2026-11-04 10:12:36", "symbol": "DPR", "rank": 1, "score": 42.5, "price": 37.45, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 36.96, "tp1": 39.81, "tp2": 40.95, "rr_ratio": 2.5, "adtv20_billion": 15.7}
-{"timestamp": "2026-11-04 10:12:36", "symbol": "VCK", "rank": 2, "score": 42.5, "price": 28.1, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 26.84, "tp1": 30.1, "tp2": 31.36, "rr_ratio": 2.5, "adtv20_billion": 42.4}
+{"timestamp": "2026-11-04 10:29:50", "symbol": "VCK", "rank": 1, "score": 42.5, "price": 28.1, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 26.84, "tp1": 30.1, "tp2": 31.36, "rr_ratio": 2.5, "adtv20_billion": 42.4}
+{"timestamp": "2026-11-04 10:29:50", "symbol": "DPR", "rank": 2, "score": 42.5, "price": 37.45, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 36.96, "tp1": 39.81, "tp2": 40.95, "rr_ratio": 2.5, "adtv20_billion": 15.7}
