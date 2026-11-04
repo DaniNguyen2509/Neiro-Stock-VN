@@ -120,7 +120,7 @@
             <div style="font-size:11px;color:#78909c;margin-top:4px;">Cập nhật theo chu kỳ giao dịch thực tế</div>
             <div style="display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-top:6px;flex-wrap:wrap;">
                 <span id="live-status" style="font-size:11px;color:#00e676;background:#1b5e20;padding:2px 7px;border-radius:4px;font-weight:bold;">🟢 Live VPS: Đang kết nối...</span>
-                <span style="font-size:11px;color:#90a4ae;">🕒 Cập nhật: <b id="scan-time" style="color:#ffb300;">11:16:30 • 04/11/2026</b></span>
+                <span style="font-size:11px;color:#90a4ae;">🕒 Cập nhật: <b id="scan-time" style="color:#ffb300;">11:37:38 • 04/11/2026</b></span>
                 <span style="font-size:11px;color:#546e7a;">•</span>
                 <span style="font-size:11px;color:#90a4ae;">🔄 Tự làm mới: <b id="countdown" style="color:#00e676;">300</b>s</span>
                 <button onclick="reloadDashboard()" style="background:#1e293b;color:#38bdf8;border:1px solid #0284c7;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer;">⚡ Tải lại ngay</button>
@@ -137,13 +137,13 @@
         </div>
         <div class="card" id="card-smart-money-container">
             <div class="card-title">Dòng Tiền Cá Mập Định Chế</div>
-            <div class="card-value" id="card-smart-money-val" style="color:#00e676;">+10.8 Tỷ VND</div>
+            <div class="card-value" id="card-smart-money-val" style="color:#00e676;">+14.0 Tỷ VND</div>
             <div id="card-smart-money-sub" style="font-size:11px;color:#78909c;margin-top:4px;">Khối ngoại mua ròng • 0/1 mã giữ cấu trúc tích lũy</div>
         </div>
         <div class="card" id="card-breadth-container">
             <div class="card-title">Độ Rộng Danh Mục Dẫn Dắt</div>
             <div class="card-value" id="card-breadth-val" style="color:#ffb300;">0.0%</div>
-            <div id="card-breadth-sub" data-macro-breadth="VN-Index: Tăng 196 / Giảm 85 (69.8%)" style="font-size:11px;color:#78909c;margin-top:4px;">0/1 Cổ phiếu giữ xung lực dẫn dắt (RS/Composite ≥ 70) • VN-Index: Tăng 196 / Giảm 85 (69.8%)</div>
+            <div id="card-breadth-sub" data-macro-breadth="VN-Index: Tăng 207 / Giảm 76 (73.1%)" style="font-size:11px;color:#78909c;margin-top:4px;">0/1 Cổ phiếu giữ xung lực dẫn dắt (RS/Composite ≥ 70) • VN-Index: Tăng 207 / Giảm 76 (73.1%)</div>
         </div>
         <div class="card" id="card-sector-container">
             <div class="card-title">Ngành Dẫn Dắt (Động Lượng RRG)</div>
@@ -154,69 +154,1710 @@
 
     
 
-    <!-- THANH CHUYỂN TAB CHIẾN THUẬT: TAB 1 (RADAR THỰC CHIẾN) & TAB 2 (WALK-FORWARD T+2.5 TRUNG THỰC) -->
+    <!-- THANH CHUYỂN TAB CHIẾN THUẬT: TAB 1 (RADAR THỰC CHIẾN) & TAB 2 (SỔ CÁI VỊ THẾ KHUYẾN NGHỊ & T+ TRACKER) -->
     <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;">
         <button id="btn-tab-radar" onclick="switchHudTab('radar')" style="background:#ffb300;color:#0b0e14;border:none;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:800;cursor:pointer;">📡 TAB 1: RADAR THỰC CHIẾN & BẢNG ĐỊNH LƯỢNG</button>
-        <button id="btn-tab-wf" onclick="switchHudTab('wf')" style="background:#151a23;color:#90a4ae;border:1px solid #263238;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">🧪 TAB 2: KIỂM ĐỊNH WALK-FORWARD T+2.5 TRUNG THỰC (FLOOR-LOCK)</button>
+        <button id="btn-tab-positions" onclick="switchHudTab('positions')" style="background:#151a23;color:#90a4ae;border:1px solid #263238;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">📋 TAB 2: SỔ CÁI VỊ THẾ KHUYẾN NGHỊ & THEO DÕI LÃI/LỖ PnL (T+ TRACKER)</button>
     </div>
 
-    <div id="hud-tab-wf" style="display:none;margin-bottom:25px;">
+    <div id="hud-tab-positions" style="display:none;margin-bottom:25px;">
         <div class="section-header">
-            <div class="section-title" style="color:#38bdf8;">🧪 BÁO CÁO KIỂM ĐỊNH WALK-FORWARD T+2.5 TRUNG THỰC (KHÓA SÀN TRẮNG BÊN MUA & TRẦN 20% NAV)</div>
-            <span style="font-size:11px;color:#78909c;">WFE: <b style="color:#00e676;">0.0%</b> • Phí &amp; Thuế toàn vòng: <b style="color:#ffb300;">0.40%</b> • Trần Cold-Start: <b style="color:#4fc3f7;">&le; 20% NAV/mã</b> • Cắt lỗ Gap-Down T+2.5</span>
+            <div class="section-title" style="color:#38bdf8;">📋 SỔ CÁI VỊ THẾ KHUYẾN NGHỊ ĐANG NẮM GIỮ & THEO DÕI LÃI/LỖ PnL (T+ TRACKER)</div>
+            <span style="font-size:11px;color:#78909c;">Chu kỳ: <b style="color:#4fc3f7;">T+2.5</b> • Giới hạn vị thế: <b style="color:#00e676;">&le; 20% NAV/mã</b> • Phí &amp; Thuế: <b style="color:#ffb300;">0.40%</b> • Đang nắm giữ: <b style="color:#00e676;">39 mã</b> • Đạt TP1: <b style="color:#64ffda;">1 mã</b> • Đã chốt lời toàn bộ TP2 &amp; rời bảng: <b style="color:#ffb300;">1 mã</b></span>
         </div>
         <div class="table-container">
-            <table id="walk-forward-table">
+            <table id="active-positions-table">
                 <thead>
                     <tr>
-                        <th>Giai Đoạn Kiểm Định</th>
-                        <th style="text-align:center;">Tổng Lợi Nhuận Ròng</th>
-                        <th style="text-align:center;">CAGR / Năm</th>
-                        <th style="text-align:center;">Max Drawdown</th>
-                        <th style="text-align:center;">Sharpe Ratio</th>
-                        <th style="text-align:center;">Win Rate</th>
-                        <th style="text-align:center;">Alpha vs VN-Index</th>
-                        <th style="text-align:center;">Khóa Bán (Sàn / T+2.5)</th>
+                        <th style="text-align:center;">STT</th>
+                        <th>Mã CP</th>
+                        <th style="text-align:center;">Ngày Mua (T0)</th>
+                        <th style="text-align:center;">Chu Kỳ T+</th>
+                        <th style="text-align:right;">Giá Mua Gốc</th>
+                        <th style="text-align:right;">Thị Giá Live</th>
+                        <th style="text-align:right;">Lãi/Lỗ PnL %</th>
+                        <th style="text-align:right;">Cắt Lỗ (SL)</th>
+                        <th style="text-align:center;">Chốt Lời (TP1 / TP2)</th>
+                        <th style="text-align:center;">Trạng Thái &amp; Quyết Nghị</th>
                     </tr>
                 </thead>
                 <tbody>
                     
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:10px;font-weight:bold;color:#ffb300;">In-Sample (2021 - 2023 • Bull & Bear)</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">+8.63%</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">+2.71%</td>
-            <td style="padding:10px;text-align:center;color:#ff5252;font-weight:bold;">-13.30%</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">-0.19</td>
-            <td style="padding:10px;text-align:center;">30.1% (73 lệnh)</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">+15.56%</td>
-            <td style="padding:10px;text-align:center;color:#fbbf24;font-weight:bold;">0 lần sàn / 15 lần T+2.5</td>
-        </tr>
-        
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:10px;font-weight:bold;color:#ffb300;">Out-of-Sample (2024 - 2026 • Kiểm Chứng Mù)</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">+51.14%</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">+16.81%</td>
-            <td style="padding:10px;text-align:center;color:#ff5252;font-weight:bold;">-4.18%</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">1.65</td>
-            <td style="padding:10px;text-align:center;">49.2% (63 lệnh)</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">-114.20%</td>
-            <td style="padding:10px;text-align:center;color:#fbbf24;font-weight:bold;">0 lần sàn / 15 lần T+2.5</td>
-        </tr>
-        
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:10px;font-weight:bold;color:#ffb300;">Toàn Chu Kỳ (2021 - 2026 • Hợp Nhất)</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">+60.28%</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">+8.54%</td>
-            <td style="padding:10px;text-align:center;color:#ff5252;font-weight:bold;">-13.30%</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">0.54</td>
-            <td style="padding:10px;text-align:center;">39.1% (138 lệnh)</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">-88.20%</td>
-            <td style="padding:10px;text-align:center;color:#fbbf24;font-weight:bold;">0 lần sàn / 30 lần T+2.5</td>
-        </tr>
-        
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">1</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">TCH</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-26</div>
+                    <div style="font-size:10px;color:#64748b;">14:45:13</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+7 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    11.90
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="TCH" style="font-weight:bold;color:#ffb300;">12.60</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="TCH" data-entry="11.90" style="font-weight:800;color:#00e676;">+5.88%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#00e676;font-weight:bold;">11.90</span> <span style="font-size:10px;color:#64ffda;background:#004d40;padding:1px 4px;border-radius:3px;">Hòa vốn</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="text-decoration:line-through;color:#78909c;">12.44</span> <b style="color:#00e676;">✓ Đạt</b> / <b style="color:#38bdf8;">12.80</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="TCH" data-entry="11.90" data-sl="11.90" data-tp1="12.44" data-tp2="12.80">
+                    <span style="background:#004d40;color:#64ffda;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🎯 ĐÃ CHỐT 50% TP1 — GỒNG LÃI TỚI TP2 (CẤM MUA ĐUỔI)</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">2</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">NKG</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-27</div>
+                    <div style="font-size:10px;color:#64748b;">09:28:38</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+6 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    11.85
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="NKG" style="font-weight:bold;color:#ffb300;">12.35</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="NKG" data-entry="11.85" style="font-weight:800;color:#00e676;">+4.22%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">11.85</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">12.39</span> / <b style="color:#38bdf8;">12.75</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="NKG" data-entry="11.85" data-sl="11.85" data-tp1="12.39" data-tp2="12.75">
+                    <span style="background:#bf360c;color:#ffccbc;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">⚠️ BULL-TRAP — NẮM GIỮ / CHỜ HỒI</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">3</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">BAF</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-27</div>
+                    <div style="font-size:10px;color:#64748b;">09:28:38</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+6 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    29.70
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="BAF" style="font-weight:bold;color:#ffb300;">30.90</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="BAF" data-entry="29.70" style="font-weight:800;color:#00e676;">+4.04%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">28.81</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">31.04</span> / <b style="color:#38bdf8;">31.93</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="BAF" data-entry="29.70" data-sl="28.81" data-tp1="31.04" data-tp2="31.93">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">4</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">DXG</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-26</div>
+                    <div style="font-size:10px;color:#64748b;">14:45:13</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+7 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    10.10
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="DXG" style="font-weight:bold;color:#ffb300;">10.45</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="DXG" data-entry="10.10" style="font-weight:800;color:#00e676;">+3.47%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">9.80</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">10.55</span> / <b style="color:#38bdf8;">10.85</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="DXG" data-entry="10.10" data-sl="9.80" data-tp1="10.55" data-tp2="10.85">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">5</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">NTP</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-29</div>
+                    <div style="font-size:10px;color:#64748b;">10:46:09</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+4 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    53.40
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="NTP" style="font-weight:bold;color:#ffb300;">55.10</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="NTP" data-entry="53.40" style="font-weight:800;color:#00e676;">+3.18%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">51.80</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">55.80</span> / <b style="color:#38bdf8;">57.40</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="NTP" data-entry="53.40" data-sl="51.80" data-tp1="55.80" data-tp2="57.40">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">6</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">HPG</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-27</div>
+                    <div style="font-size:10px;color:#64748b;">09:28:38</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+6 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    20.90
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="HPG" style="font-weight:bold;color:#ffb300;">21.40</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="HPG" data-entry="20.90" style="font-weight:800;color:#00e676;">+2.39%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">20.27</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">21.84</span> / <b style="color:#38bdf8;">22.47</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="HPG" data-entry="20.90" data-sl="20.27" data-tp1="21.84" data-tp2="22.47">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">7</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">VCI</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-26</div>
+                    <div style="font-size:10px;color:#64748b;">14:45:13</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+7 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    19.15
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="VCI" style="font-weight:bold;color:#ffb300;">19.55</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="VCI" data-entry="19.15" style="font-weight:800;color:#00e676;">+2.09%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">18.58</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">20.00</span> / <b style="color:#38bdf8;">20.57</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="VCI" data-entry="19.15" data-sl="18.58" data-tp1="20.00" data-tp2="20.57">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">8</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">STB</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-30</div>
+                    <div style="font-size:10px;color:#64748b;">09:16:13</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+3 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    66.60
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="STB" style="font-weight:bold;color:#ffb300;">67.80</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="STB" data-entry="66.60" style="font-weight:800;color:#00e676;">+1.80%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">64.60</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">69.60</span> / <b style="color:#38bdf8;">71.60</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="STB" data-entry="66.60" data-sl="64.60" data-tp1="69.60" data-tp2="71.60">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">9</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">SHI</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-30</div>
+                    <div style="font-size:10px;color:#64748b;">10:16:10</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+3 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    14.15
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="SHI" style="font-weight:bold;color:#ffb300;">14.35</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="SHI" data-entry="14.15" style="font-weight:800;color:#00e676;">+1.41%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">13.73</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">14.78</span> / <b style="color:#38bdf8;">15.20</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="SHI" data-entry="14.15" data-sl="13.73" data-tp1="14.78" data-tp2="15.20">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">10</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">VND</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-27</div>
+                    <div style="font-size:10px;color:#64748b;">09:28:38</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+6 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    13.55
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="VND" style="font-weight:bold;color:#ffb300;">13.65</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="VND" data-entry="13.55" style="font-weight:800;color:#00e676;">+0.74%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">13.14</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">14.17</span> / <b style="color:#38bdf8;">14.58</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="VND" data-entry="13.55" data-sl="13.14" data-tp1="14.17" data-tp2="14.58">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">11</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">CTS</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-26</div>
+                    <div style="font-size:10px;color:#64748b;">14:40:56</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+7 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    22.15
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="CTS" style="font-weight:bold;color:#ffb300;">22.30</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="CTS" data-entry="22.15" style="font-weight:800;color:#00e676;">+0.68%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">21.49</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">23.14</span> / <b style="color:#38bdf8;">23.80</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="CTS" data-entry="22.15" data-sl="21.49" data-tp1="23.14" data-tp2="23.80">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">12</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">VC3</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-27</div>
+                    <div style="font-size:10px;color:#64748b;">14:46:02</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+6 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    23.30
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="VC3" style="font-weight:bold;color:#ffb300;">23.40</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="VC3" data-entry="23.30" style="font-weight:800;color:#00e676;">+0.43%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">22.60</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">24.35</span> / <b style="color:#38bdf8;">25.05</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="VC3" data-entry="23.30" data-sl="22.60" data-tp1="24.35" data-tp2="25.05">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">13</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">TV2</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-27</div>
+                    <div style="font-size:10px;color:#64748b;">10:43:42</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+6 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    26.15
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="TV2" style="font-weight:bold;color:#ffb300;">26.25</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="TV2" data-entry="26.15" style="font-weight:800;color:#00e676;">+0.38%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">24.78</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">28.20</span> / <b style="color:#38bdf8;">29.57</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="TV2" data-entry="26.15" data-sl="24.78" data-tp1="28.20" data-tp2="29.57">
+                    <span style="background:#bf360c;color:#ffccbc;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">⚠️ BULL-TRAP — NẮM GIỮ / CHỜ HỒI</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">14</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">VCK</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-11-04</div>
+                    <div style="font-size:10px;color:#64748b;">10:12:03</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#0284c7;color:#e0f2fe;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+0 (Vừa mua)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    28.10
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="VCK" style="font-weight:bold;color:#ffb300;">28.15</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="VCK" data-entry="28.10" style="font-weight:800;color:#00e676;">+0.18%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">26.84</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">30.10</span> / <b style="color:#38bdf8;">31.36</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="VCK" data-entry="28.10" data-sl="26.84" data-tp1="30.10" data-tp2="31.36">
+                    <span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟢 ĐANG NẮM GIỮ (CHỜ CHẠM TP)</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">15</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">VTZ</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-26</div>
+                    <div style="font-size:10px;color:#64748b;">14:40:56</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+7 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    20.20
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="VTZ" style="font-weight:bold;color:#ffb300;">20.20</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="VTZ" data-entry="20.20" style="font-weight:800;color:#ffb300;">0.00%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">19.14</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">21.79</span> / <b style="color:#38bdf8;">22.85</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="VTZ" data-entry="20.20" data-sl="19.14" data-tp1="21.79" data-tp2="22.85">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">16</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">VJC</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-26</div>
+                    <div style="font-size:10px;color:#64748b;">14:45:13</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+7 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    132.00
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="VJC" style="font-weight:bold;color:#ffb300;">132.00</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="VJC" data-entry="132.00" style="font-weight:800;color:#ffb300;">0.00%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">128.04</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">137.94</span> / <b style="color:#38bdf8;">141.90</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="VJC" data-entry="132.00" data-sl="128.04" data-tp1="137.94" data-tp2="141.90">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">17</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">NAB</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-30</div>
+                    <div style="font-size:10px;color:#64748b;">10:16:10</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+3 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    12.65
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="NAB" style="font-weight:bold;color:#ffb300;">12.60</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="NAB" data-entry="12.65" style="font-weight:800;color:#ff5252;">-0.40%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">12.27</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">13.22</span> / <b style="color:#38bdf8;">13.60</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="NAB" data-entry="12.65" data-sl="12.27" data-tp1="13.22" data-tp2="13.60">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">18</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">SSI</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-26</div>
+                    <div style="font-size:10px;color:#64748b;">14:45:13</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+7 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    19.80
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="SSI" style="font-weight:bold;color:#ffb300;">19.70</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="SSI" data-entry="19.80" style="font-weight:800;color:#ff5252;">-0.51%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">19.21</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">20.69</span> / <b style="color:#38bdf8;">21.27</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="SSI" data-entry="19.80" data-sl="19.21" data-tp1="20.69" data-tp2="21.27">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">19</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">HHS</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-30</div>
+                    <div style="font-size:10px;color:#64748b;">09:16:13</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+3 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    9.60
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="HHS" style="font-weight:bold;color:#ffb300;">9.53</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="HHS" data-entry="9.60" style="font-weight:800;color:#ff5252;">-0.73%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">9.31</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">10.03</span> / <b style="color:#38bdf8;">10.32</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="HHS" data-entry="9.60" data-sl="9.31" data-tp1="10.03" data-tp2="10.32">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">20</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">BMP</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-30</div>
+                    <div style="font-size:10px;color:#64748b;">09:46:19</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+3 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    137.30
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="BMP" style="font-weight:bold;color:#ffb300;">136.30</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="BMP" data-entry="137.30" style="font-weight:800;color:#ff5252;">-0.73%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">133.18</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">143.48</span> / <b style="color:#38bdf8;">147.60</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="BMP" data-entry="137.30" data-sl="133.18" data-tp1="143.48" data-tp2="147.60">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">21</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">QTP</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-28</div>
+                    <div style="font-size:10px;color:#64748b;">10:52:20</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+5 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    11.20
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="QTP" style="font-weight:bold;color:#ffb300;">11.10</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="QTP" data-entry="11.20" style="font-weight:800;color:#ff5252;">-0.89%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">10.61</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">12.08</span> / <b style="color:#38bdf8;">12.67</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="QTP" data-entry="11.20" data-sl="10.61" data-tp1="12.08" data-tp2="12.67">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">22</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">SHB</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-27</div>
+                    <div style="font-size:10px;color:#64748b;">09:28:38</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+6 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    10.70
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="SHB" style="font-weight:bold;color:#ffb300;">10.60</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="SHB" data-entry="10.70" style="font-weight:800;color:#ff5252;">-0.93%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">10.38</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">11.18</span> / <b style="color:#38bdf8;">11.50</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="SHB" data-entry="10.70" data-sl="10.38" data-tp1="11.18" data-tp2="11.50">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">23</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">VIB</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-27</div>
+                    <div style="font-size:10px;color:#64748b;">10:06:14</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+6 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    14.10
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="VIB" style="font-weight:bold;color:#ffb300;">13.95</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="VIB" data-entry="14.10" style="font-weight:800;color:#ff5252;">-1.06%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">13.68</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">14.73</span> / <b style="color:#38bdf8;">15.15</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="VIB" data-entry="14.10" data-sl="13.68" data-tp1="14.73" data-tp2="15.15">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">24</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">CII</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-26</div>
+                    <div style="font-size:10px;color:#64748b;">20:07:36</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+7 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    13.60
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="CII" style="font-weight:bold;color:#ffb300;">13.45</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="CII" data-entry="13.60" style="font-weight:800;color:#ff5252;">-1.10%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">13.19</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">14.21</span> / <b style="color:#38bdf8;">14.62</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="CII" data-entry="13.60" data-sl="13.19" data-tp1="14.21" data-tp2="14.62">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">25</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">ABB</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-27</div>
+                    <div style="font-size:10px;color:#64748b;">09:28:38</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+6 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    17.60
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="ABB" style="font-weight:bold;color:#ffb300;">17.40</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="ABB" data-entry="17.60" style="font-weight:800;color:#ff5252;">-1.14%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">17.07</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">18.40</span> / <b style="color:#38bdf8;">18.93</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="ABB" data-entry="17.60" data-sl="17.07" data-tp1="18.40" data-tp2="18.93">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">26</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">CTG</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-29</div>
+                    <div style="font-size:10px;color:#64748b;">09:46:09</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+4 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    30.85
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="CTG" style="font-weight:bold;color:#ffb300;">30.40</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="CTG" data-entry="30.85" style="font-weight:800;color:#ff5252;">-1.46%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">29.92</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">32.25</span> / <b style="color:#38bdf8;">33.17</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="CTG" data-entry="30.85" data-sl="29.92" data-tp1="32.25" data-tp2="33.17">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">27</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">SZC</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-29</div>
+                    <div style="font-size:10px;color:#64748b;">09:46:09</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+4 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    20.10
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="SZC" style="font-weight:bold;color:#ffb300;">19.80</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="SZC" data-entry="20.10" style="font-weight:800;color:#ff5252;">-1.49%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">19.50</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">21.00</span> / <b style="color:#38bdf8;">21.60</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="SZC" data-entry="20.10" data-sl="19.50" data-tp1="21.00" data-tp2="21.60">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">28</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">TPB</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-27</div>
+                    <div style="font-size:10px;color:#64748b;">09:28:38</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+6 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    12.85
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="TPB" style="font-weight:bold;color:#ffb300;">12.65</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="TPB" data-entry="12.85" style="font-weight:800;color:#ff5252;">-1.56%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">12.46</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">13.43</span> / <b style="color:#38bdf8;">13.82</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="TPB" data-entry="12.85" data-sl="12.46" data-tp1="13.43" data-tp2="13.82">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">29</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">DPR</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-28</div>
+                    <div style="font-size:10px;color:#64748b;">17:38:06</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+5 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    38.10
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="DPR" style="font-weight:bold;color:#ffb300;">37.50</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="DPR" data-entry="38.10" style="font-weight:800;color:#ff5252;">-1.57%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">36.96</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">39.81</span> / <b style="color:#38bdf8;">40.95</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="DPR" data-entry="38.10" data-sl="36.96" data-tp1="39.81" data-tp2="40.95">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">30</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">AAN</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-27</div>
+                    <div style="font-size:10px;color:#64748b;">14:08:45</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+6 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    15.65
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="AAN" style="font-weight:bold;color:#ffb300;">15.40</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="AAN" data-entry="15.65" style="font-weight:800;color:#ff5252;">-1.60%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">15.18</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">16.36</span> / <b style="color:#38bdf8;">16.83</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="AAN" data-entry="15.65" data-sl="15.18" data-tp1="16.36" data-tp2="16.83">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">31</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">BVS</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-26</div>
+                    <div style="font-size:10px;color:#64748b;">14:40:56</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+7 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    27.30
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="BVS" style="font-weight:bold;color:#ffb300;">26.80</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="BVS" data-entry="27.30" style="font-weight:800;color:#ff5252;">-1.83%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">26.48</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">28.53</span> / <b style="color:#38bdf8;">29.35</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="BVS" data-entry="27.30" data-sl="26.48" data-tp1="28.53" data-tp2="29.35">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">32</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">KDC</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-26</div>
+                    <div style="font-size:10px;color:#64748b;">14:45:13</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+7 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    50.70
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="KDC" style="font-weight:bold;color:#ffb300;">49.70</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="KDC" data-entry="50.70" style="font-weight:800;color:#ff5252;">-1.97%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">48.04</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">54.69</span> / <b style="color:#38bdf8;">57.35</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="KDC" data-entry="50.70" data-sl="48.04" data-tp1="54.69" data-tp2="57.35">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">33</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">CTI</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-27</div>
+                    <div style="font-size:10px;color:#64748b;">10:43:42</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+6 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    17.30
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="CTI" style="font-weight:bold;color:#ffb300;">16.95</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="CTI" data-entry="17.30" style="font-weight:800;color:#ff5252;">-2.02%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">16.67</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">18.24</span> / <b style="color:#38bdf8;">18.88</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="CTI" data-entry="17.30" data-sl="16.67" data-tp1="18.24" data-tp2="18.88">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">34</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">QNS</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-26</div>
+                    <div style="font-size:10px;color:#64748b;">14:45:13</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+7 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    50.40
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="QNS" style="font-weight:bold;color:#ffb300;">49.30</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="QNS" data-entry="50.40" style="font-weight:800;color:#ff5252;">-2.18%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">48.89</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">52.66</span> / <b style="color:#38bdf8;">54.17</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="QNS" data-entry="50.40" data-sl="48.89" data-tp1="52.66" data-tp2="54.17">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">35</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">VCG</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-28</div>
+                    <div style="font-size:10px;color:#64748b;">17:38:06</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+5 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    15.75
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="VCG" style="font-weight:bold;color:#ffb300;">15.40</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="VCG" data-entry="15.75" style="font-weight:800;color:#ff5252;">-2.22%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">15.28</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">16.46</span> / <b style="color:#38bdf8;">16.93</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="VCG" data-entry="15.75" data-sl="15.28" data-tp1="16.46" data-tp2="16.93">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">36</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">DMX</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-30</div>
+                    <div style="font-size:10px;color:#64748b;">09:46:19</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+3 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    76.00
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="DMX" style="font-weight:bold;color:#ffb300;">74.00</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="DMX" data-entry="76.00" style="font-weight:800;color:#ff5252;">-2.63%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">73.72</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">79.42</span> / <b style="color:#38bdf8;">81.70</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="DMX" data-entry="76.00" data-sl="73.72" data-tp1="79.42" data-tp2="81.70">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">37</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">VIC</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-30</div>
+                    <div style="font-size:10px;color:#64748b;">14:16:15</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+3 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    239.70
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="VIC" style="font-weight:bold;color:#ffb300;">233.00</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="VIC" data-entry="239.70" style="font-weight:800;color:#ff5252;">-2.80%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">232.51</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">250.48</span> / <b style="color:#38bdf8;">257.67</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="VIC" data-entry="239.70" data-sl="232.51" data-tp1="250.48" data-tp2="257.67">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">38</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">VEA</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-29</div>
+                    <div style="font-size:10px;color:#64748b;">09:16:16</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+4 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    39.00
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="VEA" style="font-weight:bold;color:#ffb300;">37.90</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="VEA" data-entry="39.00" style="font-weight:800;color:#ff5252;">-2.82%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">37.83</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">40.76</span> / <b style="color:#38bdf8;">41.93</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="VEA" data-entry="39.00" data-sl="37.83" data-tp1="40.76" data-tp2="41.93">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">39</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">VGT</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">2026-10-27</div>
+                    <div style="font-size:10px;color:#64748b;">09:35:17</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+6 (Khả dụng 100%)</span>
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    11.80
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="VGT" style="font-weight:bold;color:#ffb300;">11.30</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="VGT" data-entry="11.80" style="font-weight:800;color:#ff5252;">-4.24%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span style="color:#ff8a80;font-weight:bold;">11.18</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <span style="color:#4fc3f7;">12.73</span> / <b style="color:#38bdf8;">13.35</b>
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="VGT" data-entry="11.80" data-sl="11.18" data-tp1="12.73" data-tp2="13.35">
+                    <span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>
+                </td>
+            </tr>
+            
                 </tbody>
             </table>
         </div>
+
+        <details style="margin-top:14px;background:#151a23;border:1px solid #1f2937;border-radius:6px;padding:8px 12px;">
+            <summary style="font-size:12px;color:#38bdf8;font-weight:bold;cursor:pointer;">
+                🏆 Lịch Sử Vị Thế Đã Hoàn Thành Toàn Vòng TP2 / Đã Đóng Bảo Toàn Vốn (40 mã — Click để mở rộng)
+            </summary>
+            <div style="margin-top:10px;overflow-x:auto;">
+                <table style="width:100%;font-size:11px;border-collapse:collapse;">
+                    <thead>
+                        <tr style="border-bottom:1px solid #263238;color:#78909c;text-align:left;">
+                            <th style="padding:6px;">Mã CP</th>
+                            <th style="padding:6px;text-align:center;">Kết QuẢ</th>
+                            <th style="padding:6px;text-align:right;">Giá Vào T0</th>
+                            <th style="padding:6px;text-align:right;">Giá Đóng</th>
+                            <th style="padding:6px;text-align:right;">Lợi Nhuận PnL %</th>
+                            <th style="padding:6px;text-align:center;">Số Ngày T+</th>
+                            <th style="padding:6px;">Lý Do Đóng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">HDC</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#004d40;color:#64ffda;padding:2px 6px;border-radius:4px;font-weight:bold;">🏆 ĐẠT TP2</span></td>
+            <td style="padding:6px;text-align:right;">11.20</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">12.60</td>
+            <td style="padding:6px;text-align:right;color:#00e676;font-weight:bold;">+12.50%</td>
+            <td style="padding:6px;text-align:center;">T+3</td>
+            <td style="padding:6px;color:#90a4ae;">Đạt mục tiêu TP2 (12.05) • Hoàn tất chốt lời 100%</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">HHV</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">9.68</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">9.38</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-3.10%</td>
+            <td style="padding:6px;text-align:center;">T+4</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">MBB</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">19.55</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">18.90</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-3.32%</td>
+            <td style="padding:6px;text-align:center;">T+3</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">PDR</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">11.70</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">11.30</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-3.42%</td>
+            <td style="padding:6px;text-align:center;">T+7</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">TAL</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">21.75</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">21.00</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-3.45%</td>
+            <td style="padding:6px;text-align:center;">T+4</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">OCB</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">11.00</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">10.60</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-3.64%</td>
+            <td style="padding:6px;text-align:center;">T+7</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">TCX</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">28.80</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">27.70</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-3.82%</td>
+            <td style="padding:6px;text-align:center;">T+6</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">MWG</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">76.00</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">73.00</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-3.95%</td>
+            <td style="padding:6px;text-align:center;">T+5</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">VIX</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">12.50</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">12.00</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-4.00%</td>
+            <td style="padding:6px;text-align:center;">T+7</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">DIG</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">9.95</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">9.55</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-4.02%</td>
+            <td style="padding:6px;text-align:center;">T+7</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">HSG</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">11.20</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">10.75</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-4.02%</td>
+            <td style="padding:6px;text-align:center;">T+6</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">BVB</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">10.65</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">10.20</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-4.23%</td>
+            <td style="padding:6px;text-align:center;">T+5</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">DHC</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">37.60</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">36.00</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-4.26%</td>
+            <td style="padding:6px;text-align:center;">T+5</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">GEX</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">23.30</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">22.20</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-4.72%</td>
+            <td style="padding:6px;text-align:center;">T+7</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">PNJ</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">16.30</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">15.50</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-4.91%</td>
+            <td style="padding:6px;text-align:center;">T+4</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">HDB</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">22.85</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">21.70</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-5.03%</td>
+            <td style="padding:6px;text-align:center;">T+5</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">VCB</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">57.20</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">54.30</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-5.07%</td>
+            <td style="padding:6px;text-align:center;">T+5</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">ACB</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">21.35</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">20.25</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-5.15%</td>
+            <td style="padding:6px;text-align:center;">T+5</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">MSN</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">74.20</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">70.10</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-5.53%</td>
+            <td style="padding:6px;text-align:center;">T+5</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">BID</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">33.90</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">31.90</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-5.90%</td>
+            <td style="padding:6px;text-align:center;">T+5</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">TCB</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">22.75</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">21.40</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-5.93%</td>
+            <td style="padding:6px;text-align:center;">T+4</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">EIB</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">17.15</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">16.10</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-6.12%</td>
+            <td style="padding:6px;text-align:center;">T+7</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">FRT</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">149.30</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">140.00</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-6.23%</td>
+            <td style="padding:6px;text-align:center;">T+5</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">PVD</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">18.35</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">17.20</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-6.27%</td>
+            <td style="padding:6px;text-align:center;">T+4</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">DXS</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">5.20</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">4.86</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-6.54%</td>
+            <td style="padding:6px;text-align:center;">T+7</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">MSR</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">65.00</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">60.70</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-6.62%</td>
+            <td style="padding:6px;text-align:center;">T+6</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">HII</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">9.96</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">9.27</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-6.93%</td>
+            <td style="padding:6px;text-align:center;">T+4</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">PHP</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">46.30</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">42.90</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-7.34%</td>
+            <td style="padding:6px;text-align:center;">T+4</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">VSC</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">14.45</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">13.20</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-8.65%</td>
+            <td style="padding:6px;text-align:center;">T+6</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">ORS</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">15.50</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">14.15</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-8.71%</td>
+            <td style="padding:6px;text-align:center;">T+7</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">TCO</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">10.20</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">9.30</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-8.82%</td>
+            <td style="padding:6px;text-align:center;">T+6</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">BVH</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">69.00</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">62.90</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-8.84%</td>
+            <td style="padding:6px;text-align:center;">T+3</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">GMD</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">54.90</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">49.95</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-9.02%</td>
+            <td style="padding:6px;text-align:center;">T+6</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">TCM</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">16.30</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">14.80</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-9.20%</td>
+            <td style="padding:6px;text-align:center;">T+5</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">PVB</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">21.00</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">19.00</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-9.52%</td>
+            <td style="padding:6px;text-align:center;">T+4</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">KDH</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">14.75</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">13.30</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-9.83%</td>
+            <td style="padding:6px;text-align:center;">T+7</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">PHR</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">32.55</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">29.30</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-9.98%</td>
+            <td style="padding:6px;text-align:center;">T+7</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">VGC</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">46.15</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">40.45</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-12.35%</td>
+            <td style="padding:6px;text-align:center;">T+7</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">PVC</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">12.00</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">10.50</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-12.50%</td>
+            <td style="padding:6px;text-align:center;">T+7</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #1f2937;">
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">PC1</td>
+            <td style="padding:6px;text-align:center;"><span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span></td>
+            <td style="padding:6px;text-align:right;">19.30</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">16.00</td>
+            <td style="padding:6px;text-align:right;color:#ff5252;font-weight:bold;">-17.10%</td>
+            <td style="padding:6px;text-align:center;">T+5</td>
+            <td style="padding:6px;color:#90a4ae;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</td>
+        </tr>
+        
+                    </tbody>
+                </table>
+            </div>
+        </details>
     </div>
 
     <div id="hud-tab-radar">
@@ -250,9 +1891,9 @@
                 
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">1</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">VCK<div title="✅ Vốn 100tr: Tối đa 700 cp (~19.5tr, 19.5% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
+            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">VCK<div title="✅ Vốn 100tr: Tối đa 700 cp (~19.7tr, 19.7% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)" style="font-size:9px;color:#fbbf24;margin-top:2px;font-weight:700;">⚠️ LÔ 100CP CAO</div></td>
             <td style="padding:6px 5px;text-align:center;"><span id="sig-badge-VCK"><span style="background:#01579b;color:#29b6f6;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỘT BIẾN GT</span></span></td>
-            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="VCK" data-ref="27.9" data-entry-high="28.52" data-entry-low="27.68" data-sl="26.84" data-tp1="30.1" data-tp2="31.36" data-buy-perm="BUY_OK">27.90</span> <span class="live-change" data-sym="VCK" style="font-size:11px;margin-left:3px;"></span></td>
+            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="VCK" data-ref="28.15" data-entry-high="28.52" data-entry-low="27.68" data-sl="26.84" data-tp1="30.1" data-tp2="31.36" data-buy-perm="BUY_OK">28.15</span> <span class="live-change" data-sym="VCK" style="font-size:11px;margin-left:3px;"></span></td>
             <td style="padding:6px 5px;color:#00e676;font-weight:600;">27.68 - 28.52</td>
             <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">26.84</td>
             <td style="padding:6px 5px;text-align:center;"><span style="color:#4fc3f7;font-weight:bold;">30.10</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">31.36</span></td>
@@ -261,7 +1902,7 @@
             <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">100/100</td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">50</td>
             <td style="padding:6px 5px;text-align:center;"><span style="background:#3e2723;color:#ffb300;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">C</span></td>
-            <td id="foreign-cell-VCK" style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;"><span class="live-foreign" data-sym="VCK">+10.8 tỷ</span><div style="font-size:9px;color:#4fc3f7;margin-top:2px;font-weight:bold;">🔵 NGOẠI ĐỠ GIÁ</div></td>
+            <td id="foreign-cell-VCK" style="padding:6px 5px;text-align:center;color:#00e676;font-weight:600;"><span class="live-foreign" data-sym="VCK">+14.0 tỷ</span><div style="font-size:9px;color:#4fc3f7;margin-top:2px;font-weight:bold;">🔵 NGOẠI ĐỠ GIÁ</div></td>
             <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">47.5</td>
             <td style="padding:6px 5px;text-align:center;white-space:nowrap;"><span style="font-weight:bold;color:#eceff1;">#1</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span></td>
         </tr>
@@ -296,7 +1937,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">VHM</td>
             <td style="padding:10px;">Vinhomes</td>
             <td style="padding:10px;color:#aaa;">Bất động sản dân cư</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="VHM">62.30</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="VHM">62.60</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">8/9</td>
             <td style="padding:10px;text-align:center;">5.7</td>
             <td style="padding:10px;text-align:center;">1.8</td>
@@ -308,7 +1949,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">HPG</td>
             <td style="padding:10px;">Tập đoàn Hòa Phát</td>
             <td style="padding:10px;color:#aaa;">Thép & Vật liệu xây dựng</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="HPG">21.35</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="HPG">21.40</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">8/9</td>
             <td style="padding:10px;text-align:center;">6.2</td>
             <td style="padding:10px;text-align:center;">1.1</td>
@@ -320,7 +1961,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">SSI</td>
             <td style="padding:10px;">Chứng khoán SSI</td>
             <td style="padding:10px;color:#aaa;">Dịch vụ tài chính & CK</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="SSI">19.55</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="SSI">19.70</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">8/9</td>
             <td style="padding:10px;text-align:center;">13.6</td>
             <td style="padding:10px;text-align:center;">1.5</td>
@@ -368,7 +2009,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">FPT</td>
             <td style="padding:10px;">Tập đoàn FPT</td>
             <td style="padding:10px;color:#aaa;">Công nghệ thông tin</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="FPT">52.60</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="FPT">52.70</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">5/9</td>
             <td style="padding:10px;text-align:center;">11.6</td>
             <td style="padding:10px;text-align:center;">2.7</td>
@@ -380,7 +2021,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">CTS</td>
             <td style="padding:10px;">Chứng khoán VietinBank</td>
             <td style="padding:10px;color:#aaa;">Dịch vụ tài chính & CK</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="CTS">22.10</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="CTS">22.30</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">4/9</td>
             <td style="padding:10px;text-align:center;">49.9</td>
             <td style="padding:10px;text-align:center;">1.9</td>
@@ -392,7 +2033,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">MBB</td>
             <td style="padding:10px;">Ngân hàng Quân Đội</td>
             <td style="padding:10px;color:#aaa;">Ngân hàng thương mại</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="MBB">18.85</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="MBB">18.90</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#78909c;">N/A (Ngân hàng)</td>
             <td style="padding:10px;text-align:center;">6.1</td>
             <td style="padding:10px;text-align:center;">1.2</td>
@@ -404,7 +2045,7 @@
             <td style="padding:10px;font-weight:bold;color:#ffb300;">VCB</td>
             <td style="padding:10px;">Vietcombank</td>
             <td style="padding:10px;color:#aaa;">Ngân hàng thương mại</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="VCB">54.30</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="VCB">54.50</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#78909c;">N/A (Ngân hàng)</td>
             <td style="padding:10px;text-align:center;">11.6</td>
             <td style="padding:10px;text-align:center;">1.9</td>
@@ -447,7 +2088,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">VCB</td>
             <td style="padding:10px;">Vietcombank</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="VCB">54.30</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="VCB">54.50</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#00e676;font-size:14px;">88/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">34.2%</td>
             <td style="padding:10px;text-align:center;">3.2%</td>
@@ -462,7 +2103,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">MBB</td>
             <td style="padding:10px;">Ngân hàng Quân Đội</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="MBB">18.85</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="MBB">18.90</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#00e676;font-size:14px;">88/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">39.5%</td>
             <td style="padding:10px;text-align:center;">4.6%</td>
@@ -477,7 +2118,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">TCB</td>
             <td style="padding:10px;">Techcombank</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="TCB">21.40</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="TCB">21.55</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#00e676;font-size:14px;">83/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">40.2%</td>
             <td style="padding:10px;text-align:center;">4.4%</td>
@@ -485,7 +2126,7 @@
             <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">110%</td>
             <td style="padding:10px;text-align:center;">33.5%</td>
             <td style="padding:10px;text-align:center;color:#4fc3f7;">16.8%</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;">1.1</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;">1.2</td>
             <td style="padding:10px;text-align:center;"><span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">HẠNG A (TINH HOA)</span></td>
         </tr>
         
@@ -507,7 +2148,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">HDB</td>
             <td style="padding:10px;">HDBank</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="HDB">21.70</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="HDB">21.80</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#4fc3f7;font-size:14px;">70/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">14.8%</td>
             <td style="padding:10px;text-align:center;">5.1%</td>
@@ -522,7 +2163,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">CTG</td>
             <td style="padding:10px;">VietinBank</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="CTG">30.35</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="CTG">30.40</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#ffb300;font-size:14px;">63/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">22.8%</td>
             <td style="padding:10px;text-align:center;">3.0%</td>
@@ -537,7 +2178,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">VPB</td>
             <td style="padding:10px;">VPBank</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="VPB">21.50</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="VPB">21.55</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#ffb300;font-size:14px;">61/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">18.2%</td>
             <td style="padding:10px;text-align:center;">5.6%</td>
@@ -567,7 +2208,7 @@
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:10px;font-weight:bold;color:#ffb300;">STB</td>
             <td style="padding:10px;">Sacombank</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="STB">67.30</td>
+            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="STB">67.80</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:#ffb300;font-size:14px;">39/100</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">19.5%</td>
             <td style="padding:10px;text-align:center;">3.6%</td>
@@ -689,20 +2330,20 @@
 
         function switchHudTab(tabName) {
             const radarEl = document.getElementById('hud-tab-radar');
-            const wfEl = document.getElementById('hud-tab-wf');
+            const posEl = document.getElementById('hud-tab-positions') || document.getElementById('hud-tab-wf');
             const btnRadar = document.getElementById('btn-tab-radar');
-            const btnWf = document.getElementById('btn-tab-wf');
-            if (!radarEl || !wfEl) return;
-            if (tabName === 'wf') {
+            const btnPos = document.getElementById('btn-tab-positions') || document.getElementById('btn-tab-wf');
+            if (!radarEl || !posEl) return;
+            if (tabName === 'positions' || tabName === 'wf') {
                 radarEl.style.display = 'none';
-                wfEl.style.display = 'block';
-                if (btnWf) { btnWf.style.background = '#ffb300'; btnWf.style.color = '#0b0e14'; }
+                posEl.style.display = 'block';
+                if (btnPos) { btnPos.style.background = '#ffb300'; btnPos.style.color = '#0b0e14'; }
                 if (btnRadar) { btnRadar.style.background = '#151a23'; btnRadar.style.color = '#90a4ae'; }
             } else {
                 radarEl.style.display = 'block';
-                wfEl.style.display = 'none';
+                posEl.style.display = 'none';
                 if (btnRadar) { btnRadar.style.background = '#ffb300'; btnRadar.style.color = '#0b0e14'; }
-                if (btnWf) { btnWf.style.background = '#151a23'; btnWf.style.color = '#90a4ae'; }
+                if (btnPos) { btnPos.style.background = '#151a23'; btnPos.style.color = '#90a4ae'; }
             }
         }
 
@@ -838,6 +2479,51 @@
                             } else if (!isLockedNoBuy && entryLow > 0 && p >= entryLow * 0.985 && p <= entryHigh * 1.03) {
                                 sigBadge.innerHTML = '<span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">VÙNG MUA 🟢</span>';
                             }
+                        }
+                    }
+                });
+
+                // Dong bo live PnL % cho Tab 2 So Cai Vi The Theo Doi
+                const pnlEls = document.querySelectorAll('.live-pnl[data-sym]');
+                pnlEls.forEach(el => {
+                    const sym = el.getAttribute('data-sym');
+                    const entry = Number(el.getAttribute('data-entry') || 0);
+                    const info = priceMap[sym];
+                    if (info && info.price > 0 && entry > 0) {
+                        const p = Number(info.price);
+                        const pnl = ((p - entry) / entry) * 100;
+                        const sign = pnl >= 0 ? '+' : '';
+                        el.innerText = sign + pnl.toFixed(2) + '%';
+                        if (p >= info.ceil && info.ceil > 0) {
+                            el.style.color = '#ea39b8';
+                        } else if (p <= info.floor && info.floor > 0) {
+                            el.style.color = '#00e5ff';
+                        } else if (pnl > 0) {
+                            el.style.color = '#00e676';
+                        } else if (pnl < 0) {
+                            el.style.color = '#ff5252';
+                        } else {
+                            el.style.color = '#ffb300';
+                        }
+                    }
+                });
+
+                // Dong bo huy hieu quyet nghi thuc chien Tab 2 khi cham nguong
+                const posBadgeEls = document.querySelectorAll('.pos-badge[data-sym]');
+                posBadgeEls.forEach(bEl => {
+                    const sym = bEl.getAttribute('data-sym');
+                    const info = priceMap[sym];
+                    const tp1 = Number(bEl.getAttribute('data-tp1') || 0);
+                    const tp2 = Number(bEl.getAttribute('data-tp2') || 0);
+                    const sl = Number(bEl.getAttribute('data-sl') || 0);
+                    if (info && info.price > 0) {
+                        const p = Number(info.price);
+                        if (tp2 > 0 && p >= tp2) {
+                            bEl.innerHTML = '<span style="background:#004d40;color:#64ffda;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🏆 CHẠM TP2 — CHỐT LỜI HẾT</span>';
+                        } else if (tp1 > 0 && p >= tp1) {
+                            bEl.innerHTML = '<span style="background:#004d40;color:#64ffda;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🎯 ĐẠT TP1 — GỒNG LÃI TỚI TP2 (CẤM MUA)</span>';
+                        } else if (sl > 0 && p <= sl) {
+                            bEl.innerHTML = '<span style="background:#b71c1c;color:#ff8a80;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🛑 CHẠM CẮT LỖ — BẢO TOÀN VỐN</span>';
                         }
                     }
                 });
