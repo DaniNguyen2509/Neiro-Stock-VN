@@ -5,7 +5,7 @@ from src.collector.data_loader import get_mock_vietnam_stocks
 from src.collector.vn_market_client import VNMarketClient
 from src.fundamental_engine.screener import screen_stocks
 from src.microstructure_engine.basis_tracker import analyze_vn30_basis
-from src.collector.fialda_scanner import FialdaCandidate, FialdaScanner
+from src.collector.fialda_scanner import FialdaCandidate, FialdaScanner, retain_same_day_active_signals
 from src.risk_engine.position_sizer import calculate_retail_t25_position_size
 from src.sector_engine.market_breadth import parse_market_breadth_dict
 from src.backtesting.walk_forward import WalkForwardCoordinator
@@ -50,6 +50,14 @@ def generate_terminal_html(
                 fialda_candidates = scanner._fallback_mock_top_20()[:top_n]
         else:
             fialda_candidates = scanner._fallback_mock_top_20()[:top_n]
+
+    # ADR-023: Duy tri cac vi the da khuyen nghi trong ngay con hieu luc tren Tab 1
+    if fialda_candidates:
+        fialda_candidates = retain_same_day_active_signals(
+            candidates=fialda_candidates,
+            active_signals=active_signals,
+            now_dt=None,
+        )
 
     if market_breadth is None and scanner.token:
         try:

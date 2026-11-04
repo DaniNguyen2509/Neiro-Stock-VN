@@ -235,3 +235,8 @@ flowchart LR
     ACT --> CSV[ml_signals_dataset.csv]
     ARC --> CSV
 ```
+
+## Cập nhật ADR-023: Cơ Chế Duy Trì Vị Thế Khuyến Nghị Trong Ngày (Same-Day Intraday Signal Retention Policy)
+
+- **`fialda_scanner.py` (`retain_same_day_active_signals`, `candidate_from_active_signal`):** Giữ chân các mã cổ phiếu đã phát sinh tín hiệu khuyến nghị mua trong ngày $T_0$ (`first_signal_date[:10] == today`) và vẫn còn hiệu lực (`is_closed == False`, `status != "STOPPED_OUT"`) trên Bảng Khuyến Nghị Tab 1 trong suốt phiên giao dịch, bất kể biến động thứ hạng tức thời. Cập nhật thị giá live và huy hiệu chống FOMO (`⛔ ĐÃ CHẠY > 1.5% — CẤM MUA ĐUỔI`).
+- **Chuyển giao $T+1$:** Khi bước sang ngày tiếp theo ($T \ge 1$), mã hoàn thành giai đoạn mở vị thế mới và rời khỏi Tab 1, chuyển giao toàn phần sang Tab 2 (Sổ Cái Vị Thế Đang Nắm Giữ & Theo Dõi Lãi/Lỗ PnL) theo dõi đến hết chu kỳ $T+20$ (TP2 hoặc Stop Loss).

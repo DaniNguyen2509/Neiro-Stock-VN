@@ -442,6 +442,124 @@ def enrich_candidates_with_trailing_stop_and_history(
     return final_candidates
 
 
+def candidate_from_active_signal(sig: Any, now_dt: Optional[datetime] = None) -> FialdaCandidate:
+    """Tai tao FialdaCandidate tu ActiveSignal de duy tri hien thi tren Tab 1 (ADR-023)."""
+    sym = str(getattr(sig, "symbol", "") or "")
+    p = float(getattr(sig, "current_price", 0.0) or getattr(sig, "entry_original", 0.0) or 0.0)
+    orig_entry = float(getattr(sig, "entry_original", p) or p)
+    sl = float(getattr(sig, "current_stop_loss", 0.0) or getattr(sig, "initial_stop_loss", p * 0.95) or p * 0.95)
+    tp1 = float(getattr(sig, "tp1", p * 1.07) or p * 1.07)
+    tp2 = float(getattr(sig, "tp2", p * 1.15) or p * 1.15)
+    sig_type = str(getattr(sig, "signal_type", "CHO_MUA_CHAN_SONG") or "CHO_MUA_CHAN_SONG")
+    pnl = float(getattr(sig, "pnl_pct", 0.0) or 0.0)
+    buy_perm = str(getattr(sig, "buy_permission", "BUY_OK") or "BUY_OK")
+    advice = str(getattr(sig, "advice_note", "") or "")
+
+    badge = format_public_anti_fomo_badge(
+        buy_permission=buy_perm,
+        pnl_pct=pnl,
+        holding_days=int(getattr(sig, "holding_days", 0) or 0),
+        status=str(getattr(sig, "status", "ACTIVE") or "ACTIVE"),
+        advice_note=advice,
+    )
+
+    return FialdaCandidate(
+        symbol=sym,
+        price=p,
+        signal_type=sig_type,
+        entry_low=round(orig_entry * 0.985, 2),
+        entry_high=round(orig_entry * 1.015, 2),
+        stop_loss=round(sl, 2),
+        target_1m=round(tp2, 2),
+        rs_1m=int(getattr(sig, "rs_1m", 70) or 70),
+        composite_rating=int(getattr(sig, "composite_rating", 75) or 75),
+        acc_diss_rating=str(getattr(sig, "acc_diss_rating", "B") or "B"),
+        rrg_r=float(getattr(sig, "rrg_r", 100.0) or 100.0),
+        rrg_m=float(getattr(sig, "rrg_m", 100.0) or 100.0),
+        foreign_net_value_billion=float(getattr(sig, "foreign_net_value_billion", 0.0) or 0.0),
+        ranking_score=float(getattr(sig, "ranking_score", 60.0) or 60.0),
+        catalyst=str(getattr(sig, "catalyst", f"Khuyến nghị T0 ({sym})") or f"Khuyến nghị T0 ({sym})"),
+        adtv20_billion=float(getattr(sig, "adtv20_billion", 25.0) or 25.0),
+        adv20_shares=int(getattr(sig, "adv20_shares", 1_000_000) or 1_000_000),
+        max_shares_capacity=100_000,
+        liquidity_score=float(getattr(sig, "liquidity_score", 80.0) or 80.0),
+        slippage_est_pct=0.50,
+        is_liquid=True,
+        tp1=tp1,
+        tp2=tp2,
+        rr_ratio=2.5,
+        rank_change_badge="T0 KHUYẾN NGHỊ",
+        t25_exposure_level=str(getattr(sig, "t25_exposure_level", "SAFE") or "SAFE"),
+        t25_status_badge="T+0 (Khuyến nghị hôm nay)",
+        prop_net_value_billion=float(getattr(sig, "prop_net_value_billion", 0.0) or 0.0),
+        flow_regime=str(getattr(sig, "flow_regime", "NOI_CAN_HANG") or "NOI_CAN_HANG"),
+        flow_badge=str(getattr(sig, "flow_badge", "🟢 KHUYẾN NGHỊ T0") or "🟢 KHUYẾN NGHỊ T0"),
+        has_actual_prop_flow=bool(getattr(sig, "has_actual_prop_flow_t0", False)),
+        atr_14=float(getattr(sig, "atr_14", 0.0) or 0.0),
+        poc_price=float(getattr(sig, "poc_price_t0", 0.0) or 0.0),
+        val_price=float(getattr(sig, "val_price_t0", 0.0) or 0.0),
+        buy_permission=buy_perm,
+        anti_fomo_badge=badge,
+        t0_entry_original=orig_entry,
+        pnl_from_t0_pct=pnl,
+        holding_days_t0=int(getattr(sig, "holding_days", 0) or 0),
+    )
+
+
+def retain_same_day_active_signals(
+    candidates: List[FialdaCandidate],
+    active_signals: Optional[Dict[str, Any]] = None,
+    now_dt: Optional[datetime] = None,
+    enrich_pool: Optional[List[FialdaCandidate]] = None,
+) -> List[FialdaCandidate]:
+    """ADR-023: Duy tri cac ma co phieu da khuyen nghi trong ngay tren Tab 1.
+    
+    Cac ma phat sinh tin hieu mua trong ngay hom nay (T0) va van con hieu luc
+    (not is_closed, status != 'STOPPED_OUT') bat buoc duoc giu lai tren Tab 1 suot phien.
+    Chi khi buoc sang ngay giao dich moi (T+1) moi duoc remove khoi Tab 1 de chuyen sang Tab 2.
+    """
+    if active_signals is None:
+        if "PYTEST_CURRENT_TEST" in os.environ:
+            active_signals = {}
+        else:
+            try:
+                active_signals = SignalTracker().load_active_signals()
+            except Exception:
+                active_signals = {}
+
+    if not active_signals:
+        return candidates
+
+    current_dt = now_dt or SignalTracker.current_vn_time()
+    today_str = current_dt.strftime("%Y-%m-%d")
+
+    result = list(candidates)
+    existing_syms = {c.symbol for c in result}
+    pool = enrich_pool or []
+
+    for sym, sig in active_signals.items():
+        if getattr(sig, "is_closed", False):
+            continue
+        if getattr(sig, "status", "") == "STOPPED_OUT":
+            continue
+
+        f_date = str(getattr(sig, "first_signal_date", "") or "")
+        # Kiem tra co phai khuyen nghi trong ngay hom nay (T0) khong
+        if not f_date.startswith(today_str):
+            continue
+
+        if sym not in existing_syms:
+            # 1. Tim trong pool ung vien bo sung neu co
+            found_c = next((c for c in pool if c.symbol == sym), None)
+            if found_c is None:
+                # 2. Tai tao FialdaCandidate tu ActiveSignal
+                found_c = candidate_from_active_signal(sig, now_dt=current_dt)
+            result.append(found_c)
+            existing_syms.add(sym)
+
+    return result
+
+
 class FialdaScanner:
     """Client giao tiep va khai thac he thong API Fialda VIP Expert."""
 
@@ -1716,6 +1834,13 @@ class FialdaScanner:
             current_time=now_vn,
         )
         top_final = enriched_all[:top_n]
+        # ADR-023: Duy tri cac ma khuyen nghi trong ngay con hieu luc tren Tab 1
+        top_final = retain_same_day_active_signals(
+            candidates=top_final,
+            active_signals=None,
+            now_dt=now_vn,
+            enrich_pool=enriched_all,
+        )
         if record_history and top_final:
             try:
                 RankingHistoryTracker().record_snapshot(top_final)

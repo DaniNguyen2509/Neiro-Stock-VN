@@ -596,4 +596,22 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
    - Thực thi đồng thời 3 tầng kiểm toán: Walk-Forward Backtesting (2021 – 2026), Sổ cái tín hiệu thực tế (Live Track Record), và Thẩm định chất lượng dữ liệu ML.
    - Tự động xuất bản báo cáo phân tích toàn diện tại `reports/system_and_ml_evaluation.md`.
 
+---
+
+### Tier 25 [ACCEPTED - ADR-023]: Cơ Chế Duy Trì Vị Thế Khuyến Nghị Trong Ngày (Same-Day Intraday Signal Retention Policy) & Chuyển Giao Tab 2 Khi Qua Ngày (T+1)
+
+> **Trạng thái:** `ACCEPTED & IMPLEMENTED` (xem [`ADR-023`](decisions/ADR-023-intraday-signal-retention-policy.md), test: `tests/test_intraday_signal_retention.py`).
+
+1. **Quy Tắc Duy Trì Trong Ngày (Same-Day Retention on Tab 1):**
+   - Mọi mã cổ phiếu đã phát sinh tín hiệu khuyến nghị mua trong ngày hôm nay ($T_0$, `first_signal_date` cùng ngày với ngày quét hiện tại) và **vẫn còn hiệu lực** (`is_closed == False`, `status != "STOPPED_OUT"`) **bắt buộc phải được giữ lại (retained / pinned)** trên Bảng Khuyến Nghị Tab 1 trong suốt phiên giao dịch, bất kể biến động thứ hạng `ranking_score` tức thời của các chu kỳ quét buổi chiều.
+   - Triệt tiêu 100% hiện tượng mã vừa khuyến nghị sáng nay bị rơi khỏi Top 20 buổi chiều khiến nhà đầu tư băn khoăn.
+2. **Cập Nhật Trạng Thái & Chống FOMO Mua Đuổi:**
+   - Nếu thị giá còn trong biên độ an toàn $\le +1.5\%$ so với giá vào $T_0$: Giữ nhãn `🟢 VÙNG MUA CHUẨN`.
+   - Nếu thị giá đã tăng mạnh $> +1.5\%$ (như `VCK` tăng từ 28.10 lên 28.60, tức +1.8%): Khóa quyền mua đuổi và hiển thị huy hiệu đỏ cảnh báo `⛔ ĐÃ CHẠY > 1.5% — CẤM MUA ĐUỔI (T0)`.
+3. **Quy Tắc Chuyển Giao Khi Qua Ngày ($T+1$):**
+   - Khi bước sang ngày tiếp theo (`now_vn.date() > first_signal_date.date()`, tức $T \ge 1$), mã đã hoàn thành vai trò phát tín hiệu mở mới của ngày $T_0$.
+   - Hệ thống tự động loại bỏ việc ghim trên Tab 1 để nhường chỗ cho các cơ hội mới của ngày tiếp theo.
+   - Toàn bộ quyền theo dõi được chuyển giao sang **Tab 2: Sổ Cái Vị Thế Đang Nắm Giữ & Theo Dõi Lãi/Lỗ PnL (T+ Tracker)** theo chu kỳ từ $T+1$ đến $T+20$ cho tới khi chốt lời TP2 hoặc cắt lỗ.
+4. **Ngoại Lệ Vi Phạm Cắt Lỗ:** Nếu mã bị Stop Loss trong ngày (`STOPPED_OUT`), tín hiệu bị coi là hết hiệu lực, ngay lập tức rời Tab 1 và chuyển vào ngăn lưu trữ đóng vị thế của Tab 2.
+
 
