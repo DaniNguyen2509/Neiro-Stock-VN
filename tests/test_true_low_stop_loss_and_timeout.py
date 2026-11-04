@@ -114,3 +114,4 @@ def test_signal_tracker_latches_stopped_out_permanently(tmp_path):
     assert vci.status == "STOPPED_OUT", f"VCI phải là STOPPED_OUT, thực tế: {vci.status}"
     assert vci.is_closed is True
     assert vci.outcome_label == "STOP_LOSS"
+

@@ -59,3 +59,4 @@ Hệ thống thiết lập 3 chuẩn mực kiểm toán tài chính bắt buộc
   - Các mã đã vi phạm SL ở đáy nến (như VCI) chuyển thành `STOPPED_OUT` và đóng vị thế.
   - Các mã quá hạn $T+7$ không đạt TP1 chuyển thành `TIME_OUT` và đóng vị thế.
   - Chỉ giữ lại các vị thế thực sự chuẩn xác và hợp lệ (như `VCK` mua hôm nay $T_0$, và các vị thế chưa vi phạm).
+
