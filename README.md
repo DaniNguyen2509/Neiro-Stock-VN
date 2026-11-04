@@ -62,10 +62,12 @@ Neiro-Stock-VN/
 │   ├── sector_engine/            # Mô hình luân chuyển ngành RRG & Độ rộng thị trường
 │   ├── risk_engine/              # Quản trị T+2.5, Rolling Position, ATR Sizing, Signal Tracker & ML (ADR-009/011)
 │   ├── backtesting/              # Walk-Forward Backtesting T+2.5 (Look-ahead & PIT Defense)
+│   ├── ml/                       # Tiền xử lý ML (Winsorization, Robust Scaling, Purged CV) & Kiểm toán (ADR-022)
 │   └── hud/                      # Giao diện Tactical Terminal Web Đa Tab (Auto-Reload, Dark Mode)
 ├── data/                         # Dữ liệu mẫu benchmark, ranking_history.jsonl, active_signals.jsonl, ml_signals_dataset.csv
 ├── exports/                      # Tệp HTML Terminal xuất bản (GitHub Pages)
-├── tests/                        # Kiểm thử tự động Unit & Math verification (128/128 passed 100%)
+├── reports/                      # Báo cáo đánh giá hệ thống & ML (system_and_ml_evaluation.md)
+├── tests/                        # Kiểm thử tự động Unit & Math verification (151/151 passed 100%)
 ├── AGENTS.md / GEMINI.md         # Quy tắc bắt buộc gọi Skill & Zero-Waste Mandate
 ├── requirements.txt              # Thư viện Python phụ thuộc
 ├── pyproject.toml                # Cấu hình ruff & pytest
@@ -92,31 +94,34 @@ pip install -r requirements.txt
 
 ### 4.2. Chạy kiểm thử tự động
 ```bash
-# Chạy 100% Unit Tests xác minh tính toán toán học, API Resilience & T+2.5 Backtest (128/128 passed 100%)
+# Chạy 100% Unit Tests xác minh tính toán toán học, API Resilience, T+2.5 Backtest & ML Preprocessor (151/151 passed 100%)
 python -m pytest tests/ -v --tb=short
 
 # Kiểm tra quy chuẩn mã nguồn (Ruff)
 python -m ruff check src/ tests/
 ```
 
-### 4.3. Chạy các module định lượng
+### 4.3. Chạy các module định lượng & Đánh giá hệ thống
 ```bash
-# 1. Chạy bộ lọc Quantamental Cổ phiếu (F-score, P/E Banding)
+# 1. Chạy Đánh Giá Toàn Diện Hệ Thống & Machine Learning (ADR-022)
+python scripts/evaluate_system_and_ml.py
+
+# 2. Chạy bộ lọc Quantamental Cổ phiếu (F-score, P/E Banding)
 python -m src.fundamental_engine.screener --top 20
 
-# 2. Phân tích Volume Profile và vùng thanh khoản cho cổ phiếu (ví dụ HPG)
+# 3. Phân tích Volume Profile và vùng thanh khoản cho cổ phiếu (ví dụ HPG)
 python -m src.microstructure_engine.volume_profile --symbol HPG
 
-# 3. Phân tích luân chuyển dòng tiền ngành (RRG Rotation)
+# 4. Phân tích luân chuyển dòng tiền ngành (RRG Rotation)
 python -m src.sector_engine.rrg_rotation
 
-# 4. Quét tự động Top 20 Siêu cổ phiếu chân sóng, BCTC 4 quý & Tin tức (Fialda VIP Expert Scanner)
+# 5. Quét tự động Top 20 Siêu cổ phiếu chân sóng, BCTC 4 quý & Tin tức (Fialda VIP Expert Scanner)
 python -m src.collector.fialda_scanner --top 20 --save-report reports/latest_scan.md --generate-terminal
 
-# 5. Chạy Kiểm Định Quá Khứ Walk-Forward T+2.5 & Xuất Bản Dashboard Web Đa Tab
+# 6. Chạy Kiểm Định Quá Khứ Walk-Forward T+2.5 & Xuất Bản Dashboard Web Đa Tab
 python -m src.hud.terminal --output exports/index.html
 
-# 6. Chạy chế độ Watcher ngầm trên máy cá nhân (Tự động cập nhật 5 phút/lần)
+# 7. Chạy chế độ Watcher ngầm trên máy cá nhân (Tự động cập nhật 5 phút/lần)
 python -m src.hud.terminal --watch --interval 300
 ```
 

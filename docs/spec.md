@@ -576,3 +576,24 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 5. **Cảnh Báo Hàng Rác & An Toàn Vốn (Anti-Junk Guard):**
    - Tự động cảnh báo đỏ đối với các cổ phiếu thanh khoản yếu (ADTV20 < 15 tỷ) hoặc F-Score thấp (< 4/9), giải thích rõ nguy cơ kẹp vốn để bảo vệ an toàn cho nhà đầu tư cá nhân.
 
+---
+
+### Tier 24 [ACCEPTED - ADR-022]: Khung Chuẩn Hóa Tiền Xử Lý Dữ Liệu ML & Bộ Đánh Giá Toàn Diện Hệ Thống (System & ML Evaluator)
+
+> **Trạng thái:** `ACCEPTED & IMPLEMENTED` (xem [`ADR-022`](decisions/ADR-022-ml-preprocessing-pipeline-and-system-evaluator.md), test: `tests/test_ml_preprocessor_and_eval.py`).
+
+1. **Khung Tiền Xử Lý Dữ Liệu ML Siêu Nhẹ (`src/ml/preprocessor.py`):**
+   - Lớp `MLSignalPreprocessor` thuần NumPy/Pandas (< 15KB) đảm bảo Zero-Waste Mandate (< 15MB).
+   - `clean_and_filter_schema(drop_legacy=True)`: Phân lập và loại bỏ 78 mẫu cũ `v1_legacy` bị khuyết đặc trưng T0 khi huấn luyện mô hình chất lượng cao.
+   - `winsorize_dataframe()`: Khử nhiễu ngoại lai tài chính theo phân vị 1% – 99% cho PE, PB, ADTV, thanh khoản, trượt giá.
+   - `robust_scale_dataframe()`: Chuẩn hóa theo Trung vị (Median) và IQR, chống biến dạng do biên độ trần/sàn.
+   - `calculate_class_weights()`: Tính trọng số mẫu $w_j = \frac{N}{K \cdot n_j}$ giải quyết triệt để mất cân bằng nhãn 95:5.
+   - `purged_train_test_split()`: Phân chia tập dữ liệu chuỗi thời gian có đệm thanh toán T+2.5 (3 phiên) ngăn chặn hoàn toàn rò rỉ dữ liệu (Lookahead Leakage).
+2. **Khung Kiểm Toán & Đo Lường Sẵn Sàng ML (`src/ml/dataset_validator.py`):**
+   - Lớp `MLDatasetValidator` tự động đo lường: Quy mô mẫu thực tế vs Ngưỡng chuẩn thống kê ($\ge 500$ mẫu), Tỷ lệ mẫu v2 chuẩn hóa, Độ hoàn thiện đặc trưng V2, Tỷ lệ mất cân bằng nhãn nhị phân.
+   - Phát cảnh báo định lượng khi dữ liệu chưa đủ điều kiện để ngăn chặn huấn luyện mô hình sai lệch.
+3. **Script Đánh Giá Toàn Diện 1-Click (`scripts/evaluate_system_and_ml.py`):**
+   - Thực thi đồng thời 3 tầng kiểm toán: Walk-Forward Backtesting (2021 – 2026), Sổ cái tín hiệu thực tế (Live Track Record), và Thẩm định chất lượng dữ liệu ML.
+   - Tự động xuất bản báo cáo phân tích toàn diện tại `reports/system_and_ml_evaluation.md`.
+
+

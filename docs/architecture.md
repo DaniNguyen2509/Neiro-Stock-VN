@@ -131,7 +131,17 @@ flowchart TD
 - **`metrics.py`:** Bộ công thức toán học đo lường hiệu suất định chế: CAGR, Sharpe, Sortino, Max Drawdown, Calmar, Win Rate, Profit Factor, Walk-Forward Efficiency (WFE).
 - **`walk_forward.py` (`WalkForwardCoordinator`):** Điều phối kiểm định độc lập giữa tập In-Sample (2021-2023) và Out-of-Sample (2024-2026), tính tỷ số WFE chứng minh hệ thống không bị Overfitting.
 
-### 2.7. Tầng Giao Diện Tác Chiến (`src/hud/`)
+### 2.7. Tầng Chuẩn Hóa & Thẩm Định Machine Learning (`src/ml/` — ADR-022)
+- **`preprocessor.py` (`MLSignalPreprocessor`):** Bộ tiền xử lý định lượng thuần Python/NumPy/Pandas siêu nhẹ (< 15KB):
+  - Phân lập và loại bỏ nhiễu dữ liệu cũ `v1_legacy`, chỉ giữ mẫu chuẩn `v2` khi huấn luyện mô hình.
+  - Khử ngoại lai phân vị **Winsorization (1% – 99%)** cho các trường tài chính đuôi nặng.
+  - Chuẩn hóa **Robust Scaling** theo Median/IQR chống méo lệch phân phối do biên độ sàn HOSE/HNX.
+  - Tính toán trọng số mẫu **Class Weights** cân bằng tỷ lệ nhãn lệch 95:5.
+  - Phân chia **Purged Time-Series Train-Test Split** kèm khoảng đệm thanh toán T+2.5 ngăn chặn Lookahead Leakage.
+- **`dataset_validator.py` (`MLDatasetValidator`):** Bộ kiểm toán tự động độ sẵn sàng huấn luyện ML, đo lường khoảng thiếu hụt mẫu (Sample Size Gap so với chuẩn $\ge 500$ mẫu), tỷ lệ Schema Drift và độ hoàn thiện đặc trưng V2.
+- **`scripts/evaluate_system_and_ml.py`:** Công cụ kiểm toán 3 tầng 1-click tự động xuất báo cáo toàn diện tại `reports/system_and_ml_evaluation.md`.
+
+### 2.8. Tầng Giao Diện Tác Chiến (`src/hud/`)
 - **`terminal.py`:** Sinh mã nguồn HTML tương tác đa tab hoàn chỉnh, hỗ trợ Dark Mode hiện đại, bao gồm:
   - **Cơ chế Cập Nhật Giá Live Ticker 30s & Đồng Bộ Hóa Toàn Diện (ADR-008, ADR-010, ADR-012 & ADR-016):**
     - **Live Dynamic Price & Stats Polling (Client-Side 30s):** Định kỳ mỗi 30 giây (`setInterval(fetchLivePrices, 30000)`), JavaScript tự động kéo dữ liệu khớp lệnh trực tiếp từ Public Datafeed VPS (`https://bgapidatafeed.vps.com.vn/getliststockdata/`, CORS `*`), tự động cập nhật số liệu giá khớp, `% Biến động` đổi màu chuẩn Sở Giao dịch (Xanh lá / Đỏ / Tím trần / Xanh lam sàn / Vàng tham chiếu), và cập nhật nhãn `🟢 Live VPS: HH:MM:SS (30s)`.
