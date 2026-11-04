@@ -430,12 +430,11 @@ class SignalTracker:
         )
 
         if cur_stop >= entry_orig and entry_orig > 0:
-            current_tick_low = min(cur_price, low_price if low_price and low_price > 0 else cur_price)
-            if current_tick_low < cur_stop:
+            if cur_price < cur_stop:
                 status = "STOPPED_OUT"
                 buy_permission = "EXTENDED_NO_CHASING"
                 advice_note = (
-                    f"❌ THỦNG ĐIỂM HÒA VỐN (Thị giá {current_tick_low:.2f} < Stop hòa vốn {cur_stop:.2f}). "
+                    f"❌ THỦNG ĐIỂM HÒA VỐN (Thị giá {cur_price:.2f} < Stop hòa vốn {cur_stop:.2f}). "
                     "Bán chốt bảo toàn lợi nhuận / hòa vốn 50% còn lại."
                 )
                 return status, buy_permission, advice_note, cur_stop
