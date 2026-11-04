@@ -24,3 +24,4 @@ target-version = "py312"
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 pythonpath = ["."]
+addopts = ["--basetemp=.pytest_cache/tmp"]
