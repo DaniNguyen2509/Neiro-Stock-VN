@@ -28,6 +28,7 @@ def generate_terminal_html(
     spot_deriv_override: Optional[Dict[str, float]] = None,
     market_breadth: Optional[Dict[str, Any]] = None,
     scanner: Optional[FialdaScanner] = None,
+    active_signals: Optional[Dict[str, Any]] = None,
 ) -> str:
     """Sinh mã nguồn giao diện Web Terminal tương tác độc lập (Continuous Dashboard)."""
     scanner = scanner or FialdaScanner()
@@ -409,30 +410,153 @@ def generate_terminal_html(
         if mb_snap.pause_new_buying:
             breadth_color = "#ff5252"
 
-    # Chuan bi du lieu Tab 2: Kiem dinh Walk-Forward T+2.5 Trung thuc (Floor-Lock + 0.40% Fee/Tax + <= 20% NAV)
-    wf_summary = _get_cached_walk_forward_summary()
-    wf_is = wf_summary["in_sample"]
-    wf_oos = wf_summary["out_of_sample"]
-    wf_full = wf_summary["full"]
-    wf_wfe = wf_summary["walk_forward_efficiency_pct"]
-    wf_rows_html = ""
-    for wf_label, wf_res in [
-        ("In-Sample (2021 - 2023 • Bull & Bear)", wf_is),
-        ("Out-of-Sample (2024 - 2026 • Kiểm Chứng Mù)", wf_oos),
-        ("Toàn Chu Kỳ (2021 - 2026 • Hợp Nhất)", wf_full),
-    ]:
-        ret_color = "#00e676" if wf_res.total_return_pct >= 0 else "#ff5252"
-        alpha_color = "#00e676" if wf_res.alpha_pct >= 0 else "#ffb300"
-        wf_rows_html += f"""
+    # Chuan bi du lieu Tab 2: So Cai Vi The Khuyen Nghi & Theo Doi Lai/Lo PnL (T+ Tracker)
+    if active_signals is None:
+        try:
+            from src.risk_engine.signal_tracker import SignalTracker
+            active_signals = SignalTracker().load_active_signals()
+        except Exception:
+            active_signals = {}
+
+    active_running: List[Any] = []
+    closed_signals: List[Any] = []
+
+    if active_signals:
+        for s in active_signals.values():
+            st_val = getattr(s, "status", "")
+            is_cl = getattr(s, "is_closed", False)
+            if is_cl or st_val == "TP2_REACHED" or st_val == "STOPPED_OUT":
+                closed_signals.append(s)
+            else:
+                active_running.append(s)
+
+    # Sap xep vi the dang chay theo PnL giam dan (ma lai cao nhat len dau)
+    active_running.sort(key=lambda x: getattr(x, "pnl_pct", 0.0), reverse=True)
+    closed_signals.sort(key=lambda x: (getattr(x, "status", "") != "TP2_REACHED", -getattr(x, "pnl_pct", 0.0)))
+
+    tp1_count = sum(1 for s in active_running if getattr(s, "status", "") == "TP1_REACHED")
+    tp2_count = sum(1 for s in closed_signals if getattr(s, "status", "") == "TP2_REACHED")
+
+    active_positions_rows_html = ""
+    if not active_running:
+        active_positions_rows_html = """
+        <tr>
+            <td colspan="10" style="padding:25px;text-align:center;color:#78909c;">
+                Hiện không có vị thế nào đang nắm giữ. Mọi khuyến nghị trước đó đã đạt mục tiêu chốt lời hoặc đã đóng bảo toàn vốn.
+            </td>
+        </tr>
+        """
+    else:
+        for idx, s in enumerate(active_running, 1):
+            sym = getattr(s, "symbol", "")
+            first_date = getattr(s, "first_signal_date", "")
+            date_display = first_date.split()[0] if first_date else "T0"
+            time_display = first_date.split()[1] if len(first_date.split()) > 1 else ""
+            trading_days = getattr(s, "trading_days", 0)
+            entry_orig = getattr(s, "entry_original", 0.0)
+            cur_price = getattr(s, "current_price", 0.0)
+            pnl_pct = getattr(s, "pnl_pct", 0.0)
+            cur_sl = getattr(s, "current_stop_loss", 0.0)
+            tp1 = getattr(s, "tp1", 0.0)
+            tp2 = getattr(s, "tp2", 0.0)
+            status = getattr(s, "status", "ACTIVE")
+            buy_perm = getattr(s, "buy_permission", "BUY_OK")
+
+            if trading_days == 0:
+                t_badge = '<span style="background:#0284c7;color:#e0f2fe;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+0 (Vừa mua)</span>'
+            elif trading_days == 1:
+                t_badge = '<span style="background:#0369a1;color:#e0f2fe;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+1 (Chờ hàng)</span>'
+            elif trading_days == 2:
+                t_badge = '<span style="background:#047857;color:#d1fae5;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+2 (Khả dụng chiều)</span>'
+            else:
+                t_badge = f'<span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+{trading_days} (Khả dụng 100%)</span>'
+
+            pnl_col = "#00e676" if pnl_pct > 0 else ("#ff5252" if pnl_pct < 0 else "#ffb300")
+            pnl_sign = "+" if pnl_pct > 0 else ""
+
+            if status == "TP1_REACHED":
+                action_badge = '<span style="background:#004d40;color:#64ffda;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🎯 ĐÃ CHỐT 50% TP1 — GỒNG LÃI TỚI TP2 (CẤM MUA ĐUỔI)</span>'
+            elif buy_perm == "EXTENDED_NO_CHASING":
+                action_badge = '<span style="background:#e65100;color:#ffe0b2;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">⚠️ ĐÃ TĂNG XA NỀN — CẤM MUA ĐUỔI</span>'
+            elif buy_perm == "BULL_TRAP_REJECT":
+                action_badge = '<span style="background:#bf360c;color:#ffccbc;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">⚠️ BULL-TRAP — NẮM GIỮ / CHỜ HỒI</span>'
+            elif buy_perm == "STALE_SIGNAL":
+                action_badge = '<span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>'
+            else:
+                action_badge = '<span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟢 ĐANG NẮM GIỮ (CHỜ CHẠM TP)</span>'
+
+            if status == "TP1_REACHED" and cur_sl >= entry_orig:
+                sl_display = f'<span style="color:#00e676;font-weight:bold;">{cur_sl:.2f}</span> <span style="font-size:10px;color:#64ffda;background:#004d40;padding:1px 4px;border-radius:3px;">Hòa vốn</span>'
+            else:
+                sl_display = f'<span style="color:#ff8a80;font-weight:bold;">{cur_sl:.2f}</span>'
+
+            if status == "TP1_REACHED":
+                tp_display = f'<span style="text-decoration:line-through;color:#78909c;">{tp1:.2f}</span> <b style="color:#00e676;">✓ Đạt</b> / <b style="color:#38bdf8;">{tp2:.2f}</b>'
+            else:
+                tp_display = f'<span style="color:#4fc3f7;">{tp1:.2f}</span> / <b style="color:#38bdf8;">{tp2:.2f}</b>'
+
+            active_positions_rows_html += f"""
+            <tr style="border-bottom:1px solid #1f2937;">
+                <td style="padding:10px;text-align:center;color:#78909c;">{idx}</td>
+                <td style="padding:10px;">
+                    <span style="font-weight:800;color:#ffb300;font-size:13px;">{sym}</span>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">{date_display}</div>
+                    <div style="font-size:10px;color:#64748b;">{time_display}</div>
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    {t_badge}
+                </td>
+                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
+                    {entry_orig:.2f}
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-price" data-sym="{sym}" style="font-weight:bold;color:#ffb300;">{cur_price:.2f}</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    <span class="live-pnl" data-sym="{sym}" data-entry="{entry_orig:.2f}" style="font-weight:800;color:{pnl_col};">{pnl_sign}{pnl_pct:.2f}%</span>
+                </td>
+                <td style="padding:10px;text-align:right;">
+                    {sl_display}
+                </td>
+                <td style="padding:10px;text-align:center;">
+                    {tp_display}
+                </td>
+                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="{sym}" data-entry="{entry_orig:.2f}" data-sl="{cur_sl:.2f}" data-tp1="{tp1:.2f}" data-tp2="{tp2:.2f}">
+                    {action_badge}
+                </td>
+            </tr>
+            """
+
+    closed_rows_html = ""
+    for c_sig in closed_signals:
+        c_sym = getattr(c_sig, "symbol", "")
+        c_pnl = getattr(c_sig, "pnl_pct", 0.0)
+        c_status = getattr(c_sig, "status", "")
+        c_entry = getattr(c_sig, "entry_original", 0.0)
+        c_cur = getattr(c_sig, "current_price", 0.0)
+        c_t = getattr(c_sig, "trading_days", 0)
+        c_tp2 = getattr(c_sig, "tp2", 0.0)
+
+        c_pnl_col = "#00e676" if c_pnl > 0 else "#ff5252"
+        c_sign = "+" if c_pnl > 0 else ""
+        if c_status == "TP2_REACHED":
+            status_badge = '<span style="background:#004d40;color:#64ffda;padding:2px 6px;border-radius:4px;font-weight:bold;">🏆 ĐẠT TP2</span>'
+            reason = f'Đạt mục tiêu TP2 ({c_tp2:.2f}) • Hoàn tất chốt lời 100%'
+        else:
+            status_badge = '<span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span>'
+            reason = 'Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5'
+
+        closed_rows_html += f"""
         <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:10px;font-weight:bold;color:#ffb300;">{wf_label}</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:{ret_color};">{wf_res.total_return_pct:+.2f}%</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#4fc3f7;">{wf_res.cagr_pct:+.2f}%</td>
-            <td style="padding:10px;text-align:center;color:#ff5252;font-weight:bold;">-{abs(wf_res.max_drawdown_pct):.2f}%</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">{wf_res.sharpe_ratio:.2f}</td>
-            <td style="padding:10px;text-align:center;">{wf_res.win_rate_pct:.1f}% ({wf_res.total_trades} lệnh)</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:{alpha_color};">{wf_res.alpha_pct:+.2f}%</td>
-            <td style="padding:10px;text-align:center;color:#fbbf24;font-weight:bold;">{wf_res.floor_lock_blocked_count} lần sàn / {wf_res.t25_blocked_count} lần T+2.5</td>
+            <td style="padding:6px;font-weight:bold;color:#ffb300;">{c_sym}</td>
+            <td style="padding:6px;text-align:center;">{status_badge}</td>
+            <td style="padding:6px;text-align:right;">{c_entry:.2f}</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">{c_cur:.2f}</td>
+            <td style="padding:6px;text-align:right;color:{c_pnl_col};font-weight:bold;">{c_sign}{c_pnl:.2f}%</td>
+            <td style="padding:6px;text-align:center;">T+{c_t}</td>
+            <td style="padding:6px;color:#90a4ae;">{reason}</td>
         </tr>
         """
 
@@ -658,36 +782,62 @@ def generate_terminal_html(
 
     {circuit_breaker_html}
 
-    <!-- THANH CHUYỂN TAB CHIẾN THUẬT: TAB 1 (RADAR THỰC CHIẾN) & TAB 2 (WALK-FORWARD T+2.5 TRUNG THỰC) -->
+    <!-- THANH CHUYỂN TAB CHIẾN THUẬT: TAB 1 (RADAR THỰC CHIẾN) & TAB 2 (SỔ CÁI VỊ THẾ KHUYẾN NGHỊ & T+ TRACKER) -->
     <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;">
         <button id="btn-tab-radar" onclick="switchHudTab('radar')" style="background:#ffb300;color:#0b0e14;border:none;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:800;cursor:pointer;">📡 TAB 1: RADAR THỰC CHIẾN & BẢNG ĐỊNH LƯỢNG</button>
-        <button id="btn-tab-wf" onclick="switchHudTab('wf')" style="background:#151a23;color:#90a4ae;border:1px solid #263238;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">🧪 TAB 2: KIỂM ĐỊNH WALK-FORWARD T+2.5 TRUNG THỰC (FLOOR-LOCK)</button>
+        <button id="btn-tab-positions" onclick="switchHudTab('positions')" style="background:#151a23;color:#90a4ae;border:1px solid #263238;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">📋 TAB 2: SỔ CÁI VỊ THẾ KHUYẾN NGHỊ & THEO DÕI LÃI/LỖ PnL (T+ TRACKER)</button>
     </div>
 
-    <div id="hud-tab-wf" style="display:none;margin-bottom:25px;">
+    <div id="hud-tab-positions" style="display:none;margin-bottom:25px;">
         <div class="section-header">
-            <div class="section-title" style="color:#38bdf8;">🧪 BÁO CÁO KIỂM ĐỊNH WALK-FORWARD T+2.5 TRUNG THỰC (KHÓA SÀN TRẮNG BÊN MUA & TRẦN 20% NAV)</div>
-            <span style="font-size:11px;color:#78909c;">WFE: <b style="color:#00e676;">{wf_wfe:.1f}%</b> • Phí &amp; Thuế toàn vòng: <b style="color:#ffb300;">0.40%</b> • Trần Cold-Start: <b style="color:#4fc3f7;">&le; 20% NAV/mã</b> • Cắt lỗ Gap-Down T+2.5</span>
+            <div class="section-title" style="color:#38bdf8;">📋 SỔ CÁI VỊ THẾ KHUYẾN NGHỊ ĐANG NẮM GIỮ & THEO DÕI LÃI/LỖ PnL (T+ TRACKER)</div>
+            <span style="font-size:11px;color:#78909c;">Chu kỳ: <b style="color:#4fc3f7;">T+2.5</b> • Giới hạn vị thế: <b style="color:#00e676;">&le; 20% NAV/mã</b> • Phí &amp; Thuế: <b style="color:#ffb300;">0.40%</b> • Đang nắm giữ: <b style="color:#00e676;">{len(active_running)} mã</b> • Đạt TP1: <b style="color:#64ffda;">{tp1_count} mã</b> • Đã chốt lời toàn bộ TP2 &amp; rời bảng: <b style="color:#ffb300;">{tp2_count} mã</b></span>
         </div>
         <div class="table-container">
-            <table id="walk-forward-table">
+            <table id="active-positions-table">
                 <thead>
                     <tr>
-                        <th>Giai Đoạn Kiểm Định</th>
-                        <th style="text-align:center;">Tổng Lợi Nhuận Ròng</th>
-                        <th style="text-align:center;">CAGR / Năm</th>
-                        <th style="text-align:center;">Max Drawdown</th>
-                        <th style="text-align:center;">Sharpe Ratio</th>
-                        <th style="text-align:center;">Win Rate</th>
-                        <th style="text-align:center;">Alpha vs VN-Index</th>
-                        <th style="text-align:center;">Khóa Bán (Sàn / T+2.5)</th>
+                        <th style="text-align:center;">STT</th>
+                        <th>Mã CP</th>
+                        <th style="text-align:center;">Ngày Mua (T0)</th>
+                        <th style="text-align:center;">Chu Kỳ T+</th>
+                        <th style="text-align:right;">Giá Mua Gốc</th>
+                        <th style="text-align:right;">Thị Giá Live</th>
+                        <th style="text-align:right;">Lãi/Lỗ PnL %</th>
+                        <th style="text-align:right;">Cắt Lỗ (SL)</th>
+                        <th style="text-align:center;">Chốt Lời (TP1 / TP2)</th>
+                        <th style="text-align:center;">Trạng Thái &amp; Quyết Nghị</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {wf_rows_html}
+                    {active_positions_rows_html}
                 </tbody>
             </table>
         </div>
+
+        <details style="margin-top:14px;background:#151a23;border:1px solid #1f2937;border-radius:6px;padding:8px 12px;">
+            <summary style="font-size:12px;color:#38bdf8;font-weight:bold;cursor:pointer;">
+                🏆 Lịch Sử Vị Thế Đã Hoàn Thành Toàn Vòng TP2 / Đã Đóng Bảo Toàn Vốn ({len(closed_signals)} mã — Click để mở rộng)
+            </summary>
+            <div style="margin-top:10px;overflow-x:auto;">
+                <table style="width:100%;font-size:11px;border-collapse:collapse;">
+                    <thead>
+                        <tr style="border-bottom:1px solid #263238;color:#78909c;text-align:left;">
+                            <th style="padding:6px;">Mã CP</th>
+                            <th style="padding:6px;text-align:center;">Kết QuẢ</th>
+                            <th style="padding:6px;text-align:right;">Giá Vào T0</th>
+                            <th style="padding:6px;text-align:right;">Giá Đóng</th>
+                            <th style="padding:6px;text-align:right;">Lợi Nhuận PnL %</th>
+                            <th style="padding:6px;text-align:center;">Số Ngày T+</th>
+                            <th style="padding:6px;">Lý Do Đóng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {closed_rows_html}
+                    </tbody>
+                </table>
+            </div>
+        </details>
     </div>
 
     <div id="hud-tab-radar">
@@ -837,20 +987,20 @@ def generate_terminal_html(
 
         function switchHudTab(tabName) {{
             const radarEl = document.getElementById('hud-tab-radar');
-            const wfEl = document.getElementById('hud-tab-wf');
+            const posEl = document.getElementById('hud-tab-positions') || document.getElementById('hud-tab-wf');
             const btnRadar = document.getElementById('btn-tab-radar');
-            const btnWf = document.getElementById('btn-tab-wf');
-            if (!radarEl || !wfEl) return;
-            if (tabName === 'wf') {{
+            const btnPos = document.getElementById('btn-tab-positions') || document.getElementById('btn-tab-wf');
+            if (!radarEl || !posEl) return;
+            if (tabName === 'positions' || tabName === 'wf') {{
                 radarEl.style.display = 'none';
-                wfEl.style.display = 'block';
-                if (btnWf) {{ btnWf.style.background = '#ffb300'; btnWf.style.color = '#0b0e14'; }}
+                posEl.style.display = 'block';
+                if (btnPos) {{ btnPos.style.background = '#ffb300'; btnPos.style.color = '#0b0e14'; }}
                 if (btnRadar) {{ btnRadar.style.background = '#151a23'; btnRadar.style.color = '#90a4ae'; }}
             }} else {{
                 radarEl.style.display = 'block';
-                wfEl.style.display = 'none';
+                posEl.style.display = 'none';
                 if (btnRadar) {{ btnRadar.style.background = '#ffb300'; btnRadar.style.color = '#0b0e14'; }}
-                if (btnWf) {{ btnWf.style.background = '#151a23'; btnWf.style.color = '#90a4ae'; }}
+                if (btnPos) {{ btnPos.style.background = '#151a23'; btnPos.style.color = '#90a4ae'; }}
             }}
         }}
 
@@ -986,6 +1136,51 @@ def generate_terminal_html(
                             }} else if (!isLockedNoBuy && entryLow > 0 && p >= entryLow * 0.985 && p <= entryHigh * 1.03) {{
                                 sigBadge.innerHTML = '<span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">VÙNG MUA 🟢</span>';
                             }}
+                        }}
+                    }}
+                }});
+
+                // Dong bo live PnL % cho Tab 2 So Cai Vi The Theo Doi
+                const pnlEls = document.querySelectorAll('.live-pnl[data-sym]');
+                pnlEls.forEach(el => {{
+                    const sym = el.getAttribute('data-sym');
+                    const entry = Number(el.getAttribute('data-entry') || 0);
+                    const info = priceMap[sym];
+                    if (info && info.price > 0 && entry > 0) {{
+                        const p = Number(info.price);
+                        const pnl = ((p - entry) / entry) * 100;
+                        const sign = pnl >= 0 ? '+' : '';
+                        el.innerText = sign + pnl.toFixed(2) + '%';
+                        if (p >= info.ceil && info.ceil > 0) {{
+                            el.style.color = '#ea39b8';
+                        }} else if (p <= info.floor && info.floor > 0) {{
+                            el.style.color = '#00e5ff';
+                        }} else if (pnl > 0) {{
+                            el.style.color = '#00e676';
+                        }} else if (pnl < 0) {{
+                            el.style.color = '#ff5252';
+                        }} else {{
+                            el.style.color = '#ffb300';
+                        }}
+                    }}
+                }});
+
+                // Dong bo huy hieu quyet nghi thuc chien Tab 2 khi cham nguong
+                const posBadgeEls = document.querySelectorAll('.pos-badge[data-sym]');
+                posBadgeEls.forEach(bEl => {{
+                    const sym = bEl.getAttribute('data-sym');
+                    const info = priceMap[sym];
+                    const tp1 = Number(bEl.getAttribute('data-tp1') || 0);
+                    const tp2 = Number(bEl.getAttribute('data-tp2') || 0);
+                    const sl = Number(bEl.getAttribute('data-sl') || 0);
+                    if (info && info.price > 0) {{
+                        const p = Number(info.price);
+                        if (tp2 > 0 && p >= tp2) {{
+                            bEl.innerHTML = '<span style="background:#004d40;color:#64ffda;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🏆 CHẠM TP2 — CHỐT LỜI HẾT</span>';
+                        }} else if (tp1 > 0 && p >= tp1) {{
+                            bEl.innerHTML = '<span style="background:#004d40;color:#64ffda;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🎯 ĐẠT TP1 — GỒNG LÃI TỚI TP2 (CẤM MUA)</span>';
+                        }} else if (sl > 0 && p <= sl) {{
+                            bEl.innerHTML = '<span style="background:#b71c1c;color:#ff8a80;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🛑 CHẠM CẮT LỖ — BẢO TOÀN VỐN</span>';
                         }}
                     }}
                 }});

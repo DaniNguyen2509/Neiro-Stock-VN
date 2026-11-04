@@ -542,3 +542,17 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 3. **CẤM MUA MỚI:** `> +5%`, Bull-Trap (MFE > 5% rồi xìu), `< -2.5%` dưới T0, quá `3` phiên thực, `CRITICAL`, Cầu chì vĩ mô, hoặc đã `STOPPED_OUT` trong 3 phiên thực.
 4. **Bất biến vùng giá:** `SL < Entry_Low <= Entry_High < TP1 < TP2`.
 5. **Sổ cái ML v2:** `signal_id`, `schema_version`, `trading_days`, khóa trạng thái đóng, archive `data/signal_history_ml.jsonl`, làm mới giá live cho mã rớt Top 20, `is_ml_ready`.
+
+---
+
+### Tier 22 [ACCEPTED - ADR-020]: Tab 2 Sổ Cái Vị Thế Khuyến Nghị & Theo Dõi Lãi/Lỗ PnL (T+ Tracker) — Cơ Chế Rời Bảng Khi Đạt TP2 & Đồng Bộ Live PnL VPS
+
+> **Trạng thái:** `ACCEPTED & IMPLEMENTED (100% — 138/138 TESTS PASSING)` (xem [`ADR-020`](decisions/ADR-020-tab2-active-positions-tracker-and-tp-lifecycle.md), test: `tests/test_positions_tracker_tab.py`).
+
+1. **Thay Thế Tab 2 Walk-Forward:** Chuyển đổi Tab 2 từ báo cáo kiểm định lịch sử sang bảng thực chiến **"SỔ CÁI VỊ THẾ KHUYẾN NGHỊ ĐANG NẮM GIỮ & THEO DÕI LÃI/LỖ PnL (T+ TRACKER)"** (`#active-positions-table`).
+2. **Quy Tắc Rời Bảng Khi Hoàn Thành Mục Tiêu TP2:** Các vị thế đã đạt mục tiêu chốt lời toàn phần (`status == "TP2_REACHED"`, như HDC +12.5%) hoặc đã đóng bảo toàn vốn (`STOPPED_OUT`) đã kết thúc sứ mệnh và tự động biến mất khỏi bảng chính đang chạy, được gom vào ngăn collapsible lưu trữ lịch sử để giữ bảng luôn tinh gọn.
+3. **Phân Loại & Quyết Nghị Thực Chiến:**
+   - Mã đã đạt TP1 và đang gồng lãi 50% còn lại tới TP2 (như TCH +5.5% / +7.1% tím trần, trailing stop hòa vốn 11.90) hiển thị nổi bật với huy hiệu `🎯 ĐÃ CHỐT 50% TP1 — GỒNG LÃI TỚI TP2 (CẤM MUA ĐUỔI)`.
+   - Cảnh báo triệt để tâm lý FOMO mua đuổi: nhà đầu tư mở Tab 2 thấy mã đã bùng nổ từ trước và đang gồng lãi thì tuyệt đối không mua đuổi.
+4. **Đồng Bộ Live PnL VPS Thời Gian Thực:** Client-side JS tự động nạp giá live từ VPS qua `.live-price[data-sym]` và tính toán lại `.live-pnl[data-sym]` (`data-entry`) mỗi 30 giây, tự động đổi màu theo thị giá (tím trần, xanh sàn, xanh lãi, đỏ lỗ) và chuyển đổi huy hiệu khuyến nghị (`.pos-badge`).
+5. **Tối Ưu Hiệu Năng Terminal:** Loại bỏ việc chạy lại toàn bộ Walk-Forward Coordinator nặng khi sinh HTML, giảm thời gian render Terminal xuống ~0.5 giây.

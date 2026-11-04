@@ -838,11 +838,12 @@ class TestPhase5MultiLayerDashboardAudit:
 
         # FPT giá 215.00 (1 lô = 21.5 triệu > trần 20 triệu của TK 100tr) -> Hiện cảnh báo LÔ 100CP CAO
         assert "LÔ 100CP CAO" in html_ok
-        # Tab 2 Walk-Forward T+2.5 hiện diện đầy đủ với Floor-Lock, 0.40% phí thuế & <= 20% NAV
-        assert 'id="walk-forward-table"' in html_ok
+        # Tab 2 Sổ Cái Vị Thế Đang Theo Dõi & Lãi/Lỗ PnL (T+ Tracker) với giới hạn 20% NAV & 0.40% phí thuế
+        assert 'id="active-positions-table"' in html_ok
+        assert "btn-tab-positions" in html_ok
         assert "0.40%" in html_ok
         assert "20% NAV" in html_ok
-        assert "lần sàn" in html_ok
+        assert "T+ TRACKER" in html_ok
 
         # 2. Trạng thái sập độ rộng (Breadth 25.1%: 83 Tăng / 248 Giảm) -> Toàn bộ cột Tín Hiệu AI chuyển sang NGỪNG MUA MỚI
         out_cb = tmp_path / "hud_cb.html"
