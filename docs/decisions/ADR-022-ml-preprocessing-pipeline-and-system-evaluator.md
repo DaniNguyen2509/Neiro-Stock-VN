@@ -49,3 +49,4 @@ Cung cấp công cụ đánh giá 1-click tích hợp:
 - **Tuân thủ Zero-Waste Mandate:** Toàn bộ giải pháp chỉ thêm ~15 KB mã nguồn, không kéo theo gói thư viện nặng.
 - **Cloud-First:** Tập dữ liệu và pipeline tiền xử lý sẵn sàng xuất sang Google Colab để huấn luyện mô hình khi quy mô mẫu đạt chuẩn $\ge 500$.
 - **Test suite:** Bổ sung 8 test case trong `tests/test_ml_preprocessor_and_eval.py`, pass 100%.
+
