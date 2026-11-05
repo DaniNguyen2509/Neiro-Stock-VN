@@ -496,5 +496,5 @@
 {"timestamp": "2026-11-05 09:46:07", "symbol": "PDR", "rank": 2, "score": 39.6, "price": 11.5, "signal_type": "THE_CHE_GOM", "stop_loss": 10.91, "tp1": 12.43, "tp2": 13.02, "rr_ratio": 2.5, "adtv20_billion": 66.1}
 {"timestamp": "2026-11-05 10:16:11", "symbol": "TCX", "rank": 1, "score": 17.5, "price": 28.8, "signal_type": "THE_CHE_GOM", "stop_loss": 26.99, "tp1": 30.5, "tp2": 31.86, "rr_ratio": 2.5, "adtv20_billion": 92.0}
 {"timestamp": "2026-11-05 10:16:11", "symbol": "PDR", "rank": 2, "score": 39.6, "price": 11.5, "signal_type": "THE_CHE_GOM", "stop_loss": 10.91, "tp1": 12.43, "tp2": 13.02, "rr_ratio": 2.5, "adtv20_billion": 66.1}
-{"timestamp": "2026-11-05 10:46:17", "symbol": "TCX", "rank": 1, "score": 17.5, "price": 28.7, "signal_type": "THE_CHE_GOM", "stop_loss": 26.99, "tp1": 30.5, "tp2": 31.86, "rr_ratio": 2.5, "adtv20_billion": 92.0}
-{"timestamp": "2026-11-05 10:46:17", "symbol": "PDR", "rank": 2, "score": 39.6, "price": 11.5, "signal_type": "THE_CHE_GOM", "stop_loss": 10.91, "tp1": 12.43, "tp2": 13.02, "rr_ratio": 2.5, "adtv20_billion": 66.1}
+{"timestamp": "2026-11-05 11:16:08", "symbol": "TCX", "rank": 1, "score": 17.5, "price": 28.7, "signal_type": "THE_CHE_GOM", "stop_loss": 26.99, "tp1": 30.5, "tp2": 31.86, "rr_ratio": 2.5, "adtv20_billion": 92.0}
+{"timestamp": "2026-11-05 11:16:08", "symbol": "PDR", "rank": 2, "score": 39.6, "price": 11.5, "signal_type": "THE_CHE_GOM", "stop_loss": 10.91, "tp1": 12.43, "tp2": 13.02, "rr_ratio": 2.5, "adtv20_billion": 66.1}
