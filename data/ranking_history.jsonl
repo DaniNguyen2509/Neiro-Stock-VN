@@ -1,5 +1,3 @@
-{"timestamp": "2026-10-29 10:46:09", "symbol": "CTS", "rank": 1, "score": 87.5, "price": 22.15, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 21.49, "tp1": 23.14, "tp2": 23.8, "rr_ratio": 2.5, "adtv20_billion": 20.0}
-{"timestamp": "2026-10-29 10:46:09", "symbol": "NKG", "rank": 2, "score": 86.8, "price": 12.45, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 12.08, "tp1": 13.0, "tp2": 13.37, "rr_ratio": 2.5, "adtv20_billion": 44.0}
 {"timestamp": "2026-10-29 10:46:09", "symbol": "VGT", "rank": 3, "score": 62.9, "price": 12.0, "signal_type": "CHO_MUA_CHAN_SONG", "stop_loss": 11.64, "tp1": 12.54, "tp2": 12.9, "rr_ratio": 2.5, "adtv20_billion": 25.0}
 {"timestamp": "2026-10-29 10:46:09", "symbol": "DPR", "rank": 4, "score": 62.5, "price": 39.1, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 37.93, "tp1": 40.86, "tp2": 42.03, "rr_ratio": 2.5, "adtv20_billion": 25.0}
 {"timestamp": "2026-10-29 10:46:09", "symbol": "TCB", "rank": 5, "score": 59.0, "price": 22.45, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 21.78, "tp1": 23.45, "tp2": 24.12, "rr_ratio": 2.5, "adtv20_billion": 334.5}
@@ -498,3 +496,5 @@
 {"timestamp": "2026-11-05 02:40:28", "symbol": "TCX", "rank": 2, "score": 17.5, "price": 28.35, "signal_type": "THE_CHE_GOM", "stop_loss": 26.99, "tp1": 30.5, "tp2": 31.86, "rr_ratio": 2.5, "adtv20_billion": 92.0}
 {"timestamp": "2026-11-05 09:46:07", "symbol": "TCX", "rank": 1, "score": 17.5, "price": 28.7, "signal_type": "THE_CHE_GOM", "stop_loss": 26.99, "tp1": 30.5, "tp2": 31.86, "rr_ratio": 2.5, "adtv20_billion": 92.0}
 {"timestamp": "2026-11-05 09:46:07", "symbol": "PDR", "rank": 2, "score": 39.6, "price": 11.5, "signal_type": "THE_CHE_GOM", "stop_loss": 10.91, "tp1": 12.43, "tp2": 13.02, "rr_ratio": 2.5, "adtv20_billion": 66.1}
+{"timestamp": "2026-11-05 10:16:11", "symbol": "TCX", "rank": 1, "score": 17.5, "price": 28.8, "signal_type": "THE_CHE_GOM", "stop_loss": 26.99, "tp1": 30.5, "tp2": 31.86, "rr_ratio": 2.5, "adtv20_billion": 92.0}
+{"timestamp": "2026-11-05 10:16:11", "symbol": "PDR", "rank": 2, "score": 39.6, "price": 11.5, "signal_type": "THE_CHE_GOM", "stop_loss": 10.91, "tp1": 12.43, "tp2": 13.02, "rr_ratio": 2.5, "adtv20_billion": 66.1}
