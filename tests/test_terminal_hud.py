@@ -132,7 +132,7 @@ def test_terminal_hud_dynamic_synchronization_and_30s_interval(tmp_path: Path):
     # 1. Kiem tra the metric cards co ID semantic de JavaScript dong bo
     assert 'id="card-basis-val"' in content
     assert 'id="card-smart-money-val"' in content
-    assert "Khối Ngoại Ròng (Rổ Top Radar)" in content
+    assert "Khối Ngoại Ròng: Rổ Top vs. Toàn Sàn" in content
     assert 'id="card-breadth-val"' in content
     assert 'id="card-sector-val"' in content
 
@@ -192,5 +192,61 @@ def test_terminal_hud_live_change_negative_sign_and_sync(tmp_path: Path):
     assert "changeEl.innerText = '(-' + pctStr + '%)'" in content
     assert "else if (p > info.ref)" in content
     assert "changeEl.innerText = '(+' + pctStr + '%)'" in content
+
+
+def test_terminal_hud_dual_foreign_flow_top_vs_market(tmp_path: Path):
+    """Kiem thu hien thi cong thuc so sanh dong tien ngoai: Ro Top vs Toan San (Delta Flow & 4 Regimes)."""
+    output_file = tmp_path / "exports" / "test_dual_flow.html"
+    mock_candidates = [
+        FialdaCandidate(
+            symbol="VCK",
+            price=28.1,
+            signal_type="CHO_MUA_CHAN_SONG",
+            entry_low=27.5,
+            entry_high=28.5,
+            stop_loss=26.5,
+            target_1m=32.0,
+            rs_1m=80,
+            composite_rating=85,
+            acc_diss_rating="A",
+            rrg_r=101.0,
+            rrg_m=101.0,
+            foreign_net_value_billion=153.2,
+            ranking_score=88.0,
+            catalyst="Test Dual Flow",
+            adtv20_billion=50.0,
+            liquidity_score=85.0,
+            tp1=30.0,
+            tp2=32.0,
+        )
+    ]
+
+    # Case 1: Ro Top +153.2t, Toan san +50.0t -> SIEU_SONG
+    res_path = generate_terminal_html(
+        output_path=str(output_file),
+        fialda_candidates=mock_candidates,
+        top_n=1,
+        market_foreign_net_billion=50.0,
+    )
+    content = Path(res_path).read_text(encoding="utf-8")
+    assert 'data-market-net="50.0"' in content
+    assert "Top: +153.2t" in content
+    assert "Sàn: +50.0t" in content
+    assert "SIÊU SÓNG ĐỒNG THUẬN" in content
+    assert "+103.2t" in content
+
+    # Case 2: Ro Top +153.2t, Toan san -20.0t -> DAI_CAT_TIM_VANG
+    output_file2 = tmp_path / "exports" / "test_dual_flow_divergence.html"
+    res_path2 = generate_terminal_html(
+        output_path=str(output_file2),
+        fialda_candidates=mock_candidates,
+        top_n=1,
+        market_foreign_net_billion=-20.0,
+    )
+    content2 = Path(res_path2).read_text(encoding="utf-8")
+    assert 'data-market-net="-20.0"' in content2
+    assert "ĐÃI CÁT TÌM VÀNG" in content2
+    assert "+173.2t" in content2
+
 
 

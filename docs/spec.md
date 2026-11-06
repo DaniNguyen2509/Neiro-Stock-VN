@@ -99,7 +99,8 @@ Neiro-Stock-VN/
 │       ├── ADR-015-dashboard-freeze-diagnosis-scheduler-decollision-and-client-resilience.md
 │       ├── ADR-016-external-cron-dispatch-resilience.md
 │       ├── ADR-017-retail-t25-anti-chasing-and-risk-remediation-plan.md
-│       └── ADR-018-api-crawling-resilience-and-schema-alignment.md
+│       ├── ADR-018-api-crawling-resilience-and-schema-alignment.md
+│       └── ADR-025-dual-foreign-flow-top-vs-market-divergence.md
 ├── src/
 │   ├── collector/                # Thu thập dữ liệu TTCK Việt Nam
 │   │   ├── __init__.py
@@ -456,7 +457,7 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 ### Tier 15: Đồng Bộ Hóa Toàn Diện Dashboard & Live Ticker 30 Giây (ADR-012)
 
 1. **Xóa Bỏ Hardcode & Tính Toán Động 4 Thẻ Chỉ Số Header:**
-   - **Khối Ngoại Ròng Rổ Top (Smart Money):** Định danh tường minh `Khối Ngoại Ròng (Rổ Top Radar)` tính tổng mua/bán ròng thực tế của khối ngoại từ danh mục Top cổ phiếu lọc (tránh hiểu lầm với chỉ số Khối ngoại toàn sàn VN-Index trên FireAnt/CTCK); phản ánh chính xác trạng thái ngoại xả nội gom.
+   - **Khối Ngoại Ròng: Rổ Top vs. Toàn Sàn (Dual Foreign Flow & Divergence):** Định danh tường minh `Khối Ngoại Ròng: Rổ Top vs. Toàn Sàn`, hiển thị song hành số liệu mua ròng Rổ Top ($\text{Net}_{\text{Top}}$) và Toàn sàn VN-Index ($\text{Net}_{\text{Market}}$), chuẩn hóa độ lệch $\Delta \text{Flow} = \text{Net}_{\text{Top}} - \text{Net}_{\text{Market}}$ và phân loại tự động 4 trạng thái thị trường (`SIÊU SÓNG ĐỒNG THUẬN`, `ĐÃI CÁT TÌM VÀNG`, `KÉO TRỤ PHÂN HÓA`, `ÁP LỰC XẢ DIỆN RỘNG`).
    - **Độ Rộng Danh Mục (Momentum Breadth):** Tính tỷ lệ cổ phiếu giữ xung lực dẫn dắt (RS/Composite $\ge 70$).
    - **Ngành Dẫn Dắt (Leading Sector):** Gom nhóm ngành tự động dựa trên tọa độ RRG thực tế và số lượng ứng viên dẫn đầu.
    - **Gán ID Semantic:** Cung cấp ID cho tất cả thẻ chỉ số để JavaScript cập nhật thời gian thực.

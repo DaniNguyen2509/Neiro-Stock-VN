@@ -30,6 +30,7 @@ def generate_terminal_html(
     market_breadth: Optional[Dict[str, Any]] = None,
     scanner: Optional[FialdaScanner] = None,
     active_signals: Optional[Dict[str, Any]] = None,
+    market_foreign_net_billion: Optional[float] = None,
 ) -> str:
     """Sinh mã nguồn giao diện Web Terminal tương tác độc lập (Continuous Dashboard)."""
     scanner = scanner or FialdaScanner()
@@ -373,9 +374,25 @@ def generate_terminal_html(
     }
     regime_vn = regime_map.get(basis.regime, basis.regime)
 
-    # 1. Tinh dong tien Ca map (Foreign Net Value) dong bo that tu danh muc Top (Khong bia dat Tu doanh)
+    # 1. Tinh dong tien Ca map (Foreign Net Value) dong bo that tu danh muc Top & So sanh Toan San
     total_cands = len(fialda_candidates) if fialda_candidates else 0
     total_foreign = sum(getattr(c, "foreign_net_value_billion", 0.0) for c in fialda_candidates) if fialda_candidates else 0.0
+
+    # Trich xuat dong tien khoi ngoai toan san tu market_breadth
+    if market_foreign_net_billion is None and isinstance(market_breadth, dict):
+        raw_m_fnet = market_breadth.get("foreignNetValue")
+        if raw_m_fnet is None and (
+            market_breadth.get("foreignBuyValue") is not None or market_breadth.get("foreignSellValue") is not None
+        ):
+            raw_m_fnet = float(market_breadth.get("foreignBuyValue") or 0.0) - float(
+                market_breadth.get("foreignSellValue") or 0.0
+            )
+        if raw_m_fnet is not None:
+            raw_f_val = float(raw_m_fnet)
+            market_foreign_net_billion = round(raw_f_val / 1e9, 1) if abs(raw_f_val) > 1e6 else round(raw_f_val, 1)
+
+    m_net_str = f"{market_foreign_net_billion:.1f}" if market_foreign_net_billion is not None else "N/A"
+
     absorbed_cnt = sum(
         1
         for c in (fialda_candidates or [])
@@ -387,18 +404,32 @@ def generate_terminal_html(
         for c in (fialda_candidates or [])
         if getattr(c, "flow_regime", "") == "RUI_RO_XA" or getattr(c, "acc_diss_rating", "C") in ("D", "E")
     )
-    if total_foreign >= 0:
-        smart_money_val = f"+{total_foreign:.1f} Tỷ VND"
-        smart_money_color = "#00e676"
-        smart_money_sub = f"Rổ Top: Khối ngoại mua ròng • {absorbed_cnt}/{max(total_cands, 1)} mã giữ cấu trúc tích lũy"
-    elif absorbed_cnt > dist_cnt and not circuit_breaker_active:
-        smart_money_val = f"{total_foreign:.1f} Tỷ VND"
-        smart_money_color = "#ffb300"
-        smart_money_sub = f"Rổ Top: Ngoại bán ròng • Dòng tiền Nội gom cân hàng ({absorbed_cnt}/{max(total_cands, 1)} mã nền A/B)"
+
+    if market_foreign_net_billion is not None:
+        delta_flow = total_foreign - market_foreign_net_billion
+        smart_money_val = f'Top: {total_foreign:+.1f}t <span style="font-size:13px;color:#64748b;font-weight:normal;">|</span> <span style="font-size:13px;color:#94a3b8;">Sàn: {market_foreign_net_billion:+.1f}t</span>'
+        smart_money_color = "#00e676" if total_foreign >= 0 else "#ff5252"
+        if total_foreign > 0 and market_foreign_net_billion <= 0:
+            smart_money_sub = f'🟢 ĐÃI CÁT TÌM VÀNG • Độ lệch: <b style="color:#00e676;">{delta_flow:+.1f}t</b> gom Top'
+        elif total_foreign > 0 and market_foreign_net_billion > 0:
+            smart_money_sub = f'🟢🟢 SIÊU SÓNG ĐỒNG THUẬN • Độ lệch: <b style="color:#00e676;">{delta_flow:+.1f}t</b>'
+        elif total_foreign <= 0 and market_foreign_net_billion > 0:
+            smart_money_sub = f'🟡 KÉO TRỤ PHÂN HÓA • Rổ Top bị xả ({delta_flow:+.1f}t)'
+        else:
+            smart_money_sub = f'🔴 ÁP LỰC XẢ DIỆN RỘNG • Độ lệch: {delta_flow:+.1f}t'
     else:
-        smart_money_val = f"{total_foreign:.1f} Tỷ VND"
-        smart_money_color = "#ff5252"
-        smart_money_sub = f"Rổ Top: Khối ngoại bán ròng • Cảnh báo {dist_cnt}/{max(total_cands, 1)} mã áp lực xả (Thận trọng T+2.5)"
+        if total_foreign >= 0:
+            smart_money_val = f"+{total_foreign:.1f} Tỷ VND"
+            smart_money_color = "#00e676"
+            smart_money_sub = f"Rổ Top: Khối ngoại mua ròng • {absorbed_cnt}/{max(total_cands, 1)} mã giữ cấu trúc tích lũy"
+        elif absorbed_cnt > dist_cnt and not circuit_breaker_active:
+            smart_money_val = f"{total_foreign:.1f} Tỷ VND"
+            smart_money_color = "#ffb300"
+            smart_money_sub = f"Rổ Top: Ngoại bán ròng • Dòng tiền Nội gom cân hàng ({absorbed_cnt}/{max(total_cands, 1)} mã nền A/B)"
+        else:
+            smart_money_val = f"{total_foreign:.1f} Tỷ VND"
+            smart_money_color = "#ff5252"
+            smart_money_sub = f"Rổ Top: Khối ngoại bán ròng • Cảnh báo {dist_cnt}/{max(total_cands, 1)} mã áp lực xả (Thận trọng T+2.5)"
 
     # 2. Do rong danh muc sieu co phieu (Market Breadth / Momentum)
     if total_cands > 0:
@@ -796,8 +827,8 @@ def generate_terminal_html(
             <div id="card-basis-sub" style="font-size:11px;color:#78909c;margin-top:4px;">Trạng thái: {regime_vn}</div>
         </div>
         <div class="card" id="card-smart-money-container">
-            <div class="card-title">Khối Ngoại Ròng (Rổ Top Radar)</div>
-            <div class="card-value" id="card-smart-money-val" style="color:{smart_money_color};">{smart_money_val}</div>
+            <div class="card-title">Khối Ngoại Ròng: Rổ Top vs. Toàn Sàn</div>
+            <div class="card-value" id="card-smart-money-val" data-market-net="{m_net_str}" style="color:{smart_money_color};">{smart_money_val}</div>
             <div id="card-smart-money-sub" style="font-size:11px;color:#78909c;margin-top:4px;">{smart_money_sub}</div>
         </div>
         <div class="card" id="card-breadth-container">
@@ -1253,15 +1284,35 @@ def generate_terminal_html(
                     const smValEl = document.getElementById('card-smart-money-val');
                     const smSubEl = document.getElementById('card-smart-money-sub');
                     if (smValEl) {{
-                        const sign = netForeignBillion >= 0 ? '+' : '';
-                        smValEl.innerText = sign + netForeignBillion.toFixed(1) + ' Tỷ VND';
-                        smValEl.style.color = netForeignBillion >= 0 ? '#00e676' : '#ffb300';
-                    }}
-                    if (smSubEl) {{
-                        if (netForeignBillion < 0) {{
-                            smSubEl.innerText = 'Rổ Top: Khối ngoại bán ròng • Kiểm tra cột Tích Luỹ A/B';
+                        const topSign = netForeignBillion >= 0 ? '+' : '';
+                        const mNetAttr = smValEl.getAttribute('data-market-net');
+                        if (mNetAttr && mNetAttr !== 'N/A') {{
+                            const mNet = Number(mNetAttr);
+                            const mSign = mNet >= 0 ? '+' : '';
+                            smValEl.innerHTML = '<span style="color:' + (netForeignBillion >= 0 ? '#00e676' : '#ff5252') + '">Top: ' + topSign + netForeignBillion.toFixed(1) + 't</span> <span style="font-size:13px;color:#64748b;font-weight:normal;">|</span> <span style="font-size:13px;color:#94a3b8;">Sàn: ' + mSign + mNet.toFixed(1) + 't</span>';
+                            if (smSubEl) {{
+                                const deltaFlow = netForeignBillion - mNet;
+                                const deltaSign = deltaFlow >= 0 ? '+' : '';
+                                if (netForeignBillion > 0 && mNet <= 0) {{
+                                    smSubEl.innerHTML = '<span style="color:#38bdf8;font-weight:bold;">🟢 ĐÃI CÁT TÌM VÀNG</span> • Độ lệch: <b style="color:#00e676;">' + deltaSign + deltaFlow.toFixed(1) + 't</b> gom Top';
+                                }} else if (netForeignBillion > 0 && mNet > 0) {{
+                                    smSubEl.innerHTML = '<span style="color:#00e676;font-weight:bold;">🟢🟢 SIÊU SÓNG ĐỒNG THUẬN</span> • Độ lệch: <b style="color:#00e676;">' + deltaSign + deltaFlow.toFixed(1) + 't</b>';
+                                }} else if (netForeignBillion <= 0 && mNet > 0) {{
+                                    smSubEl.innerHTML = '<span style="color:#ffb300;font-weight:bold;">🟡 KÉO TRỤ PHÂN HÓA</span> • Rổ Top bị xả (' + deltaSign + deltaFlow.toFixed(1) + 't)';
+                                }} else {{
+                                    smSubEl.innerHTML = '<span style="color:#ff5252;font-weight:bold;">🔴 ÁP LỰC XẢ DIỆN RỘNG</span> • Độ lệch: ' + deltaSign + deltaFlow.toFixed(1) + 't';
+                                }}
+                            }}
                         }} else {{
-                            smSubEl.innerText = 'Rổ Top: Khối ngoại mua ròng trực tiếp (Live VPS)';
+                            smValEl.innerText = topSign + netForeignBillion.toFixed(1) + ' Tỷ VND';
+                            smValEl.style.color = netForeignBillion >= 0 ? '#00e676' : '#ff5252';
+                            if (smSubEl) {{
+                                if (netForeignBillion < 0) {{
+                                    smSubEl.innerText = 'Rổ Top: Khối ngoại bán ròng • Cảnh báo áp lực xả';
+                                }} else {{
+                                    smSubEl.innerText = 'Rổ Top: Khối ngoại mua ròng trực tiếp (Live VPS)';
+                                }}
+                            }}
                         }}
                     }}
                 }}
