@@ -144,14 +144,14 @@ class VNMarketClient:
                     raw_val = float(idx_data.get("totalValue") or 0.0)
                     turnover_bil = round(raw_val / 1e9, 2) if raw_val > 1e6 else round(raw_val, 2)
                     raw_f_net = idx_data.get("foreignNetValue")
-                    if raw_f_net is None and (
-                        idx_data.get("foreignBuyValue") is not None or idx_data.get("foreignSellValue") is not None
-                    ):
-                        raw_f_net = float(idx_data.get("foreignBuyValue") or 0.0) - float(
-                            idx_data.get("foreignSellValue") or 0.0
-                        )
+                    if raw_f_net is None:
+                        fb = idx_data.get("totalForeignBuyValue") if idx_data.get("totalForeignBuyValue") is not None else idx_data.get("foreignBuyValue")
+                        fs = idx_data.get("totalForeignSellValue") if idx_data.get("totalForeignSellValue") is not None else idx_data.get("foreignSellValue")
+                        if fb is not None or fs is not None:
+                            raw_f_net = float(fb or 0.0) - float(fs or 0.0)
                     if raw_f_net is not None:
-                        foreign_bil = round(float(raw_f_net) / 1e9, 2)
+                        raw_f_val = float(raw_f_net)
+                        foreign_bil = round(raw_f_val / 1e9, 2) if abs(raw_f_val) > 1e6 else round(raw_f_val, 2)
                 prop_summary = scanner.get_prop_trading_summary()
                 prop_bil = round(float(prop_summary.get("market_net_billion") or 0.0), 2)
         except Exception:

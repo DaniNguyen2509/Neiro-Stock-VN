@@ -381,12 +381,11 @@ def generate_terminal_html(
     # Trich xuat dong tien khoi ngoai toan san tu market_breadth
     if market_foreign_net_billion is None and isinstance(market_breadth, dict):
         raw_m_fnet = market_breadth.get("foreignNetValue")
-        if raw_m_fnet is None and (
-            market_breadth.get("foreignBuyValue") is not None or market_breadth.get("foreignSellValue") is not None
-        ):
-            raw_m_fnet = float(market_breadth.get("foreignBuyValue") or 0.0) - float(
-                market_breadth.get("foreignSellValue") or 0.0
-            )
+        if raw_m_fnet is None:
+            fb = market_breadth.get("totalForeignBuyValue") if market_breadth.get("totalForeignBuyValue") is not None else market_breadth.get("foreignBuyValue")
+            fs = market_breadth.get("totalForeignSellValue") if market_breadth.get("totalForeignSellValue") is not None else market_breadth.get("foreignSellValue")
+            if fb is not None or fs is not None:
+                raw_m_fnet = float(fb or 0.0) - float(fs or 0.0)
         if raw_m_fnet is not None:
             raw_f_val = float(raw_m_fnet)
             market_foreign_net_billion = round(raw_f_val / 1e9, 1) if abs(raw_f_val) > 1e6 else round(raw_f_val, 1)
