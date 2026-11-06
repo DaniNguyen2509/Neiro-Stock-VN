@@ -125,8 +125,8 @@
 - **[VIX] Theo dấu dòng tiền cá mập 05/11: VIX hút hơn 452 tỷ đồng vốn ngoại, FPT bị xả đồng loạt** (2026-11-05 • *FILI*)
   > Phiên 05/11, khối ngoại bán ròng hơn 232 tỷ đồng, phiên thứ 10 liên tiếp, trong khi tự doanh mua ròng gần 254 tỷ đồng. VIX là mã được khối ngoại mua mạnh nhất, FPT bị xả đồng loạt.
 - 📅 **[VIX - SỰ KIỆN]** Ngày: `Gần đây` — *Giao dịch bổ sung - 122,500,761 CP*
-- **[HDC] HDC: Báo cáo kết quả giao dịch cổ phiếu của người nội bộ Đoàn Hữu Hà Vinh, Đoàn Hữu Thuận** (2026-11-06 • *HOSE*)
-  > Hai người nội bộ của HDC là Đoàn Hữu Hà Vinh và Đoàn Hữu Thuận vừa báo cáo kết quả giao dịch cổ phiếu của mình tại công ty.
+- **[HDC] HDC: Chủ tịch Hodeco cùng hai con trai mua thành công cổ phiếu HDC như đăng ký** (2026-11-06 • *An ninh tiền tệ*)
+  > Chủ tịch HĐQT Hodeco Đoàn Hữu Thuận cùng hai người con trai là Phó Chủ tịch Đoàn Hữu Hà Vinh và Đoàn Hữu Hà An vừa mua thêm cổ phiếu HDC theo đăng ký, nâng tỷ lệ sở hữu của nhóm.
 - 📅 **[HDC - SỰ KIỆN]** Ngày: `2026-10-09` — *HDC: Thông báo giao dịch cổ phiếu của người có liên quan đến người nội bộ Đoàn Hữu Hà An*
 
 ---
