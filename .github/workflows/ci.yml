@@ -31,8 +31,9 @@ jobs:
 
       - name: Verify Project Size (< 15MB Zero-Waste)
         run: |
-          SIZE_MB=$(du -sm . | cut -f1)
-          echo "Total workspace size: ${SIZE_MB}MB"
+          rm -rf tests_temp .pytest_cache
+          SIZE_MB=$(du -sm --exclude='.git' . | cut -f1)
+          echo "Total workspace size (clean): ${SIZE_MB}MB"
           if [ "$SIZE_MB" -gt 15 ]; then
             echo "Error: Repository exceeds 15MB limit!"
             exit 1

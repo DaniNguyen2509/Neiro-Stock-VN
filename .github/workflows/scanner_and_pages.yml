@@ -89,10 +89,11 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main || true
           git add reports/latest_scan.md data/ranking_history.jsonl data/active_signals.jsonl data/signal_history_ml.jsonl data/advisory_scorecard.md data/ml_signals_dataset.csv exports/index.html exports/404.html || true
           if git diff --staged --quiet; then
             echo "No changes in reports/data to commit."
           else
             git commit -m "chore(report): auto-update Top 5 Super Stocks, signal ledger and ML dataset [skip ci]"
-            git push origin main
+            git push origin main || (git pull --rebase origin main && git push origin main)
           fi
