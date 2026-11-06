@@ -390,15 +390,15 @@ def generate_terminal_html(
     if total_foreign >= 0:
         smart_money_val = f"+{total_foreign:.1f} Tỷ VND"
         smart_money_color = "#00e676"
-        smart_money_sub = f"Khối ngoại mua ròng • {absorbed_cnt}/{max(total_cands, 1)} mã giữ cấu trúc tích lũy"
+        smart_money_sub = f"Rổ Top: Khối ngoại mua ròng • {absorbed_cnt}/{max(total_cands, 1)} mã giữ cấu trúc tích lũy"
     elif absorbed_cnt > dist_cnt and not circuit_breaker_active:
         smart_money_val = f"{total_foreign:.1f} Tỷ VND"
         smart_money_color = "#ffb300"
-        smart_money_sub = f"Ngoại bán ròng • Dòng tiền Nội gom cân hàng ({absorbed_cnt}/{max(total_cands, 1)} mã nền A/B)"
+        smart_money_sub = f"Rổ Top: Ngoại bán ròng • Dòng tiền Nội gom cân hàng ({absorbed_cnt}/{max(total_cands, 1)} mã nền A/B)"
     else:
         smart_money_val = f"{total_foreign:.1f} Tỷ VND"
         smart_money_color = "#ff5252"
-        smart_money_sub = f"Khối ngoại bán ròng • Cảnh báo {dist_cnt}/{max(total_cands, 1)} mã áp lực xả (Thận trọng T+2.5)"
+        smart_money_sub = f"Rổ Top: Khối ngoại bán ròng • Cảnh báo {dist_cnt}/{max(total_cands, 1)} mã áp lực xả (Thận trọng T+2.5)"
 
     # 2. Do rong danh muc sieu co phieu (Market Breadth / Momentum)
     if total_cands > 0:
@@ -796,7 +796,7 @@ def generate_terminal_html(
             <div id="card-basis-sub" style="font-size:11px;color:#78909c;margin-top:4px;">Trạng thái: {regime_vn}</div>
         </div>
         <div class="card" id="card-smart-money-container">
-            <div class="card-title">Dòng Tiền Cá Mập Định Chế</div>
+            <div class="card-title">Khối Ngoại Ròng (Rổ Top Radar)</div>
             <div class="card-value" id="card-smart-money-val" style="color:{smart_money_color};">{smart_money_val}</div>
             <div id="card-smart-money-sub" style="font-size:11px;color:#78909c;margin-top:4px;">{smart_money_sub}</div>
         </div>
@@ -1259,9 +1259,9 @@ def generate_terminal_html(
                     }}
                     if (smSubEl) {{
                         if (netForeignBillion < 0) {{
-                            smSubEl.innerText = 'Khối ngoại bán ròng trực tiếp trên rổ Top • Kiểm tra cột Tích Luỹ A/B';
+                            smSubEl.innerText = 'Rổ Top: Khối ngoại bán ròng • Kiểm tra cột Tích Luỹ A/B';
                         }} else {{
-                            smSubEl.innerText = 'Khối ngoại mua ròng trực tiếp trên rổ Top (Live VPS)';
+                            smSubEl.innerText = 'Rổ Top: Khối ngoại mua ròng trực tiếp (Live VPS)';
                         }}
                     }}
                 }}

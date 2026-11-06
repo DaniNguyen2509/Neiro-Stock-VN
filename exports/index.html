@@ -136,9 +136,11 @@
             <div id="card-basis-sub" style="font-size:11px;color:#78909c;margin-top:4px;">Trạng thái: Cân Bằng Bình Thường</div>
         </div>
         <div class="card" id="card-smart-money-container">
-            <div class="card-title">Dòng Tiền Cá Mập Định Chế</div>
+        <div class="card" id="card-smart-money-container">
+            <div class="card-title">Khối Ngoại Ròng (Rổ Top Radar)</div>
             <div class="card-value" id="card-smart-money-val" style="color:#00e676;">+165.8 Tỷ VND</div>
-            <div id="card-smart-money-sub" style="font-size:11px;color:#78909c;margin-top:4px;">Khối ngoại mua ròng • 0/7 mã giữ cấu trúc tích lũy</div>
+            <div id="card-smart-money-sub" style="font-size:11px;color:#78909c;margin-top:4px;">Rổ Top: Khối ngoại mua ròng • 0/7 mã giữ cấu trúc tích lũy</div>
+        </div>
         </div>
         <div class="card" id="card-breadth-container">
             <div class="card-title">Độ Rộng Danh Mục Dẫn Dắt</div>
@@ -2315,9 +2317,9 @@
                     }
                     if (smSubEl) {
                         if (netForeignBillion < 0) {
-                            smSubEl.innerText = 'Khối ngoại bán ròng trực tiếp trên rổ Top • Kiểm tra cột Tích Luỹ A/B';
+                            smSubEl.innerText = 'Rổ Top: Khối ngoại bán ròng • Kiểm tra cột Tích Luỹ A/B';
                         } else {
-                            smSubEl.innerText = 'Khối ngoại mua ròng trực tiếp trên rổ Top (Live VPS)';
+                            smSubEl.innerText = 'Rổ Top: Khối ngoại mua ròng trực tiếp (Live VPS)';
                         }
                     }
                 }

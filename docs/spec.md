@@ -456,7 +456,7 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 ### Tier 15: Đồng Bộ Hóa Toàn Diện Dashboard & Live Ticker 30 Giây (ADR-012)
 
 1. **Xóa Bỏ Hardcode & Tính Toán Động 4 Thẻ Chỉ Số Header:**
-   - **Dòng Tiền Cá Mập (Smart Money):** Tính tổng mua/bán ròng thực tế của khối ngoại và tự doanh từ danh mục Top cổ phiếu; phản ánh chính xác trạng thái ngoại xả nội gom thay vì số liệu cứng.
+   - **Khối Ngoại Ròng Rổ Top (Smart Money):** Định danh tường minh `Khối Ngoại Ròng (Rổ Top Radar)` tính tổng mua/bán ròng thực tế của khối ngoại từ danh mục Top cổ phiếu lọc (tránh hiểu lầm với chỉ số Khối ngoại toàn sàn VN-Index trên FireAnt/CTCK); phản ánh chính xác trạng thái ngoại xả nội gom.
    - **Độ Rộng Danh Mục (Momentum Breadth):** Tính tỷ lệ cổ phiếu giữ xung lực dẫn dắt (RS/Composite $\ge 70$).
    - **Ngành Dẫn Dắt (Leading Sector):** Gom nhóm ngành tự động dựa trên tọa độ RRG thực tế và số lượng ứng viên dẫn đầu.
    - **Gán ID Semantic:** Cung cấp ID cho tất cả thẻ chỉ số để JavaScript cập nhật thời gian thực.

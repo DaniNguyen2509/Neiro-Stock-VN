@@ -132,12 +132,13 @@ def test_terminal_hud_dynamic_synchronization_and_30s_interval(tmp_path: Path):
     # 1. Kiem tra the metric cards co ID semantic de JavaScript dong bo
     assert 'id="card-basis-val"' in content
     assert 'id="card-smart-money-val"' in content
+    assert "Khối Ngoại Ròng (Rổ Top Radar)" in content
     assert 'id="card-breadth-val"' in content
     assert 'id="card-sector-val"' in content
 
     # 2. Kiem tra tinh toan dong Smart Money (tong -15.4 + -8.6 = -24.0 ty)
     assert "-24.0 Tỷ VND" in content
-    assert "Ngoại bán ròng • Dòng tiền Nội gom cân hàng" in content
+    assert "Rổ Top: Ngoại bán ròng • Dòng tiền Nội gom cân hàng" in content
 
     # 3. Kiem tra tinh toan dong Nganh Dan Dat tu sector map
     assert "CHỨNG KHOÁN & BẤT ĐỘNG SẢN" in content
