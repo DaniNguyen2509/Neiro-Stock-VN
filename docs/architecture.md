@@ -129,7 +129,8 @@ flowchart TD
   - Khớp lệnh tại $t+1$ (giá Open/ATO) để triệt tiêu hoàn toàn Look-ahead Bias.
 - **`point_in_time.py` (`PointInTimeDatabase`):** Đảm bảo BCTC chỉ được đưa vào tính Piotroski F-score và CAMEL sau ngày nộp chính thức (`filing_date`), triệt tiêu Point-in-Time Bias.
 - **`metrics.py`:** Bộ công thức toán học đo lường hiệu suất định chế: CAGR, Sharpe, Sortino, Max Drawdown, Calmar, Win Rate, Profit Factor, Walk-Forward Efficiency (WFE).
-- **`walk_forward.py` (`WalkForwardCoordinator`):** Điều phối kiểm định độc lập giữa tập In-Sample (2021-2023) và Out-of-Sample (2024-2026), tính tỷ số WFE chứng minh hệ thống không bị Overfitting.
+- **`historical_data.py` (`fetch_real_historical_market_data_2024_2026` — ADR-026):** Tải dữ liệu OHLCV 2023–2026 từ Entrade API trực tiếp trên RAM, căn chỉnh trục ngày VNINDEX, tính OFI và ref_price causal, 0 byte file rác.
+- **`walk_forward.py` (`WalkForwardCoordinator` — ADR-026):** Điều phối kiểm định độc lập giữa tập In-Sample (2021-2023) và Out-of-Sample (2024-2026); hỗ trợ bóc tách từng năm 2024, 2025, 2026 và toàn kỳ 3 năm kết hợp quy tắc ADR-024 (`True Low SL`, `TP1 Breakeven`, `Time-Stop T+7`).
 
 ### 2.7. Tầng Chuẩn Hóa & Thẩm Định Machine Learning (`src/ml/` — ADR-022)
 - **`preprocessor.py` (`MLSignalPreprocessor`):** Bộ tiền xử lý định lượng thuần Python/NumPy/Pandas siêu nhẹ (< 15KB):

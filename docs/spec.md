@@ -617,22 +617,23 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 
 ---
 
-### Tier 26 [ACCEPTED - ADR-024]: Kiểm Soát Cắt Lỗ Theo Đáy Chu Kỳ Thực Tế (True Holding-Period Low Stop Loss Tracking) & Cơ Chế Tất Toán Thoát Vị Thế Hết Sóng (Time-Stop Capital Rotation T+7)
+### Tier 27 [ACCEPTED - ADR-026]: Kiểm Định Lịch Sử Thực Chiến 3 Năm (2024 - 2026) Không Nhìn Trước Dữ Liệu (In-Memory Multi-Year Backtesting Engine with Zero Look-Ahead & Zero-Waste)
 
-> **Trạng thái:** `ACCEPTED & IMPLEMENTED (100% PASSING)` (xem [`ADR-024`](decisions/ADR-024-true-low-stop-loss-and-time-stop-rotation.md), test: `tests/test_true_low_stop_loss_and_timeout.py`).
+> **Trạng thái:** `ACCEPTED & IMPLEMENTED (100% PASSING)` (xem [`ADR-026`](decisions/ADR-026-real-historical-backtesting-2024-2026-zero-lookahead.md), test: `tests/test_backtest_2024_2026_zero_lookahead.py`).
 
-1. **Kiểm Soát Cắt Lỗ Đáy Chu Kỳ (ADR-024 True Low Stop Loss):**
-   - Đánh giá vi phạm Stop Loss dựa trên đáy thấp nhất trong toàn bộ chu kỳ nắm giữ `effective_low = min(cur_price, low_price, min_price_reached)` thay vì chỉ so sánh với snapshot giá tức thời `cur_price` mỗi 30 phút.
-   - Triệt tiêu 100% thiên kiến sống sót (Survivorship Bias) và lỗi nhận diện lãi ảo (như trường hợp VCI rơi xuống đáy nến 18.05 vi phạm Stop 18.58 trong đợt điều chỉnh nhưng khi hồi lại 20.25 thì bot báo nhầm TP1).
-   - Tự động chốt trạng thái `STOPPED_OUT` bất biến (`is_closed = True`, `outcome_label = "STOP_LOSS"`) ngay khi đáy chu kỳ chạm ngưỡng cắt lỗ.
-2. **Quy Tắc Trailing Stop Hòa Vốn Hậu TP1:**
-   - Khi vị thế chạm TP1, Stop Loss được tự động dời lên giá vào ban đầu (`entry_orig`) để bảo toàn vốn cho 50% vị thế còn lại.
-   - Cơ chế dừng lỗ hòa vốn áp dụng theo thị giá và đáy phiên hiện tại (`current_tick_low < cur_stop`), chống nhầm lẫn với giá nến $T_0$ lúc mở mua.
-3. **Cơ Chế Tất Toán Thoát Vị Thế Hết Sóng (Time-Stop Capital Rotation T+7):**
-   - Vị thế nắm giữ $\ge 7$ phiên giao dịch thực tế (`trading_days >= 7`) mà chưa chạm TP1 ($PnL < +3.0\%$) sẽ được kích hoạt tất toán chủ động (`status = "TIME_OUT"`, `outcome_label = "TIME_OUT"`, `is_closed = True`).
-   - Giải phóng và thu hồi sức mua để luân chuyển dòng vốn sang các cơ hội mới bứt phá chân sóng, không để vốn bị chôn chân trong các cổ phiếu đi ngang cạn kiệt thanh khoản.
-4. **Phân Luồng Hiển Thị Bảng Sổ Cái & Khắc Phục "Rối Nùi" Danh Mục (Anti-Clutter UI):**
-   - Bảng Sổ cái vị thế Tab 2 phân lập tách bạch: Bảng chính chỉ hiển thị các mã đang nắm giữ thực chiến còn hiệu lực (tinh gọn 12 mã).
-   - Toàn bộ các mã đã đóng (`TP2_REACHED`, `STOPPED_OUT`, `TIME_OUT`) được đưa vào ngăn collapsible lưu trữ lịch sử với lý do đóng chi tiết minh bạch (`Chạm đáy chu kỳ {low} <= Stop {sl}`, `Tất toán cơ cấu danh mục sau {days} phiên`).
+1. **Nạp Dữ Liệu Lịch Sử Thật Trực Tiếp Trên RAM (In-Memory Zero-Waste):**
+   - Kéo trực tiếp chuỗi nến ngày (`1D`) từ API công khai DNSE Entrade cho `VNINDEX` và rổ 30–40 cổ phiếu thanh khoản lớn từ `01/10/2023` đến `08/11/2026` (772 phiên).
+   - Q4/2023 (65 phiên) đóng vai trò Warm-Up Buffer để tính sẵn MA20, ATR14, ADTV20, Volume Profile trước ngày `02/01/2024`.
+   - Xử lý 100% trên RAM, 0 byte dữ liệu lưu ra ổ cứng (bảo toàn Zero-Waste `< 15MB`).
+2. **5 Chốt Chặn Toán Học Chống Look-Ahead (Zero Look-Ahead Invariants):**
+   - **Khớp lệnh trễ Next-Bar Open:** Tín hiệu đóng phiên $t$ (`bar.close`) chỉ khớp tại giá mở cửa phiên $t+1$ (`bar.open`). Hủy lệnh nếu nhảy Gap $> 2.5 \times \text{ATR}_{14}$ hoặc kịch trần.
+   - **Strict Causal Truncation Proof:** Mọi chỉ báo tại ngày $t$ chỉ dùng dữ liệu $\le t$, kiểm chứng bằng bài test cắt cụt dữ liệu tại $t_{\text{mid}}$ đối chiếu trùng khớp 100% NAV và Trade Records.
+   - **Point-in-Time BCTC:** Báo cáo tài chính Quý $Q$ chỉ được mở khóa sau ngày nộp chính thức (`filing_date`: Q1 ngày 28/04, Q2 ngày 30/07, Q3 ngày 30/10, Q4 ngày 30/01 năm sau).
+   - **Ràng buộc T+2.5 & Khóa Sàn:** Mua tại $T_0$ chỉ bán được từ chiều $T+2$; nếu đóng cửa nằm sàn (`bar.close <= floor_price`), lệnh bán bị khóa kẹt.
+   - **Bộ Quy Tắc ADR-024:** Khớp cắt lỗ theo đáy thật `bar.low`, nâng Stop Loss hòa vốn tại TP1 (`1.5R`), và tất toán xoay vòng vốn `Time-Stop T+7` nếu lãi $< +3.0\%$.
+3. **Phân rã Kết quả Từng Năm & CLI Trực tiếp:**
+   - Cung cấp phương thức `coord.run_multi_year_2024_2026()` bóc tách hiệu suất từng năm `2024`, `2025`, `2026` và tổng kỳ 3 năm.
+   - CLI: `python -m src.backtesting.walk_forward --real-data`.
+
 
 

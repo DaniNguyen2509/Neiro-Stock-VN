@@ -118,10 +118,13 @@ python -m src.sector_engine.rrg_rotation
 # 5. Quét tự động Top 20 Siêu cổ phiếu chân sóng, BCTC 4 quý & Tin tức (Fialda VIP Expert Scanner)
 python -m src.collector.fialda_scanner --top 20 --save-report reports/latest_scan.md --generate-terminal
 
-# 6. Chạy Kiểm Định Quá Khứ Walk-Forward T+2.5 & Xuất Bản Dashboard Web Đa Tab
+# 6. Chạy Kiểm Định Lịch Sử Thực Chiến 3 Năm (2024 - 2026) Chống Look-Ahead (ADR-026)
+python -m src.backtesting.walk_forward --real-data
+
+# 7. Xuất Bản Dashboard Web Đa Tab
 python -m src.hud.terminal --output exports/index.html
 
-# 7. Chạy chế độ Watcher ngầm trên máy cá nhân (Tự động cập nhật 5 phút/lần)
+# 8. Chạy chế độ Watcher ngầm trên máy cá nhân (Tự động cập nhật 5 phút/lần)
 python -m src.hud.terminal --watch --interval 300
 ```
 

@@ -155,6 +155,11 @@ class BacktestConfig:
     position_allocation_pct: float = 0.20      # 20% NAV moi ma
     min_holding_bars: int = 2                  # T+2.5: Bar 0 mua -> Bar 2 chieu moi duoc ban
     risk_free_rate_annual: float = 0.045       # Lai suat phi rui ro 4.5%/nam (Trai phieu CP 10Y)
+    min_adtv_billion: float = 0.0              # Nguong loc thanh khoan toi thieu (ty VND)
+    take_profit_pct: float = 12.0              # Muc tieu chot loi (% lai, mac dinh 12.0% cho chu ky T+2.5-1M)
+    enable_time_stop_t7: bool = True           # Tat toan xoay vong von sau 7 phien neu lai < 3% (ADR-024)
+    enable_tp1_breakeven: bool = True          # Nang stop loss hoa von khi cham TP1 (1.5R)
+    cooldown_bars_after_sl: int = 3            # So phien cooldown sau khi vi pham cat lo
 
 
 @dataclass
