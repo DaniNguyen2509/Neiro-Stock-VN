@@ -30,3 +30,4 @@ Khi chạy kiểm định không nhìn trước dữ liệu trên chuỗi giá t
 - Tỷ lệ lệnh thoát qua `TIME_STOP_T7` đạt $\sim 45\% - 50\%$, phản ánh đặc tính thị trường chứng khoán Việt Nam thường xuyên đi ngang tích lũy sau các cây nến bùng nổ giả.
 - Cơ chế `True Low SL` và `Khóa Sàn Trắng Bên Mua` phản ánh chân thực các rủi ro kẹt hàng T+2.5 thực tế của nhà đầu tư nhỏ lẻ.
 - Repository không phát sinh bất kỳ file rác nào, hoàn toàn sạch sẽ và tuân thủ Zero-Waste.
+

@@ -128,3 +128,4 @@ def test_multi_year_simulation_and_adr024_rules():
     report_str = format_backtest_report_text("TEST REPORT 3Y", res_3y)
     assert "Lợi nhuận ròng:" in report_str
     assert "CAGR" in report_str
+
