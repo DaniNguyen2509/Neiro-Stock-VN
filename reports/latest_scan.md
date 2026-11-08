@@ -122,8 +122,8 @@
 - **[PDR] PDR: Bài toán lợi nhuận bền vững của Bất động sản Phát Đạt** (2026-11-05 • *Nhà đầu tư*)
   > Phát Đạt (PDR) 9 tháng đầu năm ghi nhận lợi nhuận 231,7 tỷ đồng nhờ doanh thu tài chính tăng vọt từ chuyển nhượng 3 thương vụ M&A lớn, trong khi doanh thu bất động sản giảm mạnh.
 - 📅 **[PDR - SỰ KIỆN]** Ngày: `2026-07-31` — *PDR: Báo cáo kết quả giao dịch cổ phiếu của người nội bộ Nguyễn Văn Đạt*
-- **[VIX] Theo dấu dòng tiền cá mập 05/11: VIX hút hơn 452 tỷ đồng vốn ngoại, FPT bị xả đồng loạt** (2026-11-05 • *FILI*)
-  > Phiên 05/11, khối ngoại bán ròng hơn 232 tỷ đồng, phiên thứ 10 liên tiếp, trong khi tự doanh mua ròng gần 254 tỷ đồng. VIX là mã được khối ngoại mua mạnh nhất, FPT bị xả đồng loạt.
+- **[VIX] Khối ngoại bán mạnh 3 mã ngân hàng, VIX hút gần 600 tỉ đồng** (2026-11-08 • *Báo Tuổi trẻ*)
+  > Khối ngoại bán ròng VN-Index tuần thứ 7 liên tiếp với khoảng 965 tỉ đồng, trong khi VIX tăng hơn 11% nhờ dòng tiền mua ròng gần 600 tỉ đồng.
 - 📅 **[VIX - SỰ KIỆN]** Ngày: `Gần đây` — *Giao dịch bổ sung - 122,500,761 CP*
 - **[HDC] HDC: Chủ tịch Hodeco cùng hai con trai mua thành công cổ phiếu HDC như đăng ký** (2026-11-06 • *An ninh tiền tệ*)
   > Chủ tịch HĐQT Hodeco Đoàn Hữu Thuận cùng hai người con trai là Phó Chủ tịch Đoàn Hữu Hà Vinh và Đoàn Hữu Hà An vừa mua thêm cổ phiếu HDC theo đăng ký, nâng tỷ lệ sở hữu của nhóm.
