@@ -497,4 +497,4 @@
 {"timestamp": "2026-11-08 20:14:09", "symbol": "GEX", "rank": 9, "score": 10.0, "price": 22.45, "signal_type": "THE_CHE_GOM", "stop_loss": 21.06, "tp1": 24.62, "tp2": 26.01, "rr_ratio": 2.5, "adtv20_billion": 190.1}
 {"timestamp": "2026-11-08 20:14:09", "symbol": "HCM", "rank": 10, "score": 10.0, "price": 23.55, "signal_type": "THE_CHE_GOM", "stop_loss": 22.44, "tp1": 25.31, "tp2": 26.42, "rr_ratio": 2.5, "adtv20_billion": 79.8}
 {"timestamp": "2026-11-09 10:46:10", "symbol": "MZG", "rank": 1, "score": 17.5, "price": 10.6, "signal_type": "THE_CHE_GOM", "stop_loss": 9.53, "tp1": 11.37, "tp2": 12.09, "rr_ratio": 2.5, "adtv20_billion": 15.1}
-{"timestamp": "2026-11-09 11:16:18", "symbol": "MZG", "rank": 1, "score": 17.5, "price": 10.55, "signal_type": "THE_CHE_GOM", "stop_loss": 9.53, "tp1": 11.37, "tp2": 12.09, "rr_ratio": 2.5, "adtv20_billion": 15.1}
+{"timestamp": "2026-11-09 11:46:08", "symbol": "MZG", "rank": 1, "score": 17.5, "price": 10.65, "signal_type": "THE_CHE_GOM", "stop_loss": 9.53, "tp1": 11.37, "tp2": 12.09, "rr_ratio": 2.5, "adtv20_billion": 15.1}
