@@ -5,12 +5,12 @@
 
 | STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua | Cắt Lỗ | Chốt Lời (TP1 / TP2) | Thanh Khoản | Chuẩn Quỹ | RRG | Điểm IBD | Tích Luỹ | Ngoại Ròng | Điểm AI | Kỳ Trước |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1** | **MZG** | `ĐỘT BIẾN GT` 🟡 VÙNG VỚI (+3.9% • <=30%) | **10.65** | `10.10 - 10.40` | **9.53** | **11.37** / **12.09** | **17.8t** | `ĐẠT BIÊN` | 97/99 | **50** | `C` | +13.8 tỷ | **17.5** | #4 (+3) |
+| **1** | **MZG** | `ĐỘT BIẾN GT` 🟡 VÙNG VỚI (+3.9% • <=30%) | **10.65** | `10.10 - 10.40` | **9.53** | **11.37** / **12.09** | **17.8t** | `ĐẠT BIÊN` | 97/99 | **50** | `C` | +13.9 tỷ | **17.5** | #4 (+3) |
 | **2** | **HHP** | `ĐỘT BIẾN GT` | **16.50** | `16.25 - 16.75` | **15.31** | **18.35** / **19.54** | **33.2t** | `CHUẨN QUỸ` | 100/100 | **50** | `C` | -1.1 tỷ | **32.5** | Mới |
 
 ### 🎯 Kế Hoạch Tác Chiến, Điểm Thoát Lệnh T+2.5 & Catalysts:
 - **MZG (10.65)** `↗ +3` | **🟡 VÙNG VỚI (+3.9% • <=30%)**: Vùng gom T0 `10.10 - 10.40` | Cắt lỗ cấu trúc: `9.53` | TP1 (Net 1.5R): `11.37` | TP2 (Net 2.5R): `12.09` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +13.8 tỷ | Tự doanh: Chưa công bố EOD (N/A))
+  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +13.9 tỷ | Tự doanh: Chưa công bố EOD (N/A))
   - *Động lực:* RRG(r=97.1, m=99.3), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ | POC=10.38 (+0.6 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `17.8 tỷ` (Điểm TK: `63/100`) | Sức chứa tối đa: `167,400 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,100 cp (~11.7tr, 11.7% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⚠️ THẬN TRỌNG CAO (T+2.5 HIGH)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
