@@ -1,4 +1,4 @@
-## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 2 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)
+## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 1 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)
 > **Trạng thái Thị trường:** VN-Index Tăng **129** / Giảm **187** (Độ rộng A/D: **40.8%**) | Giá trị GD: **13,826 tỷ VND** | P/E: **10.96**
 > ⚠️ THỊ TRƯỜNG PHÂN HÓA (40.8% — Tăng 129 / Giảm 187): Chỉ giải ngân chọn lọc tại nền POC/VAL, giới hạn tổng cổ phiếu <= 40% NAV.
 > 🟢 **Trạng Thái Dữ Liệu:** `REAL-TIME FIALDA PRO API` (Dữ liệu khớp lệnh trực tiếp từ sàn)
@@ -6,7 +6,6 @@
 | STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua | Cắt Lỗ | Chốt Lời (TP1 / TP2) | Thanh Khoản | Chuẩn Quỹ | RRG | Điểm IBD | Tích Luỹ | Ngoại Ròng | Điểm AI | Kỳ Trước |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **1** | **MZG** | `ĐỘT BIẾN GT` 🟡 VÙNG VỚI (+3.9% • <=30%) | **10.65** | `10.10 - 10.40` | **9.53** | **11.37** / **12.09** | **17.8t** | `ĐẠT BIÊN` | 97/99 | **50** | `C` | +13.9 tỷ | **17.5** | #4 (+3) |
-| **2** | **HHP** | `ĐỘT BIẾN GT` | **16.50** | `16.25 - 16.75` | **15.31** | **18.35** / **19.54** | **33.2t** | `CHUẨN QUỸ` | 100/100 | **50** | `C` | -1.1 tỷ | **32.5** | Mới |
 
 ### 🎯 Kế Hoạch Tác Chiến, Điểm Thoát Lệnh T+2.5 & Catalysts:
 - **MZG (10.65)** `↗ +3` | **🟡 VÙNG VỚI (+3.9% • <=30%)**: Vùng gom T0 `10.10 - 10.40` | Cắt lỗ cấu trúc: `9.53` | TP1 (Net 1.5R): `11.37` | TP2 (Net 2.5R): `12.09` (R:R `1:2.5`)
@@ -14,11 +13,6 @@
   - *Động lực:* RRG(r=97.1, m=99.3), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ | POC=10.38 (+0.6 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `17.8 tỷ` (Điểm TK: `63/100`) | Sức chứa tối đa: `167,400 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,100 cp (~11.7tr, 11.7% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⚠️ THẬN TRỌNG CAO (T+2.5 HIGH)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **HHP (16.50)** `T0 KHUYẾN NGHỊ` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `16.25 - 16.75` | Cắt lỗ cấu trúc: `15.31` | TP1 (Net 1.5R): `18.35` | TP2 (Net 2.5R): `19.54` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: -1.1 tỷ | Tự doanh: Chưa công bố EOD (N/A))
-  - *Động lực:* RRG(r=99.9, m=100.1), IBD=50, Acc/Diss=C | 🔴 NGUY HIỂM XẢ | POC=17.10 (-0.8 ATR)
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `33.2 tỷ` (Điểm TK: `76/100`) | Sức chứa tối đa: `100,000 cp` (Trượt giá ~`0.50%`). ✅ Vốn 100tr: Tối đa 1,000 cp (~16.5tr, 16.5% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
-  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `T+0 (Khuyến nghị hôm nay)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
 
 ### 📊 BẢNG XẾP HẠNG ĐỊNH LƯỢNG CƠ BẢN (PIOTROSKI F-SCORE & P/E)
 > *Nguồn: Báo cáo tài chính chuẩn hóa & Bảng giá Real-time Fialda VIP*
@@ -60,7 +54,6 @@
 | Mã CP | Kỳ BCTC | DTT Quý N-2 | DTT Quý N-1 | DTT Quý N (Mới) | LNST Quý N-2 | LNST Quý N-1 | LNST Quý N (Mới) | Tăng Trưởng QoQ | Biên Gộp | Xu Hướng Động Lượng |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **MZG** | `Q3/2026` | 1,096.6 tỷ | 1,271.1 tỷ | **1,393.0 tỷ** | 32.1 tỷ | 51.2 tỷ | **74.9 tỷ** | `+46.3%` ↗ | 10.4% | `🚀 TĂNG TỐC 3 QUÝ` |
-| **HHP** | `Q3/2026` | 838.5 tỷ | 764.6 tỷ | **839.4 tỷ** | 13.0 tỷ | 18.9 tỷ | **13.5 tỷ** | `-28.6%` | 7.8% | `↘ CHẬM LẠI` |
 
 ### 📰 TIN TỨC DOANH NGHIỆP & LỊCH SỰ KIỆN MỚI NHẤT (SPOTLIGHT)
 > *Nguồn: Cổng công bố thông tin Fialda Real-time*
@@ -68,9 +61,6 @@
 - **[MZG] Miza (MZG) muốn huy động 300 tỷ đồng từ cổ đông hiện hữu** (2026-10-09 • *Tin nhanh CK*)
   > Miza (MZG) dự kiến chào bán 30 triệu cổ phiếu cho cổ đông hiện hữu với giá 10.000 đồng, huy động 300 tỷ đồng để rót vốn vào công ty con Miza Nghi Sơn.
 - 📅 **[MZG - SỰ KIỆN]** Ngày: `2026-10-23` — *Phát hành thêm*
-- **[HHP] HHP: Trả cổ tức năm 2025 bằng cổ phiếu** (2026-08-10 • *VSD*)
-  > HHP GLOBAL sẽ phát hành cổ phiếu trả cổ tức năm 2025 cho cổ đông theo tỷ lệ 1.000:65. Ngày đăng ký cuối cùng là 19/08/2026, cổ phiếu lẻ phát sinh sẽ bị hủy bỏ.
-- 📅 **[HHP - SỰ KIỆN]** Ngày: `Gần đây` — *Giao dịch bổ sung - 5,625,342 CP*
 
 ---
 *Báo cáo được tạo tự động bởi Neiro-Stock-VN Fialda VIP Expert Harvester trên GitHub Actions.*
