@@ -493,8 +493,5 @@
 {"timestamp": "2026-11-09 13:46:10", "symbol": "MZG", "rank": 4, "score": 17.5, "price": 10.6, "signal_type": "THE_CHE_GOM", "stop_loss": 9.53, "tp1": 11.37, "tp2": 12.09, "rr_ratio": 2.5, "adtv20_billion": 15.1}
 {"timestamp": "2026-11-09 13:46:10", "symbol": "VSC", "rank": 5, "score": 10.0, "price": 13.4, "signal_type": "THE_CHE_GOM", "stop_loss": 12.4, "tp1": 14.95, "tp2": 15.95, "rr_ratio": 2.5, "adtv20_billion": 173.5}
 {"timestamp": "2026-11-09 13:46:10", "symbol": "POW", "rank": 6, "score": 10.0, "price": 12.5, "signal_type": "THE_CHE_GOM", "stop_loss": 11.94, "tp1": 13.39, "tp2": 13.95, "rr_ratio": 2.5, "adtv20_billion": 61.8}
-{"timestamp": "2026-11-09 14:16:11", "symbol": "DIG", "rank": 1, "score": 32.9, "price": 10.25, "signal_type": "THE_CHE_GOM", "stop_loss": 9.48, "tp1": 11.45, "tp2": 12.22, "rr_ratio": 2.5, "adtv20_billion": 61.6}
-{"timestamp": "2026-11-09 14:16:11", "symbol": "NKG", "rank": 2, "score": 26.8, "price": 12.25, "signal_type": "THE_CHE_GOM", "stop_loss": 11.39, "tp1": 13.59, "tp2": 14.45, "rr_ratio": 2.5, "adtv20_billion": 73.4}
-{"timestamp": "2026-11-09 14:16:11", "symbol": "MZG", "rank": 3, "score": 17.5, "price": 10.5, "signal_type": "THE_CHE_GOM", "stop_loss": 9.53, "tp1": 11.37, "tp2": 12.09, "rr_ratio": 2.5, "adtv20_billion": 15.1}
-{"timestamp": "2026-11-09 14:16:11", "symbol": "VSC", "rank": 4, "score": 10.0, "price": 13.35, "signal_type": "THE_CHE_GOM", "stop_loss": 12.35, "tp1": 14.9, "tp2": 15.9, "rr_ratio": 2.5, "adtv20_billion": 173.5}
-{"timestamp": "2026-11-09 14:16:11", "symbol": "POW", "rank": 5, "score": 10.0, "price": 12.5, "signal_type": "THE_CHE_GOM", "stop_loss": 11.94, "tp1": 13.39, "tp2": 13.95, "rr_ratio": 2.5, "adtv20_billion": 61.8}
+{"timestamp": "2026-11-09 14:46:09", "symbol": "HHP", "rank": 1, "score": 32.5, "price": 16.5, "signal_type": "THE_CHE_GOM", "stop_loss": 15.31, "tp1": 18.35, "tp2": 19.54, "rr_ratio": 2.5, "adtv20_billion": 33.2}
+{"timestamp": "2026-11-09 14:46:09", "symbol": "MZG", "rank": 2, "score": 17.5, "price": 10.65, "signal_type": "THE_CHE_GOM", "stop_loss": 9.53, "tp1": 11.37, "tp2": 12.09, "rr_ratio": 2.5, "adtv20_billion": 15.1}
