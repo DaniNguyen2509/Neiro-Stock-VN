@@ -1,8 +1,3 @@
-{"timestamp": "2026-10-30 09:16:13", "symbol": "ACB", "rank": 12, "score": 40.7, "price": 21.15, "signal_type": "THE_CHE_GOM", "stop_loss": 20.52, "tp1": 22.09, "tp2": 22.72, "rr_ratio": 2.5, "adtv20_billion": 20.0}
-{"timestamp": "2026-10-30 09:16:13", "symbol": "STB", "rank": 13, "score": 39.6, "price": 66.6, "signal_type": "THE_CHE_GOM", "stop_loss": 64.6, "tp1": 69.6, "tp2": 71.6, "rr_ratio": 2.5, "adtv20_billion": 20.0}
-{"timestamp": "2026-10-30 09:16:13", "symbol": "EIB", "rank": 14, "score": 38.5, "price": 16.7, "signal_type": "THE_CHE_GOM", "stop_loss": 16.2, "tp1": 17.45, "tp2": 17.95, "rr_ratio": 2.5, "adtv20_billion": 20.0}
-{"timestamp": "2026-10-30 09:16:13", "symbol": "SHB", "rank": 15, "score": 36.8, "price": 10.65, "signal_type": "THE_CHE_GOM", "stop_loss": 10.33, "tp1": 11.13, "tp2": 11.45, "rr_ratio": 2.5, "adtv20_billion": 20.0}
-{"timestamp": "2026-10-30 09:16:13", "symbol": "HPG", "rank": 16, "score": 36.4, "price": 21.15, "signal_type": "THE_CHE_GOM", "stop_loss": 20.52, "tp1": 22.09, "tp2": 22.72, "rr_ratio": 2.5, "adtv20_billion": 20.0}
 {"timestamp": "2026-10-30 09:16:13", "symbol": "PNJ", "rank": 17, "score": 33.8, "price": 16.1, "signal_type": "THE_CHE_GOM", "stop_loss": 15.62, "tp1": 16.82, "tp2": 17.3, "rr_ratio": 2.5, "adtv20_billion": 20.0}
 {"timestamp": "2026-10-30 09:16:13", "symbol": "MBB", "rank": 18, "score": 32.0, "price": 19.55, "signal_type": "THE_CHE_GOM", "stop_loss": 18.96, "tp1": 20.44, "tp2": 21.02, "rr_ratio": 2.5, "adtv20_billion": 20.0}
 {"timestamp": "2026-10-30 09:16:13", "symbol": "TCB", "rank": 19, "score": 29.0, "price": 22.25, "signal_type": "THE_CHE_GOM", "stop_loss": 21.58, "tp1": 23.26, "tp2": 23.93, "rr_ratio": 2.5, "adtv20_billion": 20.0}
@@ -498,3 +493,8 @@
 {"timestamp": "2026-11-11 01:12:59", "symbol": "KBC", "rank": 3, "score": 67.5, "price": 27.2, "signal_type": "CHO_MUA_CHAN_SONG", "stop_loss": 25.97, "tp1": 29.15, "tp2": 30.38, "rr_ratio": 2.5, "adtv20_billion": 32.5}
 {"timestamp": "2026-11-11 01:12:59", "symbol": "HHV", "rank": 4, "score": 54.1, "price": 9.88, "signal_type": "CHO_MUA_CHAN_SONG", "stop_loss": 9.23, "tp1": 10.37, "tp2": 10.81, "rr_ratio": 2.5, "adtv20_billion": 33.0}
 {"timestamp": "2026-11-11 01:12:59", "symbol": "PHP", "rank": 5, "score": 47.5, "price": 44.4, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 40.62, "tp1": 46.74, "tp2": 49.12, "rr_ratio": 2.5, "adtv20_billion": 21.7}
+{"timestamp": "2026-11-11 02:37:50", "symbol": "NAB", "rank": 1, "score": 77.5, "price": 12.8, "signal_type": "CHO_MUA_CHAN_SONG", "stop_loss": 12.1, "tp1": 13.78, "tp2": 14.43, "rr_ratio": 2.5, "adtv20_billion": 31.4}
+{"timestamp": "2026-11-11 02:37:50", "symbol": "EVF", "rank": 2, "score": 77.5, "price": 12.0, "signal_type": "CHO_MUA_CHAN_SONG", "stop_loss": 11.42, "tp1": 12.92, "tp2": 13.5, "rr_ratio": 2.5, "adtv20_billion": 16.3}
+{"timestamp": "2026-11-11 02:37:50", "symbol": "KBC", "rank": 3, "score": 67.5, "price": 27.2, "signal_type": "CHO_MUA_CHAN_SONG", "stop_loss": 25.97, "tp1": 29.15, "tp2": 30.38, "rr_ratio": 2.5, "adtv20_billion": 32.5}
+{"timestamp": "2026-11-11 02:37:50", "symbol": "HHV", "rank": 4, "score": 54.1, "price": 9.88, "signal_type": "CHO_MUA_CHAN_SONG", "stop_loss": 9.23, "tp1": 10.37, "tp2": 10.81, "rr_ratio": 2.5, "adtv20_billion": 33.0}
+{"timestamp": "2026-11-11 02:37:50", "symbol": "PHP", "rank": 5, "score": 47.5, "price": 44.4, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 40.62, "tp1": 46.74, "tp2": 49.12, "rr_ratio": 2.5, "adtv20_billion": 21.7}
