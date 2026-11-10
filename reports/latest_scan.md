@@ -1,45 +1,39 @@
-## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 3 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)
-> **Trạng thái Thị trường:** VN-Index Tăng **190** / Giảm **60** (Độ rộng A/D: **76.0%**) | Giá trị GD: **2,745 tỷ VND** | P/E: **11.10**
+## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 2 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)
+> **Trạng thái Thị trường:** VN-Index Tăng **190** / Giảm **79** (Độ rộng A/D: **70.6%**) | Giá trị GD: **4,764 tỷ VND** | P/E: **11.11**
 > 🟢 **Trạng Thái Dữ Liệu:** `REAL-TIME FIALDA PRO API` (Dữ liệu khớp lệnh trực tiếp từ sàn)
 
 | STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua | Cắt Lỗ | Chốt Lời (TP1 / TP2) | Thanh Khoản | Chuẩn Quỹ | RRG | Điểm IBD | Tích Luỹ | Ngoại Ròng | Điểm AI | Kỳ Trước |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1** | **NAB** | `CHÂN SÓNG` | **12.75** | `12.59 - 12.86` | **12.10** | **13.78** / **14.43** | **30.7t** | `CHUẨN QUỸ` | 101/100 | **50** | `C` | +0.3 tỷ | **77.5** | #1 (=) |
-| **2** | **KBC** | `CHÂN SÓNG` | **27.20** | `27.01 - 27.61` | **25.97** | **29.15** / **30.38** | **32.5t** | `CHUẨN QUỸ` | 101/100 | **50** | `C` | -0.5 tỷ | **67.5** | Mới |
-| **3** | **VCK** | `ĐỘT BIẾN GT` 🟠 QUÁ HẠN T+6 (NGỪNG MUA) | **28.65** | `27.68 - 28.52` | **26.84** | **30.10** / **31.36** | **51.8t** | `CHUẨN QUỸ` | 101/101 | **50** | `C` | +0.2 tỷ | **42.5** | #1 (-2) |
+| **1** | **NAB** | `CHÂN SÓNG` | **12.75** | `12.56 - 12.94` | **12.10** | **13.78** / **14.43** | **30.7t** | `CHUẨN QUỸ` | 101/100 | **50** | `C` | +0.3 tỷ | **77.5** | Mới |
+| **2** | **KBC** | `CHÂN SÓNG` | **27.20** | `26.79 - 27.61` | **25.97** | **29.15** / **30.38** | **32.5t** | `CHUẨN QUỸ` | 101/100 | **50** | `C` | -0.5 tỷ | **67.5** | Mới |
 
 ### 🎯 Kế Hoạch Tác Chiến, Điểm Thoát Lệnh T+2.5 & Catalysts:
-- **NAB (12.75)** `=` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `12.59 - 12.86` | Cắt lỗ cấu trúc: `12.10` | TP1 (Net 1.5R): `13.78` | TP2 (Net 2.5R): `14.43` (R:R `1:2.5`)
+- **NAB (12.75)** `T0 KHUYẾN NGHỊ` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `12.56 - 12.94` | Cắt lỗ cấu trúc: `12.10` | TP1 (Net 1.5R): `13.78` | TP2 (Net 2.5R): `14.43` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: +0.3 tỷ | Tự doanh: Chưa công bố EOD (N/A))
   - *Động lực:* RRG(r=101.0, m=100.3), IBD=50, Acc/Diss=C | 🔴 NGUY HIỂM XẢ | POC=12.61 (+0.5 ATR) | ⏱️ Phiên sáng: Thăm dò <= 30%, chờ sau 13:45 xác nhận cung T+2.5
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `30.7 tỷ` (Điểm TK: `75/100`) | Sức chứa tối đa: `240,700 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,500 cp (~19.1tr, 19.1% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
-  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `🟡 THĂM DÒ <=30% (T+2.5 MODERATE)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **KBC (27.20)** `🆕 MỚI` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `27.01 - 27.61` | Cắt lỗ cấu trúc: `25.97` | TP1 (Net 1.5R): `29.15` | TP2 (Net 2.5R): `30.38` (R:R `1:2.5`)
+  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `30.7 tỷ` (Điểm TK: `75/100`) | Sức chứa tối đa: `100,000 cp` (Trượt giá ~`0.50%`). ✅ Vốn 100tr: Tối đa 1,500 cp (~19.1tr, 19.1% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
+  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `T+0 (Khuyến nghị hôm nay)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
+- **KBC (27.20)** `T0 KHUYẾN NGHỊ` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `26.79 - 27.61` | Cắt lỗ cấu trúc: `25.97` | TP1 (Net 1.5R): `29.15` | TP2 (Net 2.5R): `30.38` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: -0.5 tỷ | Tự doanh: Chưa công bố EOD (N/A))
   - *Động lực:* RRG(r=101.0, m=100.0), IBD=50, Acc/Diss=C | 🔴 NGUY HIỂM XẢ | POC=27.03 (+0.3 ATR) | ⏱️ Phiên sáng: Thăm dò <= 30%, chờ sau 13:45 xác nhận cung T+2.5
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `32.5 tỷ` (Điểm TK: `76/100`) | Sức chứa tối đa: `119,400 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 700 cp (~19.0tr, 19.0% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
-  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `🟡 THĂM DÒ <=30% (T+2.5 MODERATE)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **VCK (28.65)** `↘ -2` | **🟠 QUÁ HẠN T+6 (NGỪNG MUA)**: Vùng gom T0 `27.68 - 28.52` | Cắt lỗ cấu trúc: `26.84` | TP1 (Net 1.5R): `30.10` | TP2 (Net 2.5R): `31.36` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: +0.2 tỷ | Tự doanh: Chưa công bố EOD (N/A))
-  - *Động lực:* RRG(r=100.9, m=100.8), IBD=50, Acc/Diss=C | 🔴 NGUY HIỂM XẢ | POC=28.18 (+0.7 ATR) | ⏱️ Phiên sáng: Thăm dò <= 30%, chờ sau 13:45 xác nhận cung T+2.5
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `51.8 tỷ` (Điểm TK: `83/100`) | Sức chứa tối đa: `180,600 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 600 cp (~17.2tr, 17.2% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
-  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `🟡 THĂM DÒ <=30% (T+2.5 MODERATE)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
+  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `32.5 tỷ` (Điểm TK: `76/100`) | Sức chứa tối đa: `100,000 cp` (Trượt giá ~`0.50%`). ✅ Vốn 100tr: Tối đa 700 cp (~19.0tr, 19.0% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
+  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `T+0 (Khuyến nghị hôm nay)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
 
 ### 📊 BẢNG XẾP HẠNG ĐỊNH LƯỢNG CƠ BẢN (PIOTROSKI F-SCORE & P/E)
 > *Nguồn: Báo cáo tài chính chuẩn hóa & Bảng giá Real-time Fialda VIP*
 
 | Mã CP | Tên Doanh Nghiệp | Nhóm Ngành | Giá Khớp (1,000 đ) | F-Score | P/E | P/B | CFO / NI | Xếp Hạng |
 | :---: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **VHM** | Vinhomes | Bất động sản dân cư | **61.80** | **8/9** | 5.7 | 1.8 | 4.00 | `ĐỊNH CHẾ GOM` |
-| **HPG** | Tập đoàn Hòa Phát | Thép & Vật liệu xây dựng | **21.30** | **8/9** | 6.2 | 1.1 | 1.01 | `ĐỊNH CHẾ GOM` |
-| **SSI** | Chứng khoán SSI | Dịch vụ tài chính & CK | **20.45** | **8/9** | 13.6 | 1.5 | 4.64 | `ĐỊNH CHẾ GOM` |
+| **VHM** | Vinhomes | Bất động sản dân cư | **62.30** | **8/9** | 5.7 | 1.8 | 4.00 | `ĐỊNH CHẾ GOM` |
+| **HPG** | Tập đoàn Hòa Phát | Thép & Vật liệu xây dựng | **21.35** | **8/9** | 6.2 | 1.1 | 1.01 | `ĐỊNH CHẾ GOM` |
+| **SSI** | Chứng khoán SSI | Dịch vụ tài chính & CK | **20.50** | **8/9** | 13.6 | 1.5 | 4.64 | `ĐỊNH CHẾ GOM` |
 | **GEX** | Tập đoàn GELEX | Thiết bị điện & KCN | **22.25** | **7/9** | 31.6 | 0.9 | 9.67 | `ĐỊNH CHẾ GOM` |
-| **PTB** | Phú Tài | Gỗ & Đá xuất khẩu | **29.50** | **5/9** | 5.5 | 0.8 | 0.73 | `THEO DÕI` |
-| **DBC** | Dabaco Việt Nam | Nông nghiệp & Chăn nuôi | **16.35** | **5/9** | 6.5 | 0.8 | 5.94 | `ĐỊNH CHẾ GOM` |
-| **FPT** | Tập đoàn FPT | Công nghệ thông tin | **52.00** | **5/9** | 11.6 | 2.7 | 0.77 | `THEO DÕI` |
+| **PTB** | Phú Tài | Gỗ & Đá xuất khẩu | **29.40** | **5/9** | 5.5 | 0.8 | 0.73 | `THEO DÕI` |
+| **DBC** | Dabaco Việt Nam | Nông nghiệp & Chăn nuôi | **16.25** | **5/9** | 6.5 | 0.8 | 5.94 | `ĐỊNH CHẾ GOM` |
+| **FPT** | Tập đoàn FPT | Công nghệ thông tin | **51.70** | **5/9** | 11.6 | 2.7 | 0.77 | `THEO DÕI` |
 | **CTS** | Chứng khoán VietinBank | Dịch vụ tài chính & CK | **23.65** | **4/9** | 49.9 | 1.9 | 76.27 | `THEO DÕI` |
-| **MBB** | Ngân hàng Quân Đội | Ngân hàng thương mại | **19.45** | **N/A (Ngân hàng)** | 6.1 | 1.2 | -1.50 | `THEO DÕI` |
-| **VCB** | Vietcombank | Ngân hàng thương mại | **54.30** | **N/A (Ngân hàng)** | 11.6 | 1.9 | -5.49 | `THEO DÕI` |
+| **MBB** | Ngân hàng Quân Đội | Ngân hàng thương mại | **19.40** | **N/A (Ngân hàng)** | 6.1 | 1.2 | -1.50 | `THEO DÕI` |
+| **VCB** | Vietcombank | Ngân hàng thương mại | **54.50** | **N/A (Ngân hàng)** | 11.6 | 1.9 | -5.49 | `THEO DÕI` |
 
 > 💡 **Ghi chú định lượng học thuật (Piotroski, 2000):** Thang điểm *Piotroski F-Score (0-9)* loại trừ các Ngân hàng thương mại (MBB, VCB) do đặc thù BCTC ngành ngân hàng không có *Giá vốn/Biên Lợi Nhuận Gộp* và *Hệ số Thanh toán ngắn hạn (Current Ratio)*. Xem bảng định lượng CAMEL & Basel II/III chi tiết bên dưới.
 
@@ -48,15 +42,15 @@
 
 | Mã CP | Tên Ngân Hàng | Giá Khớp | Điểm CAMEL | CASA (%) | NIM (%) | NPL Nợ Xấu | LLR Bao Phủ | CIR (%) | ROE (%) | P/B | Xếp Hạng CAMEL |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **VCB** | Vietcombank | **54.30** | **88/100** | **34.2%** | 3.2% | 0.98% | **230%** | 31.5% | 21.5% | **1.8** | `HẠNG A (TINH HOA)` |
-| **MBB** | Ngân hàng Quân Đội | **19.50** | **88/100** | **39.5%** | 4.6% | 1.42% | **160%** | 29.8% | 22.8% | **1.2** | `HẠNG A (TINH HOA)` |
-| **TCB** | Techcombank | **21.95** | **83/100** | **40.2%** | 4.4% | 1.35% | **110%** | 33.5% | 16.8% | **1.2** | `HẠNG A (TINH HOA)` |
+| **VCB** | Vietcombank | **54.50** | **88/100** | **34.2%** | 3.2% | 0.98% | **230%** | 31.5% | 21.5% | **1.8** | `HẠNG A (TINH HOA)` |
+| **MBB** | Ngân hàng Quân Đội | **19.40** | **88/100** | **39.5%** | 4.6% | 1.42% | **160%** | 29.8% | 22.8% | **1.2** | `HẠNG A (TINH HOA)` |
+| **TCB** | Techcombank | **21.90** | **83/100** | **40.2%** | 4.4% | 1.35% | **110%** | 33.5% | 16.8% | **1.2** | `HẠNG A (TINH HOA)` |
 | **ACB** | Ngân hàng Á Châu | **20.60** | **81/100** | **24.1%** | 4.1% | 1.21% | **135%** | 32.0% | 23.1% | **1.1** | `HẠNG A (TINH HOA)` |
-| **HDB** | HDBank | **22.30** | **70/100** | **14.8%** | 5.1% | 1.65% | **95%** | 35.2% | 24.2% | **1.5** | `HẠNG B (TĂNG TRƯỞNG)` |
-| **CTG** | VietinBank | **31.80** | **63/100** | **22.8%** | 3.0% | 1.45% | **165%** | 32.8% | 17.9% | **1.2** | `HẠNG C (TÁI CƠ CẤU)` |
-| **VPB** | VPBank | **22.50** | **61/100** | **18.2%** | 5.6% | 4.20% | **52%** | 28.5% | 12.5% | **1.1** | `HẠNG C (TÁI CƠ CẤU)` |
-| **BID** | BIDV | **32.55** | **56/100** | **21.5%** | 2.8% | 1.52% | **158%** | 34.2% | 18.5% | **1.2** | `HẠNG C (TÁI CƠ CẤU)` |
-| **STB** | Sacombank | **69.50** | **39/100** | **19.5%** | 3.6% | 2.10% | **72%** | 42.5% | 15.2% | **2.0** | `HẠNG C (TÁI CƠ CẤU)` |
+| **HDB** | HDBank | **22.35** | **70/100** | **14.8%** | 5.1% | 1.65% | **95%** | 35.2% | 24.2% | **1.5** | `HẠNG B (TĂNG TRƯỞNG)` |
+| **CTG** | VietinBank | **31.70** | **63/100** | **22.8%** | 3.0% | 1.45% | **165%** | 32.8% | 17.9% | **1.2** | `HẠNG C (TÁI CƠ CẤU)` |
+| **VPB** | VPBank | **22.40** | **61/100** | **18.2%** | 5.6% | 4.20% | **52%** | 28.5% | 12.5% | **1.1** | `HẠNG C (TÁI CƠ CẤU)` |
+| **BID** | BIDV | **32.45** | **56/100** | **21.5%** | 2.8% | 1.52% | **158%** | 34.2% | 18.5% | **1.2** | `HẠNG C (TÁI CƠ CẤU)` |
+| **STB** | Sacombank | **69.10** | **39/100** | **19.5%** | 3.6% | 2.10% | **72%** | 42.5% | 15.2% | **2.0** | `HẠNG C (TÁI CƠ CẤU)` |
 | **EIB** | Eximbank | **16.40** | **39/100** | **15.2%** | 2.8% | 2.45% | **62%** | 46.2% | 10.5% | **1.1** | `HẠNG C (TÁI CƠ CẤU)` |
 
 ### 📑 BÁO CÁO KẾT QUẢ KINH DOANH CÁC QUÝ GẦN NHẤT (DOANH THU & LỢI NHUẬN RÒNG BCTC)
@@ -66,7 +60,6 @@
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **NAB** | `Q3/2026` | 2,290.2 tỷ | 2,836.4 tỷ | **3,014.0 tỷ** | 1,308.5 tỷ | 1,209.8 tỷ | **1,268.9 tỷ** | `+4.9%` ↗ | 64.5% | `↗ TĂNG TRƯỞNG DƯƠNG` |
 | **KBC** | `Q3/2026` | 1,335.9 tỷ | 588.7 tỷ | **3,187.3 tỷ** | 234.3 tỷ | 25.6 tỷ | **937.2 tỷ** | `+3560.9%` ↗ | 54.0% | `🔥 BÙNG NỔ LNST` |
-| **VCK** | `Q3/2026` | 2,519.2 tỷ | 2,353.8 tỷ | **2,076.4 tỷ** | 1,235.2 tỷ | 1,104.3 tỷ | **893.5 tỷ** | `-19.1%` | 71.3% | `↘ CHẬM LẠI` |
 
 ### 📰 TIN TỨC DOANH NGHIỆP & LỊCH SỰ KIỆN MỚI NHẤT (SPOTLIGHT)
 > *Nguồn: Cổng công bố thông tin Fialda Real-time*
@@ -77,9 +70,6 @@
 - **[KBC] Quỹ Bất động sản Techcom Việt Nam không ghi nhận khoản đầu tư trực tiếp vào nhà đất** (2026-11-08 • *Vietnam Finance*)
   > Tại 31/10, Quỹ Techcom Việt Nam (FUCVREIT) không nắm bất động sản trực tiếp mà đầu tư 76% tài sản vào 6 cổ phiếu niêm yết; NAV giảm gần 29% từ đầu năm 2026.
 - 📅 **[KBC - SỰ KIỆN]** Ngày: `2026-10-15` — *KBC: Báo cáo thay đổi sở hữu cổ đông lớn CTCP Quản lý Quỹ PVI*
-- **[VCK] VCK: Duy trì vị thế thị phần, VPS tiếp tục báo lãi trước thuế hơn 1.000 tỷ đồng** (2026-10-20 • *Người đưa tin*)
-  > Chứng khoán VPS (VCK) quý III/2026 có doanh thu và lợi nhuận giảm so cùng kỳ do thanh khoản thấp, nhưng lũy kế 9 tháng tăng trưởng mạnh và vẫn dẫn đầu thị phần môi giới.
-- 📅 **[VCK - SỰ KIỆN]** Ngày: `2026-05-15` — *Lấy ý kiến cổ đông bằng văn bản năm 2026*
 
 ---
 *Báo cáo được tạo tự động bởi Neiro-Stock-VN Fialda VIP Expert Harvester trên GitHub Actions.*
