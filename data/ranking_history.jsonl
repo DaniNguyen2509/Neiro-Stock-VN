@@ -1,4 +1,3 @@
-{"timestamp": "2026-10-29 22:11:57", "symbol": "DPR", "rank": 1, "score": 62.5, "price": 38.8, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 37.64, "tp1": 40.54, "tp2": 41.7, "rr_ratio": 2.5, "adtv20_billion": 25.0}
 {"timestamp": "2026-10-29 22:11:57", "symbol": "TCB", "rank": 2, "score": 59.0, "price": 22.35, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 21.68, "tp1": 23.36, "tp2": 24.03, "rr_ratio": 2.5, "adtv20_billion": 531.4}
 {"timestamp": "2026-10-29 22:11:57", "symbol": "VIX", "rank": 3, "score": 58.0, "price": 12.4, "signal_type": "THE_CHE_GOM", "stop_loss": 12.03, "tp1": 12.96, "tp2": 13.33, "rr_ratio": 2.5, "adtv20_billion": 287.8}
 {"timestamp": "2026-10-29 22:11:57", "symbol": "NKG", "rank": 4, "score": 56.8, "price": 12.1, "signal_type": "THE_CHE_GOM", "stop_loss": 11.74, "tp1": 12.64, "tp2": 13.0, "rr_ratio": 2.5, "adtv20_billion": 116.6}
@@ -498,3 +497,4 @@
 {"timestamp": "2026-11-10 01:42:32", "symbol": "MZG", "rank": 1, "score": 17.5, "price": 10.65, "signal_type": "THE_CHE_GOM", "stop_loss": 9.53, "tp1": 11.37, "tp2": 12.09, "rr_ratio": 2.5, "adtv20_billion": 17.8}
 {"timestamp": "2026-11-10 04:02:31", "symbol": "MZG", "rank": 1, "score": 17.5, "price": 10.65, "signal_type": "THE_CHE_GOM", "stop_loss": 9.53, "tp1": 11.37, "tp2": 12.09, "rr_ratio": 2.5, "adtv20_billion": 17.8}
 {"timestamp": "2026-11-10 05:15:09", "symbol": "MZG", "rank": 1, "score": 17.5, "price": 10.65, "signal_type": "THE_CHE_GOM", "stop_loss": 9.53, "tp1": 11.37, "tp2": 12.09, "rr_ratio": 2.5, "adtv20_billion": 17.8}
+{"timestamp": "2026-11-10 09:16:21", "symbol": "VCK", "rank": 1, "score": 42.5, "price": 28.5, "signal_type": "THE_CHE_GOM", "stop_loss": 26.84, "tp1": 30.1, "tp2": 31.36, "rr_ratio": 2.5, "adtv20_billion": 51.8}
