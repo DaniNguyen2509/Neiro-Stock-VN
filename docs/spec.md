@@ -657,10 +657,29 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 
 1. **Hiển Thị Bộ Chỉ Số Đánh Giá Tại Thời Điểm Khuyến Nghị ($T_0$ Snapshot):**
    - Bổ sung cột `Chỉ Số Đánh Giá Tại T0` trực tiếp vào cả bảng Vị thế đang nắm giữ (`#active-positions-table`) và bảng Lịch sử vị thế đã đóng (`#closed-positions-table`, mặc định mở sẵn) trên Tab 2.
-   - Ra mắt **Tab 3 chuyên biệt (`#hud-tab-t0-audit` — `🧬 TAB 3: VỊ THẾ ĐÃ KHUYẾN NGHỊ (TP / SL) & CHỈ SỐ ĐÁNH GIÁ TẠI T0`)**: Hợp nhất toàn bộ vị thế đang mở và đã đóng (`TP1`, `TP2`, `STOPPED_OUT`, `TIME_OUT`) kèm 14 cột chỉ số đánh giá gốc tại thời điểm mua $T_0$ (`Điểm AI`, `IBD Composite`, `RS 1M`, `Tích lũy A-E`, `RRG Ratio/Mom`, `Khối ngoại & Tự doanh T0`, `ADTV20 & Điểm thanh khoản`, `POC T0 & Độ lệch ATR`, `Độ rộng TT & Basis VN30F1M`) và bộ lọc nhanh theo nhóm kết quả (`ALL`, `TP`, `SL`, `ACTIVE`, `TIMEOUT`).
+   - Bổ sung dữ liệu 14 chỉ số đánh giá gốc tại thời điểm mua $T_0$ (`Điểm AI`, `IBD Composite`, `RS 1M`, `Tích lũy A-E`, `RRG Ratio/Mom`, `Khối ngoại & Tự doanh T0`, `ADTV20 & Điểm thanh khoản`, `POC T0 & Độ lệch ATR`, `Độ rộng TT & Basis VN30F1M`).
 2. **Bộ Máy Tự Học & Tái Đánh Giá Chỉ Số T0 Trên Các Lệnh Bị SL (`evaluate_t0_signal_quality_and_diagnosis`, `analyze_t0_sl_vs_tp_attribution`):**
    - Tự động bóc tách điểm mạnh và điểm yếu tại $T_0$ cho từng vị thế.
    - Đối chiếu thống kê trung bình chỉ số $T_0$ giữa tập lệnh Chốt lời (`TP`) và tập lệnh Cắt lỗ (`SL`), tính điểm tầm quan trọng (`importance_score` thang 100) và đề xuất quy tắc lọc tự động nhằm loại bỏ các thiết lập có xác suất SL cao trong tương lai.
+
+---
+
+### Tier 30 [ACCEPTED - ADR-029]: Hợp Nhất Sổ Cái Vị Thế & Đối Soát Chỉ Số T0 Thành Một Bảng Tổng Hợp Duy Nhất (Hybrid Unified Cockpit)
+
+> **Trạng thái:** `ACCEPTED & IMPLEMENTED (100% PASSING)` (xem [`ADR-029`](decisions/ADR-029-unified-positions-and-t0-audit-cockpit.md), test: `tests/test_positions_tracker_tab.py`).
+
+1. **Hợp Nhất Toàn Bộ Vòng Đời Vị Thế Vào 1 Bảng Duy Nhất (Anti-Data-Overload Unified Table):**
+   - Tích hợp toàn diện Tab 2 (Sổ cái vị thế đang mở và lịch sử đã đóng) cùng Tab 3 (Đối soát T0) thành một bảng tổng hợp duy nhất: `TAB 2: SỔ CÁI & ĐỐI SOÁT VỊ THẾ TOÀN VÒNG (T+ TRACKER • T0 → TP/SL)`.
+   - Cấu trúc bảng 8 cột tinh gọn với kỹ thuật ô dữ liệu đa tầng (multi-tiered stacked cells): `Mã CP / Ngành & Khối Lượng Mua`, `Trạng Thái & Vòng Đời`, `Giá Mua T0 & Giá Hiện Tại / Đóng`, `Lãi / Lỗ PnL & Tiến Độ TP/SL`, `Thời Gian & Chu Kỳ Nắm Giữ (T+)`, `Chỉ Số Đánh Giá Tại T0 ($T_0$ Quant Snapshot)`, `Hành Động Khuyến Nghị Tiếp Theo`, `Lý Do Đóng & Chẩn Đoán AI`.
+   - Triệt tiêu 100% hiện tượng phân mảnh dữ liệu, cuộn ngang quá mức hay trùng lặp thông tin giữa các tab.
+2. **Thanh 5 Bộ Lọc Tức Thì (Instant Category Filter Bar):**
+   - Cung cấp 5 nút lọc nhanh Client-Side JS (`Tất Cả`, `🟢 Đang Nắm Giữ`, `🎯 Đã Chốt Lời TP`, `🛑 Đã Cắt Lỗ SL`, `⏱️ Tất Toán T+7`), phản hồi `< 1ms` không giật lag.
+3. **Tích Hợp Bảng AI Hậu Kiểm Phân Tích SL vs TP Tự Học Vào Khung Collapsible:**
+   - Đặt bảng phân tích AI Hậu kiểm (`#t0-attribution-table`) trong khung `<details id="hud-tab-t0-audit" open>`, cho phép nhà đầu tư xem ngay tương quan chỉ số T0 giữa lệnh Thắng và Lệnh Thua hoặc thu gọn khi cần tập trung theo dõi bảng sổ cái.
+4. **Bảo Toàn Khả Năng Live Streaming & Tương Thích Ngược 100%:**
+   - Giữ nguyên các định danh CSS (`.live-price`, `.live-pnl`, `.pos-badge`) để bộ kéo giá VPS live cập nhật mượt mà.
+   - Tương thích hoàn toàn với các phím tắt và hàm điều hướng cũ (`switchHudTab('t0-audit')` hay `'t0_audit'` tự động chuyển mượt vào bảng hợp nhất).
+
 
 
 

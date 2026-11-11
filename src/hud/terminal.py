@@ -513,205 +513,8 @@ def generate_terminal_html(
     sl_closed_count = sum(1 for s in closed_signals if getattr(s, "status", "") == "STOPPED_OUT")
     timeout_closed_count = sum(1 for s in closed_signals if getattr(s, "status", "") == "TIME_OUT")
 
-    def _format_t0_metrics_compact_html(sig_obj: Any) -> str:
-        """Định dạng cụm huy hiệu chỉ số đánh giá tại thời điểm khuyến nghị T0 gọn gàng cho bảng vị thế."""
-        comp = int(getattr(sig_obj, "composite_rating", 0) or 0)
-        rs1m = int(getattr(sig_obj, "rs_1m", 0) or 0)
-        ad_let = str(getattr(sig_obj, "acc_diss_rating", "C") or "C").upper()
-        rrg_r = float(getattr(sig_obj, "rrg_r", 100.0) or 100.0)
-        rrg_m = float(getattr(sig_obj, "rrg_m", 100.0) or 100.0)
-        ai_sc = float(getattr(sig_obj, "ranking_score", 0.0) or 0.0)
-        f_net = float(getattr(sig_obj, "foreign_net_value_billion", 0.0) or 0.0)
-        p_net = float(getattr(sig_obj, "prop_net_value_billion", 0.0) or 0.0)
-        adtv_val = float(getattr(sig_obj, "adtv20_billion", 0.0) or 0.0)
-        poc_p = float(getattr(sig_obj, "poc_price_t0", 0.0) or 0.0)
-        atr_d = float(getattr(sig_obj, "atr_dist_from_poc_t0", 0.0) or 0.0)
-
-        ibd_col = "#00e676" if comp >= 75 else ("#ffb300" if comp >= 60 else "#ff8a80")
-        ad_col = "#00e676" if ad_let in ("A", "B") else ("#ffb300" if ad_let == "C" else "#ff5252")
-        rrg_col = "#00e676" if (rrg_r >= 100.0 and rrg_m >= 100.0) else ("#4fc3f7" if rrg_m >= 100.0 else "#ff8a80")
-        f_col = "#00e676" if f_net >= 0 else "#ff5252"
-
-        poc_str = f" • POC:{poc_p:.1f} ({atr_d:+.1f}ATR)" if poc_p > 0 else f" • TK:{adtv_val:.0f}t"
-        prop_str = f" • TD:{p_net:+.1f}t" if abs(p_net) >= 0.05 else ""
-        return (
-            f'<div style="font-size:11px;line-height:1.35;">'
-            f'<span style="color:#ffb300;font-weight:bold;">AI:{ai_sc:.1f}</span> • '
-            f'IBD:<b style="color:{ibd_col};">{comp}</b>/RS:<b>{rs1m}</b> • '
-            f'TL:<b style="color:{ad_col};">{ad_let}</b> • '
-            f'RRG:<span style="color:{rrg_col};font-weight:600;">{rrg_r:.1f}/{rrg_m:.1f}</span>'
-            f'</div>'
-            f'<div style="font-size:10px;color:#94a3b8;margin-top:2px;">'
-            f'Ngoại:<b style="color:{f_col};">{f_net:+.1f}t</b>{prop_str}{poc_str}'
-            f'</div>'
-        )
-
-    active_positions_rows_html = ""
-    if not active_running:
-        active_positions_rows_html = """
-        <tr>
-            <td colspan="11" style="padding:25px;text-align:center;color:#78909c;">
-                Hiện không có vị thế nào đang nắm giữ. Mọi khuyến nghị trước đó đã đạt mục tiêu chốt lời hoặc đã đóng bảo toàn vốn.
-            </td>
-        </tr>
-        """
-    else:
-        for idx, s in enumerate(active_running, 1):
-            sym = getattr(s, "symbol", "")
-            first_date = getattr(s, "first_signal_date", "")
-            date_display = first_date.split()[0] if first_date else "T0"
-            time_display = first_date.split()[1] if len(first_date.split()) > 1 else ""
-            trading_days = getattr(s, "trading_days", 0)
-            entry_orig = getattr(s, "entry_original", 0.0)
-            cur_price = getattr(s, "current_price", 0.0)
-            pnl_pct = getattr(s, "pnl_pct", 0.0)
-            cur_sl = getattr(s, "current_stop_loss", 0.0)
-            tp1 = getattr(s, "tp1", 0.0)
-            tp2 = getattr(s, "tp2", 0.0)
-            status = getattr(s, "status", "ACTIVE")
-            buy_perm = getattr(s, "buy_permission", "BUY_OK")
-            t0_metrics_html = _format_t0_metrics_compact_html(s)
-
-            if trading_days == 0:
-                t_badge = '<span style="background:#0284c7;color:#e0f2fe;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+0 (Vừa mua)</span>'
-            elif trading_days == 1:
-                t_badge = '<span style="background:#0369a1;color:#e0f2fe;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+1 (Chờ hàng)</span>'
-            elif trading_days == 2:
-                t_badge = '<span style="background:#047857;color:#d1fae5;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+2 (Khả dụng chiều)</span>'
-            else:
-                t_badge = f'<span style="background:#1b5e20;color:#00e676;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">T+{trading_days} (Khả dụng 100%)</span>'
-
-            pnl_col = "#00e676" if pnl_pct > 0 else ("#ff5252" if pnl_pct < 0 else "#ffb300")
-            pnl_sign = "+" if pnl_pct > 0 else ""
-
-            if status == "TP1_REACHED":
-                action_badge = '<span style="background:#004d40;color:#64ffda;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🎯 ĐÃ CHỐT 50% TP1 — GỒNG LÃI TỚI TP2 (CẤM MUA ĐUỔI)</span>'
-            elif buy_perm == "EXTENDED_NO_CHASING":
-                action_badge = '<span style="background:#e65100;color:#ffe0b2;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">⚠️ ĐÃ TĂNG XA NỀN — CẤM MUA ĐUỔI</span>'
-            elif buy_perm == "BULL_TRAP_REJECT":
-                action_badge = '<span style="background:#bf360c;color:#ffccbc;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">⚠️ BULL-TRAP — NẮM GIỮ / CHỜ HỒI</span>'
-            elif buy_perm == "STALE_SIGNAL":
-                action_badge = '<span style="background:#374151;color:#d1d5db;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>'
-            else:
-                action_badge = '<span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🟢 ĐANG NẮM GIỮ (CHỜ CHẠM TP)</span>'
-
-            if status == "TP1_REACHED" and cur_sl >= entry_orig:
-                sl_display = f'<span style="color:#00e676;font-weight:bold;">{cur_sl:.2f}</span> <span style="font-size:10px;color:#64ffda;background:#004d40;padding:1px 4px;border-radius:3px;">Hòa vốn</span>'
-            else:
-                sl_display = f'<span style="color:#ff8a80;font-weight:bold;">{cur_sl:.2f}</span>'
-
-            if status == "TP1_REACHED":
-                tp_display = f'<span style="text-decoration:line-through;color:#78909c;">{tp1:.2f}</span> <b style="color:#00e676;">✓ Đạt</b> / <b style="color:#38bdf8;">{tp2:.2f}</b>'
-            else:
-                tp_display = f'<span style="color:#4fc3f7;">{tp1:.2f}</span> / <b style="color:#38bdf8;">{tp2:.2f}</b>'
-
-            active_positions_rows_html += f"""
-            <tr style="border-bottom:1px solid #1f2937;">
-                <td style="padding:10px;text-align:center;color:#78909c;">{idx}</td>
-                <td style="padding:10px;">
-                    <span style="font-weight:800;color:#ffb300;font-size:13px;">{sym}</span>
-                </td>
-                <td style="padding:10px;text-align:center;">
-                    <div style="font-size:12px;color:#e2e8f0;font-weight:bold;">{date_display}</div>
-                    <div style="font-size:10px;color:#64748b;">{time_display}</div>
-                </td>
-                <td style="padding:10px;text-align:center;">
-                    {t_badge}
-                </td>
-                <td style="padding:10px;text-align:right;font-weight:bold;color:#f8fafc;">
-                    {entry_orig:.2f}
-                </td>
-                <td style="padding:10px;text-align:right;">
-                    <span class="live-price" data-sym="{sym}" style="font-weight:bold;color:#ffb300;">{cur_price:.2f}</span>
-                </td>
-                <td style="padding:10px;text-align:right;">
-                    <span class="live-pnl" data-sym="{sym}" data-entry="{entry_orig:.2f}" style="font-weight:800;color:{pnl_col};">{pnl_sign}{pnl_pct:.2f}%</span>
-                </td>
-                <td style="padding:10px;text-align:right;">
-                    {sl_display}
-                </td>
-                <td style="padding:10px;text-align:center;">
-                    {tp_display}
-                </td>
-                <td style="padding:10px;text-align:left;">
-                    {t0_metrics_html}
-                </td>
-                <td style="padding:10px;text-align:center;" class="pos-badge" data-sym="{sym}" data-entry="{entry_orig:.2f}" data-sl="{cur_sl:.2f}" data-tp1="{tp1:.2f}" data-tp2="{tp2:.2f}">
-                    {action_badge}
-                </td>
-            </tr>
-            """
-
-    closed_rows_html = ""
-    for c_sig in closed_signals:
-        c_sym = getattr(c_sig, "symbol", "")
-        c_pnl = getattr(c_sig, "pnl_pct", 0.0)
-        c_status = getattr(c_sig, "status", "")
-        c_entry = getattr(c_sig, "entry_original", 0.0)
-        c_cur = getattr(c_sig, "current_price", 0.0)
-        c_t = getattr(c_sig, "trading_days", 0)
-        c_tp2 = getattr(c_sig, "tp2", 0.0)
-        c_first_dt = getattr(c_sig, "first_signal_date", "") or ""
-        c_closed_dt = getattr(c_sig, "closed_at", "") or getattr(c_sig, "last_updated", "") or ""
-        t0_display = c_first_dt.split()[0] if c_first_dt else "T0"
-        closed_display = c_closed_dt.split()[0] if c_closed_dt else "N/A"
-        c_t0_metrics_html = _format_t0_metrics_compact_html(c_sig)
-
-        c_sl = getattr(c_sig, "current_stop_loss", 0.0) or getattr(c_sig, "initial_stop_loss", 0.0)
-        c_low = getattr(c_sig, "min_price_reached", 0.0) or getattr(c_sig, "current_price", 0.0)
-
-        if c_status == "TP2_REACHED":
-            exit_price = c_tp2 if c_tp2 > 0 else c_cur
-            c_pnl = round(((exit_price - c_entry) / c_entry) * 100.0, 2) if c_entry > 0 else c_pnl
-            status_badge = '<span style="background:#004d40;color:#64ffda;padding:2px 6px;border-radius:4px;font-weight:bold;">🏆 ĐẠT TP2</span>'
-            reason = f'Đạt mục tiêu TP2 ({c_tp2:.2f}) • Hoàn tất chốt lời 100%'
-        elif c_status == "TIME_OUT":
-            exit_price = c_cur
-            status_badge = '<span style="background:#374151;color:#fbbf24;padding:2px 6px;border-radius:4px;font-weight:bold;">⏱️ HẾT SÓNG T+7</span>'
-            reason = f'Tất toán cơ cấu danh mục sau {c_t} phiên (thu hồi sức mua)'
-        else:
-            status_badge = '<span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span>'
-            # Đảm bảo Giá Đóng là giá chạm ngưỡng Stop Loss thực tế và PnL nhất quán âm/hòa vốn
-            exit_price = min(c_cur, c_sl) if c_sl > 0 else c_cur
-            c_pnl = round(((exit_price - c_entry) / c_entry) * 100.0, 2) if c_entry > 0 else min(c_pnl, 0.0)
-            if c_low > 0 and c_sl > 0:
-                reason = f'Chạm đáy chu kỳ {c_low:.2f} &le; Ngưỡng Stop {c_sl:.2f}'
-            else:
-                reason = 'Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5'
-
-        c_pnl_col = "#00e676" if c_pnl > 0 else ("#ff5252" if c_pnl < 0 else "#ffb300")
-        c_sign = "+" if c_pnl > 0 else ""
-
-        closed_rows_html += f"""
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:6px;font-weight:bold;color:#ffb300;">{c_sym}</td>
-            <td style="padding:6px;text-align:center;">{status_badge}</td>
-            <td style="padding:6px;text-align:center;color:#94a3b8;">{t0_display}</td>
-            <td style="padding:6px;text-align:center;color:#64748b;">{closed_display}</td>
-            <td style="padding:6px;text-align:right;">{c_entry:.2f}</td>
-            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">{exit_price:.2f}</td>
-            <td style="padding:6px;text-align:right;color:{c_pnl_col};font-weight:bold;">{c_sign}{c_pnl:.2f}%</td>
-            <td style="padding:6px;text-align:center;">T+{c_t}</td>
-            <td style="padding:6px;text-align:left;">{c_t0_metrics_html}</td>
-            <td style="padding:6px;color:#90a4ae;">{reason}</td>
-        </tr>
-        """
-
-    if not closed_rows_html:
-        closed_rows_html = """
-        <tr>
-            <td colspan="10" style="padding:15px;text-align:center;color:#78909c;">
-                Chưa có vị thế nào đóng trong chu kỳ gần đây.
-            </td>
-        </tr>
-        """
-
-    # Chuan bi du lieu Tab 3: Bang Tong Hop Toan Bo Vi The Da Khuyen Nghi (Bao Gom Da TP, Da SL, Dang Chay) + Chi So Tai T0 & AI Post-Mortem
+    # Chuan bi du lieu: Bang Tong Hop Toan Bo Vi The Khuyen Nghi & Doi Soat Chi So T0 Toan Vong (ADR-029)
     all_recommended_signals: List[Any] = list(active_running) + list(closed_signals)
-    all_recommended_signals.sort(
-        key=lambda x: (str(getattr(x, "first_signal_date", "") or ""), getattr(x, "ranking_score", 0.0)),
-        reverse=True,
-    )
     t0_attribution = analyze_t0_sl_vs_tp_attribution(all_recommended_signals)
     tp_st = t0_attribution["tp_stats"]
     sl_st = t0_attribution["sl_stats"]
@@ -730,12 +533,12 @@ def generate_terminal_html(
         </tr>
         """
 
-    t0_audit_rows_html = ""
+    unified_positions_rows_html = ""
     if not all_recommended_signals:
-        t0_audit_rows_html = """
+        unified_positions_rows_html = """
         <tr>
-            <td colspan="12" style="padding:25px;text-align:center;color:#78909c;">
-                Chưa có vị thế khuyến nghị nào trong sổ cái để phân tích chỉ số T0.
+            <td colspan="8" style="padding:25px;text-align:center;color:#78909c;">
+                Hiện không có vị thế nào đang nắm giữ. Mọi khuyến nghị trước đó đã đạt mục tiêu chốt lời hoặc đã đóng bảo toàn vốn.
             </td>
         </tr>
         """
@@ -746,6 +549,9 @@ def generate_terminal_html(
             eff_price = diag_info["effective_price"]
             eff_pnl = diag_info["effective_pnl_pct"]
             diag_text = diag_info["diagnosis"]
+
+            is_act = not getattr(sig_item, "is_closed", False) and getattr(sig_item, "status", "") not in ("TP2_REACHED", "STOPPED_OUT", "TIME_OUT")
+            active_flag = "1" if is_act else "0"
 
             s_sym = getattr(sig_item, "symbol", "")
             s_type = str(getattr(sig_item, "signal_type", "CHO_MUA_CHAN_SONG") or "CHO_MUA_CHAN_SONG")
@@ -758,36 +564,95 @@ def generate_terminal_html(
 
             s_status = str(getattr(sig_item, "status", "ACTIVE") or "ACTIVE")
             s_outcome = str(getattr(sig_item, "outcome_label", "ACTIVE") or "ACTIVE")
+            buy_perm = getattr(sig_item, "buy_permission", "BUY_OK")
+            s_tdays = int(getattr(sig_item, "trading_days", 0) or 0)
+
             if s_status == "TP2_REACHED" or s_outcome == "WIN_TP2":
-                res_badge = '<span style="background:#004d40;color:#64ffda;padding:3px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🏆 ĐẠT TP2</span>'
+                res_badge = '<span style="background:#004d40;color:#64ffda;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🏆 ĐẠT TP2</span>'
             elif s_status == "TP1_REACHED" or s_outcome == "WIN_TP1":
-                res_badge = '<span style="background:#065f46;color:#6ee7b7;padding:3px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🎯 ĐẠT TP1</span>'
+                res_badge = '<span style="background:#065f46;color:#6ee7b7;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🎯 ĐẠT TP1</span>'
             elif s_status == "STOPPED_OUT" or s_outcome == "STOP_LOSS":
-                res_badge = '<span style="background:#b71c1c;color:#ff8a80;padding:3px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🛑 CẮT LỖ (SL)</span>'
+                res_badge = '<span style="background:#b71c1c;color:#ff8a80;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🛑 CẮT LỖ</span>'
             elif s_status == "TIME_OUT" or s_outcome == "TIME_OUT":
-                res_badge = '<span style="background:#374151;color:#fbbf24;padding:3px 7px;border-radius:4px;font-weight:bold;font-size:11px;">⏱️ HẾT SÓNG T+7</span>'
+                res_badge = '<span style="background:#374151;color:#fbbf24;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">⏱️ HẾT SÓNG T+7</span>'
             else:
-                res_badge = '<span style="background:#0284c7;color:#e0f2fe;padding:3px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🟢 ĐANG NẮM GIỮ</span>'
+                res_badge = '<span style="background:#0284c7;color:#e0f2fe;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🟢 ĐANG NẮM GIỮ</span>'
 
             s_first = str(getattr(sig_item, "first_signal_date", "") or "")
             s_closed = str(getattr(sig_item, "closed_at", "") or getattr(sig_item, "last_updated", "") or "")
             s_t0_dt = s_first.split()[0] if s_first else "T0"
             s_cl_dt = s_closed.split()[0] if (getattr(sig_item, "is_closed", False) and s_closed) else "Đang mở"
-            s_tdays = int(getattr(sig_item, "trading_days", 0) or 0)
+
+            if is_act:
+                if s_tdays == 0:
+                    t_str = '<span style="background:#0284c7;color:#e0f2fe;padding:1px 5px;border-radius:3px;font-weight:bold;font-size:10.5px;">T+0 (Vừa mua)</span>'
+                elif s_tdays == 1:
+                    t_str = '<span style="background:#0369a1;color:#e0f2fe;padding:1px 5px;border-radius:3px;font-weight:bold;font-size:10.5px;">T+1 (Chờ hàng)</span>'
+                elif s_tdays == 2:
+                    t_str = '<span style="background:#047857;color:#d1fae5;padding:1px 5px;border-radius:3px;font-weight:bold;font-size:10.5px;">T+2 (Khả dụng chiều)</span>'
+                else:
+                    t_str = f'<span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-weight:bold;font-size:10.5px;">T+{s_tdays} (Khả dụng 100%)</span>'
+                time_sub = f'{t_str} • <span style="color:#94a3b8;">Vào: {s_t0_dt}</span>'
+            else:
+                time_sub = f'<span style="color:#cbd5e1;font-weight:bold;">T+{s_tdays}</span> • Vào: {s_t0_dt} &rarr; Đóng: {s_cl_dt}'
 
             s_entry = float(getattr(sig_item, "entry_original", 0.0) or 0.0)
+            s_cur = float(getattr(sig_item, "current_price", 0.0) or 0.0)
             s_sl = float(getattr(sig_item, "current_stop_loss", 0.0) or getattr(sig_item, "initial_stop_loss", 0.0) or 0.0)
             s_tp1 = float(getattr(sig_item, "tp1", 0.0) or 0.0)
             s_tp2 = float(getattr(sig_item, "tp2", 0.0) or 0.0)
             s_mfe = float(getattr(sig_item, "mfe_pct", 0.0) or 0.0)
             s_mae = float(getattr(sig_item, "mae_pct", 0.0) or 0.0)
+            s_low = float(getattr(sig_item, "min_price_reached", 0.0) or 0.0)
 
-            pnl_c = "#00e676" if eff_pnl > 0 else ("#ff5252" if eff_pnl < 0 else "#ffb300")
-            pnl_s = "+" if eff_pnl > 0 else ""
+            if s_status == "TP1_REACHED" and s_sl >= s_entry:
+                sl_str = f'<span style="color:#00e676;font-weight:bold;">{s_sl:.2f}</span> (Hòa vốn)'
+            else:
+                sl_str = f'<span style="color:#ff8a80;font-weight:bold;">{s_sl:.2f}</span>'
+
+            if s_status == "TP1_REACHED":
+                tp_str = f'<span style="text-decoration:line-through;color:#78909c;">{s_tp1:.2f}</span> <b style="color:#00e676;">✓</b>/<b style="color:#38bdf8;">{s_tp2:.2f}</b>'
+            else:
+                tp_str = f'<span style="color:#4fc3f7;">{s_tp1:.2f}</span>/<b style="color:#38bdf8;">{s_tp2:.2f}</b>'
+
+            if is_act:
+                cur_price_html = f'<span class="live-price" data-sym="{s_sym}" style="font-weight:bold;color:#ffb300;">{s_cur:.2f}</span>'
+                pnl_col = "#00e676" if eff_pnl > 0 else ("#ff5252" if eff_pnl < 0 else "#ffb300")
+                pnl_s = "+" if eff_pnl > 0 else ""
+                pnl_html = f'<span class="live-pnl" data-sym="{s_sym}" data-entry="{s_entry:.2f}" style="font-weight:800;color:{pnl_col};font-size:12.5px;">{pnl_s}{eff_pnl:.2f}%</span>'
+            else:
+                cur_price_html = f'<b style="color:#ffffff;">{eff_price:.2f}</b>'
+                pnl_col = "#00e676" if eff_pnl > 0 else ("#ff5252" if eff_pnl < 0 else "#ffb300")
+                pnl_s = "+" if eff_pnl > 0 else ""
+                pnl_html = f'<span style="font-weight:800;color:{pnl_col};font-size:12.5px;">{pnl_s}{eff_pnl:.2f}%</span>'
+
             if cat == "SL":
                 excursion_sub = f'<div style="font-size:10px;color:#fca5a5;">Đáy MAE: {min(s_mae, eff_pnl):.1f}%</div>'
             else:
                 excursion_sub = f'<div style="font-size:10px;color:#94a3b8;">Đỉnh: +{max(s_mfe, 0.0):.1f}% / Đáy: {min(s_mae, 0.0):.1f}%</div>'
+
+            # Action / Reason badge
+            if is_act:
+                if s_status == "TP1_REACHED":
+                    action_badge = '<span style="background:#004d40;color:#64ffda;padding:2px 6px;border-radius:4px;font-size:10.5px;font-weight:bold;">🎯 ĐÃ CHỐT 50% TP1 — GỒNG LÃI TỚI TP2 (CẤM MUA ĐUỔI)</span>'
+                elif buy_perm == "EXTENDED_NO_CHASING":
+                    action_badge = '<span style="background:#e65100;color:#ffe0b2;padding:2px 6px;border-radius:4px;font-size:10.5px;font-weight:bold;">⚠️ ĐÃ TĂNG XA NỀN — CẤM MUA ĐUỔI</span>'
+                elif buy_perm == "BULL_TRAP_REJECT":
+                    action_badge = '<span style="background:#bf360c;color:#ffccbc;padding:2px 6px;border-radius:4px;font-size:10.5px;font-weight:bold;">⚠️ BULL-TRAP — NẮM GIỮ / CHỜ HỒI</span>'
+                elif buy_perm == "STALE_SIGNAL":
+                    action_badge = '<span style="background:#374151;color:#d1d5db;padding:2px 6px;border-radius:4px;font-size:10.5px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>'
+                else:
+                    action_badge = '<span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10.5px;font-weight:bold;">🟢 ĐANG NẮM GIỮ (CHỜ CHẠM TP)</span>'
+            else:
+                if s_status == "TP2_REACHED":
+                    action_badge = f'<span style="color:#64ffda;font-size:11px;font-weight:600;">Đạt mục tiêu TP2 ({s_tp2:.2f}) • Hoàn tất chốt lời 100%</span>'
+                elif s_status == "TIME_OUT":
+                    action_badge = f'<span style="color:#fbbf24;font-size:11px;font-weight:600;">Tất toán cơ cấu danh mục sau {s_tdays} phiên (thu hồi sức mua)</span>'
+                else:
+                    if s_low > 0 and s_sl > 0:
+                        action_badge = f'<span style="color:#ff8a80;font-size:11px;font-weight:600;">Chạm đáy chu kỳ {s_low:.2f} &le; Ngưỡng Stop {s_sl:.2f}</span>'
+                    else:
+                        action_badge = '<span style="color:#ff8a80;font-size:11px;font-weight:600;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</span>'
 
             s_ai = float(getattr(sig_item, "ranking_score", 0.0) or 0.0)
             s_ibd = int(getattr(sig_item, "composite_rating", 0) or 0)
@@ -797,13 +662,9 @@ def generate_terminal_html(
             s_m = float(getattr(sig_item, "rrg_m", 100.0) or 100.0)
             s_fnet = float(getattr(sig_item, "foreign_net_value_billion", 0.0) or 0.0)
             s_pnet = float(getattr(sig_item, "prop_net_value_billion", 0.0) or 0.0)
-            s_fbadge = str(getattr(sig_item, "flow_badge", "🟢 NỘI GOM CÂN HÀNG") or "🟢 NỘI GOM CÂN HÀNG")
             s_adtv = float(getattr(sig_item, "adtv20_billion", 0.0) or 0.0)
-            s_liq = float(getattr(sig_item, "liquidity_score", 0.0) or 0.0)
             s_poc = float(getattr(sig_item, "poc_price_t0", 0.0) or 0.0)
             s_atrd = float(getattr(sig_item, "atr_dist_from_poc_t0", 0.0) or 0.0)
-            s_breadth = float(getattr(sig_item, "market_breadth_pct_t0", 55.0) or 55.0)
-            s_basis = float(getattr(sig_item, "vn30_basis_t0", 0.0) or 0.0)
 
             ibd_c = "#00e676" if s_ibd >= 75 else ("#ffb300" if s_ibd >= 60 else "#ff5252")
             ad_c = "#00e676" if s_ad in ("A", "B") else ("#ffb300" if s_ad == "C" else "#ff5252")
@@ -817,60 +678,62 @@ def generate_terminal_html(
             else:
                 rrg_quad = '<span style="color:#ff5252;font-size:10px;font-weight:bold;">Tụt hậu</span>'
 
-            poc_cell_html = (
-                f'<div style="font-size:11px;color:#4fc3f7;font-weight:bold;">{s_adtv:.1f}t <span style="font-size:10px;color:#94a3b8;">(TK:{s_liq:.0f})</span></div>'
-                + (
-                    f'<div style="font-size:10px;color:{"#00e676" if -0.5 <= s_atrd <= 0.9 else "#ffb300"};">POC:{s_poc:.2f} ({s_atrd:+.1f}ATR)</div>'
-                    if s_poc > 0
-                    else '<div style="font-size:10px;color:#64748b;">POC: Chuẩn cũ</div>'
-                )
-            )
-            macro_cell_html = (
-                f'<div style="font-size:11px;color:{"#00e676" if s_breadth >= 50 else "#ffb300"};">Độ rộng: {s_breadth:.1f}%</div>'
-                f'<div style="font-size:10px;color:#94a3b8;">Basis: {s_basis:+.1f}đ</div>'
-            )
+            prop_str = f" • TD:<b style=\"color:{'#00e676' if s_pnet >= 0 else '#ff5252'};\">{s_pnet:+.1f}t</b>" if abs(s_pnet) >= 0.05 else ""
+            poc_str = f'<span style="color:{"#00e676" if -0.5 <= s_atrd <= 0.9 else "#ffb300"};">POC:{s_poc:.2f} ({s_atrd:+.1f}ATR)</span> • TK:{s_adtv:.0f}t' if s_poc > 0 else f'TK:{s_adtv:.0f}t'
 
-            t0_audit_rows_html += f"""
-            <tr class="t0-audit-row" data-cat="{cat}" style="border-bottom:1px solid #1f2937;">
-                <td style="padding:7px 5px;text-align:center;color:#78909c;font-weight:bold;">{idx}</td>
-                <td style="padding:7px 5px;">
+            unified_positions_rows_html += f"""
+            <tr class="unified-pos-row t0-audit-row" data-cat="{cat}" data-active="{active_flag}" style="border-bottom:1px solid #1f2937;">
+                <td style="padding:8px 6px;text-align:center;color:#78909c;font-weight:bold;">{idx}</td>
+                <td style="padding:8px 6px;">
                     <div style="font-weight:800;color:#ffb300;font-size:13px;">{s_sym}</div>
                     <div style="margin-top:2px;">{s_type_badge}</div>
                 </td>
-                <td style="padding:7px 5px;text-align:center;">{res_badge}</td>
-                <td style="padding:7px 5px;text-align:center;">
-                    <div style="font-size:11px;color:#e2e8f0;font-weight:bold;">Vào: {s_t0_dt}</div>
-                    <div style="font-size:10px;color:#94a3b8;">Đóng: {s_cl_dt} (T+{s_tdays})</div>
+                <td style="padding:8px 6px;text-align:center;">
+                    <div>{res_badge}</div>
+                    <div style="font-size:10.5px;color:#94a3b8;margin-top:3px;">
+                        {time_sub}
+                    </div>
                 </td>
-                <td style="padding:7px 5px;text-align:right;">
-                    <div style="font-size:11.5px;color:#f8fafc;"><b>{s_entry:.2f}</b> &rarr; <b style="color:#ffb300;">{eff_price:.2f}</b></div>
-                    <div style="font-size:10px;color:#64748b;">SL:{s_sl:.2f} | TP:{s_tp1:.1f}/{s_tp2:.1f}</div>
+                <td style="padding:8px 6px;text-align:right;">
+                    <div style="font-size:12px;color:#f8fafc;">
+                        <b>{s_entry:.2f}</b> &rarr; {cur_price_html}
+                    </div>
+                    <div style="font-size:10px;color:#64748b;margin-top:2px;">
+                        SL:{sl_str} | TP:{tp_str}
+                    </div>
                 </td>
-                <td style="padding:7px 5px;text-align:right;">
-                    <div style="font-weight:800;color:{pnl_c};font-size:12.5px;">{pnl_s}{eff_pnl:.2f}%</div>
+                <td style="padding:8px 6px;text-align:right;">
+                    <div>{pnl_html}</div>
                     {excursion_sub}
                 </td>
-                <td style="padding:7px 5px;text-align:center;font-weight:800;color:#ffb300;font-size:13px;">{s_ai:.1f}</td>
-                <td style="padding:7px 5px;text-align:center;">
-                    <div style="font-weight:bold;color:{ibd_c};">IBD: {s_ibd}</div>
-                    <div style="font-size:10.5px;color:#cbd5e1;">RS 1M: <b>{s_rs}</b></div>
+                <td style="padding:8px 6px;text-align:left;">
+                    <div style="font-size:11px;line-height:1.35;">
+                        <span style="color:#ffb300;font-weight:bold;">AI:{s_ai:.1f}</span> • 
+                        IBD:<b style="color:{ibd_c};">{s_ibd}</b>/RS:<b>{s_rs}</b> • 
+                        TL:<span style="background:{ad_bg_c};color:{ad_c};padding:1px 5px;border-radius:3px;font-weight:bold;font-size:10px;">{s_ad}</span>
+                    </div>
+                    <div style="font-size:10px;color:#94a3b8;margin-top:2px;">
+                        RRG:<span style="color:#38bdf8;font-weight:600;">{s_r:.1f}/{s_m:.1f}</span> ({rrg_quad})
+                    </div>
                 </td>
-                <td style="padding:7px 5px;text-align:center;">
-                    <span style="background:{ad_bg_c};color:{ad_c};padding:2px 8px;border-radius:4px;font-weight:800;font-size:12px;">{s_ad}</span>
+                <td style="padding:8px 6px;text-align:left;">
+                    <div style="font-size:10.5px;">
+                        Ngoại:<b style="color:{'#00e676' if s_fnet >= 0 else '#ff5252'};">{s_fnet:+.1f}t</b>{prop_str}
+                    </div>
+                    <div style="font-size:10px;color:#94a3b8;margin-top:2px;">
+                        {poc_str}
+                    </div>
                 </td>
-                <td style="padding:7px 5px;text-align:center;">
-                    <div style="font-size:11.5px;color:#e2e8f0;font-weight:bold;">{s_r:.1f} / {s_m:.1f}</div>
-                    <div>{rrg_quad}</div>
+                <td style="padding:8px 6px;text-align:left;min-width:210px;">
+                    <div style="font-size:11px;color:#cbd5e1;line-height:1.35;">{diag_text}</div>
+                    <div style="margin-top:4px;" class="pos-badge" data-sym="{s_sym}" data-entry="{s_entry:.2f}" data-sl="{s_sl:.2f}" data-tp1="{s_tp1:.2f}" data-tp2="{s_tp2:.2f}">{action_badge}</div>
                 </td>
-                <td style="padding:7px 5px;text-align:center;">
-                    <div style="font-size:10px;font-weight:bold;">{s_fbadge}</div>
-                    <div style="font-size:10.5px;color:{'#00e676' if s_fnet >= 0 else '#ff5252'};margin-top:2px;">Ngoại: {s_fnet:+.1f}t | TD: {s_pnet:+.1f}t</div>
-                </td>
-                <td style="padding:7px 5px;text-align:center;">{poc_cell_html}</td>
-                <td style="padding:7px 5px;text-align:center;">{macro_cell_html}</td>
-                <td style="padding:7px 6px;color:#cbd5e1;font-size:11px;white-space:normal;min-width:210px;line-height:1.35;">{diag_text}</td>
             </tr>
             """
+
+    active_positions_rows_html = unified_positions_rows_html
+    closed_rows_html = ""
+    t0_audit_rows_html = unified_positions_rows_html
 
     basis_color = "#ff5252" if basis.basis_points <= -8.0 else ("#ffb300" if basis.basis_points < 0 else "#29b6f6")
     circuit_breaker_html = ""
@@ -1105,156 +968,100 @@ def generate_terminal_html(
 
     {quant_search_cockpit_html}
 
-    <!-- THANH CHUYỂN TAB CHIẾN THUẬT: TAB 1 (RADAR), TAB 2 (SỔ CÁI VỊ THẾ T+) & TAB 3 (ĐỐI SOÁT VỊ THẾ TP/SL & CHỈ SỐ T0) -->
+    <!-- THANH CHUYỂN TAB CHIẾN THUẬT: TAB 1 (RADAR) & TAB 2 (SỔ CÁI & ĐỐI SOÁT VỊ THẾ TOÀN VÒNG) -->
     <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;">
         <button id="btn-tab-radar" onclick="switchHudTab('radar')" style="background:#ffb300;color:#0b0e14;border:none;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:800;cursor:pointer;">📡 TAB 1: RADAR THỰC CHIẾN & BẢNG ĐỊNH LƯỢNG</button>
-        <button id="btn-tab-positions" onclick="switchHudTab('positions')" style="background:#151a23;color:#90a4ae;border:1px solid #263238;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">📋 TAB 2: SỔ CÁI VỊ THẾ KHUYẾN NGHỊ & THEO DÕI LÃI/LỖ PnL (T+ TRACKER)</button>
-        <button id="btn-tab-t0-audit" onclick="switchHudTab('t0-audit')" style="background:#151a23;color:#38bdf8;border:1px solid #0284c7;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:800;cursor:pointer;">🧬 TAB 3: VỊ THẾ ĐÃ KHUYẾN NGHỊ (TP / SL) & CHỈ SỐ ĐÁNH GIÁ TẠI T0 ({len(all_recommended_signals)} MÃ)</button>
+        <button id="btn-tab-positions" onclick="switchHudTab('positions')" style="background:#151a23;color:#90a4ae;border:1px solid #263238;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">📋 TAB 2: SỔ CÁI &amp; ĐỐI SOÁT VỊ THẾ TOÀN VÒNG (T+ TRACKER • T0 &rarr; TP/SL) ({len(all_recommended_signals)} MÃ)</button>
     </div>
 
     <div id="hud-tab-positions" style="display:none;margin-bottom:25px;">
         <div class="section-header">
-            <div class="section-title" style="color:#38bdf8;">📋 SỔ CÁI VỊ THẾ KHUYẾN NGHỊ ĐANG NẮM GIỮ & THEO DÕI LÃI/LỖ PnL (T+ TRACKER)</div>
-            <span style="font-size:11px;color:#78909c;">Chu kỳ: <b style="color:#4fc3f7;">T+2.5</b> • Sắp xếp mặc định: <b style="color:#ffb300;">Ngày mua mới nhất (T0)</b> • Giới hạn vị thế: <b style="color:#00e676;">&le; 20% NAV/mã</b> • Phí &amp; Thuế: <b style="color:#ffb300;">0.40%</b> • Đang nắm giữ: <b style="color:#00e676;">{len(active_running)} mã</b> • Đạt TP1: <b style="color:#64ffda;">{tp1_count} mã</b> • Đã chốt lời toàn bộ TP2 &amp; rời bảng: <b style="color:#ffb300;">{tp2_count} mã</b> (Đã đóng/Cơ cấu: {len(closed_signals)} mã)</span>
+            <div class="section-title" style="color:#38bdf8;">📋 SỔ CÁI VỊ THẾ KHUYẾN NGHỊ &amp; ĐỐI SOÁT CHỈ SỐ T0 TOÀN VÒNG (T+ TRACKER • T0 &rarr; TP/SL)</div>
+            <span style="font-size:11px;color:#78909c;">Chu kỳ: <b style="color:#4fc3f7;">T+2.5</b> • Sắp xếp mặc định: <b style="color:#ffb300;">Vị thế mở &amp; Ngày mua mới nhất (T0)</b> • Giới hạn vị thế: <b style="color:#00e676;">&le; 20% NAV/mã</b> • Phí &amp; Thuế: <b style="color:#ffb300;">0.40%</b> • Đang nắm giữ: <b style="color:#00e676;">{len(active_running)} mã</b> • Đạt TP1: <b style="color:#64ffda;">{tp1_count} mã</b> • Đã chốt lời toàn bộ TP2 &amp; rời bảng: <b style="color:#ffb300;">{tp2_count} mã</b> (Tổng cộng: {len(all_recommended_signals)} mã)</span>
         </div>
-        <div class="table-container">
-            <table id="active-positions-table">
+
+        <details id="hud-tab-t0-audit" open style="margin-bottom:18px;background:#10151d;border:1px solid #1f2937;border-radius:8px;padding:12px 14px;">
+            <summary style="font-size:12.5px;color:#ffb300;font-weight:bold;cursor:pointer;">
+                🧠 AI TÁI ĐÁNH GIÁ CHỈ SỐ T0 TRÊN CÁC LỆNH TP vs. SL &amp; TỰ HỌC CHỌN LỌC KÈO MỚI (Bấm để ẩn/hiện)
+            </summary>
+            <div style="margin-top:12px;">
+                <div class="grid" style="margin-bottom:14px;">
+                    <div class="card">
+                        <div class="card-title">Tổng Vị Thế Đã Khuyến Nghị</div>
+                        <div class="card-value" style="color:#ffb300;">{len(all_recommended_signals)} VỊ THẾ</div>
+                        <div style="font-size:11px;color:#94a3b8;margin-top:4px;">
+                            🎯 Đạt TP1/TP2: <b style="color:#00e676;">{tp_st['count']}</b> • 🛑 Cắt lỗ SL: <b style="color:#ff5252;">{sl_st['count']}</b> • 🟢 Đang chạy: <b style="color:#38bdf8;">{act_st['count']}</b> • ⏱️ Hết sóng: <b>{to_st['count']}</b>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Xung Lực &amp; Tích Lũy Tại T0 (TP vs. SL)</div>
+                        <div class="card-value" style="color:#00e676;font-size:17px;">TP: IBD {tp_st['avg_ibd']:.0f} | SL: IBD {sl_st['avg_ibd']:.0f}</div>
+                        <div style="font-size:11px;color:#94a3b8;margin-top:4px;">
+                            Tỷ lệ dính Phân phối (D/E) tại T0: Nhóm SL <b style="color:#ff5252;">{sl_st['weak_acc_diss_pct']:.1f}%</b> vs. Nhóm TP <b style="color:#00e676;">{tp_st['weak_acc_diss_pct']:.1f}%</b>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Chu Kỳ Ngành RRG &amp; Nền POC T0</div>
+                        <div class="card-value" style="color:#38bdf8;font-size:17px;">RRG-M: {tp_st['avg_rrg_m']:.1f} vs. {sl_st['avg_rrg_m']:.1f}</div>
+                        <div style="font-size:11px;color:#94a3b8;margin-top:4px;">
+                            Lệnh SL mua khi RRG-M &lt; 100: <b style="color:#ff5252;">{sl_st['weak_rrg_m_pct']:.1f}%</b> • Độ lệch POC T0: <b>{sl_st['avg_atr_dist_poc']:+.2f} ATR</b>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Trọng Số Học Tăng Cường (Self-Learning)</div>
+                        <div class="card-value" style="color:#64ffda;font-size:16px;">4 TRỤ CỘT LỌC KÈO</div>
+                        <div style="font-size:11px;color:#94a3b8;margin-top:4px;">
+                            1. Acc/Diss &ge; C • 2. RRG-M &ge; 100 • 3. IBD &ge; 70 • 4. Cách POC &le; +0.9 ATR
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="t0-attribution-table">
+                        <thead>
+                            <tr>
+                                <th>Chỉ Số Đánh Giá Tại Thời Điểm Mua (T0)</th>
+                                <th>Đặc Trưng Nhóm Thắng (Đạt TP1 / TP2)</th>
+                                <th>Đặc Trưng Nhóm Bị Cắt Lỗ (SL)</th>
+                                <th style="text-align:center;">Đánh Giá Trọng Số</th>
+                                <th>Quy Tắc Tự Cải Thiện Để Chọn Lọc Kèo Mới</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {t0_lessons_rows_html}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </details>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <button class="pos-filter-btn t0-filter-btn" data-filter="ALL" onclick="filterUnifiedPositions('ALL')" style="background:#ffb300;color:#0b0e14;border:none;padding:5px 12px;border-radius:4px;font-size:11.5px;font-weight:bold;cursor:pointer;">Tất Cả ({len(all_recommended_signals)})</button>
+                <button class="pos-filter-btn t0-filter-btn" data-filter="ACTIVE" onclick="filterUnifiedPositions('ACTIVE')" style="background:#151a23;color:#38bdf8;border:1px solid #0284c7;padding:5px 12px;border-radius:4px;font-size:11.5px;font-weight:bold;cursor:pointer;">🟢 Đang Nắm Giữ ({len(active_running)})</button>
+                <button class="pos-filter-btn t0-filter-btn" data-filter="TP" onclick="filterUnifiedPositions('TP')" style="background:#151a23;color:#00e676;border:1px solid #1b5e20;padding:5px 12px;border-radius:4px;font-size:11.5px;font-weight:bold;cursor:pointer;">🎯 Đã Chốt Lời TP ({tp_st['count']})</button>
+                <button class="pos-filter-btn t0-filter-btn" data-filter="SL" onclick="filterUnifiedPositions('SL')" style="background:#151a23;color:#ff8a80;border:1px solid #b71c1c;padding:5px 12px;border-radius:4px;font-size:11.5px;font-weight:bold;cursor:pointer;">🛑 Đã Cắt Lỗ SL ({sl_st['count']})</button>
+                <button class="pos-filter-btn t0-filter-btn" data-filter="TIMEOUT" onclick="filterUnifiedPositions('TIMEOUT')" style="background:#151a23;color:#fbbf24;border:1px solid #78350f;padding:5px 12px;border-radius:4px;font-size:11.5px;font-weight:bold;cursor:pointer;">⏱️ Tất Toán T+7 ({to_st['count']})</button>
+            </div>
+            <span style="font-size:11px;color:#64748b;">💡 Bảng hợp nhất toàn vòng: Cập nhật giá Live &amp; đồng bộ trọn vẹn Snapshot T0</span>
+        </div>
+
+        <div id="t0-recommended-positions-table" class="table-container">
+            <table id="active-positions-table" class="unified-positions-table">
                 <thead>
                     <tr>
                         <th style="text-align:center;">STT</th>
                         <th>Mã CP</th>
-                        <th style="text-align:center;">Ngày Mua (T0)</th>
-                        <th style="text-align:center;">Chu Kỳ T+</th>
-                        <th style="text-align:right;">Giá Mua Gốc</th>
-                        <th style="text-align:right;">Thị Giá Live</th>
+                        <th style="text-align:center;">Trạng Thái &amp; Chu Kỳ (Ngày Vào T0 &bull; Ngày Đóng)</th>
+                        <th style="text-align:right;">Giá Vốn &rarr; Thoát/Live</th>
                         <th style="text-align:right;">Lãi/Lỗ PnL %</th>
-                        <th style="text-align:right;">Cắt Lỗ (SL)</th>
-                        <th style="text-align:center;">Chốt Lời (TP1 / TP2)</th>
                         <th>Chỉ Số Đánh Giá Tại T0</th>
-                        <th style="text-align:center;">Trạng Thái &amp; Quyết Nghị</th>
+                        <th>Dòng Tiền &amp; Nền POC T0</th>
+                        <th>AI Chẩn Đoán &amp; Quyết Nghị</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {active_positions_rows_html}
-                </tbody>
-            </table>
-        </div>
-
-        <details open style="margin-top:14px;background:#151a23;border:1px solid #1f2937;border-radius:6px;padding:8px 12px;">
-            <summary style="font-size:12px;color:#38bdf8;font-weight:bold;cursor:pointer;">
-                🏆 Lịch Sử Vị Thế Đã Hoàn Thành Toàn Vòng TP2 / Hết Sóng Cơ Cấu / Đã Đóng Bảo Toàn Vốn ({len(closed_signals)} mã — Kèm Chỉ Số Đánh Giá Tại T0)
-            </summary>
-            <div style="margin-top:10px;overflow-x:auto;">
-                <table id="closed-positions-table" style="width:100%;font-size:11px;border-collapse:collapse;">
-                    <thead>
-                        <tr style="border-bottom:1px solid #263238;color:#78909c;text-align:left;">
-                            <th style="padding:6px;">Mã CP</th>
-                            <th style="padding:6px;text-align:center;">Kết Quả</th>
-                            <th style="padding:6px;text-align:center;">Ngày Vào T0</th>
-                            <th style="padding:6px;text-align:center;">Ngày Đóng</th>
-                            <th style="padding:6px;text-align:right;">Giá Vào T0</th>
-                            <th style="padding:6px;text-align:right;">Giá Đóng</th>
-                            <th style="padding:6px;text-align:right;">Lợi Nhuận PnL %</th>
-                            <th style="padding:6px;text-align:center;">Số Ngày T+</th>
-                            <th style="padding:6px;">Chỉ Số Đánh Giá Tại T0</th>
-                            <th style="padding:6px;">Lý Do Đóng</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {closed_rows_html}
-                    </tbody>
-                </table>
-            </div>
-        </details>
-    </div>
-
-    <div id="hud-tab-t0-audit" style="display:none;margin-bottom:25px;">
-        <div class="section-header">
-            <div class="section-title" style="color:#ffb300;">🧠 AI TÁI ĐÁNH GIÁ CHỈ SỐ T0 TRÊN CÁC LỆNH TP vs. SL &amp; TỰ HỌC CHỌN LỌC KÈO MỚI</div>
-            <span style="font-size:11px;color:#90a4ae;">Đối chiếu Snapshot chỉ số tại đúng thời điểm khuyến nghị (T0) để nhận diện trọng số quyết định Thắng (TP) hay Dính Cắt Lỗ (SL)</span>
-        </div>
-
-        <div class="grid" style="margin-bottom:16px;">
-            <div class="card">
-                <div class="card-title">Tổng Vị Thế Đã Khuyến Nghị</div>
-                <div class="card-value" style="color:#ffb300;">{len(all_recommended_signals)} VỊ THẾ</div>
-                <div style="font-size:11px;color:#94a3b8;margin-top:4px;">
-                    🎯 Đạt TP1/TP2: <b style="color:#00e676;">{tp_st['count']}</b> • 🛑 Cắt lỗ SL: <b style="color:#ff5252;">{sl_st['count']}</b> • 🟢 Đang chạy: <b style="color:#38bdf8;">{act_st['count']}</b> • ⏱️ Hết sóng: <b>{to_st['count']}</b>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-title">Xung Lực &amp; Tích Lũy Tại T0 (TP vs. SL)</div>
-                <div class="card-value" style="color:#00e676;font-size:17px;">TP: IBD {tp_st['avg_ibd']:.0f} | SL: IBD {sl_st['avg_ibd']:.0f}</div>
-                <div style="font-size:11px;color:#94a3b8;margin-top:4px;">
-                    Tỷ lệ dính Phân phối (D/E) tại T0: Nhóm SL <b style="color:#ff5252;">{sl_st['weak_acc_diss_pct']:.1f}%</b> vs. Nhóm TP <b style="color:#00e676;">{tp_st['weak_acc_diss_pct']:.1f}%</b>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-title">Chu Kỳ Ngành RRG &amp; Nền POC T0</div>
-                <div class="card-value" style="color:#38bdf8;font-size:17px;">RRG-M: {tp_st['avg_rrg_m']:.1f} vs. {sl_st['avg_rrg_m']:.1f}</div>
-                <div style="font-size:11px;color:#94a3b8;margin-top:4px;">
-                    Lệnh SL mua khi RRG-M &lt; 100: <b style="color:#ff5252;">{sl_st['weak_rrg_m_pct']:.1f}%</b> • Độ lệch POC T0: <b>{sl_st['avg_atr_dist_poc']:+.2f} ATR</b>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-title">Trọng Số Học Tăng Cường (Self-Learning)</div>
-                <div class="card-value" style="color:#64ffda;font-size:16px;">4 TRỤ CỘT LỌC KÈO</div>
-                <div style="font-size:11px;color:#94a3b8;margin-top:4px;">
-                    1. Acc/Diss &ge; C • 2. RRG-M &ge; 100 • 3. IBD &ge; 70 • 4. Cách POC &le; +0.9 ATR
-                </div>
-            </div>
-        </div>
-
-        <div class="table-container" style="margin-bottom:20px;">
-            <table id="t0-attribution-table">
-                <thead>
-                    <tr>
-                        <th>Chỉ Số Đánh Giá Tại Thời Điểm Mua (T0)</th>
-                        <th>Đặc Trưng Nhóm Thắng (Đạt TP1 / TP2)</th>
-                        <th>Đặc Trưng Nhóm Bị Cắt Lỗ (SL)</th>
-                        <th style="text-align:center;">Đánh Giá Trọng Số</th>
-                        <th>Quy Tắc Tự Cải Thiện Để Chọn Lọc Kèo Mới</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {t0_lessons_rows_html}
-                </tbody>
-            </table>
-        </div>
-
-        <div class="section-header">
-            <div class="section-title" style="color:#38bdf8;">📊 BẢNG CHI TIẾT CÁC VỊ THẾ ĐÃ KHUYẾN NGHỊ (ĐANG CHẠY • ĐÃ TP • ĐÃ SL) &amp; BỘ CHỈ SỐ TẠI T0</div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                <button class="t0-filter-btn" data-filter="ALL" onclick="filterT0AuditRows('ALL')" style="background:#ffb300;color:#0b0e14;border:none;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer;">Tất Cả ({len(all_recommended_signals)})</button>
-                <button class="t0-filter-btn" data-filter="TP" onclick="filterT0AuditRows('TP')" style="background:#151a23;color:#00e676;border:1px solid #1b5e20;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer;">🎯 Đã Chốt Lời TP ({tp_st['count']})</button>
-                <button class="t0-filter-btn" data-filter="SL" onclick="filterT0AuditRows('SL')" style="background:#151a23;color:#ff8a80;border:1px solid #b71c1c;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer;">🛑 Đã Cắt Lỗ SL ({sl_st['count']})</button>
-                <button class="t0-filter-btn" data-filter="ACTIVE" onclick="filterT0AuditRows('ACTIVE')" style="background:#151a23;color:#38bdf8;border:1px solid #0284c7;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer;">🟢 Đang Nắm Giữ ({act_st['count']})</button>
-                <button class="t0-filter-btn" data-filter="TIMEOUT" onclick="filterT0AuditRows('TIMEOUT')" style="background:#151a23;color:#fbbf24;border:1px solid #78350f;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer;">⏱️ Tất Toán T+7 ({to_st['count']})</button>
-            </div>
-        </div>
-
-        <div class="table-container">
-            <table id="t0-recommended-positions-table">
-                <thead>
-                    <tr>
-                        <th style="text-align:center;">STT</th>
-                        <th>Mã CP &amp; Tín Hiệu T0</th>
-                        <th style="text-align:center;">Kết Quả / Trạng Thái</th>
-                        <th style="text-align:center;">Thời Gian (T0 &rarr; Đóng)</th>
-                        <th style="text-align:right;">Giá T0 &rarr; Đóng/Hiện Tại</th>
-                        <th style="text-align:right;">Lãi/Lỗ PnL %</th>
-                        <th style="text-align:center;">Điểm AI T0</th>
-                        <th style="text-align:center;">IBD / RS T0</th>
-                        <th style="text-align:center;">Tích Lũy T0</th>
-                        <th style="text-align:center;">RRG (R / M) T0</th>
-                        <th style="text-align:center;">Dòng Tiền T0</th>
-                        <th style="text-align:center;">Thanh Khoản &amp; POC T0</th>
-                        <th style="text-align:center;">Vĩ Mô T0</th>
-                        <th>Chẩn Đoán Chỉ Số T0 (Lý Do TP / Bài Học SL)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {t0_audit_rows_html}
+                    {unified_positions_rows_html}
                 </tbody>
             </table>
         </div>
@@ -1408,56 +1215,55 @@ def generate_terminal_html(
         function switchHudTab(tabName) {{
             const radarEl = document.getElementById('hud-tab-radar');
             const posEl = document.getElementById('hud-tab-positions') || document.getElementById('hud-tab-wf');
-            const t0AuditEl = document.getElementById('hud-tab-t0-audit');
             const btnRadar = document.getElementById('btn-tab-radar');
             const btnPos = document.getElementById('btn-tab-positions') || document.getElementById('btn-tab-wf');
-            const btnT0Audit = document.getElementById('btn-tab-t0-audit');
             if (!radarEl || !posEl) return;
-            if (tabName === 'positions' || tabName === 'wf') {{
+            if (tabName === 'positions' || tabName === 'wf' || tabName === 't0-audit' || tabName === 't0_audit') {{
                 radarEl.style.display = 'none';
                 posEl.style.display = 'block';
-                if (t0AuditEl) t0AuditEl.style.display = 'none';
                 if (btnPos) {{ btnPos.style.background = '#ffb300'; btnPos.style.color = '#0b0e14'; }}
                 if (btnRadar) {{ btnRadar.style.background = '#151a23'; btnRadar.style.color = '#90a4ae'; }}
-                if (btnT0Audit) {{ btnT0Audit.style.background = '#151a23'; btnT0Audit.style.color = '#00b0ff'; }}
-            }} else if (tabName === 't0-audit' || tabName === 't0_audit') {{
-                radarEl.style.display = 'none';
-                posEl.style.display = 'none';
-                if (t0AuditEl) t0AuditEl.style.display = 'block';
-                if (btnT0Audit) {{ btnT0Audit.style.background = '#00b0ff'; btnT0Audit.style.color = '#0b0e14'; }}
-                if (btnRadar) {{ btnRadar.style.background = '#151a23'; btnRadar.style.color = '#90a4ae'; }}
-                if (btnPos) {{ btnPos.style.background = '#151a23'; btnPos.style.color = '#90a4ae'; }}
             }} else {{
                 radarEl.style.display = 'block';
                 posEl.style.display = 'none';
-                if (t0AuditEl) t0AuditEl.style.display = 'none';
                 if (btnRadar) {{ btnRadar.style.background = '#ffb300'; btnRadar.style.color = '#0b0e14'; }}
                 if (btnPos) {{ btnPos.style.background = '#151a23'; btnPos.style.color = '#90a4ae'; }}
-                if (btnT0Audit) {{ btnT0Audit.style.background = '#151a23'; btnT0Audit.style.color = '#00b0ff'; }}
             }}
         }}
 
-        function filterT0AuditRows(cat) {{
-            const rows = document.querySelectorAll('#t0-recommended-positions-table .t0-audit-row');
+        function filterUnifiedPositions(cat) {{
+            const rows = document.querySelectorAll('#active-positions-table .unified-pos-row');
             rows.forEach(row => {{
                 const rowCat = row.getAttribute('data-cat') || 'ALL';
-                if (cat === 'ALL' || rowCat === cat) {{
-                    row.style.display = '';
-                }} else {{
-                    row.style.display = 'none';
+                const isActive = row.getAttribute('data-active') === '1';
+                let show = false;
+                if (cat === 'ALL') {{
+                    show = true;
+                }} else if (cat === 'ACTIVE') {{
+                    show = isActive;
+                }} else if (cat === 'TP') {{
+                    show = (rowCat === 'TP');
+                }} else if (cat === 'SL') {{
+                    show = (rowCat === 'SL');
+                }} else if (cat === 'TIMEOUT') {{
+                    show = (rowCat === 'TIMEOUT');
                 }}
+                row.style.display = show ? '' : 'none';
             }});
-            const btns = document.querySelectorAll('.t0-filter-btn');
+            const btns = document.querySelectorAll('.pos-filter-btn, .t0-filter-btn');
             btns.forEach(btn => {{
                 if (btn.getAttribute('data-filter') === cat) {{
-                    btn.style.background = '#00b0ff';
+                    btn.style.background = '#ffb300';
                     btn.style.color = '#0b0e14';
+                    btn.style.border = 'none';
                 }} else {{
                     btn.style.background = '#151a23';
-                    btn.style.color = '#b0bec5';
+                    btn.style.color = '#90a4ae';
+                    btn.style.border = '1px solid #263238';
                 }}
             }});
         }}
+        const filterT0AuditRows = filterUnifiedPositions;
 
         function reloadDashboard() {{
             if (countdownEl) countdownEl.innerText = 'Đang nạp...';

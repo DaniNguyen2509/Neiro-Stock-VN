@@ -265,5 +265,14 @@ flowchart LR
   - Chẩn đoán tự động chất lượng tín hiệu tại thời điểm khuyến nghị $T_0$, chỉ rõ các chỉ số đạt chuẩn và các chỉ số yếu khiến lệnh chạm SL.
   - Phân tích đối chiếu nhóm `TP` so với nhóm `SL` trên 8 chiều chỉ số định lượng tại $T_0$, xếp hạng mức độ ảnh hưởng (`importance_score`) và sinh quy tắc tối ưu hóa bộ lọc.
 - **`terminal.py` (`#hud-tab-t0-audit`, `#t0-attribution-table`, `#t0-recommended-positions-table`):**
-  - Bổ sung cột `Chỉ Số Đánh Giá Tại T0` trên cả 2 bảng của Tab 2 và xây dựng **Tab 3** hiển thị đầy đủ mọi vị thế đã khuyến nghị (Đang giữ, TP1/TP2, SL, Time-Out T+7) cùng bảng AI tự học hậu kiểm SL vs TP.
+  - Bổ sung cột `Chỉ Số Đánh Giá Tại T0` trên cả 2 bảng của Tab 2 và xây dựng bảng AI tự học hậu kiểm SL vs TP.
+
+## Cập nhật ADR-029: Hợp Nhất Tab 2 & Tab 3 Thành Một Bảng Tổng Hợp Duy Nhất (Hybrid Unified Cockpit)
+
+- **`terminal.py` (`#hud-tab-positions`, `#active-positions-table`, `.unified-pos-row`):**
+  - Hợp nhất toàn bộ dữ liệu vị thế đang mở và vị thế đã đóng (TP1, TP2, SL, Time-Out T+7) từ Tab 2 và Tab 3 thành một bảng tổng hợp duy nhất 8 cột với thiết kế ô đa tầng tinh gọn (multi-tiered stacked cells).
+  - Tích hợp thanh 5 nút lọc tức thì (`filterUnifiedPositions(cat)`): `Tất Cả`, `🟢 Đang Nắm Giữ`, `🎯 Đã Chốt Lời TP`, `🛑 Đã Cắt Lỗ SL`, `⏱️ Tất Toán T+7`.
+  - Tích hợp khung phân tích AI Tự Học Hậu Kiểm SL vs TP (`<details id="hud-tab-t0-audit" open>`) ngay dưới bảng tổng hợp, hỗ trợ mở/đóng linh hoạt.
+  - Giữ nguyên các class định danh `.live-price`, `.live-pnl`, `.pos-badge` để duy trì 100% khả năng cập nhật giá live qua VPS WebSocket.
+
 
