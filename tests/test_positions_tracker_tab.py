@@ -364,6 +364,10 @@ def test_t0_evaluation_metrics_and_attribution_tab(tmp_path):
     assert 'id="t0-attribution-table"' in html
     assert 'id="t0-recommended-positions-table"' in html
     assert "filterT0AuditRows(" in html
+    # Regression: khóa tab trong onclick của nút Tab 3 phải được JS switchHudTab nhận diện (lỗi bấm Tab 3 không hiện)
+    import re as _re
+    btn_key = _re.search(r'id="btn-tab-t0-audit" onclick="switchHudTab\(\'([^\']+)\'\)', html).group(1)
+    assert f"tabName === '{btn_key}'" in html, f"switchHudTab không xử lý khóa '{btn_key}' của nút Tab 3"
     assert "Chỉ Số Đánh Giá Tại T0" in html
     assert "BVB" in html
     assert "VGS" in html

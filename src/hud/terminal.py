@@ -1420,7 +1420,7 @@ def generate_terminal_html(
                 if (btnPos) {{ btnPos.style.background = '#ffb300'; btnPos.style.color = '#0b0e14'; }}
                 if (btnRadar) {{ btnRadar.style.background = '#151a23'; btnRadar.style.color = '#90a4ae'; }}
                 if (btnT0Audit) {{ btnT0Audit.style.background = '#151a23'; btnT0Audit.style.color = '#00b0ff'; }}
-            }} else if (tabName === 't0_audit') {{
+            }} else if (tabName === 't0-audit' || tabName === 't0_audit') {{
                 radarEl.style.display = 'none';
                 posEl.style.display = 'none';
                 if (t0AuditEl) t0AuditEl.style.display = 'block';
