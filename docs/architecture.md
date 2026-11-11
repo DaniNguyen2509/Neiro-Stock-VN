@@ -258,3 +258,12 @@ flowchart LR
   - Bổ sung 2 cột thời gian `Ngày Vào T0` và `Ngày Đóng` vào bảng lịch sử vị thế.
   - Sửa đổi miền nghiệp vụ: Giá đóng của vị thế cắt lỗ (`STOPPED_OUT`) bắt buộc là giá kích hoạt Stop Loss thực tế `min(current_price, stop_loss)`, đảm bảo PnL luôn mang dấu âm/hòa vốn, loại bỏ hoàn toàn nghịch lý PnL dương cạnh nhãn Cắt Lỗ.
   - Ngăn chặn hoàn toàn việc hiển thị các bản ghi thử nghiệm cũ (`schema_version == "v1_legacy"`).
+
+## Cập nhật ADR-028: Tab Vị Thế Đã Khuyến Nghị (TP/SL), Hiển Thị Chỉ Số Đánh Giá Tại T0 & Bộ Máy Tự Học Hậu Kiểm (T0 SL vs TP Attribution)
+
+- **`signal_tracker.py` (`evaluate_t0_signal_quality_and_diagnosis`, `analyze_t0_sl_vs_tp_attribution`):**
+  - Chẩn đoán tự động chất lượng tín hiệu tại thời điểm khuyến nghị $T_0$, chỉ rõ các chỉ số đạt chuẩn và các chỉ số yếu khiến lệnh chạm SL.
+  - Phân tích đối chiếu nhóm `TP` so với nhóm `SL` trên 8 chiều chỉ số định lượng tại $T_0$, xếp hạng mức độ ảnh hưởng (`importance_score`) và sinh quy tắc tối ưu hóa bộ lọc.
+- **`terminal.py` (`#hud-tab-t0-audit`, `#t0-attribution-table`, `#t0-recommended-positions-table`):**
+  - Bổ sung cột `Chỉ Số Đánh Giá Tại T0` trên cả 2 bảng của Tab 2 và xây dựng **Tab 3** hiển thị đầy đủ mọi vị thế đã khuyến nghị (Đang giữ, TP1/TP2, SL, Time-Out T+7) cùng bảng AI tự học hậu kiểm SL vs TP.
+

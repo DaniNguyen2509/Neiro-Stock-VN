@@ -930,3 +930,257 @@ class SignalTracker:
         self.scorecard_path.parent.mkdir(parents=True, exist_ok=True)
         self.scorecard_path.write_text(content, encoding="utf-8")
         return content
+
+
+def evaluate_t0_signal_quality_and_diagnosis(sig: Any) -> Dict[str, Any]:
+    """Đánh giá chi tiết bộ chỉ số tại thời điểm khuyến nghị (T0) và chẩn đoán nguyên nhân TP / SL (ADR-028)."""
+    status = str(getattr(sig, "status", "ACTIVE") or "ACTIVE")
+    outcome = str(getattr(sig, "outcome_label", "ACTIVE") or "ACTIVE")
+    c_entry = float(getattr(sig, "entry_original", 0.0) or 0.0)
+    c_cur = float(getattr(sig, "current_price", 0.0) or 0.0)
+    c_pnl = float(getattr(sig, "pnl_pct", 0.0) or 0.0)
+    c_sl = float(getattr(sig, "current_stop_loss", 0.0) or getattr(sig, "initial_stop_loss", 0.0) or 0.0)
+    c_tp1 = float(getattr(sig, "tp1", 0.0) or 0.0)
+    c_tp2 = float(getattr(sig, "tp2", 0.0) or 0.0)
+    c_mfe = float(getattr(sig, "mfe_pct", 0.0) or 0.0)
+    c_mae = float(getattr(sig, "mae_pct", 0.0) or 0.0)
+
+    # Chuẩn hóa Giá Hiện Tại / Giá Thoát & PnL bảo toàn bất biến miền (STOPPED_OUT không bao giờ dương)
+    if status == "TP2_REACHED":
+        effective_price = c_tp2 if c_tp2 > 0 else c_cur
+        effective_pnl = round(((effective_price - c_entry) / c_entry) * 100.0, 2) if c_entry > 0 else c_pnl
+        category = "TP"
+    elif status == "STOPPED_OUT":
+        effective_price = min(c_cur, c_sl) if c_sl > 0 else c_cur
+        effective_pnl = round(((effective_price - c_entry) / c_entry) * 100.0, 2) if c_entry > 0 else min(c_pnl, 0.0)
+        category = "SL"
+    elif status == "TP1_REACHED" or outcome == "WIN_TP1":
+        effective_price = c_cur
+        effective_pnl = round(((effective_price - c_entry) / c_entry) * 100.0, 2) if c_entry > 0 else c_pnl
+        category = "TP"
+    elif status == "TIME_OUT":
+        effective_price = c_cur
+        effective_pnl = round(((effective_price - c_entry) / c_entry) * 100.0, 2) if c_entry > 0 else c_pnl
+        category = "TIMEOUT"
+    else:
+        effective_price = c_cur
+        effective_pnl = round(((effective_price - c_entry) / c_entry) * 100.0, 2) if c_entry > 0 else c_pnl
+        category = "ACTIVE"
+
+    comp = int(getattr(sig, "composite_rating", 0) or 0)
+    rs1m = int(getattr(sig, "rs_1m", 0) or 0)
+    acc_diss = str(getattr(sig, "acc_diss_rating", "C") or "C").upper()
+    rrg_r = float(getattr(sig, "rrg_r", 100.0) or 100.0)
+    rrg_m = float(getattr(sig, "rrg_m", 100.0) or 100.0)
+    f_net = float(getattr(sig, "foreign_net_value_billion", 0.0) or 0.0)
+    p_net = float(getattr(sig, "prop_net_value_billion", 0.0) or 0.0)
+    flow_regime = str(getattr(sig, "flow_regime", "NOI_CAN_HANG") or "NOI_CAN_HANG")
+    adtv20 = float(getattr(sig, "adtv20_billion", 0.0) or 0.0)
+    liq_score = float(getattr(sig, "liquidity_score", 0.0) or 0.0)
+    poc_t0 = float(getattr(sig, "poc_price_t0", 0.0) or 0.0)
+    atr_dist_poc = float(getattr(sig, "atr_dist_from_poc_t0", 0.0) or 0.0)
+    breadth_t0 = float(getattr(sig, "market_breadth_pct_t0", 55.0) or 55.0)
+    basis_t0 = float(getattr(sig, "vn30_basis_t0", 0.0) or 0.0)
+    rank_sc = float(getattr(sig, "ranking_score", 0.0) or 0.0)
+
+    strengths: List[str] = []
+    weaknesses: List[str] = []
+
+    if comp >= 75 and rs1m >= 70:
+        strengths.append(f"Xung lực mạnh (IBD {comp}, RS {rs1m})")
+    elif comp < 60 or rs1m < 55:
+        weaknesses.append(f"Xung lực T0 yếu (IBD {comp}, RS {rs1m} < 60)")
+
+    if acc_diss in ("A", "B"):
+        strengths.append(f"Nền tích lũy chặt ({acc_diss})")
+    elif acc_diss in ("D", "E"):
+        weaknesses.append(f"Áp lực phân phối ngầm (Acc/Diss={acc_diss})")
+
+    if rrg_r >= 100.0 and rrg_m >= 100.0:
+        strengths.append(f"RRG Dẫn dắt ({rrg_r:.1f}/{rrg_m:.1f})")
+    elif rrg_m < 99.8:
+        weaknesses.append(f"Động lượng RRG-M suy yếu ({rrg_m:.1f} < 100)")
+
+    if flow_regime == "SIEU_SONG" or (f_net > 0 and p_net >= 0):
+        strengths.append(f"Đồng thuận gom (Ngoại {f_net:+.1f}t)")
+    elif flow_regime == "RUI_RO_XA" or f_net <= -5.0:
+        weaknesses.append(f"Áp lực xả dòng tiền (Ngoại {f_net:+.1f}t)")
+
+    if poc_t0 > 0:
+        if -0.5 <= atr_dist_poc <= 0.9:
+            strengths.append(f"Sát nền POC ({atr_dist_poc:+.1f} ATR)")
+        elif atr_dist_poc > 1.0:
+            weaknesses.append(f"Mua xa nền POC ({atr_dist_poc:+.1f} ATR > +1.0)")
+        elif atr_dist_poc < -1.0:
+            weaknesses.append(f"Gãy dưới nền POC ({atr_dist_poc:+.1f} ATR)")
+
+    if breadth_t0 > 0 and breadth_t0 < 45.0:
+        weaknesses.append(f"Vĩ mô T0 hẹp (Độ rộng {breadth_t0:.1f}%)")
+    if basis_t0 <= -4.0:
+        weaknesses.append(f"Basis phái sinh chiết khấu ({basis_t0:+.1f}đ)")
+
+    if category == "SL":
+        if weaknesses:
+            diagnosis = "⚠️ Bài học SL T0: " + " • ".join(weaknesses[:3])
+        else:
+            diagnosis = "⚠️ Nhiễu rung lắc thị trường chung quét SL bảo toàn vốn T+2.5"
+    elif category == "TP":
+        if strengths:
+            diagnosis = "✅ Hội tụ chuẩn T0: " + " • ".join(strengths[:3])
+        else:
+            diagnosis = f"✅ Đạt mục tiêu chốt lời (Đỉnh MFE +{max(c_mfe, effective_pnl):.1f}%)"
+    elif category == "TIMEOUT":
+        if weaknesses:
+            diagnosis = "⏱️ Chậm chạy do: " + " • ".join(weaknesses[:2])
+        else:
+            diagnosis = "⏱️ Dòng tiền đi ngang quá 7 phiên, cơ cấu thu hồi vốn"
+    else:
+        if strengths and not weaknesses:
+            diagnosis = "🟢 Cấu trúc T0 chuẩn: " + " • ".join(strengths[:2])
+        elif weaknesses:
+            diagnosis = "🟡 Lưu ý chỉ số T0: " + " • ".join(weaknesses[:2])
+        else:
+            diagnosis = "🟢 Đang vận động trong biên kiểm soát rủi ro T+2.5"
+
+    return {
+        "category": category,
+        "effective_price": round(effective_price, 2),
+        "effective_pnl_pct": round(effective_pnl, 2),
+        "strengths": strengths,
+        "weaknesses": weaknesses,
+        "diagnosis": diagnosis,
+        "ranking_score": rank_sc,
+        "adtv20_billion": adtv20,
+        "liquidity_score": liq_score,
+    }
+
+
+def analyze_t0_sl_vs_tp_attribution(signals: List[Any]) -> Dict[str, Any]:
+    """Phân tích đối chiếu thống kê bộ chỉ số tại T0 giữa nhóm Lệnh Đạt TP và nhóm Lệnh Dính SL (Self-Learning Attribution)."""
+    tp_list: List[Any] = []
+    sl_list: List[Any] = []
+    timeout_list: List[Any] = []
+    active_list: List[Any] = []
+
+    for s in signals:
+        st = str(getattr(s, "status", "ACTIVE") or "ACTIVE")
+        out = str(getattr(s, "outcome_label", "ACTIVE") or "ACTIVE")
+        if st in ("TP1_REACHED", "TP2_REACHED") or out in ("WIN_TP1", "WIN_TP2"):
+            tp_list.append(s)
+        elif st == "STOPPED_OUT" or out == "STOP_LOSS":
+            sl_list.append(s)
+        elif st == "TIME_OUT" or out == "TIME_OUT":
+            timeout_list.append(s)
+        else:
+            active_list.append(s)
+
+    def _group_stats(items: List[Any]) -> Dict[str, float]:
+        if not items:
+            return {
+                "count": 0,
+                "avg_ibd": 0.0,
+                "avg_rs1m": 0.0,
+                "weak_acc_diss_pct": 0.0,
+                "strong_acc_diss_pct": 0.0,
+                "weak_rrg_m_pct": 0.0,
+                "avg_rrg_r": 100.0,
+                "avg_rrg_m": 100.0,
+                "avg_ai_score": 0.0,
+                "avg_adtv20": 0.0,
+                "avg_atr_dist_poc": 0.0,
+                "risk_flow_pct": 0.0,
+            }
+        n = len(items)
+        avg_ibd = sum(float(getattr(x, "composite_rating", 0) or 0) for x in items) / n
+        avg_rs = sum(float(getattr(x, "rs_1m", 0) or 0) for x in items) / n
+        weak_ad = sum(1 for x in items if str(getattr(x, "acc_diss_rating", "C")).upper() in ("D", "E"))
+        strong_ad = sum(1 for x in items if str(getattr(x, "acc_diss_rating", "C")).upper() in ("A", "B", "C"))
+        weak_rrg_m = sum(1 for x in items if float(getattr(x, "rrg_m", 100.0) or 100.0) < 100.0)
+        avg_r = sum(float(getattr(x, "rrg_r", 100.0) or 100.0) for x in items) / n
+        avg_m = sum(float(getattr(x, "rrg_m", 100.0) or 100.0) for x in items) / n
+        avg_ai = sum(float(getattr(x, "ranking_score", 0.0) or 0.0) for x in items) / n
+        avg_adtv = sum(float(getattr(x, "adtv20_billion", 0.0) or 0.0) for x in items) / n
+        poc_items = [float(getattr(x, "atr_dist_from_poc_t0", 0.0) or 0.0) for x in items if float(getattr(x, "poc_price_t0", 0.0) or 0.0) > 0]
+        avg_poc_dist = (sum(poc_items) / len(poc_items)) if poc_items else 0.0
+        risk_flow = sum(
+            1
+            for x in items
+            if str(getattr(x, "flow_regime", "")) == "RUI_RO_XA"
+            or float(getattr(x, "foreign_net_value_billion", 0.0) or 0.0) < 0.0
+        )
+        return {
+            "count": n,
+            "avg_ibd": round(avg_ibd, 1),
+            "avg_rs1m": round(avg_rs, 1),
+            "weak_acc_diss_pct": round((weak_ad / n) * 100.0, 1),
+            "strong_acc_diss_pct": round((strong_ad / n) * 100.0, 1),
+            "weak_rrg_m_pct": round((weak_rrg_m / n) * 100.0, 1),
+            "avg_rrg_r": round(avg_r, 2),
+            "avg_rrg_m": round(avg_m, 2),
+            "avg_ai_score": round(avg_ai, 1),
+            "avg_adtv20": round(avg_adtv, 1),
+            "avg_atr_dist_poc": round(avg_poc_dist, 2),
+            "risk_flow_pct": round((risk_flow / n) * 100.0, 1),
+        }
+
+    tp_stats = _group_stats(tp_list)
+    sl_stats = _group_stats(sl_list)
+    timeout_stats = _group_stats(timeout_list)
+    active_stats = _group_stats(active_list)
+
+    # Chắt lọc các bài học trọng yếu từ tập lệnh bị SL
+    lessons: List[Dict[str, str]] = []
+    if sl_stats["count"] > 0:
+        if sl_stats["weak_acc_diss_pct"] >= 35.0:
+            lessons.append({
+                "metric": "Hạng Tích Lũy / Phân Phối (Acc/Diss Rating T0)",
+                "tp_val": f"{tp_stats['strong_acc_diss_pct']:.1f}% đạt hạng A/B/C (D/E: {tp_stats['weak_acc_diss_pct']:.1f}%)",
+                "sl_val": f"{sl_stats['weak_acc_diss_pct']:.1f}% lệnh SL dính hạng D/E (Phân phối ngầm)",
+                "weight": "RẤT QUAN TRỌNG (Trọng số #1)",
+                "action": "Loại bỏ hoàn toàn cổ phiếu có Acc/Diss = E tại T0; nếu Acc/Diss = D bắt buộc phải có Đồng thuận gom (Ngoại + Tự doanh > 0).",
+            })
+        if sl_stats["weak_rrg_m_pct"] >= 35.0:
+            lessons.append({
+                "metric": "Gia Tốc Chu Kỳ Ngành (RRG Momentum T0)",
+                "tp_val": f"TB RRG: {tp_stats['avg_rrg_r']:.1f} / {tp_stats['avg_rrg_m']:.1f} (Suy yếu: {tp_stats['weak_rrg_m_pct']:.1f}%)",
+                "sl_val": f"{sl_stats['weak_rrg_m_pct']:.1f}% lệnh SL mua khi RRG-M < 100 ({sl_stats['avg_rrg_r']:.1f} / {sl_stats['avg_rrg_m']:.1f})",
+                "weight": "QUAN TRỌNG CAO (Trọng số #2)",
+                "action": "Ưu tiên mở vị thế khi RRG-Momentum >= 100.0 (Ngành đang tăng tốc ở góc Leading/Improving), hạn chế mua khi RRG-M < 99.5.",
+            })
+        if sl_stats["avg_ibd"] < 65.0 or sl_stats["avg_rs1m"] < 60.0:
+            lessons.append({
+                "metric": "Xung Lực Sức Mạnh Giá (IBD Composite & RS 1M T0)",
+                "tp_val": f"IBD TB: {tp_stats['avg_ibd']:.1f} • RS 1M TB: {tp_stats['avg_rs1m']:.1f}",
+                "sl_val": f"IBD TB: {sl_stats['avg_ibd']:.1f} • RS 1M TB: {sl_stats['avg_rs1m']:.1f}",
+                "weight": "QUAN TRỌNG CAO (Trọng số #3)",
+                "action": "Nâng ngưỡng lọc cứng IBD Composite >= 70 và RS 1M >= 65 để tránh các cổ phiếu yếu bị gãy nền khi VN-Index rung lắc.",
+            })
+        lessons.append({
+            "metric": "Vị Thế Giá So Với Nền Thanh Khoản (POC / ATR Distance T0)",
+            "tp_val": f"Cách POC TB: {tp_stats['avg_atr_dist_poc']:+.2f} ATR (Sát nền gom định chế)",
+            "sl_val": f"Cách POC TB: {sl_stats['avg_atr_dist_poc']:+.2f} ATR • Tỷ lệ ngoại xả: {sl_stats['risk_flow_pct']:.1f}%",
+            "weight": "KIỂM SOÁT ĐIỂM MUA (Trọng số #4)",
+            "action": "Không mua đuổi khi giá đã kéo xa POC > +1.0 ATR tại T0 (như PDR +1.2 ATR); chỉ giải ngân trong biên [-0.5 ATR .. +0.8 ATR] quanh POC.",
+        })
+    else:
+        lessons.append({
+            "metric": "Bộ Chỉ Số Hợp Lưu T0 (IBD • Acc/Diss • RRG • POC)",
+            "tp_val": f"IBD TB: {tp_stats['avg_ibd']:.1f} • RRG: {tp_stats['avg_rrg_r']:.1f}/{tp_stats['avg_rrg_m']:.1f}",
+            "sl_val": "Chưa ghi nhận mẫu chạm SL trong tập lọc",
+            "weight": "DUY TRÌ KỶ LUẬT",
+            "action": "Tiếp tục ghi nhận Snapshot T0 để tự động đối chiếu khi phát sinh mẫu đóng mới.",
+        })
+
+    decided_cnt = tp_stats["count"] + sl_stats["count"]
+    win_rate_decided = round((tp_stats["count"] / decided_cnt) * 100.0, 1) if decided_cnt > 0 else 0.0
+
+    return {
+        "total_count": len(signals),
+        "tp_stats": tp_stats,
+        "sl_stats": sl_stats,
+        "timeout_stats": timeout_stats,
+        "active_stats": active_stats,
+        "win_rate_decided_pct": win_rate_decided,
+        "lessons": lessons,
+    }
+

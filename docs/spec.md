@@ -649,6 +649,20 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 3. **Bất Biến Miền Cắt Lỗ (Stopped-Out Domain Invariant):**
    - Với mọi vị thế vi phạm cắt lỗ (`STOPPED_OUT`), giá đóng hiển thị bắt buộc là giá kích hoạt Stop Loss thực tế `min(current_price, stop_loss)` và PnL luôn mang dấu âm/hòa vốn, triệt tiêu hoàn toàn lỗi hiển thị PnL dương xanh cạnh nhãn Cắt Lỗ.
 
+---
+
+### Tier 29 [ACCEPTED - ADR-028]: Tab Vị Thế Đã Khuyến Nghị (TP/SL), Hiển Thị Chỉ Số Đánh Giá Tại T0 & Bộ Máy Tự Học Hậu Kiểm (T0 SL vs TP Attribution)
+
+> **Trạng thái:** `ACCEPTED & IMPLEMENTED (100% PASSING)` (xem [`ADR-028`](decisions/ADR-028-t0-metrics-audit-tab-and-sl-post-mortem-attribution.md), test: `tests/test_positions_tracker_tab.py`).
+
+1. **Hiển Thị Bộ Chỉ Số Đánh Giá Tại Thời Điểm Khuyến Nghị ($T_0$ Snapshot):**
+   - Bổ sung cột `Chỉ Số Đánh Giá Tại T0` trực tiếp vào cả bảng Vị thế đang nắm giữ (`#active-positions-table`) và bảng Lịch sử vị thế đã đóng (`#closed-positions-table`, mặc định mở sẵn) trên Tab 2.
+   - Ra mắt **Tab 3 chuyên biệt (`#hud-tab-t0-audit` — `🧬 TAB 3: VỊ THẾ ĐÃ KHUYẾN NGHỊ (TP / SL) & CHỈ SỐ ĐÁNH GIÁ TẠI T0`)**: Hợp nhất toàn bộ vị thế đang mở và đã đóng (`TP1`, `TP2`, `STOPPED_OUT`, `TIME_OUT`) kèm 14 cột chỉ số đánh giá gốc tại thời điểm mua $T_0$ (`Điểm AI`, `IBD Composite`, `RS 1M`, `Tích lũy A-E`, `RRG Ratio/Mom`, `Khối ngoại & Tự doanh T0`, `ADTV20 & Điểm thanh khoản`, `POC T0 & Độ lệch ATR`, `Độ rộng TT & Basis VN30F1M`) và bộ lọc nhanh theo nhóm kết quả (`ALL`, `TP`, `SL`, `ACTIVE`, `TIMEOUT`).
+2. **Bộ Máy Tự Học & Tái Đánh Giá Chỉ Số T0 Trên Các Lệnh Bị SL (`evaluate_t0_signal_quality_and_diagnosis`, `analyze_t0_sl_vs_tp_attribution`):**
+   - Tự động bóc tách điểm mạnh và điểm yếu tại $T_0$ cho từng vị thế.
+   - Đối chiếu thống kê trung bình chỉ số $T_0$ giữa tập lệnh Chốt lời (`TP`) và tập lệnh Cắt lỗ (`SL`), tính điểm tầm quan trọng (`importance_score` thang 100) và đề xuất quy tắc lọc tự động nhằm loại bỏ các thiết lập có xác suất SL cao trong tương lai.
+
+
 
 
 

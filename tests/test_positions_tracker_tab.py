@@ -254,3 +254,119 @@ def test_active_positions_sorted_by_buy_date_descending(tmp_path):
     idx_tch = table_content.index("TCH")
 
     assert idx_vck < idx_baf < idx_tch, f"Th? t? ng?y mua b? sai: VCK({idx_vck}), BAF({idx_baf}), TCH({idx_tch})"
+
+
+def test_t0_evaluation_metrics_and_attribution_tab(tmp_path):
+    """Kiểm tra Tab 3 (Vị thế đã khuyến nghị TP/SL & Chỉ số đánh giá tại T0) cùng bộ máy tự học hậu kiểm SL vs TP."""
+    from src.risk_engine.signal_tracker import (
+        analyze_t0_sl_vs_tp_attribution,
+        evaluate_t0_signal_quality_and_diagnosis,
+    )
+
+    out_html_path = tmp_path / "test_t0_audit_tab.html"
+
+    tp_sig = ActiveSignal(
+        symbol="BVB",
+        first_signal_date="2026-10-25 09:30:00",
+        last_updated="2026-11-02 14:45:00",
+        entry_original=12.40,
+        current_price=14.40,
+        pnl_pct=16.13,
+        mfe_pct=17.20,
+        mae_pct=-0.80,
+        holding_days=8,
+        trading_days=6,
+        initial_stop_loss=11.95,
+        current_stop_loss=13.50,
+        tp1=13.70,
+        tp2=14.20,
+        status="TP2_REACHED",
+        buy_permission="EXTENDED_NO_CHASING",
+        advice_note="Đạt TP2 xuất sắc",
+        is_closed=True,
+        closed_at="2026-11-02 14:45:00",
+        ranking_score=86.5,
+        composite_rating=91,
+        rs_1m=88,
+        acc_diss_rating="A",
+        rrg_r=102.4,
+        rrg_m=101.8,
+        foreign_net_value_billion=28.5,
+        prop_net_value_billion=12.0,
+        flow_badge="GOM RÒNG ĐỒNG THUẬN",
+        adtv20_billion=65.0,
+        liquidity_score=85.0,
+        poc_price_t0=12.30,
+        atr_dist_from_poc_t0=0.45,
+        market_breadth_pct_t0=62.5,
+        vn30_basis_t0=2.1,
+    )
+
+    sl_sig = ActiveSignal(
+        symbol="VGS",
+        first_signal_date="2026-10-28 10:15:00",
+        last_updated="2026-11-03 11:20:00",
+        entry_original=26.60,
+        current_price=24.10,
+        pnl_pct=-9.40,
+        mfe_pct=1.20,
+        mae_pct=-9.40,
+        holding_days=6,
+        trading_days=4,
+        initial_stop_loss=24.20,
+        current_stop_loss=24.20,
+        tp1=29.00,
+        tp2=30.50,
+        status="STOPPED_OUT",
+        buy_permission="BUY_BLOCKED_SL",
+        advice_note="Thủng SL cứng",
+        is_closed=True,
+        closed_at="2026-11-03 11:20:00",
+        ranking_score=71.2,
+        composite_rating=76,
+        rs_1m=68,
+        acc_diss_rating="C",
+        rrg_r=99.2,
+        rrg_m=99.6,
+        foreign_net_value_billion=-15.4,
+        prop_net_value_billion=-4.2,
+        flow_badge="XẢ RÒNG",
+        adtv20_billion=22.0,
+        liquidity_score=65.0,
+        poc_price_t0=25.40,
+        atr_dist_from_poc_t0=1.35,
+        market_breadth_pct_t0=41.0,
+        vn30_basis_t0=-4.5,
+    )
+
+    diag_tp = evaluate_t0_signal_quality_and_diagnosis(tp_sig)
+    diag_sl = evaluate_t0_signal_quality_and_diagnosis(sl_sig)
+    assert diag_tp["category"] == "TP"
+    assert diag_sl["category"] == "SL"
+    assert diag_sl["effective_pnl_pct"] < 0
+    assert len(diag_sl["weaknesses"]) >= 2
+
+    attribution = analyze_t0_sl_vs_tp_attribution([tp_sig, sl_sig])
+    assert attribution["tp_stats"]["count"] == 1
+    assert attribution["sl_stats"]["count"] == 1
+    assert len(attribution["lessons"]) >= 1
+
+    generate_terminal_html(
+        output_path=str(out_html_path),
+        fialda_candidates=[],
+        top_n=0,
+        active_signals={"BVB": tp_sig, "VGS": sl_sig},
+    )
+
+    html = out_html_path.read_text(encoding="utf-8")
+    assert 'id="btn-tab-t0-audit"' in html
+    assert 'id="hud-tab-t0-audit"' in html
+    assert 'id="t0-attribution-table"' in html
+    assert 'id="t0-recommended-positions-table"' in html
+    assert "filterT0AuditRows(" in html
+    assert "Chỉ Số Đánh Giá Tại T0" in html
+    assert "BVB" in html
+    assert "VGS" in html
+    assert "86.5" in html
+    assert "71.2" in html
+
