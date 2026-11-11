@@ -635,5 +635,20 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
    - Cung cấp phương thức `coord.run_multi_year_2024_2026()` bóc tách hiệu suất từng năm `2024`, `2025`, `2026` và tổng kỳ 3 năm.
    - CLI: `python -m src.backtesting.walk_forward --real-data`.
 
+---
+
+### Tier 28 [ACCEPTED - ADR-027]: Tự Động Lưu Trữ Vòng Đời Tín Hiệu Đã Đóng & Chuẩn Hóa Logic Hiển Thị Bảng Lịch Sử Vị Thế
+
+> **Trạng thái:** `ACCEPTED & IMPLEMENTED (100% PASSING)` (xem [`ADR-027`](decisions/ADR-027-signal-lifecycle-auto-archive-and-closed-positions-domain-audit.md), test: `tests/test_positions_tracker_tab.py`).
+
+1. **Tự Động Thu Gom & Lưu Trữ Vòng Đời (Lifecycle Pruning & Archival):**
+   - Vị thế có `is_closed == True` sau khi hết thời gian lưu sổ cái (>3 phiên giao dịch thực tế) tự động được chuyển sang `data/signal_history_ml.jsonl` và xóa khỏi `data/active_signals.jsonl`.
+   - Giúp sổ cái ngầm luôn tinh gọn, bảo toàn dung lượng Zero-Waste `< 15MB` và loại bỏ 100% dữ liệu thử nghiệm cũ gây hiểu lầm.
+2. **Minh Bạch Dòng Thời Gian Khuyến Nghị (Timeline Transparency):**
+   - Bổ sung 2 cột thời gian `Ngày Vào T0` và `Ngày Đóng` vào bảng Lịch sử vị thế hoàn thành toàn vòng trên Dashboard.
+3. **Bất Biến Miền Cắt Lỗ (Stopped-Out Domain Invariant):**
+   - Với mọi vị thế vi phạm cắt lỗ (`STOPPED_OUT`), giá đóng hiển thị bắt buộc là giá kích hoạt Stop Loss thực tế `min(current_price, stop_loss)` và PnL luôn mang dấu âm/hòa vốn, triệt tiêu hoàn toàn lỗi hiển thị PnL dương xanh cạnh nhãn Cắt Lỗ.
+
+
 
 

@@ -832,6 +832,17 @@ class SignalTracker:
                 low_price=live_l if live_l > 0 else None,
             )
 
+        # Tự động dọn dẹp và lưu trữ bất biến các vị thế đã ĐÓNG và đã hết thời gian cooldown (>3 phiên giao dịch thực tế)
+        # Giúp sổ cái active_signals.jsonl luôn tinh gọn, tập trung danh mục thực chiến và bảo đảm Zero-Waste
+        closed_to_archive: List[str] = []
+        for sym, existing in active_signals.items():
+            if existing.is_closed and self._is_closed_cooldown_expired(existing, now_dt=now_dt, cooldown_sessions=3):
+                closed_to_archive.append(sym)
+
+        for sym in closed_to_archive:
+            self._archive_closed_signal(active_signals[sym])
+            del active_signals[sym]
+
         self.save_active_signals(active_signals)
         self.generate_scorecard_markdown(active_signals, now_str)
         self.export_ml_dataset(active_signals)

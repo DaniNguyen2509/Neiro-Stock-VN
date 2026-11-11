@@ -249,3 +249,12 @@ flowchart LR
   - **Trailing Stop Hòa Vốn:** Khi chạm TP1, dời Stop lên `entry_orig`. Kiểm tra hòa vốn theo giá/đáy phiên hiện tại (`current_tick_low < cur_stop`), không nhầm với giá vào $T_0$.
   - **Time-Stop Policy:** Tất toán vị thế sau 7 phiên giao dịch (`trading_days >= 7`) nếu $PnL < +3.0\%$ (`TIME_OUT`, `is_closed = True`), giải phóng sức mua luân chuyển dòng vốn.
 - **`terminal.py`:** Phân luồng Tab 2 tinh gọn: Bảng chính chỉ hiển thị 12 vị thế đang nắm giữ; ngăn collapsible lưu trữ lịch sử các vị thế đã chốt TP2, cắt lỗ hoặc tất toán T+7 kèm lý do chi tiết.
+
+## Cập nhật ADR-027: Tự Động Lưu Trữ Vòng Đời Tín Hiệu Đã Đóng & Chuẩn Hóa Logic Hiển Thị Bảng Lịch Sử Vị Thế
+
+- **`signal_tracker.py` (`update_signals`):**
+  - Tự động thu gom và lưu trữ vĩnh viễn các vị thế đã đóng (`is_closed == True`) sau khi hết 3 phiên cooldown sang `data/signal_history_ml.jsonl`, giải phóng `data/active_signals.jsonl` luôn ở trạng thái tinh gọn (<15KB).
+- **`terminal.py`:**
+  - Bổ sung 2 cột thời gian `Ngày Vào T0` và `Ngày Đóng` vào bảng lịch sử vị thế.
+  - Sửa đổi miền nghiệp vụ: Giá đóng của vị thế cắt lỗ (`STOPPED_OUT`) bắt buộc là giá kích hoạt Stop Loss thực tế `min(current_price, stop_loss)`, đảm bảo PnL luôn mang dấu âm/hòa vốn, loại bỏ hoàn toàn nghịch lý PnL dương cạnh nhãn Cắt Lỗ.
+  - Ngăn chặn hoàn toàn việc hiển thị các bản ghi thử nghiệm cũ (`schema_version == "v1_legacy"`).

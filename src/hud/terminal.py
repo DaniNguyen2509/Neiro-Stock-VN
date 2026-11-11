@@ -469,6 +469,20 @@ def generate_terminal_html(
             else:
                 active_running.append(s)
 
+    # Nếu sổ cái active không còn mã đóng nào (đã được archive sau 3 phiên), lấy các vị thế chuẩn v2 từ archive (tối đa 15 mã gần nhất)
+    if not closed_signals:
+        try:
+            from src.risk_engine.signal_tracker import SignalTracker
+            archived = SignalTracker().load_archived_signals()
+            valid_archived = [
+                s for s in archived.values()
+                if getattr(s, "schema_version", "") == "v2" and getattr(s, "is_closed", False)
+            ]
+            if valid_archived:
+                closed_signals.extend(valid_archived)
+        except Exception:
+            pass
+
     # Sap xep vi the dang chay mac dinh theo ngay mua gan nhat (T0 len dau), thu cap theo PnL giam dan
     active_running.sort(
         key=lambda x: (str(getattr(x, "first_signal_date", "") or ""), getattr(x, "pnl_pct", 0.0)),
@@ -583,33 +597,56 @@ def generate_terminal_html(
         c_cur = getattr(c_sig, "current_price", 0.0)
         c_t = getattr(c_sig, "trading_days", 0)
         c_tp2 = getattr(c_sig, "tp2", 0.0)
+        c_first_dt = getattr(c_sig, "first_signal_date", "") or ""
+        c_closed_dt = getattr(c_sig, "closed_at", "") or getattr(c_sig, "last_updated", "") or ""
+        t0_display = c_first_dt.split()[0] if c_first_dt else "T0"
+        closed_display = c_closed_dt.split()[0] if c_closed_dt else "N/A"
 
-        c_pnl_col = "#00e676" if c_pnl > 0 else "#ff5252"
-        c_sign = "+" if c_pnl > 0 else ""
+        c_sl = getattr(c_sig, "current_stop_loss", 0.0) or getattr(c_sig, "initial_stop_loss", 0.0)
+        c_low = getattr(c_sig, "min_price_reached", 0.0) or getattr(c_sig, "current_price", 0.0)
+
         if c_status == "TP2_REACHED":
+            exit_price = c_tp2 if c_tp2 > 0 else c_cur
+            c_pnl = round(((exit_price - c_entry) / c_entry) * 100.0, 2) if c_entry > 0 else c_pnl
             status_badge = '<span style="background:#004d40;color:#64ffda;padding:2px 6px;border-radius:4px;font-weight:bold;">🏆 ĐẠT TP2</span>'
             reason = f'Đạt mục tiêu TP2 ({c_tp2:.2f}) • Hoàn tất chốt lời 100%'
         elif c_status == "TIME_OUT":
+            exit_price = c_cur
             status_badge = '<span style="background:#374151;color:#fbbf24;padding:2px 6px;border-radius:4px;font-weight:bold;">⏱️ HẾT SÓNG T+7</span>'
             reason = f'Tất toán cơ cấu danh mục sau {c_t} phiên (thu hồi sức mua)'
         else:
             status_badge = '<span style="background:#b71c1c;color:#ff8a80;padding:2px 6px;border-radius:4px;font-weight:bold;">🛑 CẮT LỖ</span>'
-            c_low = getattr(c_sig, "min_price_reached", 0.0) or getattr(c_sig, "current_price", 0.0)
-            c_sl = getattr(c_sig, "current_stop_loss", 0.0)
+            # Đảm bảo Giá Đóng là giá chạm ngưỡng Stop Loss thực tế và PnL nhất quán âm/hòa vốn
+            exit_price = min(c_cur, c_sl) if c_sl > 0 else c_cur
+            c_pnl = round(((exit_price - c_entry) / c_entry) * 100.0, 2) if c_entry > 0 else min(c_pnl, 0.0)
             if c_low > 0 and c_sl > 0:
                 reason = f'Chạm đáy chu kỳ {c_low:.2f} &le; Ngưỡng Stop {c_sl:.2f}'
             else:
                 reason = 'Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5'
 
+        c_pnl_col = "#00e676" if c_pnl > 0 else ("#ff5252" if c_pnl < 0 else "#ffb300")
+        c_sign = "+" if c_pnl > 0 else ""
+
         closed_rows_html += f"""
         <tr style="border-bottom:1px solid #1f2937;">
             <td style="padding:6px;font-weight:bold;color:#ffb300;">{c_sym}</td>
             <td style="padding:6px;text-align:center;">{status_badge}</td>
+            <td style="padding:6px;text-align:center;color:#94a3b8;">{t0_display}</td>
+            <td style="padding:6px;text-align:center;color:#64748b;">{closed_display}</td>
             <td style="padding:6px;text-align:right;">{c_entry:.2f}</td>
-            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">{c_cur:.2f}</td>
+            <td style="padding:6px;text-align:right;color:#ffffff;font-weight:bold;">{exit_price:.2f}</td>
             <td style="padding:6px;text-align:right;color:{c_pnl_col};font-weight:bold;">{c_sign}{c_pnl:.2f}%</td>
             <td style="padding:6px;text-align:center;">T+{c_t}</td>
             <td style="padding:6px;color:#90a4ae;">{reason}</td>
+        </tr>
+        """
+
+    if not closed_rows_html:
+        closed_rows_html = """
+        <tr>
+            <td colspan="9" style="padding:15px;text-align:center;color:#78909c;">
+                Chưa có vị thế nào đóng trong chu kỳ gần đây.
+            </td>
         </tr>
         """
 
@@ -888,7 +925,9 @@ def generate_terminal_html(
                     <thead>
                         <tr style="border-bottom:1px solid #263238;color:#78909c;text-align:left;">
                             <th style="padding:6px;">Mã CP</th>
-                            <th style="padding:6px;text-align:center;">Kết QuẢ</th>
+                            <th style="padding:6px;text-align:center;">Kết Quả</th>
+                            <th style="padding:6px;text-align:center;">Ngày Vào T0</th>
+                            <th style="padding:6px;text-align:center;">Ngày Đóng</th>
                             <th style="padding:6px;text-align:right;">Giá Vào T0</th>
                             <th style="padding:6px;text-align:right;">Giá Đóng</th>
                             <th style="padding:6px;text-align:right;">Lợi Nhuận PnL %</th>

@@ -109,10 +109,58 @@ def test_active_positions_tracker_table_rendering(tmp_path):
     assert "T+6 (Khả dụng 100%)" in html
 
     # 4. HDC đã đạt TP2 (+12.50%) hoàn tất vòng đời:
-    # Phải nằm trong ngăn lịch sử chốt lời đóng vòng đời
+    # Phải nằm trong ngăn lịch sử chốt lời đóng vòng đời với đủ cột Ngày Vào T0 và Ngày Đóng
     assert "🏆 ĐẠT TP2" in html
     assert "Đạt mục tiêu TP2 (12.60) • Hoàn tất chốt lời 100%" in html
     assert "Đã chốt lời toàn bộ TP2 &amp; rời bảng: <b style=\"color:#ffb300;\">1 mã</b>" in html
+    assert "Ngày Vào T0" in html
+    assert "Ngày Đóng" in html
+    assert "2026-10-28" in html
+    assert "2026-10-31" in html
+
+
+def test_closed_positions_stopped_out_exit_price_and_negative_pnl_invariant(tmp_path):
+    """Kiểm tra bất biến miền nghiệp vụ: Vị thế STOPPED_OUT không bao giờ hiển thị PnL dương xanh, giá đóng phải là giá chạm Stop."""
+    out_html_path = tmp_path / "test_stopped_out_domain.html"
+
+    # Giả lập mã PDR bị chạm stop 10.91 nhưng thị giá hiện tại đã hồi lên 11.75
+    mock_signals = {
+        "PDR": ActiveSignal(
+            symbol="PDR",
+            first_signal_date="2026-10-30 09:15:00",
+            last_updated="2026-11-04 14:50:00",
+            entry_original=11.50,
+            current_price=11.75,     # Đã hồi lên cao hơn giá vào
+            pnl_pct=2.17,             # PnL thị giá dương
+            holding_days=5,
+            trading_days=4,
+            initial_stop_loss=10.91,
+            current_stop_loss=10.91,
+            tp1=12.43,
+            tp2=13.02,
+            status="STOPPED_OUT",
+            buy_permission="EXTENDED_NO_CHASING",
+            advice_note="Vi phạm cắt lỗ",
+            is_closed=True,
+            closed_at="2026-11-04 14:50:00",
+            min_price_reached=10.75,  # Đáy chu kỳ đã đâm thủng 10.91
+        ),
+    }
+
+    generate_terminal_html(
+        output_path=str(out_html_path),
+        fialda_candidates=[],
+        top_n=0,
+        active_signals=mock_signals,
+    )
+
+    html = out_html_path.read_text(encoding="utf-8")
+    assert "🛑 CẮT LỖ" in html
+    assert "10.91" in html, "Giá đóng của STOPPED_OUT phải là giá kích hoạt Stop Loss 10.91"
+    assert "-5.13%" in html, "PnL của lệnh cắt lỗ phải là PnL thực tế khi thoát tại Stop Loss (-5.13%), cấm hiển thị dương"
+    assert "+2.17%" not in html, "Không được hiển thị PnL dương khi trạng thái là CẮT LỖ"
+    assert "2026-10-30" in html, "Phải hiển thị Ngày vào T0"
+    assert "2026-11-04" in html, "Phải hiển thị Ngày đóng"
 
 
 def test_empty_active_positions_graceful_display(tmp_path):

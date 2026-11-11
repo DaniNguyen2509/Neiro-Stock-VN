@@ -224,3 +224,8 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
 - **True Low Stop Loss:** So sánh ngưỡng cắt lỗ với đáy thực tế chu kỳ nắm giữ `min(cur_price, low_price, min_price_reached)` thay vì chỉ snapshot giá 30 phút, triệt tiêu 100% thiên kiến sống sót và lãi ảo (như ca VCI thủng đáy 18.05 vi phạm stop 18.58).
 - **Time-Stop T+7 Capital Rotation:** Tự động tất toán sau 7 phiên giao dịch thực tế nếu $PnL < +3.0\%$ để thu hồi sức mua luân chuyển dòng vốn.
 - **Sổ Cái Tab 2 Tinh Gọn (Anti-Clutter UI):** Bảng chính chỉ giữ các vị thế đang chạy thực chiến (~12 mã); toàn bộ mã đã đóng (TP2, Cắt lỗ, Hết sóng T+7) được chuyển vào ngăn collapsible lưu trữ lịch sử minh bạch. Chi tiết tại [`docs/decisions/ADR-024-true-low-stop-loss-and-time-stop-rotation.md`](docs/decisions/ADR-024-true-low-stop-loss-and-time-stop-rotation.md).
+
+### 4.17. Tự Động Lưu Trữ Vòng Đời Tín Hiệu Đã Đóng & Chuẩn Hóa Logic Hiển Thị Bảng Lịch Sử Vị Thế (ADR-027 — Accepted)
+- **Tự động lưu trữ vòng đời (Automatic Lifecycle Archival):** Tự động chuyển các vị thế đã đóng sau 3 phiên giao dịch sang `data/signal_history_ml.jsonl`, giải phóng `data/active_signals.jsonl` luôn ở trạng thái tinh gọn (<15KB) và bảo toàn tiêu chuẩn Zero-Waste.
+- **Minh bạch dòng thời gian:** Bổ sung cột `Ngày Vào T0` và `Ngày Đóng` vào bảng lịch sử vị thế.
+- **Bất biến miền Cắt Lỗ (Stopped-Out Domain Invariant):** Chuẩn hóa Giá đóng của vị thế cắt lỗ thành `min(current_price, stop_loss)`, đảm bảo PnL luôn mang dấu âm/hòa vốn, triệt tiêu hoàn toàn lỗi hiển thị PnL dương cạnh nhãn Cắt Lỗ. Chi tiết tại [`docs/decisions/ADR-027-signal-lifecycle-auto-archive-and-closed-positions-domain-audit.md`](docs/decisions/ADR-027-signal-lifecycle-auto-archive-and-closed-positions-domain-audit.md).
