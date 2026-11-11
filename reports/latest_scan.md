@@ -1,4 +1,4 @@
-## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 8 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)
+## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 2 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)
 > **Trạng thái Thị trường:** VN-Index Tăng **136** / Giảm **157** (Độ rộng A/D: **46.4%**) | Giá trị GD: **13,844 tỷ VND** | P/E: **11.17**
 > ⚠️ THỊ TRƯỜNG PHÂN HÓA (46.4% — Tăng 136 / Giảm 157): Chỉ giải ngân chọn lọc tại nền POC/VAL, giới hạn tổng cổ phiếu <= 40% NAV.
 > 🟢 **Trạng Thái Dữ Liệu:** `REAL-TIME FIALDA PRO API` (Dữ liệu khớp lệnh trực tiếp từ sàn)
@@ -7,12 +7,6 @@
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **1** | **SZC** | `ĐỘT BIẾN GT` | **20.60** | `20.49 - 21.11` | **19.24** | **23.22** / **24.78** | **18.8t** | `ĐẠT BIÊN` | 104/100 | **50** | `C` | -0.2 tỷ | **62.5** | #1 (=) |
 | **2** | **GMD** | `ĐỘT BIẾN GT` | **53.60** | `53.19 - 54.81` | **50.90** | **58.87** / **61.97** | **105.0t** | `SIÊU TK` | 99/100 | **95** | `D` | +6.8 tỷ | **51.8** | #2 (=) |
-| **3** | **NAB** | `ĐỘT BIẾN GT` | **12.80** | `12.66 - 13.04` | **12.14** | **13.97** / **14.68** | **31.4t** | `CHUẨN QUỸ` | 101/100 | **50** | `C` | +1.3 tỷ | **42.5** | Mới |
-| **4** | **EVF** | `ĐỘT BIẾN GT` | **11.90** | `11.72 - 12.08` | **11.36** | **12.76** / **13.30** | **16.3t** | `ĐẠT BIÊN` | 100/100 | **50** | `C` | -0.5 tỷ | **42.5** | Mới |
-| **5** | **KBC** | `CHÂN SÓNG` | **27.35** | `26.99 - 27.81` | **26.17** | **29.35** / **30.58** | **32.5t** | `CHUẨN QUỸ` | 101/100 | **50** | `C` | -1.5 tỷ | **77.5** | Mới |
-| **6** | **VTZ** | `CHÂN SÓNG` | **20.30** | `20.00 - 20.60` | **19.39** | **21.75** / **22.66** | **17.6t** | `ĐẠT BIÊN` | 100/100 | **50** | `C` | -0.1 tỷ | **77.5** | Mới |
-| **7** | **BCM** | `ĐỘT BIẾN GT` | **38.60** | `38.02 - 39.18` | **36.78** | **41.48** / **43.30** | **23.9t** | `ĐẠT BIÊN` | 99/99 | **50** | `C` | -0.5 tỷ | **42.5** | Mới |
-| **8** | **MZG** | `ĐỘT BIẾN GT` ⛔ ĐÃ SUY YẾU (CẤM BẮT DAO RƠI) | **10.70** | `10.83 - 11.16` | **10.22** | **12.21** / **12.99** | **18.2t** | `ĐẠT BIÊN` | 97/100 | **50** | `C` | +6.8 tỷ | **17.5** | Mới |
 
 ### 🎯 Kế Hoạch Tác Chiến, Điểm Thoát Lệnh T+2.5 & Catalysts:
 - **SZC (20.60)** `=` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `20.49 - 21.11` | Cắt lỗ cấu trúc: `19.24` | TP1 (Net 1.5R): `23.22` | TP2 (Net 2.5R): `24.78` (R:R `1:2.5`)
@@ -25,36 +19,6 @@
   - *Động lực:* RRG(r=98.9, m=99.6), IBD=95, Acc/Diss=D | 🔵 NGOẠI ĐỠ GIÁ | POC=52.86 (+0.4 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `105.0 tỷ` (Điểm TK: `93/100`) | Sức chứa tối đa: `195,800 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 300 cp (~16.1tr, 16.1% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `🟡 THĂM DÒ <=30% (T+2.5 MODERATE)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **NAB (12.80)** `T0 KHUYẾN NGHỊ` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `12.66 - 13.04` | Cắt lỗ cấu trúc: `12.14` | TP1 (Net 1.5R): `13.97` | TP2 (Net 2.5R): `14.68` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +1.3 tỷ | Tự doanh thực tế: +0.1 tỷ)
-  - *Động lực:* RRG(r=101.1, m=100.3), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ | POC=12.57 (+1.0 ATR) | ⏱️ Phiên sáng: Thăm dò <= 30%, chờ sau 13:45 xác nhận cung T+2.5
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `31.4 tỷ` (Điểm TK: `76/100`) | Sức chứa tối đa: `100,000 cp` (Trượt giá ~`0.50%`). ✅ Vốn 100tr: Tối đa 1,500 cp (~19.2tr, 19.2% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
-  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `T+0 (Khuyến nghị hôm nay)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **EVF (11.90)** `T0 KHUYẾN NGHỊ` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `11.72 - 12.08` | Cắt lỗ cấu trúc: `11.36` | TP1 (Net 1.5R): `12.76` | TP2 (Net 2.5R): `13.30` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: -0.5 tỷ | Tự doanh thực tế: +0.3 tỷ)
-  - *Động lực:* RRG(r=100.5, m=100.0), IBD=50, Acc/Diss=C | 🔴 NGUY HIỂM XẢ | POC=11.61 (+0.8 ATR) | ⏱️ Phiên sáng: Thăm dò <= 30%, chờ sau 13:45 xác nhận cung T+2.5
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `16.3 tỷ` (Điểm TK: `61/100`) | Sức chứa tối đa: `100,000 cp` (Trượt giá ~`0.50%`). ✅ Vốn 100tr: Tối đa 1,600 cp (~19.0tr, 19.0% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
-  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `T+0 (Khuyến nghị hôm nay)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **KBC (27.35)** `T0 KHUYẾN NGHỊ` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `26.99 - 27.81` | Cắt lỗ cấu trúc: `26.17` | TP1 (Net 1.5R): `29.35` | TP2 (Net 2.5R): `30.58` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: -1.5 tỷ | Tự doanh: Chưa công bố EOD (N/A))
-  - *Động lực:* RRG(r=101.1, m=100.2), IBD=50, Acc/Diss=C | 🔴 NGUY HIỂM XẢ | POC=27.04 (+0.7 ATR) | ⏱️ Phiên sáng: Thăm dò <= 30%, chờ sau 13:45 xác nhận cung T+2.5
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `32.5 tỷ` (Điểm TK: `76/100`) | Sức chứa tối đa: `100,000 cp` (Trượt giá ~`0.50%`). ✅ Vốn 100tr: Tối đa 700 cp (~19.1tr, 19.1% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
-  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `T+0 (Khuyến nghị hôm nay)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **VTZ (20.30)** `T0 KHUYẾN NGHỊ` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `20.00 - 20.60` | Cắt lỗ cấu trúc: `19.39` | TP1 (Net 1.5R): `21.75` | TP2 (Net 2.5R): `22.66` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: -0.1 tỷ | Tự doanh: Chưa công bố EOD (N/A))
-  - *Động lực:* RRG(r=100.2, m=100.2), IBD=50, Acc/Diss=C | 🔴 NGUY HIỂM XẢ | POC=20.23 (+0.3 ATR) | ⏱️ Phiên sáng: Thăm dò <= 30%, chờ sau 13:45 xác nhận cung T+2.5
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `17.6 tỷ` (Điểm TK: `63/100`) | Sức chứa tối đa: `100,000 cp` (Trượt giá ~`0.50%`). ✅ Vốn 100tr: Tối đa 900 cp (~18.3tr, 18.3% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
-  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `T+0 (Khuyến nghị hôm nay)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **BCM (38.60)** `T0 KHUYẾN NGHỊ` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `38.02 - 39.18` | Cắt lỗ cấu trúc: `36.78` | TP1 (Net 1.5R): `41.48` | TP2 (Net 2.5R): `43.30` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: -0.5 tỷ | Tự doanh: Chưa công bố EOD (N/A))
-  - *Động lực:* RRG(r=98.9, m=99.3), IBD=50, Acc/Diss=C | 🔴 NGUY HIỂM XẢ | POC=40.89 (-2.0 ATR) | ⏱️ Phiên sáng: Thăm dò <= 30%, chờ sau 13:45 xác nhận cung T+2.5
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `23.9 tỷ` (Điểm TK: `69/100`) | Sức chứa tối đa: `100,000 cp` (Trượt giá ~`0.50%`). ✅ Vốn 100tr: Tối đa 500 cp (~19.3tr, 19.3% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
-  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `T+0 (Khuyến nghị hôm nay)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **MZG (10.70)** `T0 KHUYẾN NGHỊ` | **⛔ ĐÃ SUY YẾU (CẤM BẮT DAO RƠI)**: Vùng gom T0 `10.83 - 11.16` | Cắt lỗ cấu trúc: `10.22` | TP1 (Net 1.5R): `12.21` | TP2 (Net 2.5R): `12.99` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +6.8 tỷ | Tự doanh: Chưa công bố EOD (N/A))
-  - *Động lực:* RRG(r=97.3, m=100.0), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ | POC=10.38 (+1.4 ATR)
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `18.2 tỷ` (Điểm TK: `63/100`) | Sức chứa tối đa: `100,000 cp` (Trượt giá ~`0.50%`). ✅ Vốn 100tr: Tối đa 1,800 cp (~19.3tr, 19.3% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
-  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `T+0 (Khuyến nghị hôm nay)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
 
 ### 📊 BẢNG XẾP HẠNG ĐỊNH LƯỢNG CƠ BẢN (PIOTROSKI F-SCORE & P/E)
 > *Nguồn: Báo cáo tài chính chuẩn hóa & Bảng giá Real-time Fialda VIP*
@@ -97,9 +61,6 @@
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **SZC** | `Q3/2026` | 101.9 tỷ | 132.3 tỷ | **112.1 tỷ** | 17.1 tỷ | 18.9 tỷ | **21.6 tỷ** | `+14.3%` ↗ | 33.7% | `🚀 TĂNG TỐC 3 QUÝ` |
 | **GMD** | `Q3/2026` | 1,452.4 tỷ | 1,761.6 tỷ | **2,209.8 tỷ** | 650.2 tỷ | 1,288.4 tỷ | **586.3 tỷ** | `-54.5%` | 31.8% | `↘ CHẬM LẠI` |
-| **NAB** | `Q3/2026` | 2,290.2 tỷ | 2,836.4 tỷ | **3,014.0 tỷ** | 1,308.5 tỷ | 1,209.8 tỷ | **1,268.9 tỷ** | `+4.9%` ↗ | 64.5% | `↗ TĂNG TRƯỞNG DƯƠNG` |
-| **EVF** | `Q3/2026` | 487.4 tỷ | 627.5 tỷ | **591.0 tỷ** | 266.6 tỷ | 289.6 tỷ | **279.1 tỷ** | `-3.6%` | 83.1% | `↘ CHẬM LẠI` |
-| **KBC** | `Q3/2026` | 1,335.9 tỷ | 588.7 tỷ | **3,187.3 tỷ** | 234.3 tỷ | 25.6 tỷ | **937.2 tỷ** | `+3560.9%` ↗ | 54.0% | `🔥 BÙNG NỔ LNST` |
 
 ### 📰 TIN TỨC DOANH NGHIỆP & LỊCH SỰ KIỆN MỚI NHẤT (SPOTLIGHT)
 > *Nguồn: Cổng công bố thông tin Fialda Real-time*
@@ -110,12 +71,6 @@
 - **[GMD] Loạt quỹ ETF sắp tái cơ cấu: MSB bị bán gần 11 triệu cổ phiếu, GMD, NLG, HPG hút dòng tiền?** (2026-11-05 • *Vietnam Finance*)
   > Các quỹ ETF theo VN30, VNDiamond và VNFin Lead sắp tái cơ cấu từ 9–13/11, dự báo tạo áp lực bán lên nhóm ngân hàng như MSB, ACB, TCB và hỗ trợ dòng tiền mua vào GMD, NLG, HPG.
 - 📅 **[GMD - SỰ KIỆN]** Ngày: `Sắp tới` — *Giao dịch bổ sung - 216,444,883 CP*
-- **[NAB] NAB: Nam A Bank sẽ sử dụng hơn 1.300 tỷ đồng từ chào bán cổ phiếu riêng lẻ vào mục đích gì?** (2026-11-09 • *An ninh tiền tệ*)
-  > Nam A Bank (NAB) dự kiến chào bán 100 triệu cổ phiếu riêng lẻ cho 7 nhà đầu tư tổ chức ở giá 13.200 đồng, thu về khoảng 1.320 tỷ đồng để cấp tín dụng và đầu tư tài sản cố định.
-- 📅 **[NAB - SỰ KIỆN]** Ngày: `Gần đây` — *Giao dịch bổ sung - 25,000,000 CP*
-- **[EVF] EVF: Thông báo nhận được Công văn của UBCKNN về hồ sơ đăng ký chào bán trái phiếu ra thị trường quốc tế** (2026-11-09 • *HOSE*)
-  > Công ty Tài chính Tổng hợp Cổ phần Điện lực (EVF) đã nhận được công văn của UBCKNN liên quan đến hồ sơ đăng ký chào bán trái phiếu ra thị trường quốc tế.
-- 📅 **[EVF - SỰ KIỆN]** Ngày: `2026-09-21` — *EVF: Thông báo giao dịch cổ phiếu của Người nội bộ Lê Mạnh Linh*
 
 ---
 *Báo cáo được tạo tự động bởi Neiro-Stock-VN Fialda VIP Expert Harvester trên GitHub Actions.*
