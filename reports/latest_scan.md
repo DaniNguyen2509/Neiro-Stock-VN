@@ -1,13 +1,13 @@
 ## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 8 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)
-> **Trạng thái Thị trường:** VN-Index Tăng **115** / Giảm **190** (Độ rộng A/D: **37.7%**) | Giá trị GD: **10,689 tỷ VND** | P/E: **11.12**
-> ⚠️ THỊ TRƯỜNG PHÂN HÓA (37.7% — Tăng 115 / Giảm 190): Chỉ giải ngân chọn lọc tại nền POC/VAL, giới hạn tổng cổ phiếu <= 40% NAV.
+> **Trạng thái Thị trường:** VN-Index Tăng **106** / Giảm **192** (Độ rộng A/D: **35.6%**) | Giá trị GD: **11,209 tỷ VND** | P/E: **11.12**
+> ⚠️ THỊ TRƯỜNG PHÂN HÓA (35.6% — Tăng 106 / Giảm 192): Chỉ giải ngân chọn lọc tại nền POC/VAL, giới hạn tổng cổ phiếu <= 40% NAV.
 > 🟢 **Trạng Thái Dữ Liệu:** `REAL-TIME FIALDA PRO API` (Dữ liệu khớp lệnh trực tiếp từ sàn)
 
 | STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua | Cắt Lỗ | Chốt Lời (TP1 / TP2) | Thanh Khoản | Chuẩn Quỹ | RRG | Điểm IBD | Tích Luỹ | Ngoại Ròng | Điểm AI | Kỳ Trước |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **1** | **SZC** | `ĐỘT BIẾN GT` 🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN) | **20.65** | `20.49 - 21.11` | **19.24** | **23.22** / **24.78** | **17.7t** | `ĐẠT BIÊN` | 104/100 | **50** | `C` | -0.2 tỷ | **62.5** | #1 (=) |
-| **2** | **GMD** | `ĐỘT BIẾN GT` 🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN) | **53.90** | `53.19 - 54.81` | **50.90** | **58.87** / **61.97** | **103.0t** | `SIÊU TK` | 99/100 | **95** | `D` | +4.1 tỷ | **51.8** | #2 (=) |
-| **3** | **MZG** | `ĐỘT BIẾN GT` 🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN) | **10.90** | `10.83 - 11.16` | **10.22** | **12.21** / **12.99** | **18.2t** | `ĐẠT BIÊN` | 97/100 | **50** | `C` | +12.5 tỷ | **17.5** | #3 (=) |
+| **2** | **GMD** | `ĐỘT BIẾN GT` 🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN) | **53.90** | `53.19 - 54.81` | **50.90** | **58.87** / **61.97** | **103.0t** | `SIÊU TK` | 99/100 | **95** | `D` | +5.1 tỷ | **51.8** | #2 (=) |
+| **3** | **MZG** | `ĐỘT BIẾN GT` ⛔ ĐÃ SUY YẾU (CẤM BẮT DAO RƠI) | **10.70** | `10.83 - 11.16` | **10.22** | **12.21** / **12.99** | **18.2t** | `ĐẠT BIÊN` | 97/100 | **50** | `C` | +12.5 tỷ | **17.5** | #3 (=) |
 | **4** | **NAB** | `ĐỘT BIẾN GT` | **12.80** | `12.66 - 13.04` | **12.14** | **13.97** / **14.68** | **31.4t** | `CHUẨN QUỸ` | 101/100 | **50** | `C` | +1.3 tỷ | **42.5** | Mới |
 | **5** | **EVF** | `ĐỘT BIẾN GT` | **11.90** | `11.72 - 12.08` | **11.36** | **12.76** / **13.30** | **16.3t** | `ĐẠT BIÊN` | 100/100 | **50** | `C` | -0.5 tỷ | **42.5** | Mới |
 | **6** | **KBC** | `CHÂN SÓNG` | **27.35** | `26.99 - 27.81` | **26.17** | **29.35** / **30.58** | **32.5t** | `CHUẨN QUỸ` | 101/100 | **50** | `C` | -1.5 tỷ | **77.5** | Mới |
@@ -21,14 +21,14 @@
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `17.7 tỷ` (Điểm TK: `63/100`) | Sức chứa tối đa: `85,500 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 800 cp (~16.5tr, 16.5% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⚠️ THẬN TRỌNG CAO (T+2.5 HIGH)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
 - **GMD (53.90)** `=` | **🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN)**: Vùng gom T0 `53.19 - 54.81` | Cắt lỗ cấu trúc: `50.90` | TP1 (Net 1.5R): `58.87` | TP2 (Net 2.5R): `61.97` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🟢🟢 ĐỒNG THUẬN GOM (Khối ngoại: +4.1 tỷ | Tự doanh thực tế: +1.8 tỷ)
+  - *Ma trận Dòng tiền:* 🟢🟢 ĐỒNG THUẬN GOM (Khối ngoại: +5.1 tỷ | Tự doanh thực tế: +1.8 tỷ)
   - *Động lực:* RRG(r=98.9, m=99.6), IBD=95, Acc/Diss=D | 🟢🟢 ĐỒNG THUẬN GOM | POC=52.86 (+0.5 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `103.0 tỷ` (Điểm TK: `93/100`) | Sức chứa tối đa: `191,100 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 300 cp (~16.2tr, 16.2% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⚠️ THẬN TRỌNG CAO (T+2.5 HIGH)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **MZG (10.90)** `=` | **🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN)**: Vùng gom T0 `10.83 - 11.16` | Cắt lỗ cấu trúc: `10.22` | TP1 (Net 1.5R): `12.21` | TP2 (Net 2.5R): `12.99` (R:R `1:2.5`)
+- **MZG (10.70)** `=` | **⛔ ĐÃ SUY YẾU (CẤM BẮT DAO RƠI)**: Vùng gom T0 `10.83 - 11.16` | Cắt lỗ cấu trúc: `10.22` | TP1 (Net 1.5R): `12.21` | TP2 (Net 2.5R): `12.99` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +12.5 tỷ | Tự doanh: Chưa công bố EOD (N/A))
-  - *Động lực:* RRG(r=97.3, m=99.9), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ | POC=10.38 (+1.2 ATR)
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `18.2 tỷ` (Điểm TK: `63/100`) | Sức chứa tối đa: `166,900 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,800 cp (~19.6tr, 19.6% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
+  - *Động lực:* RRG(r=97.3, m=99.9), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ | POC=10.38 (+0.7 ATR)
+  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `18.2 tỷ` (Điểm TK: `63/100`) | Sức chứa tối đa: `170,000 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,800 cp (~19.3tr, 19.3% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⚠️ THẬN TRỌNG CAO (T+2.5 HIGH)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
 - **NAB (12.80)** `T0 KHUYẾN NGHỊ` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `12.66 - 13.04` | Cắt lỗ cấu trúc: `12.14` | TP1 (Net 1.5R): `13.97` | TP2 (Net 2.5R): `14.68` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +1.3 tỷ | Tự doanh thực tế: +0.1 tỷ)
@@ -61,16 +61,16 @@
 
 | Mã CP | Tên Doanh Nghiệp | Nhóm Ngành | Giá Khớp (1,000 đ) | F-Score | P/E | P/B | CFO / NI | Xếp Hạng |
 | :---: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **VHM** | Vinhomes | Bất động sản dân cư | **62.00** | **8/9** | 5.7 | 1.8 | 4.00 | `ĐỊNH CHẾ GOM` |
-| **HPG** | Tập đoàn Hòa Phát | Thép & Vật liệu xây dựng | **21.25** | **8/9** | 6.2 | 1.1 | 1.01 | `ĐỊNH CHẾ GOM` |
-| **SSI** | Chứng khoán SSI | Dịch vụ tài chính & CK | **20.60** | **8/9** | 13.6 | 1.5 | 4.64 | `ĐỊNH CHẾ GOM` |
+| **VHM** | Vinhomes | Bất động sản dân cư | **62.10** | **8/9** | 5.7 | 1.8 | 4.00 | `ĐỊNH CHẾ GOM` |
+| **HPG** | Tập đoàn Hòa Phát | Thép & Vật liệu xây dựng | **21.20** | **8/9** | 6.2 | 1.1 | 1.01 | `ĐỊNH CHẾ GOM` |
+| **SSI** | Chứng khoán SSI | Dịch vụ tài chính & CK | **20.55** | **8/9** | 13.6 | 1.5 | 4.64 | `ĐỊNH CHẾ GOM` |
 | **GEX** | Tập đoàn GELEX | Thiết bị điện & KCN | **22.25** | **7/9** | 31.6 | 0.9 | 9.67 | `ĐỊNH CHẾ GOM` |
 | **PTB** | Phú Tài | Gỗ & Đá xuất khẩu | **29.40** | **5/9** | 5.5 | 0.8 | 0.73 | `THEO DÕI` |
-| **DBC** | Dabaco Việt Nam | Nông nghiệp & Chăn nuôi | **16.25** | **5/9** | 6.5 | 0.8 | 5.94 | `ĐỊNH CHẾ GOM` |
+| **DBC** | Dabaco Việt Nam | Nông nghiệp & Chăn nuôi | **16.15** | **5/9** | 6.5 | 0.8 | 5.94 | `ĐỊNH CHẾ GOM` |
 | **FPT** | Tập đoàn FPT | Công nghệ thông tin | **50.70** | **5/9** | 11.6 | 2.7 | 0.77 | `THEO DÕI` |
 | **CTS** | Chứng khoán VietinBank | Dịch vụ tài chính & CK | **23.15** | **4/9** | 49.9 | 1.9 | 76.27 | `THEO DÕI` |
-| **MBB** | Ngân hàng Quân Đội | Ngân hàng thương mại | **19.25** | **N/A (Ngân hàng)** | 6.1 | 1.2 | -1.50 | `THEO DÕI` |
-| **VCB** | Vietcombank | Ngân hàng thương mại | **54.20** | **N/A (Ngân hàng)** | 11.6 | 1.9 | -5.49 | `THEO DÕI` |
+| **MBB** | Ngân hàng Quân Đội | Ngân hàng thương mại | **19.30** | **N/A (Ngân hàng)** | 6.1 | 1.2 | -1.50 | `THEO DÕI` |
+| **VCB** | Vietcombank | Ngân hàng thương mại | **54.10** | **N/A (Ngân hàng)** | 11.6 | 1.9 | -5.49 | `THEO DÕI` |
 
 > 💡 **Ghi chú định lượng học thuật (Piotroski, 2000):** Thang điểm *Piotroski F-Score (0-9)* loại trừ các Ngân hàng thương mại (MBB, VCB) do đặc thù BCTC ngành ngân hàng không có *Giá vốn/Biên Lợi Nhuận Gộp* và *Hệ số Thanh toán ngắn hạn (Current Ratio)*. Xem bảng định lượng CAMEL & Basel II/III chi tiết bên dưới.
 
@@ -79,16 +79,16 @@
 
 | Mã CP | Tên Ngân Hàng | Giá Khớp | Điểm CAMEL | CASA (%) | NIM (%) | NPL Nợ Xấu | LLR Bao Phủ | CIR (%) | ROE (%) | P/B | Xếp Hạng CAMEL |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **VCB** | Vietcombank | **54.20** | **88/100** | **34.2%** | 3.2% | 0.98% | **230%** | 31.5% | 21.5% | **1.8** | `HẠNG A (TINH HOA)` |
-| **MBB** | Ngân hàng Quân Đội | **19.25** | **88/100** | **39.5%** | 4.6% | 1.42% | **160%** | 29.8% | 22.8% | **1.2** | `HẠNG A (TINH HOA)` |
-| **TCB** | Techcombank | **21.75** | **83/100** | **40.2%** | 4.4% | 1.35% | **110%** | 33.5% | 16.8% | **1.2** | `HẠNG A (TINH HOA)` |
-| **ACB** | Ngân hàng Á Châu | **20.50** | **81/100** | **24.1%** | 4.1% | 1.21% | **135%** | 32.0% | 23.1% | **1.1** | `HẠNG A (TINH HOA)` |
-| **HDB** | HDBank | **22.40** | **70/100** | **14.8%** | 5.1% | 1.65% | **95%** | 35.2% | 24.2% | **1.6** | `HẠNG B (TĂNG TRƯỞNG)` |
-| **CTG** | VietinBank | **31.65** | **63/100** | **22.8%** | 3.0% | 1.45% | **165%** | 32.8% | 17.9% | **1.2** | `HẠNG C (TÁI CƠ CẤU)` |
-| **VPB** | VPBank | **22.30** | **61/100** | **18.2%** | 5.6% | 4.20% | **52%** | 28.5% | 12.5% | **1.1** | `HẠNG C (TÁI CƠ CẤU)` |
+| **VCB** | Vietcombank | **54.10** | **88/100** | **34.2%** | 3.2% | 0.98% | **230%** | 31.5% | 21.5% | **1.8** | `HẠNG A (TINH HOA)` |
+| **MBB** | Ngân hàng Quân Đội | **19.30** | **88/100** | **39.5%** | 4.6% | 1.42% | **160%** | 29.8% | 22.8% | **1.2** | `HẠNG A (TINH HOA)` |
+| **TCB** | Techcombank | **21.90** | **83/100** | **40.2%** | 4.4% | 1.35% | **110%** | 33.5% | 16.8% | **1.2** | `HẠNG A (TINH HOA)` |
+| **ACB** | Ngân hàng Á Châu | **20.55** | **81/100** | **24.1%** | 4.1% | 1.21% | **135%** | 32.0% | 23.1% | **1.1** | `HẠNG A (TINH HOA)` |
+| **HDB** | HDBank | **22.45** | **70/100** | **14.8%** | 5.1% | 1.65% | **95%** | 35.2% | 24.2% | **1.6** | `HẠNG B (TĂNG TRƯỞNG)` |
+| **CTG** | VietinBank | **31.70** | **63/100** | **22.8%** | 3.0% | 1.45% | **165%** | 32.8% | 17.9% | **1.2** | `HẠNG C (TÁI CƠ CẤU)` |
+| **VPB** | VPBank | **22.35** | **61/100** | **18.2%** | 5.6% | 4.20% | **52%** | 28.5% | 12.5% | **1.1** | `HẠNG C (TÁI CƠ CẤU)` |
 | **BID** | BIDV | **32.40** | **56/100** | **21.5%** | 2.8% | 1.52% | **158%** | 34.2% | 18.5% | **1.2** | `HẠNG C (TÁI CƠ CẤU)` |
-| **STB** | Sacombank | **68.30** | **39/100** | **19.5%** | 3.6% | 2.10% | **72%** | 42.5% | 15.2% | **2.0** | `HẠNG C (TÁI CƠ CẤU)` |
-| **EIB** | Eximbank | **16.40** | **39/100** | **15.2%** | 2.8% | 2.45% | **62%** | 46.2% | 10.5% | **1.1** | `HẠNG C (TÁI CƠ CẤU)` |
+| **STB** | Sacombank | **68.50** | **39/100** | **19.5%** | 3.6% | 2.10% | **72%** | 42.5% | 15.2% | **2.0** | `HẠNG C (TÁI CƠ CẤU)` |
+| **EIB** | Eximbank | **16.35** | **39/100** | **15.2%** | 2.8% | 2.45% | **62%** | 46.2% | 10.5% | **1.1** | `HẠNG C (TÁI CƠ CẤU)` |
 
 ### 📑 BÁO CÁO KẾT QUẢ KINH DOANH CÁC QUÝ GẦN NHẤT (DOANH THU & LỢI NHUẬN RÒNG BCTC)
 > *Thống kê xu hướng tăng trưởng 1 CP / 1 dòng duy nhất • Nguồn: Báo cáo tài chính Fialda VIP API*
