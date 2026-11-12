@@ -26,9 +26,9 @@ Triển khai kỹ thuật CSS Sticky 2 chiều với kiến trúc container và 
   - Tất cả thẻ `th` đều có `position: sticky; top: 0; z-index: 20; background: #0b111e; border-bottom: 2px solid #334155;`.
 - **Cố định 9 cột đầu tiên từ STT đến Chốt Lời TP (Horizontal Sticky Columns 1 - 9):**
   - Cột 1 (`STT`): `left: 0; width: 44px; text-align: center; border-right: 1px solid #1e293b;`
-  - Cột 2 (`Mã CP`): `left: 44px; width: 96px; border-right: 1px solid #1e293b;`
-  - Cột 3 (`Trạng Thái`): `left: 140px; width: 110px; text-align: center; border-right: 1px solid #1e293b;`
-  - Cột 4 (`Chu Kỳ (Ngày Vào T0 • Ngày Đóng)`): `left: 250px; width: 135px; text-align: center; border-right: 1px solid #1e293b;`
+  - Cột 2 (`Mã CP`): `left: 44px; width: 86px; border-right: 1px solid #1e293b;`
+  - Cột 3 (`Trạng Thái`): `left: 130px; width: 125px; text-align: center; border-right: 1px solid #1e293b;` (bề rộng mở rộng, triệt tiêu 100% lỗi cắt chữ `ĐANG NẮM GI...`)
+  - Cột 4 (`Chu Kỳ (Ngày Vào T0 • Ngày Đóng)`): `left: 255px; width: 130px; text-align: center; border-right: 1px solid #1e293b;` (khớp hoàn hảo mép phải cột 3, xóa tan hiện tượng đè cột)
   - Cột 5 (`Giá Vốn`): `left: 385px; width: 75px; text-align: right; border-right: 1px solid #1e293b;`
   - Cột 6 (`Giá Thoát/Live`): `left: 460px; width: 85px; text-align: right; border-right: 1px solid #1e293b;`
   - Cột 7 (`Lãi/Lỗ PnL %`): `left: 545px; width: 95px; text-align: right; border-right: 1px solid #1e293b;`
@@ -40,8 +40,14 @@ Triển khai kỹ thuật CSS Sticky 2 chiều với kiến trúc container và 
 - **Đồng bộ hiệu ứng rê chuột (Hover Synchronization):**
   - Khi rê chuột vào dòng `.unified-pos-row:hover td.col-sticky-pane`, toàn bộ 9 cột cố định đều chuyển sang cùng một nền sáng nhẹ `#131c2e !important;`, đồng bộ tuyệt đối với các cột đang cuộn.
 
-### 2.2. Bảng Đơn Sắc Đồng Nhất (Monochromatic Unified Theme)
-- Loại bỏ toàn bộ CSS `nth-child(even)` zebra striping.
+### 2.2. Bảng Đơn Sắc Đồng Nhất & Triệt Tiêu Hiệu Ứng Màu Mè (Flat Minimalist Dark Slate Cockpit)
+- **Loại bỏ 100% khung box/pill viền neon lộn xộn:**
+  - Dưới Mã CP: Chuyển các pill tím/xanh sang text phẳng màu xám nhã nhặn `#94a3b8` (`Chân sóng`, `Thể chế`, `Đột biến GT`), không background, không border.
+  - Cột Trạng Thái: Text phẳng thanh thoát, không đóng hộp pill cồng kềnh, loại bỏ viền border.
+  - Cột Chu Kỳ: Text phẳng `T+0 (Vừa mua)` với màu xám sáng `#e2e8f0` và ngày tháng `#64748b`, xóa bỏ hoàn toàn khung viền cyan bao quanh.
+  - Cột Cắt Lỗ SL & Chốt Lời TP: Chuẩn hóa màu xám sáng `#cbd5e1`, chấm dứt việc tô đỏ rực cả cột SL hay tô xanh cyan cả cột TP.
+  - Cột Giá Live: Màu trắng bạc `#e2e8f0`, giữ màu xanh/đỏ độc quyền cho cột Lãi/Lỗ PnL % và Dòng tiền ròng.
+  - Thanh nút bộ lọc: Đồng nhất chuẩn Dark Slate `#111722` viền `#1e293b`, bỏ các biểu tượng emoji lòe loẹt.
 - Áp dụng một tông nền tối duy nhất `#0b111e` cho toàn bộ container, table, `thead th`, `tbody td`, và thanh cuộn tùy biến Webkit scrollbar.
 - Đường kẻ viền mỏng tinh tế `1px solid #182232` và `border-collapse: separate; border-spacing: 0;` giúp viền hiển thị hoàn hảo khi cuộn sticky.
 

@@ -556,11 +556,11 @@ def generate_terminal_html(
             s_sym = getattr(sig_item, "symbol", "")
             s_type = str(getattr(sig_item, "signal_type", "CHO_MUA_CHAN_SONG") or "CHO_MUA_CHAN_SONG")
             if "CHO_MUA" in s_type:
-                s_type_badge = '<span style="background:rgba(16,185,129,0.12);color:#34d399;border:1px solid rgba(16,185,129,0.25);padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">CHÂN SÓNG</span>'
+                s_type_badge = '<span style="color:#94a3b8;font-size:10px;font-weight:500;">Chân sóng</span>'
             elif "THE_CHE" in s_type:
-                s_type_badge = '<span style="background:rgba(139,92,246,0.12);color:#a78bfa;border:1px solid rgba(139,92,246,0.25);padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">THỂ CHẾ GOM</span>'
+                s_type_badge = '<span style="color:#94a3b8;font-size:10px;font-weight:500;">Thể chế</span>'
             else:
-                s_type_badge = '<span style="background:rgba(56,189,248,0.12);color:#38bdf8;border:1px solid rgba(56,189,248,0.25);padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">ĐỘT BIẾN GT</span>'
+                s_type_badge = '<span style="color:#94a3b8;font-size:10px;font-weight:500;">Đột biến GT</span>'
 
             s_status = str(getattr(sig_item, "status", "ACTIVE") or "ACTIVE")
             s_outcome = str(getattr(sig_item, "outcome_label", "ACTIVE") or "ACTIVE")
@@ -568,15 +568,15 @@ def generate_terminal_html(
             s_tdays = int(getattr(sig_item, "trading_days", 0) or 0)
 
             if s_status == "TP2_REACHED" or s_outcome == "WIN_TP2":
-                res_badge = '<span style="background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🏆 ĐẠT TP2</span>'
+                res_badge = '<span style="color:#fbbf24;font-weight:600;font-size:11px;">🏆 ĐẠT TP2</span>'
             elif s_status == "TP1_REACHED" or s_outcome == "WIN_TP1":
-                res_badge = '<span style="background:rgba(16,185,129,0.12);color:#34d399;border:1px solid rgba(16,185,129,0.25);padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🎯 ĐẠT TP1</span>'
+                res_badge = '<span style="color:#34d399;font-weight:600;font-size:11px;">🎯 ĐẠT TP1</span>'
             elif s_status == "STOPPED_OUT" or s_outcome == "STOP_LOSS":
-                res_badge = '<span style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.25);padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🛑 CẮT LỖ</span>'
+                res_badge = '<span style="color:#f87171;font-weight:600;font-size:11px;">🛑 CẮT LỖ</span>'
             elif s_status == "TIME_OUT" or s_outcome == "TIME_OUT":
-                res_badge = '<span style="background:rgba(245,158,11,0.12);color:#fbbf24;border:1px solid rgba(245,158,11,0.25);padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">⏱️ HẾT SÓNG T+7</span>'
+                res_badge = '<span style="color:#94a3b8;font-weight:600;font-size:11px;">⏱️ HẾT SÓNG T+7</span>'
             else:
-                res_badge = '<span style="background:rgba(56,189,248,0.12);color:#38bdf8;border:1px solid rgba(56,189,248,0.25);padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🟢 ĐANG NẮM GIỮ</span>'
+                res_badge = '<span style="color:#34d399;font-weight:600;font-size:11px;">🟢 ĐANG NẮM GIỮ</span>'
 
             s_first = str(getattr(sig_item, "first_signal_date", "") or "")
             s_closed = str(getattr(sig_item, "closed_at", "") or getattr(sig_item, "last_updated", "") or "")
@@ -585,16 +585,16 @@ def generate_terminal_html(
 
             if is_act:
                 if s_tdays == 0:
-                    t_str = '<span style="background:rgba(56,189,248,0.08);color:#7dd3fc;border:1px solid rgba(56,189,248,0.2);padding:1px 5px;border-radius:3px;font-weight:600;font-size:10px;">T+0 (Vừa mua)</span>'
+                    t_str = '<span style="color:#e2e8f0;font-weight:600;font-size:11px;">T+0 (Vừa mua)</span>'
                 elif s_tdays == 1:
-                    t_str = '<span style="background:rgba(56,189,248,0.08);color:#7dd3fc;border:1px solid rgba(56,189,248,0.2);padding:1px 5px;border-radius:3px;font-weight:600;font-size:10px;">T+1 (Chờ hàng)</span>'
+                    t_str = '<span style="color:#e2e8f0;font-weight:600;font-size:11px;">T+1 (Chờ hàng)</span>'
                 elif s_tdays == 2:
-                    t_str = '<span style="background:rgba(16,185,129,0.08);color:#6ee7b7;border:1px solid rgba(16,185,129,0.2);padding:1px 5px;border-radius:3px;font-weight:600;font-size:10px;">T+2 (Khả dụng chiều)</span>'
+                    t_str = '<span style="color:#e2e8f0;font-weight:600;font-size:11px;">T+2 (Khả dụng chiều)</span>'
                 else:
-                    t_str = f'<span style="background:rgba(16,185,129,0.08);color:#6ee7b7;border:1px solid rgba(16,185,129,0.2);padding:1px 5px;border-radius:3px;font-weight:600;font-size:10px;">T+{s_tdays} (Khả dụng 100%)</span>'
+                    t_str = f'<span style="color:#e2e8f0;font-weight:600;font-size:11px;">T+{s_tdays} (Khả dụng 100%)</span>'
                 time_sub = f'{t_str}<div style="color:#64748b;font-size:10px;margin-top:2px;">Vào: {s_t0_dt}</div>'
             else:
-                time_sub = f'<span style="color:#94a3b8;font-weight:600;font-size:10.5px;">T+{s_tdays}</span><div style="color:#64748b;font-size:10px;margin-top:2px;">Vào: {s_t0_dt} &rarr; Đóng: {s_cl_dt}</div>'
+                time_sub = f'<span style="color:#e2e8f0;font-weight:600;font-size:11px;">T+{s_tdays}</span><div style="color:#64748b;font-size:10px;margin-top:2px;">Vào: {s_t0_dt} &rarr; Đóng: {s_cl_dt}</div>'
 
             s_entry = float(getattr(sig_item, "entry_original", 0.0) or 0.0)
             s_cur = float(getattr(sig_item, "current_price", 0.0) or 0.0)
@@ -606,41 +606,41 @@ def generate_terminal_html(
             s_low = float(getattr(sig_item, "min_price_reached", 0.0) or 0.0)
 
             if s_status == "TP1_REACHED" and s_sl >= s_entry:
-                sl_str = f'<span style="color:#34d399;font-weight:600;">{s_sl:.2f}</span><div style="font-size:9.5px;color:#64748b;">(Hòa vốn)</div>'
+                sl_str = f'<span style="color:#cbd5e1;font-weight:500;">{s_sl:.2f}</span><div style="font-size:9.5px;color:#34d399;">(Hòa vốn)</div>'
             else:
-                sl_str = f'<span style="color:#f87171;font-weight:600;">{s_sl:.2f}</span>'
+                sl_str = f'<span style="color:#cbd5e1;font-weight:500;">{s_sl:.2f}</span>'
 
             if s_status == "TP1_REACHED":
-                tp_str = f'<span style="text-decoration:line-through;color:#64748b;">{s_tp1:.2f}</span> <b style="color:#34d399;">✓</b><br/><b style="color:#38bdf8;">{s_tp2:.2f}</b>'
+                tp_str = f'<span style="text-decoration:line-through;color:#64748b;">{s_tp1:.2f}</span> <span style="color:#34d399;font-size:10px;">✓</span><br/><span style="color:#cbd5e1;font-weight:500;">{s_tp2:.2f}</span>'
             else:
-                tp_str = f'<span style="color:#38bdf8;">{s_tp1:.2f}</span> / <b style="color:#38bdf8;">{s_tp2:.2f}</b>'
+                tp_str = f'<span style="color:#cbd5e1;font-weight:500;">{s_tp1:.2f} / {s_tp2:.2f}</span>'
 
             pnl_col = "#34d399" if eff_pnl > 0 else ("#f87171" if eff_pnl < 0 else "#94a3b8")
             pnl_s = "+" if eff_pnl > 0 else ""
             if is_act:
-                cur_price_html = f'<span class="live-price" data-sym="{s_sym}" style="font-weight:700;color:{pnl_col};font-size:12.5px;">{s_cur:.2f}</span>'
-                pnl_html = f'<span class="live-pnl" data-sym="{s_sym}" data-entry="{s_entry:.2f}" style="font-weight:800;color:{pnl_col};font-size:12.5px;">{pnl_s}{eff_pnl:.2f}%</span>'
+                cur_price_html = f'<span class="live-price" data-sym="{s_sym}" style="font-weight:600;color:#e2e8f0;font-size:12.5px;">{s_cur:.2f}</span>'
+                pnl_html = f'<span class="live-pnl" data-sym="{s_sym}" data-entry="{s_entry:.2f}" style="font-weight:700;color:{pnl_col};font-size:12.5px;">{pnl_s}{eff_pnl:.2f}%</span>'
             else:
-                cur_price_html = f'<b style="color:#e2e8f0;font-size:12.5px;">{eff_price:.2f}</b>'
-                pnl_html = f'<span style="font-weight:800;color:{pnl_col};font-size:12.5px;">{pnl_s}{eff_pnl:.2f}%</span>'
+                cur_price_html = f'<span style="color:#e2e8f0;font-size:12.5px;font-weight:600;">{eff_price:.2f}</span>'
+                pnl_html = f'<span style="font-weight:700;color:{pnl_col};font-size:12.5px;">{pnl_s}{eff_pnl:.2f}%</span>'
 
             if cat == "SL":
                 excursion_sub = f'<div style="font-size:10px;color:#fca5a5;margin-top:2px;">Đáy MAE: {min(s_mae, eff_pnl):.1f}%</div>'
             else:
                 excursion_sub = f'<div style="font-size:10px;color:#64748b;margin-top:2px;">+{max(s_mfe, 0.0):.1f}% / {min(s_mae, 0.0):.1f}%</div>'
 
-            # Action / Reason badge
+            # Action / Reason badge - tinh gọn, không màu mè chói mắt
             if is_act:
                 if s_status == "TP1_REACHED":
-                    action_badge = '<span style="background:rgba(56,189,248,0.12);color:#38bdf8;border:1px solid rgba(56,189,248,0.25);padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">🎯 ĐÃ CHỐT 50% TP1 — GỒNG LÃI TỚI TP2 (CẤM MUA ĐUỔI)</span>'
+                    action_badge = '<span style="color:#38bdf8;font-size:10px;font-weight:600;">🎯 ĐÃ CHỐT 50% TP1 — GỒNG LÃI TỚI TP2 (CẤM MUA ĐUỔI)</span>'
                 elif buy_perm == "EXTENDED_NO_CHASING":
-                    action_badge = '<span style="background:rgba(245,158,11,0.12);color:#fbbf24;border:1px solid rgba(245,158,11,0.25);padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">⚠️ ĐÃ TĂNG XA NỀN — CẤM MUA ĐUỔI</span>'
+                    action_badge = '<span style="color:#fbbf24;font-size:10px;font-weight:600;">⚠️ ĐÃ TĂNG XA NỀN — CẤM MUA ĐUỔI</span>'
                 elif buy_perm == "BULL_TRAP_REJECT":
-                    action_badge = '<span style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.25);padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">⚠️ BULL-TRAP — NẮM GIỮ / CHỜ HỒI</span>'
+                    action_badge = '<span style="color:#f87171;font-size:10px;font-weight:600;">⚠️ BULL-TRAP — NẮM GIỮ / CHỜ HỒI</span>'
                 elif buy_perm == "STALE_SIGNAL":
-                    action_badge = '<span style="background:rgba(251,146,60,0.12);color:#fb923c;border:1px solid rgba(251,146,60,0.25);padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>'
+                    action_badge = '<span style="color:#fb923c;font-size:10px;font-weight:600;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>'
                 else:
-                    action_badge = '<span style="background:rgba(16,185,129,0.12);color:#34d399;border:1px solid rgba(16,185,129,0.25);padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">🟢 ĐANG NẮM GIỮ (CHỜ CHẠM TP)</span>'
+                    action_badge = '<span style="color:#34d399;font-size:10px;font-weight:600;">🟢 ĐANG NẮM GIỮ (CHỜ CHẠM TP)</span>'
             else:
                 if s_status == "TP2_REACHED":
                     action_badge = f'<span style="color:#34d399;font-size:10.5px;font-weight:600;">Đạt mục tiêu TP2 ({s_tp2:.2f}) • Hoàn tất chốt lời 100%</span>'
@@ -664,29 +664,25 @@ def generate_terminal_html(
             s_poc = float(getattr(sig_item, "poc_price_t0", 0.0) or 0.0)
             s_atrd = float(getattr(sig_item, "atr_dist_from_poc_t0", 0.0) or 0.0)
 
-            ibd_c = "#34d399" if s_ibd >= 75 else ("#cbd5e1" if s_ibd >= 60 else "#94a3b8")
-            ad_c = "#34d399" if s_ad in ("A", "B") else ("#cbd5e1" if s_ad == "C" else "#f87171")
-            ad_bg_c = "rgba(16,185,129,0.12)" if s_ad in ("A", "B") else ("rgba(148,163,184,0.12)" if s_ad == "C" else "rgba(239,68,68,0.12)")
             if s_r >= 100.0 and s_m >= 100.0:
-                rrg_quad = '<span style="color:#34d399;font-size:10px;font-weight:600;">Dẫn dắt</span>'
+                rrg_quad = '<span style="color:#94a3b8;font-size:10px;">Dẫn dắt</span>'
             elif s_r < 100.0 and s_m >= 100.0:
-                rrg_quad = '<span style="color:#38bdf8;font-size:10px;font-weight:600;">Cải thiện</span>'
+                rrg_quad = '<span style="color:#94a3b8;font-size:10px;">Cải thiện</span>'
             elif s_r >= 100.0 and s_m < 100.0:
-                rrg_quad = '<span style="color:#fbbf24;font-size:10px;font-weight:600;">Suy yếu</span>'
+                rrg_quad = '<span style="color:#94a3b8;font-size:10px;">Suy yếu</span>'
             else:
-                rrg_quad = '<span style="color:#f87171;font-size:10px;font-weight:600;">Tụt hậu</span>'
+                rrg_quad = '<span style="color:#94a3b8;font-size:10px;">Tụt hậu</span>'
 
             f_net_col = "#34d399" if s_fnet > 0.05 else ("#f87171" if s_fnet < -0.05 else "#94a3b8")
             p_net_col = "#34d399" if s_pnet > 0.05 else ("#f87171" if s_pnet < -0.05 else "#94a3b8")
 
-            poc_color = "#34d399" if -0.5 <= s_atrd <= 0.9 else ("#fbbf24" if s_atrd > 0.9 else "#f87171")
             poc_cell_html = (
-                f'<span style="color:#e2e8f0;font-weight:600;">{s_poc:.2f}</span><div style="font-size:9.5px;color:{poc_color};margin-top:2px;">({s_atrd:+.1f}ATR)</div>'
+                f'<span style="color:#cbd5e1;font-weight:500;">{s_poc:.2f}</span><div style="font-size:9.5px;color:#64748b;margin-top:2px;">({s_atrd:+.1f}ATR)</div>'
                 if s_poc > 0
                 else '<span style="color:#64748b;">-</span>'
             )
             prop_cell_html = (
-                f'<b style="color:{p_net_col};font-size:11.5px;">{s_pnet:+.1f}t</b>'
+                f'<span style="color:{p_net_col};font-size:11.5px;font-weight:500;">{s_pnet:+.1f}t</span>'
                 if abs(s_pnet) >= 0.05
                 else '<span style="color:#64748b;">-</span>'
             )
@@ -721,23 +717,23 @@ def generate_terminal_html(
                     {tp_str}
                 </td>
                 <td style="padding:9px 8px;text-align:center;">
-                    <b style="color:#e2e8f0;font-size:12px;">{s_ai:.1f}</b>
+                    <span style="color:#cbd5e1;font-size:12px;font-weight:500;">{s_ai:.1f}</span>
                 </td>
                 <td style="padding:9px 8px;text-align:center;">
-                    <b style="color:{ibd_c};font-size:12px;">{s_ibd}</b>
+                    <span style="color:#cbd5e1;font-size:12px;font-weight:500;">{s_ibd}</span>
                 </td>
                 <td style="padding:9px 8px;text-align:center;">
-                    <b style="color:#cbd5e1;font-size:12px;">{s_rs}</b>
+                    <span style="color:#cbd5e1;font-size:12px;font-weight:500;">{s_rs}</span>
                 </td>
                 <td style="padding:9px 8px;text-align:center;">
-                    <span style="background:{ad_bg_c};color:{ad_c};padding:1px 6px;border-radius:3px;font-weight:bold;font-size:10.5px;">{s_ad}</span>
+                    <span style="color:#cbd5e1;font-weight:600;font-size:11.5px;">{s_ad}</span>
                 </td>
                 <td style="padding:9px 8px;text-align:center;">
-                    <div style="color:#cbd5e1;font-weight:600;font-size:11px;">{s_r:.1f}/{s_m:.1f}</div>
+                    <div style="color:#cbd5e1;font-weight:500;font-size:11px;">{s_r:.1f}/{s_m:.1f}</div>
                     <div style="margin-top:2px;">{rrg_quad}</div>
                 </td>
                 <td style="padding:9px 8px;text-align:right;">
-                    <b style="color:{f_net_col};font-size:11.5px;">{s_fnet:+.1f}t</b>
+                    <span style="color:{f_net_col};font-size:11.5px;font-weight:500;">{s_fnet:+.1f}t</span>
                 </td>
                 <td style="padding:9px 8px;text-align:right;">
                     {prop_cell_html}
@@ -996,6 +992,11 @@ def generate_terminal_html(
         .unified-pos-row:hover td {{
             background-color: #131c2e !important;
         }}
+        .unified-positions-table,
+        .unified-positions-table th,
+        .unified-positions-table td {{
+            box-sizing: border-box;
+        }}
         .unified-positions-table th.col-sticky-pane {{
             position: sticky;
             top: 0;
@@ -1020,24 +1021,24 @@ def generate_terminal_html(
         }}
         .unified-positions-table .col-sticky-2 {{
             left: 44px;
-            min-width: 96px;
-            max-width: 96px;
-            width: 96px;
+            min-width: 86px;
+            max-width: 86px;
+            width: 86px;
             border-right: 1px solid #1e293b;
         }}
         .unified-positions-table .col-sticky-3 {{
-            left: 140px;
-            min-width: 110px;
-            max-width: 110px;
-            width: 110px;
+            left: 130px;
+            min-width: 125px;
+            max-width: 125px;
+            width: 125px;
             text-align: center;
             border-right: 1px solid #1e293b;
         }}
         .unified-positions-table .col-sticky-4 {{
-            left: 250px;
-            min-width: 135px;
-            max-width: 135px;
-            width: 135px;
+            left: 255px;
+            min-width: 130px;
+            max-width: 130px;
+            width: 130px;
             text-align: center;
             border-right: 1px solid #1e293b;
         }}
@@ -1216,11 +1217,11 @@ def generate_terminal_html(
 
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
             <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                <button class="pos-filter-btn t0-filter-btn" data-filter="ALL" onclick="filterUnifiedPositions('ALL')" style="background:#1e293b;color:#f8fafc;border:1px solid #475569;padding:5px 12px;border-radius:5px;font-size:11.5px;font-weight:700;cursor:pointer;">Tất Cả ({len(all_recommended_signals)})</button>
-                <button class="pos-filter-btn t0-filter-btn" data-filter="ACTIVE" onclick="filterUnifiedPositions('ACTIVE')" style="background:#111722;color:#94a3b8;border:1px solid #1e293b;padding:5px 12px;border-radius:5px;font-size:11.5px;font-weight:700;cursor:pointer;">🟢 Đang Nắm Giữ ({len(active_running)})</button>
-                <button class="pos-filter-btn t0-filter-btn" data-filter="TP" onclick="filterUnifiedPositions('TP')" style="background:#111722;color:#94a3b8;border:1px solid #1e293b;padding:5px 12px;border-radius:5px;font-size:11.5px;font-weight:700;cursor:pointer;">🎯 Đã Chốt Lời TP ({tp_st['count']})</button>
-                <button class="pos-filter-btn t0-filter-btn" data-filter="SL" onclick="filterUnifiedPositions('SL')" style="background:#111722;color:#94a3b8;border:1px solid #1e293b;padding:5px 12px;border-radius:5px;font-size:11.5px;font-weight:700;cursor:pointer;">🛑 Đã Cắt Lỗ SL ({sl_st['count']})</button>
-                <button class="pos-filter-btn t0-filter-btn" data-filter="TIMEOUT" onclick="filterUnifiedPositions('TIMEOUT')" style="background:#111722;color:#94a3b8;border:1px solid #1e293b;padding:5px 12px;border-radius:5px;font-size:11.5px;font-weight:700;cursor:pointer;">⏱️ Tất Toán T+7 ({to_st['count']})</button>
+                <button class="pos-filter-btn t0-filter-btn" data-filter="ALL" onclick="filterUnifiedPositions('ALL')" style="background:#1e293b;color:#f8fafc;border:1px solid #475569;padding:5px 12px;border-radius:5px;font-size:11.5px;font-weight:600;cursor:pointer;">Tất Cả ({len(all_recommended_signals)})</button>
+                <button class="pos-filter-btn t0-filter-btn" data-filter="ACTIVE" onclick="filterUnifiedPositions('ACTIVE')" style="background:#111722;color:#94a3b8;border:1px solid #1e293b;padding:5px 12px;border-radius:5px;font-size:11.5px;font-weight:600;cursor:pointer;">Đang Nắm Giữ ({len(active_running)})</button>
+                <button class="pos-filter-btn t0-filter-btn" data-filter="TP" onclick="filterUnifiedPositions('TP')" style="background:#111722;color:#94a3b8;border:1px solid #1e293b;padding:5px 12px;border-radius:5px;font-size:11.5px;font-weight:600;cursor:pointer;">Đã Chốt Lời TP ({tp_st['count']})</button>
+                <button class="pos-filter-btn t0-filter-btn" data-filter="SL" onclick="filterUnifiedPositions('SL')" style="background:#111722;color:#94a3b8;border:1px solid #1e293b;padding:5px 12px;border-radius:5px;font-size:11.5px;font-weight:600;cursor:pointer;">Đã Cắt Lỗ SL ({sl_st['count']})</button>
+                <button class="pos-filter-btn t0-filter-btn" data-filter="TIMEOUT" onclick="filterUnifiedPositions('TIMEOUT')" style="background:#111722;color:#94a3b8;border:1px solid #1e293b;padding:5px 12px;border-radius:5px;font-size:11.5px;font-weight:600;cursor:pointer;">Tất Toán T+7 ({to_st['count']})</button>
             </div>
             <span style="font-size:11px;color:#94a3b8;">💡 Bảng hợp nhất toàn vòng: Cố định khung cột từ STT đến Chốt Lời (TP) khi cuộn ngang • Giữ nguyên tiêu đề khi cuộn dọc • Tách riêng từng <b>Chỉ Số Đánh Giá Tại T0</b> và <b>Dòng Tiền &amp; Nền POC T0</b></span>
         </div>
@@ -1464,27 +1465,9 @@ def generate_terminal_html(
             btns.forEach(btn => {{
                 const bCat = btn.getAttribute('data-filter');
                 if (bCat === cat) {{
-                    if (cat === 'ALL') {{
-                        btn.style.background = '#1e293b';
-                        btn.style.color = '#f8fafc';
-                        btn.style.border = '1px solid #475569';
-                    }} else if (cat === 'ACTIVE') {{
-                        btn.style.background = 'rgba(56,189,248,0.15)';
-                        btn.style.color = '#38bdf8';
-                        btn.style.border = '1px solid #0284c7';
-                    }} else if (cat === 'TP') {{
-                        btn.style.background = 'rgba(16,185,129,0.15)';
-                        btn.style.color = '#34d399';
-                        btn.style.border = '1px solid #059669';
-                    }} else if (cat === 'SL') {{
-                        btn.style.background = 'rgba(239,68,68,0.15)';
-                        btn.style.color = '#f87171';
-                        btn.style.border = '1px solid #dc2626';
-                    }} else if (cat === 'TIMEOUT') {{
-                        btn.style.background = 'rgba(245,158,11,0.15)';
-                        btn.style.color = '#fbbf24';
-                        btn.style.border = '1px solid #d97706';
-                    }}
+                    btn.style.background = '#1e293b';
+                    btn.style.color = '#f8fafc';
+                    btn.style.border = '1px solid #475569';
                 }} else {{
                     btn.style.background = '#111722';
                     btn.style.color = '#94a3b8';

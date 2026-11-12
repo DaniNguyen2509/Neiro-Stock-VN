@@ -477,5 +477,5 @@
 {"timestamp": "2026-11-12 02:31:00", "symbol": "SZC", "rank": 1, "score": 62.5, "price": 20.6, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 19.24, "tp1": 23.22, "tp2": 24.78, "rr_ratio": 2.5, "adtv20_billion": 18.8}
 {"timestamp": "2026-11-12 02:31:00", "symbol": "GMD", "rank": 2, "score": 51.8, "price": 53.6, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 50.9, "tp1": 58.87, "tp2": 61.97, "rr_ratio": 2.5, "adtv20_billion": 105.0}
 {"timestamp": "2026-11-12 09:16:06", "symbol": "PHP", "rank": 1, "score": 57.5, "price": 44.5, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 42.06, "tp1": 48.34, "tp2": 50.78, "rr_ratio": 2.5, "adtv20_billion": 21.9}
-{"timestamp": "2026-11-12 11:46:13", "symbol": "NAB", "rank": 1, "score": 72.5, "price": 12.8, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 12.14, "tp1": 13.97, "tp2": 14.68, "rr_ratio": 2.5, "adtv20_billion": 31.3}
-{"timestamp": "2026-11-12 11:46:13", "symbol": "PHP", "rank": 2, "score": 57.5, "price": 45.5, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 42.06, "tp1": 48.34, "tp2": 50.78, "rr_ratio": 2.5, "adtv20_billion": 21.9}
+{"timestamp": "2026-11-12 12:01:16", "symbol": "NAB", "rank": 1, "score": 72.5, "price": 12.8, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 12.14, "tp1": 13.97, "tp2": 14.68, "rr_ratio": 2.5, "adtv20_billion": 31.3}
+{"timestamp": "2026-11-12 12:01:16", "symbol": "PHP", "rank": 2, "score": 57.5, "price": 45.5, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 42.06, "tp1": 48.34, "tp2": 50.78, "rr_ratio": 2.5, "adtv20_billion": 21.9}
