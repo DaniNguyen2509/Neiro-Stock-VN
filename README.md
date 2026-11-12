@@ -242,5 +242,11 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
 - **Tối ưu trải nghiệm thị giác theo chuẩn Terminal định chế (Anti-Glare Design):** Chuyển màu mã cổ phiếu từ vàng cam rực sang trắng sáng tinh tế `#f8fafc`; làm dịu toàn bộ nhãn viết tắt kỹ thuật về màu xám trung tính `#64748b` để triệt tiêu hiện tượng xung đột màu neon.
 - **Bảng màu dịu mắt & Translucent Pills:** Thay thế xanh laser và đỏ chói bằng Mint Green `#34d399` và Coral Red `#f87171`; áp dụng hiệu ứng nền mờ bán trong suốt `rgba(R,G,B,0.12)` viền mỏng; nâng cấp các nút Tab và bộ lọc sang chuẩn Dark Pill Slate `#1e293b` viền cyan thanh lịch. Chi tiết tại [`docs/decisions/ADR-030-dark-cockpit-anti-glare-ui-refinement.md`](docs/decisions/ADR-030-dark-cockpit-anti-glare-ui-refinement.md).
 
+### 4.21. Cố Định Khung Cột Freeze Panes, Bảng Đơn Sắc Monochromatic & Tách Bạch 18 Cột Chỉ Số (ADR-031 — Accepted)
+- **Cố định khung cột 2 chiều (Freeze Panes Grid):** Cố định hàng tiêu đề `thead th` khi cuộn dọc (`position: sticky; top: 0`) và cố định 2 cột đầu tiên (`STT` và `Mã CP`) khi cuộn ngang (`position: sticky; left: ...`), giúp nhà đầu tư thoải mái kéo ngang/dọc mà không bao giờ bị che khuất mã cổ phiếu đang phân tích.
+- **Bảng 1 màu đơn sắc thống nhất (Monochromatic Theme):** Thống nhất một tông màu tối sâu `#0b111e` cho toàn bộ container, hàng và ô bảng vị thế, loại bỏ hoàn toàn các dải màu vằn vện zebra striping.
+- **Tách riêng 18 cột chỉ số độc lập:** Bóc tách toàn bộ chỉ số định lượng thành các cột chuyên biệt (`STT`, `Mã CP`, `Trạng Thái & Chu Kỳ`, `Giá Vốn`, `Giá Thoát/Live`, `Lãi/Lỗ %`, `Cắt Lỗ SL`, `Chốt Lời TP`, `Điểm AI`, `Điểm IBD`, `RS 1M`, `Tích Lũy`, `Chu Kỳ RRG`, `Khối Ngoại`, `Tự Doanh`, `Nền POC (ATR)`, `Thanh Khoản`, `AI Chẩn Đoán & Quyết Nghị`). Chi tiết tại [`docs/decisions/ADR-031-tab2-freeze-panes-and-monochromatic-indicator-decomposition.md`](docs/decisions/ADR-031-tab2-freeze-panes-and-monochromatic-indicator-decomposition.md).
+
+
 
 

@@ -536,8 +536,8 @@ def generate_terminal_html(
     unified_positions_rows_html = ""
     if not all_recommended_signals:
         unified_positions_rows_html = """
-        <tr>
-            <td colspan="8" style="padding:25px;text-align:center;color:#64748b;">
+        <tr class="unified-pos-row">
+            <td colspan="18" style="padding:25px;text-align:center;color:#64748b;background:#0b111e;">
                 Hiện không có vị thế nào đang nắm giữ. Mọi khuyến nghị trước đó đã đạt mục tiêu chốt lời hoặc đã đóng bảo toàn vốn.
             </td>
         </tr>
@@ -592,9 +592,9 @@ def generate_terminal_html(
                     t_str = '<span style="background:rgba(16,185,129,0.08);color:#6ee7b7;border:1px solid rgba(16,185,129,0.2);padding:1px 5px;border-radius:3px;font-weight:600;font-size:10px;">T+2 (Khả dụng chiều)</span>'
                 else:
                     t_str = f'<span style="background:rgba(16,185,129,0.08);color:#6ee7b7;border:1px solid rgba(16,185,129,0.2);padding:1px 5px;border-radius:3px;font-weight:600;font-size:10px;">T+{s_tdays} (Khả dụng 100%)</span>'
-                time_sub = f'{t_str} • <span style="color:#64748b;font-size:10px;">Vào: {s_t0_dt}</span>'
+                time_sub = f'{t_str}<div style="color:#64748b;font-size:10px;margin-top:2px;">Vào: {s_t0_dt}</div>'
             else:
-                time_sub = f'<span style="color:#94a3b8;font-weight:600;font-size:10.5px;">T+{s_tdays}</span> • <span style="color:#64748b;font-size:10px;">Vào: {s_t0_dt} &rarr; Đóng: {s_cl_dt}</span>'
+                time_sub = f'<span style="color:#94a3b8;font-weight:600;font-size:10.5px;">T+{s_tdays}</span><div style="color:#64748b;font-size:10px;margin-top:2px;">Vào: {s_t0_dt} &rarr; Đóng: {s_cl_dt}</div>'
 
             s_entry = float(getattr(sig_item, "entry_original", 0.0) or 0.0)
             s_cur = float(getattr(sig_item, "current_price", 0.0) or 0.0)
@@ -606,28 +606,28 @@ def generate_terminal_html(
             s_low = float(getattr(sig_item, "min_price_reached", 0.0) or 0.0)
 
             if s_status == "TP1_REACHED" and s_sl >= s_entry:
-                sl_str = f'<span style="color:#34d399;font-weight:600;">{s_sl:.2f}</span> (Hòa vốn)'
+                sl_str = f'<span style="color:#34d399;font-weight:600;">{s_sl:.2f}</span><div style="font-size:9.5px;color:#64748b;">(Hòa vốn)</div>'
             else:
                 sl_str = f'<span style="color:#f87171;font-weight:600;">{s_sl:.2f}</span>'
 
             if s_status == "TP1_REACHED":
-                tp_str = f'<span style="text-decoration:line-through;color:#64748b;">{s_tp1:.2f}</span> <b style="color:#34d399;">✓</b>/<b style="color:#38bdf8;">{s_tp2:.2f}</b>'
+                tp_str = f'<span style="text-decoration:line-through;color:#64748b;">{s_tp1:.2f}</span> <b style="color:#34d399;">✓</b><br/><b style="color:#38bdf8;">{s_tp2:.2f}</b>'
             else:
-                tp_str = f'<span style="color:#38bdf8;">{s_tp1:.2f}</span>/<b style="color:#38bdf8;">{s_tp2:.2f}</b>'
+                tp_str = f'<span style="color:#38bdf8;">{s_tp1:.2f}</span> / <b style="color:#38bdf8;">{s_tp2:.2f}</b>'
 
             pnl_col = "#34d399" if eff_pnl > 0 else ("#f87171" if eff_pnl < 0 else "#94a3b8")
             pnl_s = "+" if eff_pnl > 0 else ""
             if is_act:
-                cur_price_html = f'<span class="live-price" data-sym="{s_sym}" style="font-weight:700;color:{pnl_col};">{s_cur:.2f}</span>'
+                cur_price_html = f'<span class="live-price" data-sym="{s_sym}" style="font-weight:700;color:{pnl_col};font-size:12.5px;">{s_cur:.2f}</span>'
                 pnl_html = f'<span class="live-pnl" data-sym="{s_sym}" data-entry="{s_entry:.2f}" style="font-weight:800;color:{pnl_col};font-size:12.5px;">{pnl_s}{eff_pnl:.2f}%</span>'
             else:
-                cur_price_html = f'<b style="color:#e2e8f0;">{eff_price:.2f}</b>'
+                cur_price_html = f'<b style="color:#e2e8f0;font-size:12.5px;">{eff_price:.2f}</b>'
                 pnl_html = f'<span style="font-weight:800;color:{pnl_col};font-size:12.5px;">{pnl_s}{eff_pnl:.2f}%</span>'
 
             if cat == "SL":
-                excursion_sub = f'<div style="font-size:10px;color:#fca5a5;">Đáy MAE: {min(s_mae, eff_pnl):.1f}%</div>'
+                excursion_sub = f'<div style="font-size:10px;color:#fca5a5;margin-top:2px;">Đáy MAE: {min(s_mae, eff_pnl):.1f}%</div>'
             else:
-                excursion_sub = f'<div style="font-size:10px;color:#64748b;">Đỉnh: +{max(s_mfe, 0.0):.1f}% / Đáy: {min(s_mae, 0.0):.1f}%</div>'
+                excursion_sub = f'<div style="font-size:10px;color:#64748b;margin-top:2px;">+{max(s_mfe, 0.0):.1f}% / {min(s_mae, 0.0):.1f}%</div>'
 
             # Action / Reason badge
             if is_act:
@@ -678,54 +678,75 @@ def generate_terminal_html(
 
             f_net_col = "#34d399" if s_fnet > 0.05 else ("#f87171" if s_fnet < -0.05 else "#94a3b8")
             p_net_col = "#34d399" if s_pnet > 0.05 else ("#f87171" if s_pnet < -0.05 else "#94a3b8")
-            prop_str = f" • <span style=\"color:#64748b;\">TD:</span><b style=\"color:{p_net_col};\">{s_pnet:+.1f}t</b>" if abs(s_pnet) >= 0.05 else ""
+
             poc_color = "#34d399" if -0.5 <= s_atrd <= 0.9 else ("#fbbf24" if s_atrd > 0.9 else "#f87171")
-            poc_str = f'<span style="color:#64748b;">POC:</span><span style="color:#e2e8f0;">{s_poc:.2f}</span> <span style="color:{poc_color};">({s_atrd:+.1f}ATR)</span> • <span style="color:#64748b;">TK:</span><span style="color:#94a3b8;">{s_adtv:.0f}t</span>' if s_poc > 0 else f'<span style="color:#64748b;">TK:</span><span style="color:#94a3b8;">{s_adtv:.0f}t</span>'
+            poc_cell_html = (
+                f'<span style="color:#e2e8f0;font-weight:600;">{s_poc:.2f}</span><div style="font-size:9.5px;color:{poc_color};margin-top:2px;">({s_atrd:+.1f}ATR)</div>'
+                if s_poc > 0
+                else '<span style="color:#64748b;">-</span>'
+            )
+            prop_cell_html = (
+                f'<b style="color:{p_net_col};font-size:11.5px;">{s_pnet:+.1f}t</b>'
+                if abs(s_pnet) >= 0.05
+                else '<span style="color:#64748b;">-</span>'
+            )
 
             unified_positions_rows_html += f"""
             <tr class="unified-pos-row t0-audit-row" data-cat="{cat}" data-active="{active_flag}">
-                <td style="padding:9px 6px;text-align:center;color:#64748b;font-weight:600;font-size:11px;">{idx}</td>
-                <td style="padding:9px 6px;">
+                <td class="col-sticky-stt" style="padding:9px 6px;text-align:center;color:#64748b;font-weight:600;font-size:11px;">{idx}</td>
+                <td class="col-sticky-sym" style="padding:9px 8px;">
                     <div style="font-weight:800;color:#f8fafc;font-size:13.5px;letter-spacing:0.3px;">{s_sym}</div>
                     <div style="margin-top:3px;">{s_type_badge}</div>
                 </td>
-                <td style="padding:9px 6px;text-align:center;">
+                <td style="padding:9px 8px;text-align:center;">
                     <div>{res_badge}</div>
-                    <div style="margin-top:4px;">
-                        {time_sub}
-                    </div>
+                    <div style="margin-top:4px;">{time_sub}</div>
                 </td>
-                <td style="padding:9px 6px;text-align:right;">
-                    <div style="font-size:12px;color:#e2e8f0;">
-                        <b>{s_entry:.2f}</b> <span style="color:#64748b;">&rarr;</span> {cur_price_html}
-                    </div>
-                    <div style="font-size:10px;color:#64748b;margin-top:3px;">
-                        <span style="color:#64748b;">SL:</span>{sl_str} <span style="color:#334155;">|</span> <span style="color:#64748b;">TP:</span>{tp_str}
-                    </div>
+                <td style="padding:9px 8px;text-align:right;">
+                    <b style="color:#e2e8f0;font-size:12.5px;">{s_entry:.2f}</b>
                 </td>
-                <td style="padding:9px 6px;text-align:right;">
+                <td style="padding:9px 8px;text-align:right;font-size:12.5px;">
+                    {cur_price_html}
+                </td>
+                <td style="padding:9px 8px;text-align:right;">
                     <div>{pnl_html}</div>
                     {excursion_sub}
                 </td>
-                <td style="padding:9px 6px;text-align:left;">
-                    <div style="font-size:11px;line-height:1.4;">
-                        <span style="color:#64748b;">AI:</span><b style="color:#e2e8f0;">{s_ai:.1f}</b> <span style="color:#334155;">•</span> 
-                        <span style="color:#64748b;">IBD:</span><b style="color:{ibd_c};">{s_ibd}</b><span style="color:#64748b;">/RS:</span><b style="color:#cbd5e1;">{s_rs}</b> <span style="color:#334155;">•</span> 
-                        <span style="color:#64748b;">TL:</span><span style="background:{ad_bg_c};color:{ad_c};padding:1px 5px;border-radius:3px;font-weight:bold;font-size:10px;">{s_ad}</span>
-                    </div>
-                    <div style="font-size:10px;color:#94a3b8;margin-top:3px;">
-                        <span style="color:#64748b;">RRG:</span><span style="color:#cbd5e1;font-weight:500;">{s_r:.1f}/{s_m:.1f}</span> ({rrg_quad})
-                    </div>
+                <td style="padding:9px 8px;text-align:right;font-size:11.5px;">
+                    {sl_str}
                 </td>
-                <td style="padding:9px 6px;text-align:left;">
-                    <div style="font-size:10.5px;">
-                        <span style="color:#64748b;">Ngoại:</span><b style="color:{f_net_col};">{s_fnet:+.1f}t</b>{prop_str}
-                    </div>
-                    <div style="font-size:10px;margin-top:3px;">
-                        {poc_str}
-                    </div>
+                <td style="padding:9px 8px;text-align:right;font-size:11.5px;">
+                    {tp_str}
                 </td>
-                <td style="padding:9px 6px;text-align:left;min-width:210px;">
+                <td style="padding:9px 8px;text-align:center;">
+                    <b style="color:#e2e8f0;font-size:12px;">{s_ai:.1f}</b>
+                </td>
+                <td style="padding:9px 8px;text-align:center;">
+                    <b style="color:{ibd_c};font-size:12px;">{s_ibd}</b>
+                </td>
+                <td style="padding:9px 8px;text-align:center;">
+                    <b style="color:#cbd5e1;font-size:12px;">{s_rs}</b>
+                </td>
+                <td style="padding:9px 8px;text-align:center;">
+                    <span style="background:{ad_bg_c};color:{ad_c};padding:1px 6px;border-radius:3px;font-weight:bold;font-size:10.5px;">{s_ad}</span>
+                </td>
+                <td style="padding:9px 8px;text-align:center;">
+                    <div style="color:#cbd5e1;font-weight:600;font-size:11px;">{s_r:.1f}/{s_m:.1f}</div>
+                    <div style="margin-top:2px;">{rrg_quad}</div>
+                </td>
+                <td style="padding:9px 8px;text-align:right;">
+                    <b style="color:{f_net_col};font-size:11.5px;">{s_fnet:+.1f}t</b>
+                </td>
+                <td style="padding:9px 8px;text-align:right;">
+                    {prop_cell_html}
+                </td>
+                <td style="padding:9px 8px;text-align:center;">
+                    {poc_cell_html}
+                </td>
+                <td style="padding:9px 8px;text-align:right;color:#94a3b8;font-size:11px;">
+                    {s_adtv:.0f}t
+                </td>
+                <td style="padding:9px 8px;text-align:left;min-width:240px;">
                     <div style="font-size:11px;color:#94a3b8;line-height:1.4;">{diag_text}</div>
                     <div style="margin-top:4px;" class="pos-badge" data-sym="{s_sym}" data-entry="{s_entry:.2f}" data-sl="{s_sl:.2f}" data-tp1="{s_tp1:.2f}" data-tp2="{s_tp2:.2f}">{action_badge}</div>
                 </td>
@@ -915,18 +936,109 @@ def generate_terminal_html(
             align-items: center;
             gap: 8px;
         }}
-        .unified-pos-row {{
-            transition: background-color 0.15s ease;
+        .table-container-sticky {{
+            width: 100%;
+            max-height: 72vh;
+            overflow-x: auto;
+            overflow-y: auto;
+            border-radius: 8px;
+            border: 1px solid #1e293b;
+            margin-bottom: 25px;
+            background: #0b111e;
+            position: relative;
+        }}
+        .table-container-sticky::-webkit-scrollbar {{
+            width: 8px;
+            height: 8px;
+        }}
+        .table-container-sticky::-webkit-scrollbar-track {{
+            background: #0b111e;
+        }}
+        .table-container-sticky::-webkit-scrollbar-thumb {{
+            background: #334155;
+            border-radius: 4px;
+        }}
+        .table-container-sticky::-webkit-scrollbar-thumb:hover {{
+            background: #475569;
+        }}
+        .unified-positions-table {{
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: #0b111e;
+        }}
+        .unified-positions-table thead th {{
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: #0b111e;
+            border-bottom: 2px solid #334155;
+            padding: 10px 8px;
+            font-size: 11px;
+            color: #94a3b8;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
+        }}
+        .unified-positions-table tbody td {{
+            background: #0b111e;
             border-bottom: 1px solid #182232;
+            padding: 8px 8px;
+            white-space: nowrap;
+            font-size: 12px;
+            color: #cbd5e1;
         }}
-        .unified-pos-row:nth-child(even) {{
-            background-color: rgba(255, 255, 255, 0.012);
+        .unified-pos-row {{
+            background-color: #0b111e !important;
+            transition: background-color 0.15s ease;
         }}
-        .unified-pos-row:nth-child(odd) {{
-            background-color: transparent;
+        .unified-pos-row:hover td {{
+            background-color: #131c2e !important;
         }}
-        .unified-pos-row:hover {{
-            background-color: rgba(56, 189, 248, 0.05) !important;
+        .unified-positions-table th.col-sticky-stt {{
+            position: sticky;
+            left: 0;
+            top: 0;
+            z-index: 35;
+            background: #0b111e;
+            min-width: 44px;
+            max-width: 44px;
+            width: 44px;
+            text-align: center;
+            border-right: 1px solid #1e293b;
+        }}
+        .unified-positions-table td.col-sticky-stt {{
+            position: sticky;
+            left: 0;
+            z-index: 15;
+            background: #0b111e;
+            min-width: 44px;
+            max-width: 44px;
+            width: 44px;
+            text-align: center;
+            border-right: 1px solid #1e293b;
+        }}
+        .unified-positions-table th.col-sticky-sym {{
+            position: sticky;
+            left: 44px;
+            top: 0;
+            z-index: 35;
+            background: #0b111e;
+            min-width: 96px;
+            border-right: 2px solid #334155 !important;
+            box-shadow: 4px 0 8px -2px rgba(0, 0, 0, 0.6);
+        }}
+        .unified-positions-table td.col-sticky-sym {{
+            position: sticky;
+            left: 44px;
+            z-index: 15;
+            background: #0b111e;
+            min-width: 96px;
+            border-right: 2px solid #334155 !important;
+            box-shadow: 4px 0 8px -2px rgba(0, 0, 0, 0.6);
+        }}
+        .unified-pos-row:hover td.col-sticky-stt,
+        .unified-pos-row:hover td.col-sticky-sym {{
+            background-color: #131c2e !important;
         }}
         .pos-filter-btn {{
             transition: all 0.2s ease;
@@ -1068,21 +1180,31 @@ def generate_terminal_html(
                 <button class="pos-filter-btn t0-filter-btn" data-filter="SL" onclick="filterUnifiedPositions('SL')" style="background:#111722;color:#94a3b8;border:1px solid #1e293b;padding:5px 12px;border-radius:5px;font-size:11.5px;font-weight:700;cursor:pointer;">🛑 Đã Cắt Lỗ SL ({sl_st['count']})</button>
                 <button class="pos-filter-btn t0-filter-btn" data-filter="TIMEOUT" onclick="filterUnifiedPositions('TIMEOUT')" style="background:#111722;color:#94a3b8;border:1px solid #1e293b;padding:5px 12px;border-radius:5px;font-size:11.5px;font-weight:700;cursor:pointer;">⏱️ Tất Toán T+7 ({to_st['count']})</button>
             </div>
-            <span style="font-size:11px;color:#64748b;">💡 Bảng hợp nhất toàn vòng: Cập nhật giá Live &amp; đồng bộ trọn vẹn Snapshot T0</span>
+            <span style="font-size:11px;color:#94a3b8;">💡 Bảng hợp nhất toàn vòng: Cố định STT &amp; Mã CP khi cuộn ngang • Giữ nguyên tiêu đề khi cuộn dọc • Tách riêng từng <b>Chỉ Số Đánh Giá Tại T0</b> và <b>Dòng Tiền &amp; Nền POC T0</b></span>
         </div>
 
-        <div id="t0-recommended-positions-table" class="table-container">
+        <div id="t0-recommended-positions-table" class="table-container-sticky">
             <table id="active-positions-table" class="unified-positions-table">
                 <thead>
                     <tr>
-                        <th style="text-align:center;">STT</th>
-                        <th>Mã CP</th>
+                        <th class="col-sticky-stt" style="text-align:center;">STT</th>
+                        <th class="col-sticky-sym">Mã CP</th>
                         <th style="text-align:center;">Trạng Thái &amp; Chu Kỳ (Ngày Vào T0 &bull; Ngày Đóng)</th>
-                        <th style="text-align:right;">Giá Vốn &rarr; Thoát/Live</th>
+                        <th style="text-align:right;">Giá Vốn</th>
+                        <th style="text-align:right;">Giá Thoát/Live</th>
                         <th style="text-align:right;">Lãi/Lỗ PnL %</th>
-                        <th>Chỉ Số Đánh Giá Tại T0</th>
-                        <th>Dòng Tiền &amp; Nền POC T0</th>
-                        <th>AI Chẩn Đoán &amp; Quyết Nghị</th>
+                        <th style="text-align:right;">Cắt Lỗ (SL)</th>
+                        <th style="text-align:right;">Chốt Lời (TP)</th>
+                        <th style="text-align:center;" title="Chỉ Số Đánh Giá Tại T0: Điểm tổng hợp AI">Điểm AI</th>
+                        <th style="text-align:center;" title="Chỉ Số Đánh Giá Tại T0: Điểm IBD Composite">Điểm IBD</th>
+                        <th style="text-align:center;" title="Chỉ Số Đánh Giá Tại T0: Sức mạnh giá RS 1 Tháng">RS 1M</th>
+                        <th style="text-align:center;" title="Chỉ Số Đánh Giá Tại T0: Tích lũy Acc/Dist">Tích Lũy</th>
+                        <th style="text-align:center;" title="Chỉ Số Đánh Giá Tại T0: Tọa độ &amp; Pha RRG">Chu Kỳ RRG</th>
+                        <th style="text-align:right;" title="Dòng Tiền &amp; Nền POC T0: Khối ngoại ròng">Khối Ngoại</th>
+                        <th style="text-align:right;" title="Dòng Tiền &amp; Nền POC T0: Tự doanh ròng">Tự Doanh</th>
+                        <th style="text-align:center;" title="Dòng Tiền &amp; Nền POC T0: Vùng cân bằng POC &amp; Khoảng cách ATR">Nền POC (ATR)</th>
+                        <th style="text-align:right;" title="Dòng Tiền &amp; Nền POC T0: Giá trị GD trung bình 20 phiên">Thanh Khoản</th>
+                        <th style="min-width:240px;">AI Chẩn Đoán &amp; Quyết Nghị</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -285,5 +285,19 @@ flowchart LR
 - **`signal_tracker.py`:**
   - Khử nhiễu cảnh báo: Bỏ cảnh báo "Xung lực T0 yếu" với các mã mang giá trị mặc định `IBD 50 / RS 50`, giúp bảng dữ liệu trang nhã và chuẩn xác.
 
+## Cập nhật ADR-031: Cố Định Khung Cột Freeze Panes, Bảng Đơn Sắc Monochromatic & Tách Bạch 18 Cột Chỉ Số Riêng Biệt (Tab 2)
+
+- **`terminal.py`:**
+  - **Khung cuộn Freeze Panes 2 chiều (`.table-container-sticky`, `.unified-positions-table`):**
+    - Cố định tiêu đề `thead th` (`position: sticky; top: 0; z-index: 20; background: #0b111e;`).
+    - Cố định cột STT (`left: 0; min-width: 44px;`) và cột Mã CP (`left: 44px; min-width: 96px; z-index: 15;` kèm shadow ngăn cách), giúp cuộn ngang không bị che mã cổ phiếu.
+    - Cố định ô góc trên trái `z-index: 35` không bị đè khi cuộn chéo.
+    - Đồng bộ hiệu ứng hover trên cả các ô sticky và các ô cuộn (`#131c2e !important;`).
+  - **Bảng đơn sắc Monochromatic (`#0b111e`):**
+    - Loại bỏ hoàn toàn vằn ngựa vằn zebra striping, thống nhất một màu nền tối sâu `#0b111e` trên toàn bộ bảng.
+  - **Tách bạch 18 cột chỉ số độc lập:**
+    - Phân tách rõ ràng: `STT`, `Mã CP`, `Trạng Thái & Chu Kỳ`, `Giá Vốn`, `Giá Thoát/Live`, `Lãi/Lỗ PnL %`, `Cắt Lỗ (SL)`, `Chốt Lời (TP)`, `Điểm AI`, `Điểm IBD`, `RS 1M`, `Tích Lũy`, `Chu Kỳ RRG`, `Khối Ngoại`, `Tự Doanh`, `Nền POC (ATR)`, `Thanh Khoản`, `AI Chẩn Đoán & Quyết Nghị`.
+
+
 
 

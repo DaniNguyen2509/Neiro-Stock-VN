@@ -682,20 +682,21 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 
 ---
 
-### Tier 31 [ACCEPTED - ADR-030]: Chuẩn Hóa Typography & Bảng Màu Dark Cockpit Chống Chói Mắt
+### Tier 32 [ACCEPTED - ADR-031]: Cố Định Khung Cột Freeze Panes, Bảng Đơn Sắc Monochromatic & Tách Bạch 18 Cột Chỉ Số Riêng Biệt (Tab 2)
 
-> **Trạng thái:** `ACCEPTED & IMPLEMENTED (100% PASSING)` (xem [`ADR-030`](decisions/ADR-030-dark-cockpit-anti-glare-ui-refinement.md), test: `tests/test_positions_tracker_tab.py`).
+> **Trạng thái:** `ACCEPTED & IMPLEMENTED (100% PASSING)` (xem [`ADR-031`](decisions/ADR-031-tab2-freeze-panes-and-monochromatic-indicator-decomposition.md), test: `tests/test_positions_tracker_tab.py`).
 
-1. **Chuẩn Hóa Typography & Tách Biệt Nhãn Mô Tả (Anti-Rainbow Clashing):**
-   - Chuyển màu mã cổ phiếu từ vàng cam rực `#ffb300` sang trắng sáng tinh gọn `#f8fafc` (`font-weight: 800`).
-   - Đưa toàn bộ các nhãn viết tắt (`AI:`, `IBD:`, `RS:`, `TL:`, `RRG:`, `POC:`, `TK:`, `SL:`, `TP:`) về màu xám dịu `#64748b`, triệt tiêu hoàn toàn hiệu ứng "cây thông noel nhấp nháy" nhiều màu neon trên một dòng.
-2. **Hệ Thống Màu Sắc Dịu Mắt (Subdued & Translucent Accents):**
-   - Thay thế màu xanh laser `#00e676` bằng xanh bạc hà `#34d399`; thay màu đỏ chói `#ff5252` bằng màu hồng san hô `#f87171`.
-   - Toàn bộ huy hiệu chuyển sang dạng nền mờ `rgba(R, G, B, 0.12 - 0.15)` viền mỏng hiện đại, bỏ các khối màu đặc gây ngợp mắt.
-3. **Thanh Tab & Bộ Lọc Dark Pill UI:**
-   - Nút tab và bộ lọc chuyển từ màu nền vàng đặc sang Dark Pill Slate (`#1e293b` viền xanh cyan `#0284c7` kèm hiệu ứng glow nhẹ `rgba(56, 189, 248, 0.15)` khi kích hoạt).
-4. **Lọc Nhiễu Chẩn Đoán T0:**
-   - Loại trừ các mã có giá trị mặc định `IBD 50 / RS 50` khỏi nhóm cảnh báo xung lực yếu; dùng dòng văn bản nhã nhặn `#94a3b8` thay cho icon cảnh báo vàng gắt liên tiếp.
+1. **Cố Định Khung Cột 2 Chiều (Dual-Axis Freeze Panes Grid):**
+   - **Cố định hàng tiêu đề (Vertical Sticky Header):** Khung `.table-container-sticky` có `max-height: 72vh; overflow: auto;`. Toàn bộ thẻ `th` được cố định (`position: sticky; top: 0; z-index: 20; background: #0b111e;`), giữ nguyên tiêu đề cột khi cuộn dọc theo dõi danh sách dài.
+   - **Cố định 2 cột mép trái (Horizontal Sticky Columns):** Cột 1 (`STT`) cố định tại `left: 0; min-width: 44px;`. Cột 2 (`Mã CP`) cố định tại `left: 44px; min-width: 96px;` kèm đổ bóng `box-shadow` nổi bật (`z-index: 15`), giúp nhà đầu tư cuộn ngang kiểm tra các chỉ số kỹ thuật/dòng tiền mà không bao giờ bị che khuất mã cổ phiếu đang xem.
+   - **Giao thoa góc trên trái (Top-Left Corners):** Hai ô tiêu đề góc (`STT` và `Mã CP`) được cấp `z-index: 35`, đảm bảo hiển thị trên cùng khi cuộn đồng thời cả 2 trục.
+   - **Đồng bộ màu rê chuột (Hover Sync):** Khi rê chuột vào dòng, cả các ô cố định sticky và ô cuộn đều đổi sang cùng một nền sáng nhẹ `#131c2e !important;`.
+2. **Bảng Đơn Sắc Đồng Nhất (Monochromatic Unified Dark Theme):**
+   - Loại bỏ hoàn toàn hiệu ứng vằn vện ngựa vằn (`nth-child(even)`).
+   - Thiết lập một màu nền tối thống nhất duy nhất `#0b111e` cho toàn bộ container, table, headers, cells và thanh cuộn Webkit scrollbar, mang phong cách Institutional Terminal sang trọng.
+3. **Tách Bạch 18 Cột Chỉ Số Độc Lập:**
+   - Tách toàn bộ các chỉ số trước đây bị gộp ô thành 18 cột độc lập: `STT`, `Mã CP`, `Trạng Thái & Chu Kỳ`, `Giá Vốn`, `Giá Thoát/Live`, `Lãi/Lỗ PnL %`, `Cắt Lỗ (SL)`, `Chốt Lời (TP)`, `Điểm AI`, `Điểm IBD`, `RS 1M`, `Tích Lũy`, `Chu Kỳ RRG`, `Khối Ngoại`, `Tự Doanh`, `Nền POC (ATR)`, `Thanh Khoản`, `AI Chẩn Đoán & Quyết Nghị`.
+
 
 
 

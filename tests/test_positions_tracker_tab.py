@@ -376,3 +376,87 @@ def test_t0_evaluation_metrics_and_attribution_tab(tmp_path):
     assert "86.5" in html
     assert "71.2" in html
 
+
+def test_tab2_freeze_panes_monochromatic_and_decomposed_columns(tmp_path):
+    """Kiểm tra Tab 2: Bảng đơn sắc monochromatic, cố định cột STT & Mã CP, sticky header và tách bạch 18 cột chỉ số."""
+    out_html_path = tmp_path / "test_freeze_panes.html"
+
+    sig = ActiveSignal(
+        symbol="FPT",
+        first_signal_date="2026-11-01 10:00:00",
+        last_updated="2026-11-04 14:00:00",
+        entry_original=135.0,
+        current_price=138.5,
+        pnl_pct=2.59,
+        holding_days=3,
+        trading_days=3,
+        initial_stop_loss=129.5,
+        current_stop_loss=131.0,
+        tp1=142.0,
+        tp2=148.0,
+        status="ACTIVE",
+        buy_permission="BUY_OK",
+        advice_note="Vùng mua tích lũy tốt",
+        ranking_score=89.0,
+        composite_rating=92,
+        rs_1m=85,
+        acc_diss_rating="A",
+        rrg_r=101.5,
+        rrg_m=103.2,
+        foreign_net_value_billion=45.2,
+        prop_net_value_billion=18.6,
+        adtv20_billion=210.0,
+        poc_price_t0=134.2,
+        atr_dist_from_poc_t0=0.35,
+        is_closed=False,
+    )
+
+    generate_terminal_html(
+        output_path=str(out_html_path),
+        fialda_candidates=[],
+        top_n=0,
+        active_signals={"FPT": sig},
+    )
+
+    html = out_html_path.read_text(encoding="utf-8")
+
+    # 1. Khung cuộn cố định (Sticky container & freeze panes)
+    assert 'class="table-container table-container-sticky"' in html or 'class="table-container-sticky"' in html
+    assert 'col-sticky-stt' in html
+    assert 'col-sticky-sym' in html
+    assert 'position: sticky' in html
+
+    # 2. Bảng 1 màu thống nhất (Monochromatic theme #0b111e)
+    assert '.unified-positions-table' in html
+    assert 'background: #0b111e;' in html or 'background:#0b111e;' in html
+
+    # 3. Tách biệt từng cột chỉ số riêng biệt
+    table_start = html.index('id="active-positions-table"')
+    table_end = html.index('</tbody>', table_start)
+    tab_slice = html[table_start:table_end]
+
+    headers = [
+        "STT", "Mã CP", "Trạng Thái &amp; Chu Kỳ", "Giá Vốn", "Giá Thoát/Live",
+        "Lãi/Lỗ PnL %", "Cắt Lỗ (SL)", "Chốt Lời (TP)", "Điểm AI", "Điểm IBD",
+        "RS 1M", "Tích Lũy", "Chu Kỳ RRG", "Khối Ngoại", "Tự Doanh",
+        "Nền POC (ATR)", "Thanh Khoản", "AI Chẩn Đoán &amp; Quyết Nghị"
+    ]
+    for h in headers:
+        assert h in tab_slice, f"Thiếu cột riêng biệt: {h}"
+
+    # 4. Kiểm tra dữ liệu FPT hiển thị chuẩn xác ở các cột tương ứng
+    assert "FPT" in tab_slice
+    assert "135.00" in tab_slice
+    assert "138.50" in tab_slice
+    assert "131.00" in tab_slice
+    assert "142.00" in tab_slice
+    assert "148.00" in tab_slice
+    assert "89.0" in tab_slice
+    assert "92" in tab_slice
+    assert "85" in tab_slice
+    assert "+45.2t" in tab_slice
+    assert "+18.6t" in tab_slice
+    assert "134.20" in tab_slice
+    assert "210t" in tab_slice
+
+
