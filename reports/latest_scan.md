@@ -1,4 +1,4 @@
-## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 18 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)
+## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 17 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)
 > **Trạng thái Thị trường:** VN-Index Tăng **102** / Giảm **203** (Độ rộng A/D: **33.4%**) | Giá trị GD: **15,140 tỷ VND** | P/E: **11.09**
 > ⛔ CẦU CHÌ T+2.5 KÍCH HOẠT: ĐỘ RỘNG THỊ TRƯỜNG SUY YẾU (33.4% — Tăng 102 / Giảm 203). TẠM NGỪNG MUA MỚI ĐỂ TRÁNH KẸP HÀNG T+2.5!
 > 🟢 **Trạng Thái Dữ Liệu:** `REAL-TIME FIALDA PRO API` (Dữ liệu khớp lệnh trực tiếp từ sàn)
@@ -22,7 +22,6 @@
 | **15** | **MSB** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **16.15** | `15.91 - 16.39` | **15.39** | **17.35** / **18.11** | **145.4t** | `SIÊU TK` | 103/100 | **37** | `E` | -8.6 tỷ | **10.0** | #15 (=) |
 | **16** | **VSC** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **13.55** | `13.48 - 13.75` | **12.59** | **15.04** / **16.00** | **182.3t** | `SIÊU TK` | 100/99 | **33** | `E` | -0.3 tỷ | **10.0** | #16 (=) |
 | **17** | **HDB** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **22.50** | `22.16 - 22.84` | **21.49** | **24.11** / **25.12** | **341.3t** | `SIÊU TK` | 100/100 | **30** | `E` | +60.4 tỷ | **10.0** | #17 (=) |
-| **18** | **PHP** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **45.50** | `43.83 - 45.17` | **42.06** | **48.34** / **50.78** | **21.9t** | `ĐẠT BIÊN` | 97/100 | **50** | `C` | +0.0 tỷ | **57.5** | Mới |
 
 ### 🎯 Kế Hoạch Tác Chiến, Điểm Thoát Lệnh T+2.5 & Catalysts:
 - **VCG (15.55)** `=` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `15.32 - 15.78` | Cắt lỗ cấu trúc: `14.75` | TP1 (Net 1.5R): `16.81` | TP2 (Net 2.5R): `17.61` (R:R `1:2.5`)
@@ -110,11 +109,6 @@
   - *Động lực:* RRG(r=99.9, m=99.9), IBD=30, Acc/Diss=E | 🔵 NGOẠI ĐỠ GIÁ | POC=21.97 (+0.9 ATR) | CAMEL=70/100
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `341.3 tỷ` (Điểm TK: `99/100`) | Sức chứa tối đa: `1,516,900 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 800 cp (~18.0tr, 18.0% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **PHP (45.50)** `T0 KHUYẾN NGHỊ` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `43.83 - 45.17` | Cắt lỗ cấu trúc: `42.06` | TP1 (Net 1.5R): `48.34` | TP2 (Net 2.5R): `50.78` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: +0.0 tỷ | Tự doanh: Chưa công bố EOD (N/A))
-  - *Động lực:* RRG(r=97.2, m=100.5), IBD=50, Acc/Diss=C | 🔴 NGUY HIỂM XẢ | POC=42.89 (+1.1 ATR) | ⏱️ Phiên sáng: Thăm dò <= 30%, chờ sau 13:45 xác nhận cung T+2.5
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `21.9 tỷ` (Điểm TK: `67/100`) | Sức chứa tối đa: `100,000 cp` (Trượt giá ~`0.50%`). ✅ Vốn 100tr: Tối đa 300 cp (~13.7tr, 13.7% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
-  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `T+0 (Khuyến nghị hôm nay)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
 
 ### 📊 BẢNG XẾP HẠNG ĐỊNH LƯỢNG CƠ BẢN (PIOTROSKI F-SCORE & P/E)
 > *Nguồn: Báo cáo tài chính chuẩn hóa & Bảng giá Real-time Fialda VIP*
@@ -169,7 +163,7 @@
 - 📅 **[VCG - SỰ KIỆN]** Ngày: `Gần đây` — *Giao dịch bổ sung - 51,707,909 CP*
 - **[GMD] Loạt quỹ ETF sắp tái cơ cấu: MSB bị bán gần 11 triệu cổ phiếu, GMD, NLG, HPG hút dòng tiền?** (2026-11-05 • *Vietnam Finance*)
   > Các quỹ ETF theo VN30, VNDiamond và VNFin Lead sắp tái cơ cấu từ 9–13/11, dự báo tạo áp lực bán lên nhóm ngân hàng như MSB, ACB, TCB và hỗ trợ dòng tiền mua vào GMD, NLG, HPG.
-- 📅 **[GMD - SỰ KIỆN]** Ngày: `Sắp tới` — *Giao dịch bổ sung - 216,444,883 CP*
+- 📅 **[GMD - SỰ KIỆN]** Ngày: `Gần đây` — *Giao dịch bổ sung - 216,444,883 CP*
 - **[HCM] HCM: Đã giải ngân xong gần 2.700 tỷ đồng huy động từ cổ phiếu** (2026-11-06 • *An ninh tiền tệ*)
   > HSC (HCM) đã giải ngân xong gần 2.700 tỷ đồng thu về từ đợt chào bán cổ phiếu, dùng để bổ sung vốn cho hoạt động cho vay ký quỹ. Trong quý III/2026, lợi nhuận sau thuế của công ty giảm 32,5% so với cùng kỳ.
 - 📅 **[HCM - SỰ KIỆN]** Ngày: `2026-11-11` — *Lấy ý kiến cổ đông bằng văn bản năm 2026*
