@@ -238,4 +238,9 @@ Hệ thống được trang bị workflow **GitHub Actions CI/CD** tự động 
 - **Hợp nhất Tab 2 & Tab 3 thành 1 bảng tổng hợp duy nhất (Hybrid Unified Cockpit):** Kết hợp toàn diện dữ liệu vị thế đang nắm giữ và lịch sử đã đóng (TP1, TP2, SL, Time-Out T+7) vào một bảng duy nhất `TAB 2: SỔ CÁI & ĐỐI SOÁT VỊ THẾ TOÀN VÒNG (T+ TRACKER • T0 → TP/SL)`. Bảng có 8 cột tinh gọn với các ô dữ liệu đa tầng (multi-tiered stacked cells), loại bỏ 100% tình trạng phân mảnh thông tin hoặc cuộn ngang màn hình.
 - **Thanh 5 bộ lọc tức thì & Phân tích AI Hậu Kiểm tích hợp:** Cung cấp bộ lọc nhanh Client-Side JS (`Tất Cả`, `🟢 Đang Nắm Giữ`, `🎯 Đã Chốt Lời TP`, `🛑 Đã Cắt Lỗ SL`, `⏱️ Tất Toán T+7`) và tích hợp trực tiếp bảng Phân tích Tự học Hậu kiểm SL vs TP vào khung collapsible `<details id="hud-tab-t0-audit" open>`, bảo toàn đầy đủ khả năng cập nhật live stream giá VPS. Chi tiết tại [`docs/decisions/ADR-029-unified-positions-and-t0-audit-cockpit.md`](docs/decisions/ADR-029-unified-positions-and-t0-audit-cockpit.md).
 
+### 4.20. Chuẩn Hóa Typography & Bảng Màu Dark Cockpit Chống Chói Mắt (ADR-030 — Accepted)
+- **Tối ưu trải nghiệm thị giác theo chuẩn Terminal định chế (Anti-Glare Design):** Chuyển màu mã cổ phiếu từ vàng cam rực sang trắng sáng tinh tế `#f8fafc`; làm dịu toàn bộ nhãn viết tắt kỹ thuật về màu xám trung tính `#64748b` để triệt tiêu hiện tượng xung đột màu neon.
+- **Bảng màu dịu mắt & Translucent Pills:** Thay thế xanh laser và đỏ chói bằng Mint Green `#34d399` và Coral Red `#f87171`; áp dụng hiệu ứng nền mờ bán trong suốt `rgba(R,G,B,0.12)` viền mỏng; nâng cấp các nút Tab và bộ lọc sang chuẩn Dark Pill Slate `#1e293b` viền cyan thanh lịch. Chi tiết tại [`docs/decisions/ADR-030-dark-cockpit-anti-glare-ui-refinement.md`](docs/decisions/ADR-030-dark-cockpit-anti-glare-ui-refinement.md).
+
+
 

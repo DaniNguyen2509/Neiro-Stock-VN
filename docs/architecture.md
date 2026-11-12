@@ -275,4 +275,15 @@ flowchart LR
   - Tích hợp khung phân tích AI Tự Học Hậu Kiểm SL vs TP (`<details id="hud-tab-t0-audit" open>`) ngay dưới bảng tổng hợp, hỗ trợ mở/đóng linh hoạt.
   - Giữ nguyên các class định danh `.live-price`, `.live-pnl`, `.pos-badge` để duy trì 100% khả năng cập nhật giá live qua VPS WebSocket.
 
+## Cập nhật ADR-030: Thiết Kế Bảng Màu Dark Cockpit Chống Chói Mắt & Chuẩn Hóa Typography Giao Diện
+
+- **`terminal.py`:**
+  - Chuẩn hóa typography: Mã cổ phiếu màu trắng sáng `#f8fafc` thay thế màu vàng rực `#ffb300`; nhãn thuộc tính chuyển sang màu xám dịu `#64748b`.
+  - Bảng màu dịu mắt: Xanh lãi `#34d399` (thay cho xanh neon `#00e676`), Đỏ lỗ `#f87171` (thay cho `#ff5252`), Tham chiếu/Hòa vốn `#94a3b8` (thay cho vàng `#ffb300`).
+  - Toàn bộ huy hiệu chuyển sang dạng nền mờ `rgba(R,G,B,0.12)` viền mỏng cùng tông màu.
+  - Chuyển đổi thanh điều hướng và nút lọc danh mục sang thiết kế Dark Pill Slate `#1e293b` viền cyan nhẹ.
+- **`signal_tracker.py`:**
+  - Khử nhiễu cảnh báo: Bỏ cảnh báo "Xung lực T0 yếu" với các mã mang giá trị mặc định `IBD 50 / RS 50`, giúp bảng dữ liệu trang nhã và chuẩn xác.
+
+
 

@@ -129,51 +129,51 @@ def generate_terminal_html(
                 flow_badge_html += f'<div style="font-size:9px;color:{prop_c};margin-top:1px;">TD: {prop_v:+.1f}t</div>'
 
         if c.liquidity_score >= 90:
-            liq_badge = '<span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span>'
+            liq_badge = '<span style="background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">SIÊU TK</span>'
         elif c.liquidity_score >= 75:
-            liq_badge = '<span style="background:#01579b;color:#29b6f6;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span>'
+            liq_badge = '<span style="background:rgba(56,189,248,0.15);color:#38bdf8;border:1px solid rgba(56,189,248,0.3);padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">CHUẨN QUỸ</span>'
         else:
-            liq_badge = '<span style="background:#ff6f00;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span>'
+            liq_badge = '<span style="background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);padding:1px 5px;border-radius:3px;font-size:10px;font-weight:bold;">ĐẠT BIÊN</span>'
 
         ad_letter = getattr(c, "acc_diss_rating", "C")
-        ad_color = "#00e676" if ad_letter in ["A", "B"] else ("#ffb300" if ad_letter == "C" else "#ff5252")
-        ad_bg = "#1b5e20" if ad_letter in ["A", "B"] else ("#3e2723" if ad_letter == "C" else "#450a0a")
+        ad_color = "#34d399" if ad_letter in ["A", "B"] else ("#cbd5e1" if ad_letter == "C" else "#f87171")
+        ad_bg = "rgba(16,185,129,0.15)" if ad_letter in ["A", "B"] else ("rgba(148,163,184,0.15)" if ad_letter == "C" else "rgba(239,68,68,0.15)")
         ad_badge = f'<span style="background:{ad_bg};color:{ad_color};padding:2px 7px;border-radius:3px;font-size:11px;font-weight:bold;">{ad_letter}</span>'
 
         tp1_val = getattr(c, "tp1", c.price * 1.08)
         tp2_val = getattr(c, "tp2", c.target_1m)
-        tp_html = f'<span style="color:#4fc3f7;font-weight:bold;">{tp1_val:.2f}</span> <span style="color:#546e7a;">/</span> <span style="color:#ffb300;font-weight:bold;">{tp2_val:.2f}</span>'
+        tp_html = f'<span style="color:#38bdf8;font-weight:bold;">{tp1_val:.2f}</span> <span style="color:#64748b;">/</span> <span style="color:#34d399;font-weight:bold;">{tp2_val:.2f}</span>'
 
         # Xep hang ky truoc va bien dong (+ / - hang)
         prev_rank = getattr(c, "prev_rank", None)
         delta_rank = getattr(c, "rank_change_delta", None)
         if prev_rank is not None:
             if delta_rank is not None and delta_rank > 0:
-                prev_rank_html = f'<span style="font-weight:bold;color:#eceff1;">#{prev_rank}</span> <span style="background:#1b5e20;color:#00e676;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">+{delta_rank}</span>'
+                prev_rank_html = f'<span style="font-weight:bold;color:#f8fafc;">#{prev_rank}</span> <span style="background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">+{delta_rank}</span>'
             elif delta_rank is not None and delta_rank < 0:
-                prev_rank_html = f'<span style="font-weight:bold;color:#eceff1;">#{prev_rank}</span> <span style="background:#b71c1c;color:#ff8a80;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">{delta_rank}</span>'
+                prev_rank_html = f'<span style="font-weight:bold;color:#f8fafc;">#{prev_rank}</span> <span style="background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">{delta_rank}</span>'
             else:
-                prev_rank_html = f'<span style="font-weight:bold;color:#eceff1;">#{prev_rank}</span> <span style="color:#78909c;font-size:10px;font-weight:bold;">(=)</span>'
+                prev_rank_html = f'<span style="font-weight:bold;color:#f8fafc;">#{prev_rank}</span> <span style="color:#64748b;font-size:10px;font-weight:bold;">(=)</span>'
         else:
-            prev_rank_html = '<span style="background:#e65100;color:#ffe0b2;padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">MỚI</span>'
+            prev_rank_html = '<span style="background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);padding:1px 4px;border-radius:3px;font-size:10px;font-weight:bold;">MỚI</span>'
 
         fialda_rows_html += f"""
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:6px 5px;text-align:center;color:#78909c;font-weight:bold;">{idx}</td>
-            <td style="padding:6px 5px;font-weight:bold;color:#ffb300;font-size:13.5px;">{c.symbol}{lot_badge_html}</td>
-            <td style="padding:6px 5px;text-align:center;"><span id="sig-badge-{c.symbol}">{sig_badge}</span></td>
-            <td style="padding:6px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="{c.symbol}" data-ref="{c.price}" data-entry-high="{c.entry_high}" data-entry-low="{c.entry_low}" data-sl="{c.stop_loss}" data-tp1="{tp1_val}" data-tp2="{tp2_val}" data-buy-perm="{buy_perm}">{c.price:,.2f}</span> <span class="live-change" data-sym="{c.symbol}" style="font-size:11px;margin-left:3px;"></span></td>
-            <td style="padding:6px 5px;color:#00e676;font-weight:600;">{c.entry_low:.2f} - {c.entry_high:.2f}</td>
-            <td style="padding:6px 5px;color:#ff5252;font-weight:bold;">{c.stop_loss:.2f}</td>
-            <td style="padding:6px 5px;text-align:center;">{tp_html}</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#4fc3f7;">{c.adtv20_billion:.1f}t</td>
-            <td style="padding:6px 5px;text-align:center;">{liq_badge}</td>
-            <td style="padding:6px 5px;text-align:center;color:#4fc3f7;">{c.rrg_r:.0f}/{c.rrg_m:.0f}</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">{c.composite_rating}</td>
-            <td style="padding:6px 5px;text-align:center;">{ad_badge}</td>
-            <td id="foreign-cell-{c.symbol}" style="padding:6px 5px;text-align:center;color:{foreign_color};font-weight:600;"><span class="live-foreign" data-sym="{c.symbol}">{foreign_str}</span>{flow_badge_html}</td>
-            <td style="padding:6px 5px;text-align:center;font-weight:bold;color:#ffb300;">{c.ranking_score:.1f}</td>
-            <td style="padding:6px 5px;text-align:center;white-space:nowrap;">{prev_rank_html}</td>
+        <tr style="border-bottom:1px solid #1e293b;">
+            <td style="padding:7px 5px;text-align:center;color:#64748b;font-weight:600;font-size:11px;">{idx}</td>
+            <td style="padding:7px 5px;font-weight:800;color:#f8fafc;font-size:13.5px;letter-spacing:0.3px;">{c.symbol}{lot_badge_html}</td>
+            <td style="padding:7px 5px;text-align:center;"><span id="sig-badge-{c.symbol}">{sig_badge}</span></td>
+            <td style="padding:7px 5px;font-weight:bold;white-space:nowrap;"><span class="live-price" data-sym="{c.symbol}" data-ref="{c.price}" data-entry-high="{c.entry_high}" data-entry-low="{c.entry_low}" data-sl="{c.stop_loss}" data-tp1="{tp1_val}" data-tp2="{tp2_val}" data-buy-perm="{buy_perm}">{c.price:,.2f}</span> <span class="live-change" data-sym="{c.symbol}" style="font-size:11px;margin-left:3px;"></span></td>
+            <td style="padding:7px 5px;color:#34d399;font-weight:600;">{c.entry_low:.2f} - {c.entry_high:.2f}</td>
+            <td style="padding:7px 5px;color:#f87171;font-weight:600;">{c.stop_loss:.2f}</td>
+            <td style="padding:7px 5px;text-align:center;">{tp_html}</td>
+            <td style="padding:7px 5px;text-align:center;font-weight:600;color:#38bdf8;">{c.adtv20_billion:.1f}t</td>
+            <td style="padding:7px 5px;text-align:center;">{liq_badge}</td>
+            <td style="padding:7px 5px;text-align:center;color:#cbd5e1;">{c.rrg_r:.0f}/{c.rrg_m:.0f}</td>
+            <td style="padding:7px 5px;text-align:center;font-weight:bold;color:#f8fafc;">{c.composite_rating}</td>
+            <td style="padding:7px 5px;text-align:center;">{ad_badge}</td>
+            <td id="foreign-cell-{c.symbol}" style="padding:7px 5px;text-align:center;color:{foreign_color};font-weight:600;"><span class="live-foreign" data-sym="{c.symbol}">{foreign_str}</span>{flow_badge_html}</td>
+            <td style="padding:7px 5px;text-align:center;font-weight:bold;color:#38bdf8;">{c.ranking_score:.1f}</td>
+            <td style="padding:7px 5px;text-align:center;white-space:nowrap;">{prev_rank_html}</td>
         </tr>
         """
 
@@ -181,27 +181,27 @@ def generate_terminal_html(
     rows_html = ""
     for s in fund_data:
         badge = (
-            '<span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỊNH CHẾ GOM</span>'
+            '<span style="background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐỊNH CHẾ GOM</span>'
             if s.get("is_institutional")
-            else '<span style="background:#37474f;color:#b0bec5;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">THEO DÕI</span>'
+            else '<span style="background:rgba(148,163,184,0.12);color:#94a3b8;border:1px solid rgba(148,163,184,0.25);padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600;">THEO DÕI</span>'
         )
         f_score_val = s.get("f_score_str", "N/A")
         if "Ngân hàng" in f_score_val or "N/A" in f_score_val:
-            f_color = "#78909c"
+            f_color = "#64748b"
         elif s.get("f_score", 0) >= 6:
-            f_color = "#00e676"
+            f_color = "#34d399"
         else:
-            f_color = "#ffb300"
+            f_color = "#fbbf24"
         rows_html += f"""
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:10px;font-weight:bold;color:#ffb300;">{s['symbol']}</td>
-            <td style="padding:10px;">{s['company_name']}</td>
-            <td style="padding:10px;color:#aaa;">{s['sector']}</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="{s['symbol']}">{s['price']:.2f}</td>
+        <tr style="border-bottom:1px solid #1e293b;">
+            <td style="padding:10px;font-weight:800;color:#f8fafc;font-size:13.5px;">{s['symbol']}</td>
+            <td style="padding:10px;color:#e2e8f0;">{s['company_name']}</td>
+            <td style="padding:10px;color:#94a3b8;">{s['sector']}</td>
+            <td style="padding:10px;font-weight:bold;color:#34d399;" class="live-price" data-sym="{s['symbol']}">{s['price']:.2f}</td>
             <td style="padding:10px;text-align:center;font-weight:bold;color:{f_color};">{f_score_val}</td>
-            <td style="padding:10px;text-align:center;">{s['pe']:.1f}</td>
-            <td style="padding:10px;text-align:center;">{s['pb']:.1f}</td>
-            <td style="padding:10px;text-align:center;">{s['cfo_ni']:.2f}</td>
+            <td style="padding:10px;text-align:center;color:#cbd5e1;">{s['pe']:.1f}</td>
+            <td style="padding:10px;text-align:center;color:#cbd5e1;">{s['pb']:.1f}</td>
+            <td style="padding:10px;text-align:center;color:#cbd5e1;">{s['cfo_ni']:.2f}</td>
             <td style="padding:10px;text-align:center;">{badge}</td>
         </tr>
         """
@@ -217,28 +217,28 @@ def generate_terminal_html(
     for b in bank_scores:
         m = b.metrics
         if "HẠNG A" in b.tier:
-            tier_badge = f'<span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">{b.tier}</span>'
-            score_color = "#00e676"
+            tier_badge = f'<span style="background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">{b.tier}</span>'
+            score_color = "#34d399"
         elif "HẠNG B" in b.tier:
-            tier_badge = f'<span style="background:#0d47a1;color:#4fc3f7;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">{b.tier}</span>'
-            score_color = "#4fc3f7"
+            tier_badge = f'<span style="background:rgba(56,189,248,0.15);color:#38bdf8;border:1px solid rgba(56,189,248,0.3);padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">{b.tier}</span>'
+            score_color = "#38bdf8"
         else:
-            tier_badge = f'<span style="background:#ff6f00;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">{b.tier}</span>'
-            score_color = "#ffb300"
+            tier_badge = f'<span style="background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">{b.tier}</span>'
+            score_color = "#fbbf24"
 
         bank_rows_html += f"""
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:10px;font-weight:bold;color:#ffb300;">{b.symbol}</td>
-            <td style="padding:10px;">{b.bank_name}</td>
-            <td style="padding:10px;font-weight:bold;color:#00e676;" class="live-price" data-sym="{b.symbol}">{b.price:.2f}</td>
+        <tr style="border-bottom:1px solid #1e293b;">
+            <td style="padding:10px;font-weight:800;color:#f8fafc;font-size:13.5px;">{b.symbol}</td>
+            <td style="padding:10px;color:#e2e8f0;">{b.bank_name}</td>
+            <td style="padding:10px;font-weight:bold;color:#34d399;" class="live-price" data-sym="{b.symbol}">{b.price:.2f}</td>
             <td style="padding:10px;text-align:center;font-weight:800;color:{score_color};font-size:14px;">{b.total_score:.0f}/100</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#ffb300;">{m.casa:.1f}%</td>
-            <td style="padding:10px;text-align:center;">{m.nim:.1f}%</td>
-            <td style="padding:10px;text-align:center;color:{'#00e676' if m.npl <= 1.5 else '#ff5252'};">{m.npl:.2f}%</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;color:#00e676;">{m.llr:.0f}%</td>
-            <td style="padding:10px;text-align:center;">{m.cir:.1f}%</td>
-            <td style="padding:10px;text-align:center;color:#4fc3f7;">{m.roe:.1f}%</td>
-            <td style="padding:10px;text-align:center;font-weight:bold;">{m.pb:.1f}</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#38bdf8;">{m.casa:.1f}%</td>
+            <td style="padding:10px;text-align:center;color:#cbd5e1;">{m.nim:.1f}%</td>
+            <td style="padding:10px;text-align:center;color:{'#34d399' if m.npl <= 1.5 else '#f87171'};">{m.npl:.2f}%</td>
+            <td style="padding:10px;text-align:center;font-weight:bold;color:#34d399;">{m.llr:.0f}%</td>
+            <td style="padding:10px;text-align:center;color:#cbd5e1;">{m.cir:.1f}%</td>
+            <td style="padding:10px;text-align:center;color:#38bdf8;">{m.roe:.1f}%</td>
+            <td style="padding:10px;text-align:center;color:#cbd5e1;">{m.pb:.1f}</td>
             <td style="padding:10px;text-align:center;">{tier_badge}</td>
         </tr>
         """
@@ -407,11 +407,11 @@ def generate_terminal_html(
     if market_foreign_net_billion is not None:
         delta_flow = total_foreign - market_foreign_net_billion
         smart_money_val = f'Top: {total_foreign:+.1f}t <span style="font-size:13px;color:#64748b;font-weight:normal;">|</span> <span style="font-size:13px;color:#94a3b8;">Sàn: {market_foreign_net_billion:+.1f}t</span>'
-        smart_money_color = "#00e676" if total_foreign >= 0 else "#ff5252"
+        smart_money_color = "#34d399" if total_foreign >= 0 else "#f87171"
         if total_foreign > 0 and market_foreign_net_billion <= 0:
-            smart_money_sub = f'🟢 ĐÃI CÁT TÌM VÀNG • Độ lệch: <b style="color:#00e676;">{delta_flow:+.1f}t</b> gom Top'
+            smart_money_sub = f'🟢 ĐÃI CÁT TÌM VÀNG • Độ lệch: <b style="color:#34d399;">{delta_flow:+.1f}t</b> gom Top'
         elif total_foreign > 0 and market_foreign_net_billion > 0:
-            smart_money_sub = f'🟢🟢 SIÊU SÓNG ĐỒNG THUẬN • Độ lệch: <b style="color:#00e676;">{delta_flow:+.1f}t</b>'
+            smart_money_sub = f'🟢🟢 SIÊU SÓNG ĐỒNG THUẬN • Độ lệch: <b style="color:#34d399;">{delta_flow:+.1f}t</b>'
         elif total_foreign <= 0 and market_foreign_net_billion > 0:
             smart_money_sub = f'🟡 KÉO TRỤ PHÂN HÓA • Rổ Top bị xả ({delta_flow:+.1f}t)'
         else:
@@ -419,15 +419,15 @@ def generate_terminal_html(
     else:
         if total_foreign >= 0:
             smart_money_val = f"+{total_foreign:.1f} Tỷ VND"
-            smart_money_color = "#00e676"
+            smart_money_color = "#34d399"
             smart_money_sub = f"Rổ Top: Khối ngoại mua ròng • {absorbed_cnt}/{max(total_cands, 1)} mã giữ cấu trúc tích lũy"
         elif absorbed_cnt > dist_cnt and not circuit_breaker_active:
             smart_money_val = f"{total_foreign:.1f} Tỷ VND"
-            smart_money_color = "#ffb300"
+            smart_money_color = "#fbbf24"
             smart_money_sub = f"Rổ Top: Ngoại bán ròng • Dòng tiền Nội gom cân hàng ({absorbed_cnt}/{max(total_cands, 1)} mã nền A/B)"
         else:
             smart_money_val = f"{total_foreign:.1f} Tỷ VND"
-            smart_money_color = "#ff5252"
+            smart_money_color = "#f87171"
             smart_money_sub = f"Rổ Top: Khối ngoại bán ròng • Cảnh báo {dist_cnt}/{max(total_cands, 1)} mã áp lực xả (Thận trọng T+2.5)"
 
     # 2. Do rong danh muc sieu co phieu (Market Breadth / Momentum)
@@ -436,18 +436,18 @@ def generate_terminal_html(
         breadth_pct = (strong_cands / total_cands) * 100.0
         breadth_val = f"{breadth_pct:.1f}%"
         breadth_sub = f"{strong_cands}/{total_cands} Cổ phiếu giữ xung lực dẫn dắt (RS/Composite ≥ 70)"
-        breadth_color = "#00e676" if breadth_pct >= 60 else "#ffb300"
+        breadth_color = "#34d399" if breadth_pct >= 60 else "#fbbf24"
     else:
         breadth_val = "75.0%"
         breadth_sub = "Cân bằng bình thường"
-        breadth_color = "#ffb300"
+        breadth_color = "#fbbf24"
 
     macro_breadth_suffix = ""
     if mb_snap.advances > 0 or mb_snap.declines > 0:
         macro_breadth_suffix = f"VN-Index: Tăng {mb_snap.advances} / Giảm {mb_snap.declines} ({mb_snap.breadth_pct:.1f}%)"
         breadth_sub = f"{breadth_sub} • {macro_breadth_suffix}"
         if mb_snap.pause_new_buying:
-            breadth_color = "#ff5252"
+            breadth_color = "#f87171"
 
     # Chuan bi du lieu Tab 2 & Tab 3: So Cai Vi The Khuyen Nghi, Doi Soat TP/SL & Chi So Tai Thoi Diem Khuyen Nghi (T0)
     from src.risk_engine.signal_tracker import (
@@ -524,12 +524,12 @@ def generate_terminal_html(
     t0_lessons_rows_html = ""
     for lesson in t0_attribution["lessons"]:
         t0_lessons_rows_html += f"""
-        <tr style="border-bottom:1px solid #1f2937;">
-            <td style="padding:8px 6px;font-weight:bold;color:#ffb300;">{lesson['metric']}</td>
-            <td style="padding:8px 6px;color:#00e676;font-weight:600;">{lesson['tp_val']}</td>
-            <td style="padding:8px 6px;color:#ff8a80;font-weight:600;">{lesson['sl_val']}</td>
-            <td style="padding:8px 6px;text-align:center;"><span style="background:#1e293b;color:#38bdf8;border:1px solid #0284c7;padding:2px 7px;border-radius:4px;font-size:10.5px;font-weight:bold;">{lesson['weight']}</span></td>
-            <td style="padding:8px 6px;color:#e2e8f0;white-space:normal;line-height:1.4;">{lesson['action']}</td>
+        <tr style="border-bottom:1px solid #1e293b;">
+            <td style="padding:8px 6px;font-weight:600;color:#f8fafc;">{lesson['metric']}</td>
+            <td style="padding:8px 6px;color:#34d399;font-weight:600;">{lesson['tp_val']}</td>
+            <td style="padding:8px 6px;color:#f87171;font-weight:600;">{lesson['sl_val']}</td>
+            <td style="padding:8px 6px;text-align:center;"><span style="background:rgba(56,189,248,0.12);color:#38bdf8;border:1px solid rgba(56,189,248,0.25);padding:2px 7px;border-radius:4px;font-size:10.5px;font-weight:bold;">{lesson['weight']}</span></td>
+            <td style="padding:8px 6px;color:#cbd5e1;white-space:normal;line-height:1.4;">{lesson['action']}</td>
         </tr>
         """
 
@@ -537,7 +537,7 @@ def generate_terminal_html(
     if not all_recommended_signals:
         unified_positions_rows_html = """
         <tr>
-            <td colspan="8" style="padding:25px;text-align:center;color:#78909c;">
+            <td colspan="8" style="padding:25px;text-align:center;color:#64748b;">
                 Hiện không có vị thế nào đang nắm giữ. Mọi khuyến nghị trước đó đã đạt mục tiêu chốt lời hoặc đã đóng bảo toàn vốn.
             </td>
         </tr>
@@ -556,11 +556,11 @@ def generate_terminal_html(
             s_sym = getattr(sig_item, "symbol", "")
             s_type = str(getattr(sig_item, "signal_type", "CHO_MUA_CHAN_SONG") or "CHO_MUA_CHAN_SONG")
             if "CHO_MUA" in s_type:
-                s_type_badge = '<span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">CHÂN SÓNG</span>'
+                s_type_badge = '<span style="background:rgba(16,185,129,0.12);color:#34d399;border:1px solid rgba(16,185,129,0.25);padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">CHÂN SÓNG</span>'
             elif "THE_CHE" in s_type:
-                s_type_badge = '<span style="background:#311b92;color:#b388ff;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">THỂ CHẾ GOM</span>'
+                s_type_badge = '<span style="background:rgba(139,92,246,0.12);color:#a78bfa;border:1px solid rgba(139,92,246,0.25);padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">THỂ CHẾ GOM</span>'
             else:
-                s_type_badge = '<span style="background:#01579b;color:#29b6f6;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">ĐỘT BIẾN GT</span>'
+                s_type_badge = '<span style="background:rgba(56,189,248,0.12);color:#38bdf8;border:1px solid rgba(56,189,248,0.25);padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:bold;">ĐỘT BIẾN GT</span>'
 
             s_status = str(getattr(sig_item, "status", "ACTIVE") or "ACTIVE")
             s_outcome = str(getattr(sig_item, "outcome_label", "ACTIVE") or "ACTIVE")
@@ -568,15 +568,15 @@ def generate_terminal_html(
             s_tdays = int(getattr(sig_item, "trading_days", 0) or 0)
 
             if s_status == "TP2_REACHED" or s_outcome == "WIN_TP2":
-                res_badge = '<span style="background:#004d40;color:#64ffda;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🏆 ĐẠT TP2</span>'
+                res_badge = '<span style="background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🏆 ĐẠT TP2</span>'
             elif s_status == "TP1_REACHED" or s_outcome == "WIN_TP1":
-                res_badge = '<span style="background:#065f46;color:#6ee7b7;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🎯 ĐẠT TP1</span>'
+                res_badge = '<span style="background:rgba(16,185,129,0.12);color:#34d399;border:1px solid rgba(16,185,129,0.25);padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🎯 ĐẠT TP1</span>'
             elif s_status == "STOPPED_OUT" or s_outcome == "STOP_LOSS":
-                res_badge = '<span style="background:#b71c1c;color:#ff8a80;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🛑 CẮT LỖ</span>'
+                res_badge = '<span style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.25);padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🛑 CẮT LỖ</span>'
             elif s_status == "TIME_OUT" or s_outcome == "TIME_OUT":
-                res_badge = '<span style="background:#374151;color:#fbbf24;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">⏱️ HẾT SÓNG T+7</span>'
+                res_badge = '<span style="background:rgba(245,158,11,0.12);color:#fbbf24;border:1px solid rgba(245,158,11,0.25);padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">⏱️ HẾT SÓNG T+7</span>'
             else:
-                res_badge = '<span style="background:#0284c7;color:#e0f2fe;padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🟢 ĐANG NẮM GIỮ</span>'
+                res_badge = '<span style="background:rgba(56,189,248,0.12);color:#38bdf8;border:1px solid rgba(56,189,248,0.25);padding:2px 7px;border-radius:4px;font-weight:bold;font-size:11px;">🟢 ĐANG NẮM GIỮ</span>'
 
             s_first = str(getattr(sig_item, "first_signal_date", "") or "")
             s_closed = str(getattr(sig_item, "closed_at", "") or getattr(sig_item, "last_updated", "") or "")
@@ -585,16 +585,16 @@ def generate_terminal_html(
 
             if is_act:
                 if s_tdays == 0:
-                    t_str = '<span style="background:#0284c7;color:#e0f2fe;padding:1px 5px;border-radius:3px;font-weight:bold;font-size:10.5px;">T+0 (Vừa mua)</span>'
+                    t_str = '<span style="background:rgba(56,189,248,0.08);color:#7dd3fc;border:1px solid rgba(56,189,248,0.2);padding:1px 5px;border-radius:3px;font-weight:600;font-size:10px;">T+0 (Vừa mua)</span>'
                 elif s_tdays == 1:
-                    t_str = '<span style="background:#0369a1;color:#e0f2fe;padding:1px 5px;border-radius:3px;font-weight:bold;font-size:10.5px;">T+1 (Chờ hàng)</span>'
+                    t_str = '<span style="background:rgba(56,189,248,0.08);color:#7dd3fc;border:1px solid rgba(56,189,248,0.2);padding:1px 5px;border-radius:3px;font-weight:600;font-size:10px;">T+1 (Chờ hàng)</span>'
                 elif s_tdays == 2:
-                    t_str = '<span style="background:#047857;color:#d1fae5;padding:1px 5px;border-radius:3px;font-weight:bold;font-size:10.5px;">T+2 (Khả dụng chiều)</span>'
+                    t_str = '<span style="background:rgba(16,185,129,0.08);color:#6ee7b7;border:1px solid rgba(16,185,129,0.2);padding:1px 5px;border-radius:3px;font-weight:600;font-size:10px;">T+2 (Khả dụng chiều)</span>'
                 else:
-                    t_str = f'<span style="background:#1b5e20;color:#00e676;padding:1px 5px;border-radius:3px;font-weight:bold;font-size:10.5px;">T+{s_tdays} (Khả dụng 100%)</span>'
-                time_sub = f'{t_str} • <span style="color:#94a3b8;">Vào: {s_t0_dt}</span>'
+                    t_str = f'<span style="background:rgba(16,185,129,0.08);color:#6ee7b7;border:1px solid rgba(16,185,129,0.2);padding:1px 5px;border-radius:3px;font-weight:600;font-size:10px;">T+{s_tdays} (Khả dụng 100%)</span>'
+                time_sub = f'{t_str} • <span style="color:#64748b;font-size:10px;">Vào: {s_t0_dt}</span>'
             else:
-                time_sub = f'<span style="color:#cbd5e1;font-weight:bold;">T+{s_tdays}</span> • Vào: {s_t0_dt} &rarr; Đóng: {s_cl_dt}'
+                time_sub = f'<span style="color:#94a3b8;font-weight:600;font-size:10.5px;">T+{s_tdays}</span> • <span style="color:#64748b;font-size:10px;">Vào: {s_t0_dt} &rarr; Đóng: {s_cl_dt}</span>'
 
             s_entry = float(getattr(sig_item, "entry_original", 0.0) or 0.0)
             s_cur = float(getattr(sig_item, "current_price", 0.0) or 0.0)
@@ -606,53 +606,51 @@ def generate_terminal_html(
             s_low = float(getattr(sig_item, "min_price_reached", 0.0) or 0.0)
 
             if s_status == "TP1_REACHED" and s_sl >= s_entry:
-                sl_str = f'<span style="color:#00e676;font-weight:bold;">{s_sl:.2f}</span> (Hòa vốn)'
+                sl_str = f'<span style="color:#34d399;font-weight:600;">{s_sl:.2f}</span> (Hòa vốn)'
             else:
-                sl_str = f'<span style="color:#ff8a80;font-weight:bold;">{s_sl:.2f}</span>'
+                sl_str = f'<span style="color:#f87171;font-weight:600;">{s_sl:.2f}</span>'
 
             if s_status == "TP1_REACHED":
-                tp_str = f'<span style="text-decoration:line-through;color:#78909c;">{s_tp1:.2f}</span> <b style="color:#00e676;">✓</b>/<b style="color:#38bdf8;">{s_tp2:.2f}</b>'
+                tp_str = f'<span style="text-decoration:line-through;color:#64748b;">{s_tp1:.2f}</span> <b style="color:#34d399;">✓</b>/<b style="color:#38bdf8;">{s_tp2:.2f}</b>'
             else:
-                tp_str = f'<span style="color:#4fc3f7;">{s_tp1:.2f}</span>/<b style="color:#38bdf8;">{s_tp2:.2f}</b>'
+                tp_str = f'<span style="color:#38bdf8;">{s_tp1:.2f}</span>/<b style="color:#38bdf8;">{s_tp2:.2f}</b>'
 
+            pnl_col = "#34d399" if eff_pnl > 0 else ("#f87171" if eff_pnl < 0 else "#94a3b8")
+            pnl_s = "+" if eff_pnl > 0 else ""
             if is_act:
-                cur_price_html = f'<span class="live-price" data-sym="{s_sym}" style="font-weight:bold;color:#ffb300;">{s_cur:.2f}</span>'
-                pnl_col = "#00e676" if eff_pnl > 0 else ("#ff5252" if eff_pnl < 0 else "#ffb300")
-                pnl_s = "+" if eff_pnl > 0 else ""
+                cur_price_html = f'<span class="live-price" data-sym="{s_sym}" style="font-weight:700;color:{pnl_col};">{s_cur:.2f}</span>'
                 pnl_html = f'<span class="live-pnl" data-sym="{s_sym}" data-entry="{s_entry:.2f}" style="font-weight:800;color:{pnl_col};font-size:12.5px;">{pnl_s}{eff_pnl:.2f}%</span>'
             else:
-                cur_price_html = f'<b style="color:#ffffff;">{eff_price:.2f}</b>'
-                pnl_col = "#00e676" if eff_pnl > 0 else ("#ff5252" if eff_pnl < 0 else "#ffb300")
-                pnl_s = "+" if eff_pnl > 0 else ""
+                cur_price_html = f'<b style="color:#e2e8f0;">{eff_price:.2f}</b>'
                 pnl_html = f'<span style="font-weight:800;color:{pnl_col};font-size:12.5px;">{pnl_s}{eff_pnl:.2f}%</span>'
 
             if cat == "SL":
                 excursion_sub = f'<div style="font-size:10px;color:#fca5a5;">Đáy MAE: {min(s_mae, eff_pnl):.1f}%</div>'
             else:
-                excursion_sub = f'<div style="font-size:10px;color:#94a3b8;">Đỉnh: +{max(s_mfe, 0.0):.1f}% / Đáy: {min(s_mae, 0.0):.1f}%</div>'
+                excursion_sub = f'<div style="font-size:10px;color:#64748b;">Đỉnh: +{max(s_mfe, 0.0):.1f}% / Đáy: {min(s_mae, 0.0):.1f}%</div>'
 
             # Action / Reason badge
             if is_act:
                 if s_status == "TP1_REACHED":
-                    action_badge = '<span style="background:#004d40;color:#64ffda;padding:2px 6px;border-radius:4px;font-size:10.5px;font-weight:bold;">🎯 ĐÃ CHỐT 50% TP1 — GỒNG LÃI TỚI TP2 (CẤM MUA ĐUỔI)</span>'
+                    action_badge = '<span style="background:rgba(56,189,248,0.12);color:#38bdf8;border:1px solid rgba(56,189,248,0.25);padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">🎯 ĐÃ CHỐT 50% TP1 — GỒNG LÃI TỚI TP2 (CẤM MUA ĐUỔI)</span>'
                 elif buy_perm == "EXTENDED_NO_CHASING":
-                    action_badge = '<span style="background:#e65100;color:#ffe0b2;padding:2px 6px;border-radius:4px;font-size:10.5px;font-weight:bold;">⚠️ ĐÃ TĂNG XA NỀN — CẤM MUA ĐUỔI</span>'
+                    action_badge = '<span style="background:rgba(245,158,11,0.12);color:#fbbf24;border:1px solid rgba(245,158,11,0.25);padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">⚠️ ĐÃ TĂNG XA NỀN — CẤM MUA ĐUỔI</span>'
                 elif buy_perm == "BULL_TRAP_REJECT":
-                    action_badge = '<span style="background:#bf360c;color:#ffccbc;padding:2px 6px;border-radius:4px;font-size:10.5px;font-weight:bold;">⚠️ BULL-TRAP — NẮM GIỮ / CHỜ HỒI</span>'
+                    action_badge = '<span style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.25);padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">⚠️ BULL-TRAP — NẮM GIỮ / CHỜ HỒI</span>'
                 elif buy_perm == "STALE_SIGNAL":
-                    action_badge = '<span style="background:#374151;color:#d1d5db;padding:2px 6px;border-radius:4px;font-size:10.5px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>'
+                    action_badge = '<span style="background:rgba(251,146,60,0.12);color:#fb923c;border:1px solid rgba(251,146,60,0.25);padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">🟠 QUÁ HẠN T+3 — THEO DÕI SÁT SL</span>'
                 else:
-                    action_badge = '<span style="background:#1b5e20;color:#00e676;padding:2px 6px;border-radius:4px;font-size:10.5px;font-weight:bold;">🟢 ĐANG NẮM GIỮ (CHỜ CHẠM TP)</span>'
+                    action_badge = '<span style="background:rgba(16,185,129,0.12);color:#34d399;border:1px solid rgba(16,185,129,0.25);padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">🟢 ĐANG NẮM GIỮ (CHỜ CHẠM TP)</span>'
             else:
                 if s_status == "TP2_REACHED":
-                    action_badge = f'<span style="color:#64ffda;font-size:11px;font-weight:600;">Đạt mục tiêu TP2 ({s_tp2:.2f}) • Hoàn tất chốt lời 100%</span>'
+                    action_badge = f'<span style="color:#34d399;font-size:10.5px;font-weight:600;">Đạt mục tiêu TP2 ({s_tp2:.2f}) • Hoàn tất chốt lời 100%</span>'
                 elif s_status == "TIME_OUT":
-                    action_badge = f'<span style="color:#fbbf24;font-size:11px;font-weight:600;">Tất toán cơ cấu danh mục sau {s_tdays} phiên (thu hồi sức mua)</span>'
+                    action_badge = f'<span style="color:#fbbf24;font-size:10.5px;font-weight:600;">Tất toán cơ cấu danh mục sau {s_tdays} phiên (thu hồi sức mua)</span>'
                 else:
                     if s_low > 0 and s_sl > 0:
-                        action_badge = f'<span style="color:#ff8a80;font-size:11px;font-weight:600;">Chạm đáy chu kỳ {s_low:.2f} &le; Ngưỡng Stop {s_sl:.2f}</span>'
+                        action_badge = f'<span style="color:#f87171;font-size:10.5px;font-weight:600;">Chạm đáy chu kỳ {s_low:.2f} &le; Ngưỡng Stop {s_sl:.2f}</span>'
                     else:
-                        action_badge = '<span style="color:#ff8a80;font-size:11px;font-weight:600;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</span>'
+                        action_badge = '<span style="color:#f87171;font-size:10.5px;font-weight:600;">Chạm ngưỡng cắt lỗ bảo toàn vốn T+2.5</span>'
 
             s_ai = float(getattr(sig_item, "ranking_score", 0.0) or 0.0)
             s_ibd = int(getattr(sig_item, "composite_rating", 0) or 0)
@@ -666,66 +664,69 @@ def generate_terminal_html(
             s_poc = float(getattr(sig_item, "poc_price_t0", 0.0) or 0.0)
             s_atrd = float(getattr(sig_item, "atr_dist_from_poc_t0", 0.0) or 0.0)
 
-            ibd_c = "#00e676" if s_ibd >= 75 else ("#ffb300" if s_ibd >= 60 else "#ff5252")
-            ad_c = "#00e676" if s_ad in ("A", "B") else ("#ffb300" if s_ad == "C" else "#ff5252")
-            ad_bg_c = "#1b5e20" if s_ad in ("A", "B") else ("#3e2723" if s_ad == "C" else "#450a0a")
+            ibd_c = "#34d399" if s_ibd >= 75 else ("#cbd5e1" if s_ibd >= 60 else "#94a3b8")
+            ad_c = "#34d399" if s_ad in ("A", "B") else ("#cbd5e1" if s_ad == "C" else "#f87171")
+            ad_bg_c = "rgba(16,185,129,0.12)" if s_ad in ("A", "B") else ("rgba(148,163,184,0.12)" if s_ad == "C" else "rgba(239,68,68,0.12)")
             if s_r >= 100.0 and s_m >= 100.0:
-                rrg_quad = '<span style="color:#00e676;font-size:10px;font-weight:bold;">Dẫn dắt</span>'
+                rrg_quad = '<span style="color:#34d399;font-size:10px;font-weight:600;">Dẫn dắt</span>'
             elif s_r < 100.0 and s_m >= 100.0:
-                rrg_quad = '<span style="color:#4fc3f7;font-size:10px;font-weight:bold;">Cải thiện</span>'
+                rrg_quad = '<span style="color:#38bdf8;font-size:10px;font-weight:600;">Cải thiện</span>'
             elif s_r >= 100.0 and s_m < 100.0:
-                rrg_quad = '<span style="color:#ffb300;font-size:10px;font-weight:bold;">Suy yếu</span>'
+                rrg_quad = '<span style="color:#fbbf24;font-size:10px;font-weight:600;">Suy yếu</span>'
             else:
-                rrg_quad = '<span style="color:#ff5252;font-size:10px;font-weight:bold;">Tụt hậu</span>'
+                rrg_quad = '<span style="color:#f87171;font-size:10px;font-weight:600;">Tụt hậu</span>'
 
-            prop_str = f" • TD:<b style=\"color:{'#00e676' if s_pnet >= 0 else '#ff5252'};\">{s_pnet:+.1f}t</b>" if abs(s_pnet) >= 0.05 else ""
-            poc_str = f'<span style="color:{"#00e676" if -0.5 <= s_atrd <= 0.9 else "#ffb300"};">POC:{s_poc:.2f} ({s_atrd:+.1f}ATR)</span> • TK:{s_adtv:.0f}t' if s_poc > 0 else f'TK:{s_adtv:.0f}t'
+            f_net_col = "#34d399" if s_fnet > 0.05 else ("#f87171" if s_fnet < -0.05 else "#94a3b8")
+            p_net_col = "#34d399" if s_pnet > 0.05 else ("#f87171" if s_pnet < -0.05 else "#94a3b8")
+            prop_str = f" • <span style=\"color:#64748b;\">TD:</span><b style=\"color:{p_net_col};\">{s_pnet:+.1f}t</b>" if abs(s_pnet) >= 0.05 else ""
+            poc_color = "#34d399" if -0.5 <= s_atrd <= 0.9 else ("#fbbf24" if s_atrd > 0.9 else "#f87171")
+            poc_str = f'<span style="color:#64748b;">POC:</span><span style="color:#e2e8f0;">{s_poc:.2f}</span> <span style="color:{poc_color};">({s_atrd:+.1f}ATR)</span> • <span style="color:#64748b;">TK:</span><span style="color:#94a3b8;">{s_adtv:.0f}t</span>' if s_poc > 0 else f'<span style="color:#64748b;">TK:</span><span style="color:#94a3b8;">{s_adtv:.0f}t</span>'
 
             unified_positions_rows_html += f"""
-            <tr class="unified-pos-row t0-audit-row" data-cat="{cat}" data-active="{active_flag}" style="border-bottom:1px solid #1f2937;">
-                <td style="padding:8px 6px;text-align:center;color:#78909c;font-weight:bold;">{idx}</td>
-                <td style="padding:8px 6px;">
-                    <div style="font-weight:800;color:#ffb300;font-size:13px;">{s_sym}</div>
-                    <div style="margin-top:2px;">{s_type_badge}</div>
+            <tr class="unified-pos-row t0-audit-row" data-cat="{cat}" data-active="{active_flag}">
+                <td style="padding:9px 6px;text-align:center;color:#64748b;font-weight:600;font-size:11px;">{idx}</td>
+                <td style="padding:9px 6px;">
+                    <div style="font-weight:800;color:#f8fafc;font-size:13.5px;letter-spacing:0.3px;">{s_sym}</div>
+                    <div style="margin-top:3px;">{s_type_badge}</div>
                 </td>
-                <td style="padding:8px 6px;text-align:center;">
+                <td style="padding:9px 6px;text-align:center;">
                     <div>{res_badge}</div>
-                    <div style="font-size:10.5px;color:#94a3b8;margin-top:3px;">
+                    <div style="margin-top:4px;">
                         {time_sub}
                     </div>
                 </td>
-                <td style="padding:8px 6px;text-align:right;">
-                    <div style="font-size:12px;color:#f8fafc;">
-                        <b>{s_entry:.2f}</b> &rarr; {cur_price_html}
+                <td style="padding:9px 6px;text-align:right;">
+                    <div style="font-size:12px;color:#e2e8f0;">
+                        <b>{s_entry:.2f}</b> <span style="color:#64748b;">&rarr;</span> {cur_price_html}
                     </div>
-                    <div style="font-size:10px;color:#64748b;margin-top:2px;">
-                        SL:{sl_str} | TP:{tp_str}
+                    <div style="font-size:10px;color:#64748b;margin-top:3px;">
+                        <span style="color:#64748b;">SL:</span>{sl_str} <span style="color:#334155;">|</span> <span style="color:#64748b;">TP:</span>{tp_str}
                     </div>
                 </td>
-                <td style="padding:8px 6px;text-align:right;">
+                <td style="padding:9px 6px;text-align:right;">
                     <div>{pnl_html}</div>
                     {excursion_sub}
                 </td>
-                <td style="padding:8px 6px;text-align:left;">
-                    <div style="font-size:11px;line-height:1.35;">
-                        <span style="color:#ffb300;font-weight:bold;">AI:{s_ai:.1f}</span> • 
-                        IBD:<b style="color:{ibd_c};">{s_ibd}</b>/RS:<b>{s_rs}</b> • 
-                        TL:<span style="background:{ad_bg_c};color:{ad_c};padding:1px 5px;border-radius:3px;font-weight:bold;font-size:10px;">{s_ad}</span>
+                <td style="padding:9px 6px;text-align:left;">
+                    <div style="font-size:11px;line-height:1.4;">
+                        <span style="color:#64748b;">AI:</span><b style="color:#e2e8f0;">{s_ai:.1f}</b> <span style="color:#334155;">•</span> 
+                        <span style="color:#64748b;">IBD:</span><b style="color:{ibd_c};">{s_ibd}</b><span style="color:#64748b;">/RS:</span><b style="color:#cbd5e1;">{s_rs}</b> <span style="color:#334155;">•</span> 
+                        <span style="color:#64748b;">TL:</span><span style="background:{ad_bg_c};color:{ad_c};padding:1px 5px;border-radius:3px;font-weight:bold;font-size:10px;">{s_ad}</span>
                     </div>
-                    <div style="font-size:10px;color:#94a3b8;margin-top:2px;">
-                        RRG:<span style="color:#38bdf8;font-weight:600;">{s_r:.1f}/{s_m:.1f}</span> ({rrg_quad})
+                    <div style="font-size:10px;color:#94a3b8;margin-top:3px;">
+                        <span style="color:#64748b;">RRG:</span><span style="color:#cbd5e1;font-weight:500;">{s_r:.1f}/{s_m:.1f}</span> ({rrg_quad})
                     </div>
                 </td>
-                <td style="padding:8px 6px;text-align:left;">
+                <td style="padding:9px 6px;text-align:left;">
                     <div style="font-size:10.5px;">
-                        Ngoại:<b style="color:{'#00e676' if s_fnet >= 0 else '#ff5252'};">{s_fnet:+.1f}t</b>{prop_str}
+                        <span style="color:#64748b;">Ngoại:</span><b style="color:{f_net_col};">{s_fnet:+.1f}t</b>{prop_str}
                     </div>
-                    <div style="font-size:10px;color:#94a3b8;margin-top:2px;">
+                    <div style="font-size:10px;margin-top:3px;">
                         {poc_str}
                     </div>
                 </td>
-                <td style="padding:8px 6px;text-align:left;min-width:210px;">
-                    <div style="font-size:11px;color:#cbd5e1;line-height:1.35;">{diag_text}</div>
+                <td style="padding:9px 6px;text-align:left;min-width:210px;">
+                    <div style="font-size:11px;color:#94a3b8;line-height:1.4;">{diag_text}</div>
                     <div style="margin-top:4px;" class="pos-badge" data-sym="{s_sym}" data-entry="{s_entry:.2f}" data-sl="{s_sl:.2f}" data-tp1="{s_tp1:.2f}" data-tp2="{s_tp2:.2f}">{action_badge}</div>
                 </td>
             </tr>
@@ -735,7 +736,7 @@ def generate_terminal_html(
     closed_rows_html = ""
     t0_audit_rows_html = unified_positions_rows_html
 
-    basis_color = "#ff5252" if basis.basis_points <= -8.0 else ("#ffb300" if basis.basis_points < 0 else "#29b6f6")
+    basis_color = "#f87171" if basis.basis_points <= -8.0 else ("#fbbf24" if basis.basis_points < 0 else "#38bdf8")
     circuit_breaker_html = ""
     if mb_snap.pause_new_buying or basis.basis_points <= -8.0:
         reasons: List[str] = []
@@ -747,9 +748,9 @@ def generate_terminal_html(
             reasons.append(f"Phái sinh VN30F1M chiết khấu âm sâu ({basis.basis_points:+.2f} điểm)")
         reason_str = " | ".join(reasons)
         circuit_breaker_html = f"""
-    <div id="t25-circuit-breaker-banner" style="background:linear-gradient(90deg,#450a0a,#7f1d1d);border:2px solid #ef4444;border-radius:8px;padding:12px 16px;margin-bottom:18px;color:#fee2e2;font-size:13px;line-height:1.5;">
+    <div id="t25-circuit-breaker-banner" style="background:rgba(127,29,29,0.25);border:1px solid #ef4444;border-radius:8px;padding:12px 16px;margin-bottom:18px;color:#fee2e2;font-size:13px;line-height:1.5;">
         <div style="font-weight:800;font-size:14px;color:#fca5a5;">⛔ CẦU CHÌ T+2.5 KÍCH HOẠT: TẠM NGỪNG MUA MỚI TOÀN BỘ VỊ THẾ CỔ PHIẾU</div>
-        <div><b>Nguyên nhân vĩ mô:</b> {reason_str}. Tuyệt đối không mở mua mới hoặc bình quân giá xuống để tránh kẹp chu kỳ thanh toán T+2.5; ưu tiên giữ tỷ trọng tiền mặt &ge; 70% NAV.</div>
+        <div style="margin-top:4px;color:#e2e8f0;"><b>Nguyên nhân vĩ mô:</b> {reason_str}. Tuyệt đối không mở mua mới hoặc bình quân giá xuống để tránh kẹp chu kỳ thanh toán T+2.5; ưu tiên giữ tỷ trọng tiền mặt &ge; 70% NAV.</div>
     </div>
         """
 
@@ -798,14 +799,14 @@ def generate_terminal_html(
 
     is_live = bool(scanner and scanner.token)
     data_badge = (
-        '<div style="display:inline-block;background:#1b5e20;color:#00e676;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;">🟢 DỮ LIỆU: REAL-TIME FIALDA PRO API</div>'
+        '<div style="display:inline-block;background:rgba(16,185,129,0.12);color:#34d399;border:1px solid rgba(16,185,129,0.3);padding:4px 10px;border-radius:4px;font-size:11px;font-weight:700;">🟢 DỮ LIỆU: REAL-TIME FIALDA PRO API</div>'
         if is_live
-        else '<div style="display:inline-block;background:#d84315;color:#ffe0b2;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;">🟡 CHẾ ĐỘ DỰ PHÒNG: BẢNG GIÁ ENTRADE/DNSE PUBLIC</div>'
+        else '<div style="display:inline-block;background:rgba(245,158,11,0.12);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);padding:4px 10px;border-radius:4px;font-size:11px;font-weight:700;">🟡 CHẾ ĐỘ DỰ PHÒNG: BẢNG GIÁ ENTRADE/DNSE PUBLIC</div>'
     )
     data_subtext = (
         "Cập nhật theo chu kỳ giao dịch thực tế"
         if is_live
-        else '<span style="color:#ffb300;">⚠️ Fialda VIP gián đoạn - Đang tự động bảo vệ tín hiệu bằng nguồn dự phòng</span>'
+        else '<span style="color:#fbbf24;">⚠️ Fialda VIP gián đoạn - Đang tự động bảo vệ tín hiệu bằng nguồn dự phòng</span>'
     )
     vn_now = datetime.now(timezone(timedelta(hours=7)))
     scan_time_str = vn_now.strftime("%H:%M:%S • %d/%m/%Y")
@@ -822,27 +823,28 @@ def generate_terminal_html(
             box-sizing: border-box;
         }}
         body {{
-            background-color: #0b0e14;
-            color: #d1d4dc;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #0b0f17;
+            color: #cbd5e1;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             margin: 0;
-            padding: 15px;
+            padding: 16px;
+            line-height: 1.5;
         }}
         .header {{
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 10px;
-            border-bottom: 2px solid #1f2937;
-            padding-bottom: 15px;
+            gap: 12px;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 16px;
             margin-bottom: 20px;
         }}
         .title {{
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 800;
-            color: #ffb300;
-            letter-spacing: 0.5px;
+            color: #f8fafc;
+            letter-spacing: 0.3px;
         }}
         .grid {{
             display: grid;
@@ -851,47 +853,51 @@ def generate_terminal_html(
             margin-bottom: 25px;
         }}
         .card {{
-            background: #151a23;
-            border: 1px solid #263238;
+            background: #111722;
+            border: 1px solid #1e293b;
             border-radius: 8px;
             padding: 14px;
         }}
         .card-title {{
             font-size: 11px;
-            color: #78909c;
+            color: #94a3b8;
             text-transform: uppercase;
             margin-bottom: 6px;
             font-weight: 600;
+            letter-spacing: 0.5px;
         }}
         .card-value {{
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 800;
         }}
         .table-container {{
             width: 100%;
             overflow-x: auto;
             border-radius: 8px;
-            border: 1px solid #263238;
+            border: 1px solid #1e293b;
             margin-bottom: 25px;
-            background: #151a23;
+            background: #111722;
         }}
         table {{
             width: 100%;
             border-collapse: collapse;
         }}
         th {{
-            background: #1c2431;
-            padding: 8px 5px;
+            background: #0f1520;
+            padding: 9px 8px;
             text-align: left;
             font-size: 11px;
-            color: #90a4ae;
+            color: #94a3b8;
             text-transform: uppercase;
             white-space: nowrap;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            border-bottom: 1px solid #1e293b;
         }}
         td {{
             white-space: nowrap;
             font-size: 12px;
+            color: #cbd5e1;
         }}
         .section-header {{
             display: flex;
@@ -902,19 +908,38 @@ def generate_terminal_html(
             margin-bottom: 10px;
         }}
         .section-title {{
-            color: #ffb300;
-            font-size: 15px;
+            color: #f8fafc;
+            font-size: 14.5px;
             font-weight: 700;
             display: flex;
             align-items: center;
             gap: 8px;
         }}
+        .unified-pos-row {{
+            transition: background-color 0.15s ease;
+            border-bottom: 1px solid #182232;
+        }}
+        .unified-pos-row:nth-child(even) {{
+            background-color: rgba(255, 255, 255, 0.012);
+        }}
+        .unified-pos-row:nth-child(odd) {{
+            background-color: transparent;
+        }}
+        .unified-pos-row:hover {{
+            background-color: rgba(56, 189, 248, 0.05) !important;
+        }}
+        .pos-filter-btn {{
+            transition: all 0.2s ease;
+        }}
+        .pos-filter-btn:hover {{
+            filter: brightness(1.15);
+        }}
         .footer {{
             text-align: center;
             padding: 20px;
             font-size: 11px;
-            color: #546e7a;
-            border-top: 1px solid #1f2937;
+            color: #64748b;
+            border-top: 1px solid #1e293b;
             margin-top: 20px;
         }}
     </style>
@@ -931,11 +956,11 @@ def generate_terminal_html(
             {data_badge}
             <div style="font-size:11px;color:#78909c;margin-top:4px;">{data_subtext}</div>
             <div style="display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-top:6px;flex-wrap:wrap;">
-                <span id="live-status" style="font-size:11px;color:#00e676;background:#1b5e20;padding:2px 7px;border-radius:4px;font-weight:bold;">🟢 Live VPS: Đang kết nối...</span>
-                <span style="font-size:11px;color:#90a4ae;">🕒 Cập nhật: <b id="scan-time" style="color:#ffb300;">{scan_time_str}</b></span>
+                <span id="live-status" style="font-size:11px;color:#34d399;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);padding:2px 7px;border-radius:4px;font-weight:bold;">🟢 Live VPS: Đang kết nối...</span>
+                <span style="font-size:11px;color:#90a4ae;">🕒 Cập nhật: <b id="scan-time" style="color:#e2e8f0;">{scan_time_str}</b></span>
                 <span style="font-size:11px;color:#546e7a;">•</span>
                 <span style="font-size:11px;color:#90a4ae;">🔄 Tự làm mới: <b id="countdown" style="color:#00e676;">300</b>s</span>
-                <button onclick="reloadDashboard()" style="background:#1e293b;color:#38bdf8;border:1px solid #0284c7;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer;">⚡ Tải lại ngay</button>
+                <button onclick="reloadDashboard()" style="background:#1e293b;color:#94a3b8;border:1px solid #334155;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;cursor:pointer;">⚡ Tải lại ngay</button>
             </div>
         </div>
     </div>
@@ -959,7 +984,7 @@ def generate_terminal_html(
         </div>
         <div class="card" id="card-sector-container">
             <div class="card-title">Ngành Dẫn Dắt (Động Lượng RRG)</div>
-            <div class="card-value" id="card-sector-val" style="color:#00e676;">{leading_sector_val}</div>
+            <div class="card-value" id="card-sector-val" style="color:#34d399;">{leading_sector_val}</div>
             <div id="card-sector-sub" style="font-size:11px;color:#78909c;margin-top:4px;">{leading_sector_sub}</div>
         </div>
     </div>
@@ -970,46 +995,46 @@ def generate_terminal_html(
 
     <!-- THANH CHUYỂN TAB CHIẾN THUẬT: TAB 1 (RADAR) & TAB 2 (SỔ CÁI & ĐỐI SOÁT VỊ THẾ TOÀN VÒNG) -->
     <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;">
-        <button id="btn-tab-radar" onclick="switchHudTab('radar')" style="background:#ffb300;color:#0b0e14;border:none;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:800;cursor:pointer;">📡 TAB 1: RADAR THỰC CHIẾN & BẢNG ĐỊNH LƯỢNG</button>
-        <button id="btn-tab-positions" onclick="switchHudTab('positions')" style="background:#151a23;color:#90a4ae;border:1px solid #263238;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">📋 TAB 2: SỔ CÁI &amp; ĐỐI SOÁT VỊ THẾ TOÀN VÒNG (T+ TRACKER • T0 &rarr; TP/SL) ({len(all_recommended_signals)} MÃ)</button>
+        <button id="btn-tab-radar" onclick="switchHudTab('radar')" style="background:#1e293b;color:#38bdf8;border:1px solid #0284c7;box-shadow:0 0 10px rgba(56,189,248,0.15);padding:7px 15px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">📡 TAB 1: RADAR THỰC CHIẾN & BẢNG ĐỊNH LƯỢNG</button>
+        <button id="btn-tab-positions" onclick="switchHudTab('positions')" style="background:#111722;color:#94a3b8;border:1px solid #1e293b;padding:7px 15px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">📋 TAB 2: SỔ CÁI &amp; ĐỐI SOÁT VỊ THẾ TOÀN VÒNG (T+ TRACKER • T0 &rarr; TP/SL) ({len(all_recommended_signals)} MÃ)</button>
     </div>
 
     <div id="hud-tab-positions" style="display:none;margin-bottom:25px;">
         <div class="section-header">
             <div class="section-title" style="color:#38bdf8;">📋 SỔ CÁI VỊ THẾ KHUYẾN NGHỊ &amp; ĐỐI SOÁT CHỈ SỐ T0 TOÀN VÒNG (T+ TRACKER • T0 &rarr; TP/SL)</div>
-            <span style="font-size:11px;color:#78909c;">Chu kỳ: <b style="color:#4fc3f7;">T+2.5</b> • Sắp xếp mặc định: <b style="color:#ffb300;">Vị thế mở &amp; Ngày mua mới nhất (T0)</b> • Giới hạn vị thế: <b style="color:#00e676;">&le; 20% NAV/mã</b> • Phí &amp; Thuế: <b style="color:#ffb300;">0.40%</b> • Đang nắm giữ: <b style="color:#00e676;">{len(active_running)} mã</b> • Đạt TP1: <b style="color:#64ffda;">{tp1_count} mã</b> • Đã chốt lời toàn bộ TP2 &amp; rời bảng: <b style="color:#ffb300;">{tp2_count} mã</b> (Tổng cộng: {len(all_recommended_signals)} mã)</span>
+            <span style="font-size:11px;color:#78909c;">Chu kỳ: <b style="color:#38bdf8;">T+2.5</b> • Sắp xếp mặc định: <b style="color:#cbd5e1;">Vị thế mở &amp; Ngày mua mới nhất (T0)</b> • Giới hạn vị thế: <b style="color:#34d399;">&le; 20% NAV/mã</b> • Phí &amp; Thuế: <b style="color:#cbd5e1;">0.40%</b> • Đang nắm giữ: <b style="color:#34d399;">{len(active_running)} mã</b> • Đạt TP1: <b style="color:#38bdf8;">{tp1_count} mã</b> • Đã chốt lời toàn bộ TP2 &amp; rời bảng: <b style="color:#ffb300;">{tp2_count} mã</b> (Tổng cộng: {len(all_recommended_signals)} mã)</span>
         </div>
 
-        <details id="hud-tab-t0-audit" open style="margin-bottom:18px;background:#10151d;border:1px solid #1f2937;border-radius:8px;padding:12px 14px;">
-            <summary style="font-size:12.5px;color:#ffb300;font-weight:bold;cursor:pointer;">
+        <details id="hud-tab-t0-audit" open style="margin-bottom:18px;background:#0d131d;border:1px solid #1e293b;border-radius:8px;padding:12px 14px;">
+            <summary style="font-size:12.5px;color:#e2e8f0;font-weight:700;cursor:pointer;">
                 🧠 AI TÁI ĐÁNH GIÁ CHỈ SỐ T0 TRÊN CÁC LỆNH TP vs. SL &amp; TỰ HỌC CHỌN LỌC KÈO MỚI (Bấm để ẩn/hiện)
             </summary>
             <div style="margin-top:12px;">
                 <div class="grid" style="margin-bottom:14px;">
                     <div class="card">
                         <div class="card-title">Tổng Vị Thế Đã Khuyến Nghị</div>
-                        <div class="card-value" style="color:#ffb300;">{len(all_recommended_signals)} VỊ THẾ</div>
+                        <div class="card-value" style="color:#f8fafc;">{len(all_recommended_signals)} VỊ THẾ</div>
                         <div style="font-size:11px;color:#94a3b8;margin-top:4px;">
-                            🎯 Đạt TP1/TP2: <b style="color:#00e676;">{tp_st['count']}</b> • 🛑 Cắt lỗ SL: <b style="color:#ff5252;">{sl_st['count']}</b> • 🟢 Đang chạy: <b style="color:#38bdf8;">{act_st['count']}</b> • ⏱️ Hết sóng: <b>{to_st['count']}</b>
+                            🎯 Đạt TP1/TP2: <b style="color:#34d399;">{tp_st['count']}</b> • 🛑 Cắt lỗ SL: <b style="color:#f87171;">{sl_st['count']}</b> • 🟢 Đang chạy: <b style="color:#38bdf8;">{act_st['count']}</b> • ⏱️ Hết sóng: <b style="color:#fbbf24;">{to_st['count']}</b>
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-title">Xung Lực &amp; Tích Lũy Tại T0 (TP vs. SL)</div>
-                        <div class="card-value" style="color:#00e676;font-size:17px;">TP: IBD {tp_st['avg_ibd']:.0f} | SL: IBD {sl_st['avg_ibd']:.0f}</div>
+                        <div class="card-value" style="color:#34d399;font-size:17px;">TP: IBD {tp_st['avg_ibd']:.0f} | SL: IBD {sl_st['avg_ibd']:.0f}</div>
                         <div style="font-size:11px;color:#94a3b8;margin-top:4px;">
-                            Tỷ lệ dính Phân phối (D/E) tại T0: Nhóm SL <b style="color:#ff5252;">{sl_st['weak_acc_diss_pct']:.1f}%</b> vs. Nhóm TP <b style="color:#00e676;">{tp_st['weak_acc_diss_pct']:.1f}%</b>
+                            Tỷ lệ dính Phân phối (D/E) tại T0: Nhóm SL <b style="color:#f87171;">{sl_st['weak_acc_diss_pct']:.1f}%</b> vs. Nhóm TP <b style="color:#34d399;">{tp_st['weak_acc_diss_pct']:.1f}%</b>
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-title">Chu Kỳ Ngành RRG &amp; Nền POC T0</div>
                         <div class="card-value" style="color:#38bdf8;font-size:17px;">RRG-M: {tp_st['avg_rrg_m']:.1f} vs. {sl_st['avg_rrg_m']:.1f}</div>
                         <div style="font-size:11px;color:#94a3b8;margin-top:4px;">
-                            Lệnh SL mua khi RRG-M &lt; 100: <b style="color:#ff5252;">{sl_st['weak_rrg_m_pct']:.1f}%</b> • Độ lệch POC T0: <b>{sl_st['avg_atr_dist_poc']:+.2f} ATR</b>
+                            Lệnh SL mua khi RRG-M &lt; 100: <b style="color:#f87171;">{sl_st['weak_rrg_m_pct']:.1f}%</b> • Độ lệch POC T0: <b style="color:#cbd5e1;">{sl_st['avg_atr_dist_poc']:+.2f} ATR</b>
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-title">Trọng Số Học Tăng Cường (Self-Learning)</div>
-                        <div class="card-value" style="color:#64ffda;font-size:16px;">4 TRỤ CỘT LỌC KÈO</div>
+                        <div class="card-value" style="color:#a78bfa;font-size:16px;">4 TRỤ CỘT LỌC KÈO</div>
                         <div style="font-size:11px;color:#94a3b8;margin-top:4px;">
                             1. Acc/Diss &ge; C • 2. RRG-M &ge; 100 • 3. IBD &ge; 70 • 4. Cách POC &le; +0.9 ATR
                         </div>
@@ -1037,11 +1062,11 @@ def generate_terminal_html(
 
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
             <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                <button class="pos-filter-btn t0-filter-btn" data-filter="ALL" onclick="filterUnifiedPositions('ALL')" style="background:#ffb300;color:#0b0e14;border:none;padding:5px 12px;border-radius:4px;font-size:11.5px;font-weight:bold;cursor:pointer;">Tất Cả ({len(all_recommended_signals)})</button>
-                <button class="pos-filter-btn t0-filter-btn" data-filter="ACTIVE" onclick="filterUnifiedPositions('ACTIVE')" style="background:#151a23;color:#38bdf8;border:1px solid #0284c7;padding:5px 12px;border-radius:4px;font-size:11.5px;font-weight:bold;cursor:pointer;">🟢 Đang Nắm Giữ ({len(active_running)})</button>
-                <button class="pos-filter-btn t0-filter-btn" data-filter="TP" onclick="filterUnifiedPositions('TP')" style="background:#151a23;color:#00e676;border:1px solid #1b5e20;padding:5px 12px;border-radius:4px;font-size:11.5px;font-weight:bold;cursor:pointer;">🎯 Đã Chốt Lời TP ({tp_st['count']})</button>
-                <button class="pos-filter-btn t0-filter-btn" data-filter="SL" onclick="filterUnifiedPositions('SL')" style="background:#151a23;color:#ff8a80;border:1px solid #b71c1c;padding:5px 12px;border-radius:4px;font-size:11.5px;font-weight:bold;cursor:pointer;">🛑 Đã Cắt Lỗ SL ({sl_st['count']})</button>
-                <button class="pos-filter-btn t0-filter-btn" data-filter="TIMEOUT" onclick="filterUnifiedPositions('TIMEOUT')" style="background:#151a23;color:#fbbf24;border:1px solid #78350f;padding:5px 12px;border-radius:4px;font-size:11.5px;font-weight:bold;cursor:pointer;">⏱️ Tất Toán T+7 ({to_st['count']})</button>
+                <button class="pos-filter-btn t0-filter-btn" data-filter="ALL" onclick="filterUnifiedPositions('ALL')" style="background:#1e293b;color:#f8fafc;border:1px solid #475569;padding:5px 12px;border-radius:5px;font-size:11.5px;font-weight:700;cursor:pointer;">Tất Cả ({len(all_recommended_signals)})</button>
+                <button class="pos-filter-btn t0-filter-btn" data-filter="ACTIVE" onclick="filterUnifiedPositions('ACTIVE')" style="background:#111722;color:#94a3b8;border:1px solid #1e293b;padding:5px 12px;border-radius:5px;font-size:11.5px;font-weight:700;cursor:pointer;">🟢 Đang Nắm Giữ ({len(active_running)})</button>
+                <button class="pos-filter-btn t0-filter-btn" data-filter="TP" onclick="filterUnifiedPositions('TP')" style="background:#111722;color:#94a3b8;border:1px solid #1e293b;padding:5px 12px;border-radius:5px;font-size:11.5px;font-weight:700;cursor:pointer;">🎯 Đã Chốt Lời TP ({tp_st['count']})</button>
+                <button class="pos-filter-btn t0-filter-btn" data-filter="SL" onclick="filterUnifiedPositions('SL')" style="background:#111722;color:#94a3b8;border:1px solid #1e293b;padding:5px 12px;border-radius:5px;font-size:11.5px;font-weight:700;cursor:pointer;">🛑 Đã Cắt Lỗ SL ({sl_st['count']})</button>
+                <button class="pos-filter-btn t0-filter-btn" data-filter="TIMEOUT" onclick="filterUnifiedPositions('TIMEOUT')" style="background:#111722;color:#94a3b8;border:1px solid #1e293b;padding:5px 12px;border-radius:5px;font-size:11.5px;font-weight:700;cursor:pointer;">⏱️ Tất Toán T+7 ({to_st['count']})</button>
             </div>
             <span style="font-size:11px;color:#64748b;">💡 Bảng hợp nhất toàn vòng: Cập nhật giá Live &amp; đồng bộ trọn vẹn Snapshot T0</span>
         </div>
@@ -1221,13 +1246,33 @@ def generate_terminal_html(
             if (tabName === 'positions' || tabName === 'wf' || tabName === 't0-audit' || tabName === 't0_audit') {{
                 radarEl.style.display = 'none';
                 posEl.style.display = 'block';
-                if (btnPos) {{ btnPos.style.background = '#ffb300'; btnPos.style.color = '#0b0e14'; }}
-                if (btnRadar) {{ btnRadar.style.background = '#151a23'; btnRadar.style.color = '#90a4ae'; }}
+                if (btnPos) {{
+                    btnPos.style.background = '#1e293b';
+                    btnPos.style.color = '#38bdf8';
+                    btnPos.style.border = '1px solid #0284c7';
+                    btnPos.style.boxShadow = '0 0 10px rgba(56,189,248,0.15)';
+                }}
+                if (btnRadar) {{
+                    btnRadar.style.background = '#111722';
+                    btnRadar.style.color = '#94a3b8';
+                    btnRadar.style.border = '1px solid #1e293b';
+                    btnRadar.style.boxShadow = 'none';
+                }}
             }} else {{
                 radarEl.style.display = 'block';
                 posEl.style.display = 'none';
-                if (btnRadar) {{ btnRadar.style.background = '#ffb300'; btnRadar.style.color = '#0b0e14'; }}
-                if (btnPos) {{ btnPos.style.background = '#151a23'; btnPos.style.color = '#90a4ae'; }}
+                if (btnRadar) {{
+                    btnRadar.style.background = '#1e293b';
+                    btnRadar.style.color = '#38bdf8';
+                    btnRadar.style.border = '1px solid #0284c7';
+                    btnRadar.style.boxShadow = '0 0 10px rgba(56,189,248,0.15)';
+                }}
+                if (btnPos) {{
+                    btnPos.style.background = '#111722';
+                    btnPos.style.color = '#94a3b8';
+                    btnPos.style.border = '1px solid #1e293b';
+                    btnPos.style.boxShadow = 'none';
+                }}
             }}
         }}
 
@@ -1252,14 +1297,33 @@ def generate_terminal_html(
             }});
             const btns = document.querySelectorAll('.pos-filter-btn, .t0-filter-btn');
             btns.forEach(btn => {{
-                if (btn.getAttribute('data-filter') === cat) {{
-                    btn.style.background = '#ffb300';
-                    btn.style.color = '#0b0e14';
-                    btn.style.border = 'none';
+                const bCat = btn.getAttribute('data-filter');
+                if (bCat === cat) {{
+                    if (cat === 'ALL') {{
+                        btn.style.background = '#1e293b';
+                        btn.style.color = '#f8fafc';
+                        btn.style.border = '1px solid #475569';
+                    }} else if (cat === 'ACTIVE') {{
+                        btn.style.background = 'rgba(56,189,248,0.15)';
+                        btn.style.color = '#38bdf8';
+                        btn.style.border = '1px solid #0284c7';
+                    }} else if (cat === 'TP') {{
+                        btn.style.background = 'rgba(16,185,129,0.15)';
+                        btn.style.color = '#34d399';
+                        btn.style.border = '1px solid #059669';
+                    }} else if (cat === 'SL') {{
+                        btn.style.background = 'rgba(239,68,68,0.15)';
+                        btn.style.color = '#f87171';
+                        btn.style.border = '1px solid #dc2626';
+                    }} else if (cat === 'TIMEOUT') {{
+                        btn.style.background = 'rgba(245,158,11,0.15)';
+                        btn.style.color = '#fbbf24';
+                        btn.style.border = '1px solid #d97706';
+                    }}
                 }} else {{
-                    btn.style.background = '#151a23';
-                    btn.style.color = '#90a4ae';
-                    btn.style.border = '1px solid #263238';
+                    btn.style.background = '#111722';
+                    btn.style.color = '#94a3b8';
+                    btn.style.border = '1px solid #1e293b';
                 }}
             }});
         }}
@@ -1352,11 +1416,11 @@ def generate_terminal_html(
                         const p = Number(info.price);
                         el.innerText = p.toFixed(2);
                         
-                        let color = '#ffb300';
-                        if (p >= info.ceil && info.ceil > 0) color = '#ea39b8';
-                        else if (p <= info.floor && info.floor > 0) color = '#00e5ff';
-                        else if (p > info.ref) color = '#00e676';
-                        else if (p < info.ref) color = '#ff5252';
+                        let color = '#94a3b8';
+                        if (p >= info.ceil && info.ceil > 0) color = '#f472b6';
+                        else if (p <= info.floor && info.floor > 0) color = '#38bdf8';
+                        else if (p > info.ref) color = '#34d399';
+                        else if (p < info.ref) color = '#f87171';
                         el.style.color = color;
 
                         // Dong bo live change % (dam bao dau am/duong thong nhat 100% voi mau sac va chenh lech gia)
@@ -1373,7 +1437,7 @@ def generate_terminal_html(
                                 changeEl.innerText = '(' + (info.changePct > 0 ? '+' : '-') + pctStr + '%)';
                             }}
                             changeEl.style.color = color;
-                            changeEl.style.fontWeight = 'bold';
+                            changeEl.style.fontWeight = '600';
                         }}
 
                         // Danh gia lai vung mua / cat lo thoi gian thuc (Ton trong khoa Anti-FOMO T0)
@@ -1387,15 +1451,15 @@ def generate_terminal_html(
 
                         if (sigBadge) {{
                             if (stopLoss > 0 && p <= stopLoss) {{
-                                sigBadge.innerHTML = '<span style="background:#b71c1c;color:#ff8a80;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">CHẠM SL 🔴</span>';
+                                sigBadge.innerHTML = '<span style="background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);padding:2px 7px;border-radius:4px;font-size:11px;font-weight:bold;">CHẠM SL 🔴</span>';
                             }} else if (tp1 > 0 && p >= tp1) {{
-                                sigBadge.innerHTML = '<span style="background:#004d40;color:#64ffda;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">ĐẠT TP1 🎯</span>';
+                                sigBadge.innerHTML = '<span style="background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);padding:2px 7px;border-radius:4px;font-size:11px;font-weight:bold;">ĐẠT TP1 🎯</span>';
                             }} else if (!isLockedNoBuy && entryHigh > 0 && p > entryHigh * 1.03) {{
-                                sigBadge.innerHTML = '<span style="background:#e65100;color:#ffe0b2;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">MUA ĐUỔI ⚠️</span>';
+                                sigBadge.innerHTML = '<span style="background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);padding:2px 7px;border-radius:4px;font-size:11px;font-weight:bold;">MUA ĐUỔI ⚠️</span>';
                             }} else if (!isLockedNoBuy && entryLow > 0 && p < entryLow * 0.985) {{
-                                sigBadge.innerHTML = '<span style="background:#bf360c;color:#ffccbc;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">SUY YẾU ⚠️</span>';
+                                sigBadge.innerHTML = '<span style="background:rgba(244,63,94,0.15);color:#fb7185;border:1px solid rgba(244,63,94,0.3);padding:2px 7px;border-radius:4px;font-size:11px;font-weight:bold;">SUY YẾU ⚠️</span>';
                             }} else if (!isLockedNoBuy && entryLow > 0 && p >= entryLow * 0.985 && p <= entryHigh * 1.03) {{
-                                sigBadge.innerHTML = '<span style="background:#1b5e20;color:#00e676;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">VÙNG MUA 🟢</span>';
+                                sigBadge.innerHTML = '<span style="background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);padding:2px 7px;border-radius:4px;font-size:11px;font-weight:bold;">VÙNG MUA 🟢</span>';
                             }}
                         }}
                     }}
@@ -1413,15 +1477,15 @@ def generate_terminal_html(
                         const sign = pnl >= 0 ? '+' : '';
                         el.innerText = sign + pnl.toFixed(2) + '%';
                         if (p >= info.ceil && info.ceil > 0) {{
-                            el.style.color = '#ea39b8';
+                            el.style.color = '#f472b6';
                         }} else if (p <= info.floor && info.floor > 0) {{
-                            el.style.color = '#00e5ff';
+                            el.style.color = '#38bdf8';
                         }} else if (pnl > 0) {{
-                            el.style.color = '#00e676';
+                            el.style.color = '#34d399';
                         }} else if (pnl < 0) {{
-                            el.style.color = '#ff5252';
+                            el.style.color = '#f87171';
                         }} else {{
-                            el.style.color = '#ffb300';
+                            el.style.color = '#94a3b8';
                         }}
                     }}
                 }});
@@ -1437,11 +1501,11 @@ def generate_terminal_html(
                     if (info && info.price > 0) {{
                         const p = Number(info.price);
                         if (tp2 > 0 && p >= tp2) {{
-                            bEl.innerHTML = '<span style="background:#004d40;color:#64ffda;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🏆 CHẠM TP2 — CHỐT LỜI HẾT</span>';
+                            bEl.innerHTML = '<span style="background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);padding:2px 7px;border-radius:4px;font-size:10.5px;font-weight:bold;">🏆 CHẠM TP2 — CHỐT LỜI HẾT</span>';
                         }} else if (tp1 > 0 && p >= tp1) {{
-                            bEl.innerHTML = '<span style="background:#004d40;color:#64ffda;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🎯 ĐẠT TP1 — GỒNG LÃI TỚI TP2 (CẤM MUA)</span>';
+                            bEl.innerHTML = '<span style="background:rgba(56,189,248,0.15);color:#38bdf8;border:1px solid rgba(56,189,248,0.3);padding:2px 7px;border-radius:4px;font-size:10.5px;font-weight:bold;">🎯 ĐẠT TP1 — GỒNG LÃI TỚI TP2 (CẤM MUA)</span>';
                         }} else if (sl > 0 && p <= sl) {{
-                            bEl.innerHTML = '<span style="background:#b71c1c;color:#ff8a80;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">🛑 CHẠM CẮT LỖ — BẢO TOÀN VỐN</span>';
+                            bEl.innerHTML = '<span style="background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);padding:2px 7px;border-radius:4px;font-size:10.5px;font-weight:bold;">🛑 CHẠM CẮT LỖ — BẢO TOÀN VỐN</span>';
                         }}
                     }}
                 }});

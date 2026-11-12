@@ -680,6 +680,24 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
    - Giữ nguyên các định danh CSS (`.live-price`, `.live-pnl`, `.pos-badge`) để bộ kéo giá VPS live cập nhật mượt mà.
    - Tương thích hoàn toàn với các phím tắt và hàm điều hướng cũ (`switchHudTab('t0-audit')` hay `'t0_audit'` tự động chuyển mượt vào bảng hợp nhất).
 
+---
+
+### Tier 31 [ACCEPTED - ADR-030]: Chuẩn Hóa Typography & Bảng Màu Dark Cockpit Chống Chói Mắt
+
+> **Trạng thái:** `ACCEPTED & IMPLEMENTED (100% PASSING)` (xem [`ADR-030`](decisions/ADR-030-dark-cockpit-anti-glare-ui-refinement.md), test: `tests/test_positions_tracker_tab.py`).
+
+1. **Chuẩn Hóa Typography & Tách Biệt Nhãn Mô Tả (Anti-Rainbow Clashing):**
+   - Chuyển màu mã cổ phiếu từ vàng cam rực `#ffb300` sang trắng sáng tinh gọn `#f8fafc` (`font-weight: 800`).
+   - Đưa toàn bộ các nhãn viết tắt (`AI:`, `IBD:`, `RS:`, `TL:`, `RRG:`, `POC:`, `TK:`, `SL:`, `TP:`) về màu xám dịu `#64748b`, triệt tiêu hoàn toàn hiệu ứng "cây thông noel nhấp nháy" nhiều màu neon trên một dòng.
+2. **Hệ Thống Màu Sắc Dịu Mắt (Subdued & Translucent Accents):**
+   - Thay thế màu xanh laser `#00e676` bằng xanh bạc hà `#34d399`; thay màu đỏ chói `#ff5252` bằng màu hồng san hô `#f87171`.
+   - Toàn bộ huy hiệu chuyển sang dạng nền mờ `rgba(R, G, B, 0.12 - 0.15)` viền mỏng hiện đại, bỏ các khối màu đặc gây ngợp mắt.
+3. **Thanh Tab & Bộ Lọc Dark Pill UI:**
+   - Nút tab và bộ lọc chuyển từ màu nền vàng đặc sang Dark Pill Slate (`#1e293b` viền xanh cyan `#0284c7` kèm hiệu ứng glow nhẹ `rgba(56, 189, 248, 0.15)` khi kích hoạt).
+4. **Lọc Nhiễu Chẩn Đoán T0:**
+   - Loại trừ các mã có giá trị mặc định `IBD 50 / RS 50` khỏi nhóm cảnh báo xung lực yếu; dùng dòng văn bản nhã nhặn `#94a3b8` thay cho icon cảnh báo vàng gắt liên tiếp.
+
+
 
 
 

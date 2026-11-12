@@ -988,7 +988,7 @@ def evaluate_t0_signal_quality_and_diagnosis(sig: Any) -> Dict[str, Any]:
 
     if comp >= 75 and rs1m >= 70:
         strengths.append(f"Xung lực mạnh (IBD {comp}, RS {rs1m})")
-    elif comp < 60 or rs1m < 55:
+    elif (comp < 45 or rs1m < 45) or (comp < 60 and rs1m < 55 and not (comp == 50 and rs1m == 50)):
         weaknesses.append(f"Xung lực T0 yếu (IBD {comp}, RS {rs1m} < 60)")
 
     if acc_diss in ("A", "B"):
@@ -1038,9 +1038,9 @@ def evaluate_t0_signal_quality_and_diagnosis(sig: Any) -> Dict[str, Any]:
         if strengths and not weaknesses:
             diagnosis = "🟢 Cấu trúc T0 chuẩn: " + " • ".join(strengths[:2])
         elif weaknesses:
-            diagnosis = "🟡 Lưu ý chỉ số T0: " + " • ".join(weaknesses[:2])
+            diagnosis = "Lưu ý T0: " + " • ".join(weaknesses[:2])
         else:
-            diagnosis = "🟢 Đang vận động trong biên kiểm soát rủi ro T+2.5"
+            diagnosis = "Đang vận động trong biên kiểm soát rủi ro T+2.5"
 
     return {
         "category": category,
