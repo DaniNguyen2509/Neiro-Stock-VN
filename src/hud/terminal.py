@@ -537,7 +537,7 @@ def generate_terminal_html(
     if not all_recommended_signals:
         unified_positions_rows_html = """
         <tr class="unified-pos-row">
-            <td colspan="18" style="padding:25px;text-align:center;color:#64748b;background:#0b111e;">
+            <td colspan="19" style="padding:25px;text-align:center;color:#64748b;background:#0b111e;">
                 Hiện không có vị thế nào đang nắm giữ. Mọi khuyến nghị trước đó đã đạt mục tiêu chốt lời hoặc đã đóng bảo toàn vốn.
             </td>
         </tr>
@@ -700,22 +700,24 @@ def generate_terminal_html(
                 </td>
                 <td class="col-sticky-pane col-sticky-3" style="padding:9px 6px;text-align:center;">
                     <div>{res_badge}</div>
-                    <div style="margin-top:4px;">{time_sub}</div>
                 </td>
-                <td class="col-sticky-pane col-sticky-4" style="padding:9px 6px;text-align:right;">
+                <td class="col-sticky-pane col-sticky-4" style="padding:9px 6px;text-align:center;">
+                    <div>{time_sub}</div>
+                </td>
+                <td class="col-sticky-pane col-sticky-5" style="padding:9px 6px;text-align:right;">
                     <b style="color:#e2e8f0;font-size:12.5px;">{s_entry:.2f}</b>
                 </td>
-                <td class="col-sticky-pane col-sticky-5" style="padding:9px 6px;text-align:right;font-size:12.5px;">
+                <td class="col-sticky-pane col-sticky-6" style="padding:9px 6px;text-align:right;font-size:12.5px;">
                     {cur_price_html}
                 </td>
-                <td class="col-sticky-pane col-sticky-6" style="padding:9px 6px;text-align:right;">
+                <td class="col-sticky-pane col-sticky-7" style="padding:9px 6px;text-align:right;">
                     <div>{pnl_html}</div>
                     {excursion_sub}
                 </td>
-                <td class="col-sticky-pane col-sticky-7" style="padding:9px 6px;text-align:right;font-size:11.5px;">
+                <td class="col-sticky-pane col-sticky-8" style="padding:9px 6px;text-align:right;font-size:11.5px;">
                     {sl_str}
                 </td>
-                <td class="col-sticky-pane col-sticky-8 col-sticky-tp" style="padding:9px 6px;text-align:right;font-size:11.5px;">
+                <td class="col-sticky-pane col-sticky-9 col-sticky-tp" style="padding:9px 6px;text-align:right;font-size:11.5px;">
                     {tp_str}
                 </td>
                 <td style="padding:9px 8px;text-align:center;">
@@ -1025,46 +1027,54 @@ def generate_terminal_html(
         }}
         .unified-positions-table .col-sticky-3 {{
             left: 140px;
-            min-width: 145px;
-            max-width: 145px;
-            width: 145px;
+            min-width: 110px;
+            max-width: 110px;
+            width: 110px;
             text-align: center;
             border-right: 1px solid #1e293b;
         }}
         .unified-positions-table .col-sticky-4 {{
-            left: 285px;
+            left: 250px;
+            min-width: 135px;
+            max-width: 135px;
+            width: 135px;
+            text-align: center;
+            border-right: 1px solid #1e293b;
+        }}
+        .unified-positions-table .col-sticky-5 {{
+            left: 385px;
             min-width: 75px;
             max-width: 75px;
             width: 75px;
             text-align: right;
             border-right: 1px solid #1e293b;
         }}
-        .unified-positions-table .col-sticky-5 {{
-            left: 360px;
+        .unified-positions-table .col-sticky-6 {{
+            left: 460px;
             min-width: 85px;
             max-width: 85px;
             width: 85px;
             text-align: right;
             border-right: 1px solid #1e293b;
         }}
-        .unified-positions-table .col-sticky-6 {{
-            left: 445px;
+        .unified-positions-table .col-sticky-7 {{
+            left: 545px;
             min-width: 95px;
             max-width: 95px;
             width: 95px;
             text-align: right;
             border-right: 1px solid #1e293b;
         }}
-        .unified-positions-table .col-sticky-7 {{
-            left: 540px;
+        .unified-positions-table .col-sticky-8 {{
+            left: 640px;
             min-width: 85px;
             max-width: 85px;
             width: 85px;
             text-align: right;
             border-right: 1px solid #1e293b;
         }}
-        .unified-positions-table .col-sticky-8 {{
-            left: 625px;
+        .unified-positions-table .col-sticky-9 {{
+            left: 725px;
             min-width: 95px;
             max-width: 95px;
             width: 95px;
@@ -1221,12 +1231,13 @@ def generate_terminal_html(
                     <tr>
                         <th class="col-sticky-pane col-sticky-stt col-sticky-1" style="text-align:center;">STT</th>
                         <th class="col-sticky-pane col-sticky-sym col-sticky-2">Mã CP</th>
-                        <th class="col-sticky-pane col-sticky-3" style="text-align:center;">Trạng Thái &amp; Chu Kỳ (Ngày Vào T0 &bull; Ngày Đóng)</th>
-                        <th class="col-sticky-pane col-sticky-4" style="text-align:right;">Giá Vốn</th>
-                        <th class="col-sticky-pane col-sticky-5" style="text-align:right;">Giá Thoát/Live</th>
-                        <th class="col-sticky-pane col-sticky-6" style="text-align:right;">Lãi/Lỗ PnL %</th>
-                        <th class="col-sticky-pane col-sticky-7" style="text-align:right;">Cắt Lỗ (SL)</th>
-                        <th class="col-sticky-pane col-sticky-8 col-sticky-tp" style="text-align:right;">Chốt Lời (TP)</th>
+                        <th class="col-sticky-pane col-sticky-3" style="text-align:center;">Trạng Thái</th>
+                        <th class="col-sticky-pane col-sticky-4" style="text-align:center;">Chu Kỳ (Ngày Vào T0 &bull; Ngày Đóng)</th>
+                        <th class="col-sticky-pane col-sticky-5" style="text-align:right;">Giá Vốn</th>
+                        <th class="col-sticky-pane col-sticky-6" style="text-align:right;">Giá Thoát/Live</th>
+                        <th class="col-sticky-pane col-sticky-7" style="text-align:right;">Lãi/Lỗ PnL %</th>
+                        <th class="col-sticky-pane col-sticky-8" style="text-align:right;">Cắt Lỗ (SL)</th>
+                        <th class="col-sticky-pane col-sticky-9 col-sticky-tp" style="text-align:right;">Chốt Lời (TP)</th>
                         <th style="text-align:center;" title="Chỉ Số Đánh Giá Tại T0: Điểm tổng hợp AI">Điểm AI</th>
                         <th style="text-align:center;" title="Chỉ Số Đánh Giá Tại T0: Điểm IBD Composite">Điểm IBD</th>
                         <th style="text-align:center;" title="Chỉ Số Đánh Giá Tại T0: Sức mạnh giá RS 1 Tháng">RS 1M</th>

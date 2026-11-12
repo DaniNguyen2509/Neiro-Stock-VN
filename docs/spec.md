@@ -682,20 +682,20 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 
 ---
 
-### Tier 32 [ACCEPTED - ADR-031]: Cố Định Khung Cột Freeze Panes, Bảng Đơn Sắc Monochromatic & Tách Bạch 18 Cột Chỉ Số Riêng Biệt (Tab 2)
+### Tier 32 [ACCEPTED - ADR-031]: Cố Định Khung Cột Freeze Panes, Bảng Đơn Sắc Monochromatic & Tách Bạch 19 Cột Chỉ Số Riêng Biệt (Tab 2)
 
 > **Trạng thái:** `ACCEPTED & IMPLEMENTED (100% PASSING)` (xem [`ADR-031`](decisions/ADR-031-tab2-freeze-panes-and-monochromatic-indicator-decomposition.md), test: `tests/test_positions_tracker_tab.py`).
 
-1. **Cố Định Khung Cột 2 Chiều Đến Hết Cột Chốt Lời TP (Dual-Axis Freeze Panes Grid):**
+1. **Cố Định Khung Cột 2 Chiều Đến Hết Cột Chốt Lời TP (Dual-Axis Freeze Panes Grid - 9 Sticky Columns):**
    - **Cố định hàng tiêu đề (Vertical Sticky Header):** Khung `.table-container-sticky` có `max-height: 72vh; overflow: auto;`. Toàn bộ thẻ `th` được cố định (`position: sticky; top: 0; z-index: 20; background: #0b111e;`), giữ nguyên tiêu đề cột khi cuộn dọc theo dõi danh sách dài.
-   - **Cố định toàn bộ 8 cột từ STT đến Chốt Lời TP (Horizontal Sticky Columns 1 - 8):** Cố định liên tục các cột `STT` (left: 0), `Mã CP` (left: 44px), `Trạng Thái & Chu Kỳ` (left: 140px), `Giá Vốn` (left: 285px), `Giá Thoát/Live` (left: 360px), `Lãi/Lỗ PnL %` (left: 445px), `Cắt Lỗ SL` (left: 540px) và `Chốt Lời TP` (left: 625px) kèm đường viền ngăn cách `2px solid #334155` và đổ bóng `box-shadow` nổi bật (`z-index: 15`). Khi nhà đầu tư cuộn ngang kiểm tra các chỉ số kỹ thuật/dòng tiền sâu ở phía sau (AI, IBD, RS, RRG, Ngoại, Tự Doanh, POC, Thanh Khoản, Chẩn đoán), toàn bộ phân vùng thông tin vị thế cốt lõi luôn được neo cố định không bị che khuất.
-   - **Giao thoa góc trên trái (Top-Left Corners):** Tám ô tiêu đề góc từ STT đến TP được cấp `z-index: 35`, đảm bảo hiển thị trên cùng khi cuộn đồng thời cả 2 trục.
-   - **Đồng bộ màu rê chuột (Hover Sync):** Khi rê chuột vào dòng, cả 8 ô cố định sticky và các ô cuộn đều đổi sang cùng một nền sáng nhẹ `#131c2e !important;`.
+   - **Cố định toàn bộ 9 cột từ STT đến Chốt Lời TP (Horizontal Sticky Columns 1 - 9):** Cố định liên tục các cột `STT` (left: 0), `Mã CP` (left: 44px), `Trạng Thái` (left: 140px), `Chu Kỳ (Ngày Vào T0 • Ngày Đóng)` (left: 250px), `Giá Vốn` (left: 385px), `Giá Thoát/Live` (left: 460px), `Lãi/Lỗ PnL %` (left: 545px), `Cắt Lỗ SL` (left: 640px) và `Chốt Lời TP` (left: 725px) kèm đường viền ngăn cách `2px solid #334155` và đổ bóng `box-shadow` nổi bật (`z-index: 15`). Khi nhà đầu tư cuộn ngang kiểm tra các chỉ số kỹ thuật/dòng tiền sâu ở phía sau (AI, IBD, RS, RRG, Ngoại, Tự Doanh, POC, Thanh Khoản, Chẩn đoán), toàn bộ phân vùng thông tin vị thế cốt lõi luôn được neo cố định không bị che khuất.
+   - **Giao thoa góc trên trái (Top-Left Corners):** Chín ô tiêu đề góc từ STT đến TP được cấp `z-index: 35`, đảm bảo hiển thị trên cùng khi cuộn đồng thời cả 2 trục.
+   - **Đồng bộ màu rê chuột (Hover Sync):** Khi rê chuột vào dòng, cả 9 ô cố định sticky và các ô cuộn đều đổi sang cùng một nền sáng nhẹ `#131c2e !important;`.
 2. **Bảng Đơn Sắc Đồng Nhất (Monochromatic Unified Dark Theme):**
    - Loại bỏ hoàn toàn hiệu ứng vằn vện ngựa vằn (`nth-child(even)`).
    - Thiết lập một màu nền tối thống nhất duy nhất `#0b111e` cho toàn bộ container, table, headers, cells và thanh cuộn Webkit scrollbar, mang phong cách Institutional Terminal sang trọng.
-3. **Tách Bạch 18 Cột Chỉ Số Độc Lập:**
-   - Tách toàn bộ các chỉ số trước đây bị gộp ô thành 18 cột độc lập: `STT`, `Mã CP`, `Trạng Thái & Chu Kỳ`, `Giá Vốn`, `Giá Thoát/Live`, `Lãi/Lỗ PnL %`, `Cắt Lỗ (SL)`, `Chốt Lời (TP)`, `Điểm AI`, `Điểm IBD`, `RS 1M`, `Tích Lũy`, `Chu Kỳ RRG`, `Khối Ngoại`, `Tự Doanh`, `Nền POC (ATR)`, `Thanh Khoản`, `AI Chẩn Đoán & Quyết Nghị`.
+3. **Tách Bạch 19 Cột Chỉ Số Độc Lập:**
+   - Tách rời hoàn toàn trạng thái và chu kỳ, đồng thời phân tách toàn bộ chỉ số thành 19 cột độc lập: `STT`, `Mã CP`, `Trạng Thái`, `Chu Kỳ (Ngày Vào T0 • Ngày Đóng)`, `Giá Vốn`, `Giá Thoát/Live`, `Lãi/Lỗ PnL %`, `Cắt Lỗ (SL)`, `Chốt Lời (TP)`, `Điểm AI`, `Điểm IBD`, `RS 1M`, `Tích Lũy`, `Chu Kỳ RRG`, `Khối Ngoại`, `Tự Doanh`, `Nền POC (ATR)`, `Thanh Khoản`, `AI Chẩn Đoán & Quyết Nghị`.
 
 
 

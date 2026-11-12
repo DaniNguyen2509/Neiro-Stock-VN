@@ -426,6 +426,7 @@ def test_tab2_freeze_panes_monochromatic_and_decomposed_columns(tmp_path):
     assert 'col-sticky-sym' in html
     assert 'col-sticky-tp' in html
     assert 'col-sticky-8' in html
+    assert 'col-sticky-9' in html
     assert 'position: sticky' in html
 
     # 2. Bảng 1 màu thống nhất (Monochromatic theme #0b111e)
@@ -438,7 +439,7 @@ def test_tab2_freeze_panes_monochromatic_and_decomposed_columns(tmp_path):
     tab_slice = html[table_start:table_end]
 
     headers = [
-        "STT", "Mã CP", "Trạng Thái &amp; Chu Kỳ", "Giá Vốn", "Giá Thoát/Live",
+        "STT", "Mã CP", "Trạng Thái", "Chu Kỳ (Ngày Vào T0 &bull; Ngày Đóng)", "Giá Vốn", "Giá Thoát/Live",
         "Lãi/Lỗ PnL %", "Cắt Lỗ (SL)", "Chốt Lời (TP)", "Điểm AI", "Điểm IBD",
         "RS 1M", "Tích Lũy", "Chu Kỳ RRG", "Khối Ngoại", "Tự Doanh",
         "Nền POC (ATR)", "Thanh Khoản", "AI Chẩn Đoán &amp; Quyết Nghị"

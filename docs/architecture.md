@@ -285,18 +285,18 @@ flowchart LR
 - **`signal_tracker.py`:**
   - Khử nhiễu cảnh báo: Bỏ cảnh báo "Xung lực T0 yếu" với các mã mang giá trị mặc định `IBD 50 / RS 50`, giúp bảng dữ liệu trang nhã và chuẩn xác.
 
-## Cập nhật ADR-031: Cố Định Khung Cột Freeze Panes, Bảng Đơn Sắc Monochromatic & Tách Bạch 18 Cột Chỉ Số Riêng Biệt (Tab 2)
+## Cập nhật ADR-031: Cố Định Khung Cột Freeze Panes, Bảng Đơn Sắc Monochromatic & Tách Bạch 19 Cột Chỉ Số Riêng Biệt (Tab 2)
 
 - **`terminal.py`:**
   - **Khung cuộn Freeze Panes 2 chiều (`.table-container-sticky`, `.unified-positions-table`):**
     - Cố định tiêu đề `thead th` (`position: sticky; top: 0; z-index: 20; background: #0b111e;`).
-    - Cố định toàn bộ 8 cột từ STT đến Chốt Lời TP (`col-sticky-1` đến `col-sticky-8`, `left: 0` đến `left: 625px`, `z-index: 15;` kèm shadow ngăn cách tại cột TP), giúp cuộn ngang các chỉ số phía sau mà không bị che khuất bất kỳ thông tin vị thế cốt lõi nào.
+    - Cố định toàn bộ 9 cột từ STT đến Chốt Lời TP (`col-sticky-1` đến `col-sticky-9`, `left: 0` đến `left: 725px`, `z-index: 15;` kèm shadow ngăn cách tại cột TP), giúp cuộn ngang các chỉ số phía sau mà không bị che khuất bất kỳ thông tin vị thế cốt lõi nào.
     - Cố định các ô góc trên trái `z-index: 35` không bị đè khi cuộn chéo.
-    - Đồng bộ hiệu ứng hover trên cả 8 ô sticky và các ô cuộn (`#131c2e !important;`).
+    - Đồng bộ hiệu ứng hover trên cả 9 ô sticky và các ô cuộn (`#131c2e !important;`).
   - **Bảng đơn sắc Monochromatic (`#0b111e`):**
     - Loại bỏ hoàn toàn vằn ngựa vằn zebra striping, thống nhất một màu nền tối sâu `#0b111e` trên toàn bộ bảng.
-  - **Tách bạch 18 cột chỉ số độc lập:**
-    - Phân tách rõ ràng: `STT`, `Mã CP`, `Trạng Thái & Chu Kỳ`, `Giá Vốn`, `Giá Thoát/Live`, `Lãi/Lỗ PnL %`, `Cắt Lỗ (SL)`, `Chốt Lời (TP)`, `Điểm AI`, `Điểm IBD`, `RS 1M`, `Tích Lũy`, `Chu Kỳ RRG`, `Khối Ngoại`, `Tự Doanh`, `Nền POC (ATR)`, `Thanh Khoản`, `AI Chẩn Đoán & Quyết Nghị`.
+  - **Tách bạch 19 cột chỉ số độc lập:**
+    - Phân tách rõ ràng trạng thái và chu kỳ, đồng thời bóc tách mọi chỉ số: `STT`, `Mã CP`, `Trạng Thái`, `Chu Kỳ (Ngày Vào T0 • Ngày Đóng)`, `Giá Vốn`, `Giá Thoát/Live`, `Lãi/Lỗ PnL %`, `Cắt Lỗ (SL)`, `Chốt Lời (TP)`, `Điểm AI`, `Điểm IBD`, `RS 1M`, `Tích Lũy`, `Chu Kỳ RRG`, `Khối Ngoại`, `Tự Doanh`, `Nền POC (ATR)`, `Thanh Khoản`, `AI Chẩn Đoán & Quyết Nghị`.
 
 
 
