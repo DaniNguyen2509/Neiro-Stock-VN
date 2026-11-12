@@ -686,11 +686,11 @@ Sử dụng thuật toán Relative Rotation Graph (RRG) của JdK để định 
 
 > **Trạng thái:** `ACCEPTED & IMPLEMENTED (100% PASSING)` (xem [`ADR-031`](decisions/ADR-031-tab2-freeze-panes-and-monochromatic-indicator-decomposition.md), test: `tests/test_positions_tracker_tab.py`).
 
-1. **Cố Định Khung Cột 2 Chiều (Dual-Axis Freeze Panes Grid):**
+1. **Cố Định Khung Cột 2 Chiều Đến Hết Cột Chốt Lời TP (Dual-Axis Freeze Panes Grid):**
    - **Cố định hàng tiêu đề (Vertical Sticky Header):** Khung `.table-container-sticky` có `max-height: 72vh; overflow: auto;`. Toàn bộ thẻ `th` được cố định (`position: sticky; top: 0; z-index: 20; background: #0b111e;`), giữ nguyên tiêu đề cột khi cuộn dọc theo dõi danh sách dài.
-   - **Cố định 2 cột mép trái (Horizontal Sticky Columns):** Cột 1 (`STT`) cố định tại `left: 0; min-width: 44px;`. Cột 2 (`Mã CP`) cố định tại `left: 44px; min-width: 96px;` kèm đổ bóng `box-shadow` nổi bật (`z-index: 15`), giúp nhà đầu tư cuộn ngang kiểm tra các chỉ số kỹ thuật/dòng tiền mà không bao giờ bị che khuất mã cổ phiếu đang xem.
-   - **Giao thoa góc trên trái (Top-Left Corners):** Hai ô tiêu đề góc (`STT` và `Mã CP`) được cấp `z-index: 35`, đảm bảo hiển thị trên cùng khi cuộn đồng thời cả 2 trục.
-   - **Đồng bộ màu rê chuột (Hover Sync):** Khi rê chuột vào dòng, cả các ô cố định sticky và ô cuộn đều đổi sang cùng một nền sáng nhẹ `#131c2e !important;`.
+   - **Cố định toàn bộ 8 cột từ STT đến Chốt Lời TP (Horizontal Sticky Columns 1 - 8):** Cố định liên tục các cột `STT` (left: 0), `Mã CP` (left: 44px), `Trạng Thái & Chu Kỳ` (left: 140px), `Giá Vốn` (left: 285px), `Giá Thoát/Live` (left: 360px), `Lãi/Lỗ PnL %` (left: 445px), `Cắt Lỗ SL` (left: 540px) và `Chốt Lời TP` (left: 625px) kèm đường viền ngăn cách `2px solid #334155` và đổ bóng `box-shadow` nổi bật (`z-index: 15`). Khi nhà đầu tư cuộn ngang kiểm tra các chỉ số kỹ thuật/dòng tiền sâu ở phía sau (AI, IBD, RS, RRG, Ngoại, Tự Doanh, POC, Thanh Khoản, Chẩn đoán), toàn bộ phân vùng thông tin vị thế cốt lõi luôn được neo cố định không bị che khuất.
+   - **Giao thoa góc trên trái (Top-Left Corners):** Tám ô tiêu đề góc từ STT đến TP được cấp `z-index: 35`, đảm bảo hiển thị trên cùng khi cuộn đồng thời cả 2 trục.
+   - **Đồng bộ màu rê chuột (Hover Sync):** Khi rê chuột vào dòng, cả 8 ô cố định sticky và các ô cuộn đều đổi sang cùng một nền sáng nhẹ `#131c2e !important;`.
 2. **Bảng Đơn Sắc Đồng Nhất (Monochromatic Unified Dark Theme):**
    - Loại bỏ hoàn toàn hiệu ứng vằn vện ngựa vằn (`nth-child(even)`).
    - Thiết lập một màu nền tối thống nhất duy nhất `#0b111e` cho toàn bộ container, table, headers, cells và thanh cuộn Webkit scrollbar, mang phong cách Institutional Terminal sang trọng.

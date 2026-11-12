@@ -290,9 +290,9 @@ flowchart LR
 - **`terminal.py`:**
   - **Khung cuộn Freeze Panes 2 chiều (`.table-container-sticky`, `.unified-positions-table`):**
     - Cố định tiêu đề `thead th` (`position: sticky; top: 0; z-index: 20; background: #0b111e;`).
-    - Cố định cột STT (`left: 0; min-width: 44px;`) và cột Mã CP (`left: 44px; min-width: 96px; z-index: 15;` kèm shadow ngăn cách), giúp cuộn ngang không bị che mã cổ phiếu.
-    - Cố định ô góc trên trái `z-index: 35` không bị đè khi cuộn chéo.
-    - Đồng bộ hiệu ứng hover trên cả các ô sticky và các ô cuộn (`#131c2e !important;`).
+    - Cố định toàn bộ 8 cột từ STT đến Chốt Lời TP (`col-sticky-1` đến `col-sticky-8`, `left: 0` đến `left: 625px`, `z-index: 15;` kèm shadow ngăn cách tại cột TP), giúp cuộn ngang các chỉ số phía sau mà không bị che khuất bất kỳ thông tin vị thế cốt lõi nào.
+    - Cố định các ô góc trên trái `z-index: 35` không bị đè khi cuộn chéo.
+    - Đồng bộ hiệu ứng hover trên cả 8 ô sticky và các ô cuộn (`#131c2e !important;`).
   - **Bảng đơn sắc Monochromatic (`#0b111e`):**
     - Loại bỏ hoàn toàn vằn ngựa vằn zebra striping, thống nhất một màu nền tối sâu `#0b111e` trên toàn bộ bảng.
   - **Tách bạch 18 cột chỉ số độc lập:**

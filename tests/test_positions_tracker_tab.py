@@ -420,10 +420,12 @@ def test_tab2_freeze_panes_monochromatic_and_decomposed_columns(tmp_path):
 
     html = out_html_path.read_text(encoding="utf-8")
 
-    # 1. Khung cuộn cố định (Sticky container & freeze panes)
+    # 1. Khung cuộn cố định (Sticky container & freeze panes up to Chốt Lời TP)
     assert 'class="table-container table-container-sticky"' in html or 'class="table-container-sticky"' in html
     assert 'col-sticky-stt' in html
     assert 'col-sticky-sym' in html
+    assert 'col-sticky-tp' in html
+    assert 'col-sticky-8' in html
     assert 'position: sticky' in html
 
     # 2. Bảng 1 màu thống nhất (Monochromatic theme #0b111e)
