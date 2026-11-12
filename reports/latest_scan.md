@@ -5,11 +5,11 @@
 
 | STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua | Cắt Lỗ | Chốt Lời (TP1 / TP2) | Thanh Khoản | Chuẩn Quỹ | RRG | Điểm IBD | Tích Luỹ | Ngoại Ròng | Điểm AI | Kỳ Trước |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1** | **NAB** | `ĐỘT BIẾN GT` 🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN) | **12.80** | `12.66 - 13.04` | **12.14** | **13.97** / **14.68** | **31.3t** | `CHUẨN QUỸ` | 101/100 | **50** | `C` | -2.1 tỷ | **72.5** | #1 (=) |
+| **1** | **NAB** | `ĐỘT BIẾN GT` 🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN) | **12.80** | `12.66 - 13.04` | **12.14** | **13.97** / **14.68** | **31.3t** | `CHUẨN QUỸ` | 101/100 | **50** | `C` | -2.1 tỷ | **72.5** | #3 (+2) |
 | **2** | **PHP** | `ĐỘT BIẾN GT` | **45.50** | `43.83 - 45.17` | **42.06** | **48.34** / **50.78** | **21.9t** | `ĐẠT BIÊN` | 97/100 | **50** | `C` | +0.0 tỷ | **57.5** | Mới |
 
 ### 🎯 Kế Hoạch Tác Chiến, Điểm Thoát Lệnh T+2.5 & Catalysts:
-- **NAB (12.80)** `=` | **🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN)**: Vùng gom T0 `12.66 - 13.04` | Cắt lỗ cấu trúc: `12.14` | TP1 (Net 1.5R): `13.97` | TP2 (Net 2.5R): `14.68` (R:R `1:2.5`)
+- **NAB (12.80)** `↗ +2` | **🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN)**: Vùng gom T0 `12.66 - 13.04` | Cắt lỗ cấu trúc: `12.14` | TP1 (Net 1.5R): `13.97` | TP2 (Net 2.5R): `14.68` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: -2.1 tỷ | Tự doanh thực tế: +0.1 tỷ)
   - *Động lực:* RRG(r=101.0, m=100.2), IBD=50, Acc/Diss=C | 🔴 NGUY HIỂM XẢ | POC=12.61 (+0.7 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `31.3 tỷ` (Điểm TK: `76/100`) | Sức chứa tối đa: `244,200 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,500 cp (~19.2tr, 19.2% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
