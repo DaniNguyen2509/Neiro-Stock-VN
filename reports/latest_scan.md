@@ -1,23 +1,29 @@
-## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 2 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)
-> **Trạng thái Thị trường:** VN-Index Tăng **102** / Giảm **148** (Độ rộng A/D: **40.8%**) | Giá trị GD: **2,982 tỷ VND** | P/E: **11.07**
-> ⚠️ THỊ TRƯỜNG PHÂN HÓA (40.8% — Tăng 102 / Giảm 148): Chỉ giải ngân chọn lọc tại nền POC/VAL, giới hạn tổng cổ phiếu <= 40% NAV.
+## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 3 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)
+> **Trạng thái Thị trường:** VN-Index Tăng **92** / Giảm **165** (Độ rộng A/D: **35.8%**) | Giá trị GD: **3,640 tỷ VND** | P/E: **11.07**
+> ⚠️ THỊ TRƯỜNG PHÂN HÓA (35.8% — Tăng 92 / Giảm 165): Chỉ giải ngân chọn lọc tại nền POC/VAL, giới hạn tổng cổ phiếu <= 40% NAV.
 > 🟢 **Trạng Thái Dữ Liệu:** `REAL-TIME FIALDA PRO API` (Dữ liệu khớp lệnh trực tiếp từ sàn)
 
 | STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua | Cắt Lỗ | Chốt Lời (TP1 / TP2) | Thanh Khoản | Chuẩn Quỹ | RRG | Điểm IBD | Tích Luỹ | Ngoại Ròng | Điểm AI | Kỳ Trước |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1** | **NAB** | `ĐỘT BIẾN GT` 🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN) | **13.05** | `12.66 - 13.04` | **12.14** | **13.97** / **14.68** | **33.3t** | `CHUẨN QUỸ` | 101/100 | **50** | `C` | -0.1 tỷ | **42.5** | #1 (=) |
-| **2** | **MZG** | `ĐỘT BIẾN GT` ⛔ ĐÃ SUY YẾU (CẤM BẮT DAO RƠI) | **10.30** | `10.83 - 11.16` | **10.22** | **12.21** / **12.99** | **20.2t** | `ĐẠT BIÊN` | 97/100 | **50** | `C` | +0.5 tỷ | **32.5** | #8 (+6) |
+| **1** | **SZC** | `ĐỘT BIẾN GT` 🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN) | **20.75** | `20.49 - 21.11` | **19.24** | **23.22** / **24.78** | **19.3t** | `ĐẠT BIÊN` | 104/100 | **50** | `C` | -0.4 tỷ | **57.5** | #1 (=) |
+| **2** | **NAB** | `ĐỘT BIẾN GT` 🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN) | **13.00** | `12.66 - 13.04` | **12.14** | **13.97** / **14.68** | **33.3t** | `CHUẨN QUỸ` | 101/100 | **50** | `C` | +0.0 tỷ | **42.5** | #1 (-1) |
+| **3** | **MZG** | `ĐỘT BIẾN GT` ⛔ ĐÃ SUY YẾU (CẤM BẮT DAO RƠI) | **10.25** | `10.83 - 11.16` | **10.22** | **12.21** / **12.99** | **20.2t** | `ĐẠT BIÊN` | 97/100 | **50** | `C` | +0.7 tỷ | **32.5** | #2 (-1) |
 
 ### 🎯 Kế Hoạch Tác Chiến, Điểm Thoát Lệnh T+2.5 & Catalysts:
-- **NAB (13.05)** `=` | **🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN)**: Vùng gom T0 `12.66 - 13.04` | Cắt lỗ cấu trúc: `12.14` | TP1 (Net 1.5R): `13.97` | TP2 (Net 2.5R): `14.68` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: -0.1 tỷ | Tự doanh thực tế: +0.1 tỷ)
-  - *Động lực:* RRG(r=101.1, m=100.2), IBD=50, Acc/Diss=C | 🔴 NGUY HIỂM XẢ | POC=12.60 (+1.7 ATR) | ⏱️ Phiên sáng: Thăm dò <= 30%, chờ sau 13:45 xác nhận cung T+2.5
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `33.3 tỷ` (Điểm TK: `76/100`) | Sức chứa tối đa: `255,400 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,300 cp (~17.0tr, 17.0% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
+- **SZC (20.75)** `=` | **🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN)**: Vùng gom T0 `20.49 - 21.11` | Cắt lỗ cấu trúc: `19.24` | TP1 (Net 1.5R): `23.22` | TP2 (Net 2.5R): `24.78` (R:R `1:2.5`)
+  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: -0.4 tỷ | Tự doanh: Chưa công bố EOD (N/A))
+  - *Động lực:* RRG(r=103.5, m=99.9), IBD=50, Acc/Diss=C | 🔴 NGUY HIỂM XẢ | POC=20.02 (+0.9 ATR) | ⏱️ Phiên sáng: Thăm dò <= 30%, chờ sau 13:45 xác nhận cung T+2.5
+  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `19.3 tỷ` (Điểm TK: `64/100`) | Sức chứa tối đa: `93,000 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 800 cp (~16.6tr, 16.6% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⚠️ THẬN TRỌNG CAO (T+2.5 HIGH)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **MZG (10.30)** `↗ +6` | **⛔ ĐÃ SUY YẾU (CẤM BẮT DAO RƠI)**: Vùng gom T0 `10.83 - 11.16` | Cắt lỗ cấu trúc: `10.22` | TP1 (Net 1.5R): `12.21` | TP2 (Net 2.5R): `12.99` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +0.5 tỷ | Tự doanh: Chưa công bố EOD (N/A))
-  - *Động lực:* RRG(r=97.4, m=100.2), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ | POC=10.38 (-0.2 ATR) | ⏱️ Phiên sáng: Thăm dò <= 30%, chờ sau 13:45 xác nhận cung T+2.5
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `20.2 tỷ` (Điểm TK: `65/100`) | Sức chứa tối đa: `196,400 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,900 cp (~19.6tr, 19.6% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
+- **NAB (13.00)** `↘ -1` | **🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN)**: Vùng gom T0 `12.66 - 13.04` | Cắt lỗ cấu trúc: `12.14` | TP1 (Net 1.5R): `13.97` | TP2 (Net 2.5R): `14.68` (R:R `1:2.5`)
+  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: +0.0 tỷ | Tự doanh thực tế: +0.1 tỷ)
+  - *Động lực:* RRG(r=101.1, m=100.2), IBD=50, Acc/Diss=C | 🔴 NGUY HIỂM XẢ | POC=12.60 (+1.5 ATR) | ⏱️ Phiên sáng: Thăm dò <= 30%, chờ sau 13:45 xác nhận cung T+2.5
+  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `33.3 tỷ` (Điểm TK: `76/100`) | Sức chứa tối đa: `256,400 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,400 cp (~18.2tr, 18.2% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
+  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⚠️ THẬN TRỌNG CAO (T+2.5 HIGH)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
+- **MZG (10.25)** `↘ -1` | **⛔ ĐÃ SUY YẾU (CẤM BẮT DAO RƠI)**: Vùng gom T0 `10.83 - 11.16` | Cắt lỗ cấu trúc: `10.22` | TP1 (Net 1.5R): `12.21` | TP2 (Net 2.5R): `12.99` (R:R `1:2.5`)
+  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +0.7 tỷ | Tự doanh: Chưa công bố EOD (N/A))
+  - *Động lực:* RRG(r=97.4, m=100.1), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ | POC=10.38 (-0.3 ATR) | ⏱️ Phiên sáng: Thăm dò <= 30%, chờ sau 13:45 xác nhận cung T+2.5
+  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `20.2 tỷ` (Điểm TK: `65/100`) | Sức chứa tối đa: `197,300 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,900 cp (~19.5tr, 19.5% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⚠️ THẬN TRỌNG CAO (T+2.5 HIGH)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
 
 ### 📊 BẢNG XẾP HẠNG ĐỊNH LƯỢNG CƠ BẢN (PIOTROSKI F-SCORE & P/E)
@@ -25,15 +31,15 @@
 
 | Mã CP | Tên Doanh Nghiệp | Nhóm Ngành | Giá Khớp (1,000 đ) | F-Score | P/E | P/B | CFO / NI | Xếp Hạng |
 | :---: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **VHM** | Vinhomes | Bất động sản dân cư | **62.20** | **8/9** | 5.7 | 1.8 | 4.00 | `ĐỊNH CHẾ GOM` |
-| **HPG** | Tập đoàn Hòa Phát | Thép & Vật liệu xây dựng | **21.20** | **8/9** | 6.2 | 1.1 | 1.01 | `ĐỊNH CHẾ GOM` |
+| **VHM** | Vinhomes | Bất động sản dân cư | **62.10** | **8/9** | 5.7 | 1.8 | 4.00 | `ĐỊNH CHẾ GOM` |
+| **HPG** | Tập đoàn Hòa Phát | Thép & Vật liệu xây dựng | **21.10** | **8/9** | 6.2 | 1.1 | 1.01 | `ĐỊNH CHẾ GOM` |
 | **SSI** | Chứng khoán SSI | Dịch vụ tài chính & CK | **20.25** | **8/9** | 13.6 | 1.5 | 4.64 | `ĐỊNH CHẾ GOM` |
-| **GEX** | Tập đoàn GELEX | Thiết bị điện & KCN | **21.70** | **7/9** | 31.6 | 0.9 | 9.67 | `ĐỊNH CHẾ GOM` |
-| **PTB** | Phú Tài | Gỗ & Đá xuất khẩu | **29.15** | **5/9** | 5.5 | 0.8 | 0.73 | `THEO DÕI` |
+| **GEX** | Tập đoàn GELEX | Thiết bị điện & KCN | **21.55** | **7/9** | 31.6 | 0.9 | 9.67 | `ĐỊNH CHẾ GOM` |
+| **PTB** | Phú Tài | Gỗ & Đá xuất khẩu | **29.00** | **5/9** | 5.5 | 0.8 | 0.73 | `THEO DÕI` |
 | **DBC** | Dabaco Việt Nam | Nông nghiệp & Chăn nuôi | **16.00** | **5/9** | 6.5 | 0.8 | 5.94 | `ĐỊNH CHẾ GOM` |
-| **FPT** | Tập đoàn FPT | Công nghệ thông tin | **49.45** | **5/9** | 11.6 | 2.7 | 0.77 | `THEO DÕI` |
-| **CTS** | Chứng khoán VietinBank | Dịch vụ tài chính & CK | **23.55** | **4/9** | 49.9 | 1.9 | 76.27 | `THEO DÕI` |
-| **MBB** | Ngân hàng Quân Đội | Ngân hàng thương mại | **19.20** | **N/A (Ngân hàng)** | 6.1 | 1.2 | -1.50 | `THEO DÕI` |
+| **FPT** | Tập đoàn FPT | Công nghệ thông tin | **49.20** | **5/9** | 11.6 | 2.7 | 0.77 | `THEO DÕI` |
+| **CTS** | Chứng khoán VietinBank | Dịch vụ tài chính & CK | **23.50** | **4/9** | 49.9 | 1.9 | 76.27 | `THEO DÕI` |
+| **MBB** | Ngân hàng Quân Đội | Ngân hàng thương mại | **19.15** | **N/A (Ngân hàng)** | 6.1 | 1.2 | -1.50 | `THEO DÕI` |
 | **VCB** | Vietcombank | Ngân hàng thương mại | **53.90** | **N/A (Ngân hàng)** | 11.6 | 1.9 | -5.49 | `THEO DÕI` |
 
 > 💡 **Ghi chú định lượng học thuật (Piotroski, 2000):** Thang điểm *Piotroski F-Score (0-9)* loại trừ các Ngân hàng thương mại (MBB, VCB) do đặc thù BCTC ngành ngân hàng không có *Giá vốn/Biên Lợi Nhuận Gộp* và *Hệ số Thanh toán ngắn hạn (Current Ratio)*. Xem bảng định lượng CAMEL & Basel II/III chi tiết bên dưới.
@@ -44,27 +50,31 @@
 | Mã CP | Tên Ngân Hàng | Giá Khớp | Điểm CAMEL | CASA (%) | NIM (%) | NPL Nợ Xấu | LLR Bao Phủ | CIR (%) | ROE (%) | P/B | Xếp Hạng CAMEL |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **VCB** | Vietcombank | **53.90** | **88/100** | **34.2%** | 3.2% | 0.98% | **230%** | 31.5% | 21.5% | **1.8** | `HẠNG A (TINH HOA)` |
-| **MBB** | Ngân hàng Quân Đội | **19.20** | **88/100** | **39.5%** | 4.6% | 1.42% | **160%** | 29.8% | 22.8% | **1.2** | `HẠNG A (TINH HOA)` |
-| **TCB** | Techcombank | **21.65** | **83/100** | **40.2%** | 4.4% | 1.35% | **110%** | 33.5% | 16.8% | **1.2** | `HẠNG A (TINH HOA)` |
-| **ACB** | Ngân hàng Á Châu | **20.40** | **81/100** | **24.1%** | 4.1% | 1.21% | **135%** | 32.0% | 23.1% | **1.1** | `HẠNG A (TINH HOA)` |
+| **MBB** | Ngân hàng Quân Đội | **19.15** | **88/100** | **39.5%** | 4.6% | 1.42% | **160%** | 29.8% | 22.8% | **1.2** | `HẠNG A (TINH HOA)` |
+| **TCB** | Techcombank | **21.60** | **83/100** | **40.2%** | 4.4% | 1.35% | **110%** | 33.5% | 16.8% | **1.2** | `HẠNG A (TINH HOA)` |
+| **ACB** | Ngân hàng Á Châu | **20.35** | **81/100** | **24.1%** | 4.1% | 1.21% | **135%** | 32.0% | 23.1% | **1.1** | `HẠNG A (TINH HOA)` |
 | **HDB** | HDBank | **22.50** | **70/100** | **14.8%** | 5.1% | 1.65% | **95%** | 35.2% | 24.2% | **1.6** | `HẠNG B (TĂNG TRƯỞNG)` |
-| **CTG** | VietinBank | **31.35** | **63/100** | **22.8%** | 3.0% | 1.45% | **165%** | 32.8% | 17.9% | **1.2** | `HẠNG C (TÁI CƠ CẤU)` |
-| **VPB** | VPBank | **21.95** | **61/100** | **18.2%** | 5.6% | 4.20% | **52%** | 28.5% | 12.5% | **1.1** | `HẠNG C (TÁI CƠ CẤU)` |
+| **CTG** | VietinBank | **31.30** | **63/100** | **22.8%** | 3.0% | 1.45% | **165%** | 32.8% | 17.9% | **1.2** | `HẠNG C (TÁI CƠ CẤU)` |
+| **VPB** | VPBank | **22.00** | **61/100** | **18.2%** | 5.6% | 4.20% | **52%** | 28.5% | 12.5% | **1.1** | `HẠNG C (TÁI CƠ CẤU)` |
 | **BID** | BIDV | **31.90** | **56/100** | **21.5%** | 2.8% | 1.52% | **158%** | 34.2% | 18.5% | **1.2** | `HẠNG C (TÁI CƠ CẤU)` |
-| **STB** | Sacombank | **69.80** | **39/100** | **19.5%** | 3.6% | 2.10% | **72%** | 42.5% | 15.2% | **2.0** | `HẠNG C (TÁI CƠ CẤU)` |
-| **EIB** | Eximbank | **16.25** | **39/100** | **15.2%** | 2.8% | 2.45% | **62%** | 46.2% | 10.5% | **1.1** | `HẠNG C (TÁI CƠ CẤU)` |
+| **STB** | Sacombank | **70.20** | **39/100** | **19.5%** | 3.6% | 2.10% | **72%** | 42.5% | 15.2% | **2.1** | `HẠNG C (TÁI CƠ CẤU)` |
+| **EIB** | Eximbank | **16.20** | **39/100** | **15.2%** | 2.8% | 2.45% | **62%** | 46.2% | 10.5% | **1.1** | `HẠNG C (TÁI CƠ CẤU)` |
 
 ### 📑 BÁO CÁO KẾT QUẢ KINH DOANH CÁC QUÝ GẦN NHẤT (DOANH THU & LỢI NHUẬN RÒNG BCTC)
 > *Thống kê xu hướng tăng trưởng 1 CP / 1 dòng duy nhất • Nguồn: Báo cáo tài chính Fialda VIP API*
 
 | Mã CP | Kỳ BCTC | DTT Quý N-2 | DTT Quý N-1 | DTT Quý N (Mới) | LNST Quý N-2 | LNST Quý N-1 | LNST Quý N (Mới) | Tăng Trưởng QoQ | Biên Gộp | Xu Hướng Động Lượng |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **SZC** | `Q3/2026` | 101.9 tỷ | 132.3 tỷ | **112.1 tỷ** | 17.1 tỷ | 18.9 tỷ | **21.6 tỷ** | `+14.3%` ↗ | 33.7% | `🚀 TĂNG TỐC 3 QUÝ` |
 | **NAB** | `Q3/2026` | 2,290.2 tỷ | 2,836.4 tỷ | **3,014.0 tỷ** | 1,308.5 tỷ | 1,209.8 tỷ | **1,268.9 tỷ** | `+4.9%` ↗ | 64.5% | `↗ TĂNG TRƯỞNG DƯƠNG` |
 | **MZG** | `Q3/2026` | 1,096.6 tỷ | 1,271.1 tỷ | **1,393.0 tỷ** | 32.1 tỷ | 51.2 tỷ | **74.9 tỷ** | `+46.3%` ↗ | 10.4% | `🚀 TĂNG TỐC 3 QUÝ` |
 
 ### 📰 TIN TỨC DOANH NGHIỆP & LỊCH SỰ KIỆN MỚI NHẤT (SPOTLIGHT)
 > *Nguồn: Cổng công bố thông tin Fialda Real-time*
 
+- **[SZC] Mảng khu công nghiệp hụt hơi, lãi 9 tháng 2026 của Sonadezi Châu Đức (SZC) sụt giảm 76%** (2026-10-22 • *Tin nhanh CK*)
+  > Lãi sau thuế 9 tháng 2026 của Sonadezi Châu Đức (SZC) giảm 76% xuống 57,7 tỷ đồng, do doanh thu mảng khu công nghiệp suy giảm mạnh dù quý III có tín hiệu tăng.
+- 📅 **[SZC - SỰ KIỆN]** Ngày: `2026-09-14` — *Trả cổ tức năm 2025 bằng tiền, 1,000 đồng/CP*
 - **[NAB] NAB: Nam A Bank sẽ sử dụng hơn 1.300 tỷ đồng từ chào bán cổ phiếu riêng lẻ vào mục đích gì?** (2026-11-09 • *An ninh tiền tệ*)
   > Nam A Bank (NAB) dự kiến chào bán 100 triệu cổ phiếu riêng lẻ cho 7 nhà đầu tư tổ chức ở giá 13.200 đồng, thu về khoảng 1.320 tỷ đồng để cấp tín dụng và đầu tư tài sản cố định.
 - 📅 **[NAB - SỰ KIỆN]** Ngày: `Gần đây` — *Giao dịch bổ sung - 25,000,000 CP*
