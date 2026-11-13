@@ -82,8 +82,8 @@
 - **[GMD] Loạt quỹ ETF sắp tái cơ cấu: MSB bị bán gần 11 triệu cổ phiếu, GMD, NLG, HPG hút dòng tiền?** (2026-11-05 • *Vietnam Finance*)
   > Các quỹ ETF theo VN30, VNDiamond và VNFin Lead sắp tái cơ cấu từ 9–13/11, dự báo tạo áp lực bán lên nhóm ngân hàng như MSB, ACB, TCB và hỗ trợ dòng tiền mua vào GMD, NLG, HPG.
 - 📅 **[GMD - SỰ KIỆN]** Ngày: `Gần đây` — *Giao dịch bổ sung - 216,444,883 CP*
-- **[SZC] Mảng khu công nghiệp hụt hơi, lãi 9 tháng 2026 của Sonadezi Châu Đức (SZC) sụt giảm 76%** (2026-10-22 • *Tin nhanh CK*)
-  > Lãi sau thuế 9 tháng 2026 của Sonadezi Châu Đức (SZC) giảm 76% xuống 57,7 tỷ đồng, do doanh thu mảng khu công nghiệp suy giảm mạnh dù quý III có tín hiệu tăng.
+- **[SZC] SZC: Thông báo và Nghị quyết HĐQT về ngày đăng ký cuối cùng chốt danh sách cổ đông để thực hiện quyền lấy ý kiến cổ đông bằng văn bản** (2026-11-13 • *HOSE*)
+  > Sonadezi Châu Đức (SZC) công bố nghị quyết HĐQT chốt ngày đăng ký cuối cùng để lập danh sách cổ đông nhằm thực hiện quyền lấy ý kiến cổ đông bằng văn bản.
 - 📅 **[SZC - SỰ KIỆN]** Ngày: `2026-09-14` — *Trả cổ tức năm 2025 bằng tiền, 1,000 đồng/CP*
 - **[BAF] BAF: Thông báo giao dịch quyền mua cổ phiếu của người nội bộ Bùi Hương Giang** (2026-11-11 • *HOSE*)
   > Bà Bùi Hương Giang, người nội bộ của Công ty Cổ phần Nông nghiệp BAF Việt Nam, vừa công bố thông tin giao dịch quyền mua cổ phiếu công ty.
