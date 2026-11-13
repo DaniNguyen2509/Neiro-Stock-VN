@@ -1,5 +1,5 @@
 # 🛡️ Bảng Đối Chiếu Tín Hiệu & Rada Chống Mua Đuổi (Anti-FOMO Scorecard)
-*Cập nhật tự động ngầm trên GitHub lúc: `2026-11-13 21:37:00` (Giờ VN UTC+7)*
+*Cập nhật tự động ngầm trên GitHub lúc: `2026-11-13 23:13:28` (Giờ VN UTC+7)*
 
 | Mã CP | Ngày Bùng Nổ | Giá Entry Gốc | Giá Hiện Tại | Lãi/Lỗ (%) | Nắm Giữ | Stop Loss | TP1 / TP2 | Quyết Nghị Mua Mới |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
