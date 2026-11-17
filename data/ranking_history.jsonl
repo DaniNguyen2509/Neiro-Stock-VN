@@ -497,4 +497,4 @@
 {"timestamp": "2026-11-17 09:46:19", "symbol": "ACB", "rank": 18, "score": 10.0, "price": 20.3, "signal_type": "THE_CHE_GOM", "stop_loss": 19.39, "tp1": 21.75, "tp2": 22.66, "rr_ratio": 2.5, "adtv20_billion": 209.3}
 {"timestamp": "2026-11-17 09:46:19", "symbol": "VHM", "rank": 19, "score": 10.0, "price": 61.9, "signal_type": "THE_CHE_GOM", "stop_loss": 59.0, "tp1": 66.5, "tp2": 69.4, "rr_ratio": 2.5, "adtv20_billion": 431.9}
 {"timestamp": "2026-11-17 09:46:19", "symbol": "HDB", "rank": 20, "score": 10.0, "price": 22.1, "signal_type": "THE_CHE_GOM", "stop_loss": 21.11, "tp1": 23.67, "tp2": 24.66, "rr_ratio": 2.5, "adtv20_billion": 326.5}
-{"timestamp": "2026-11-17 10:16:20", "symbol": "PDR", "rank": 1, "score": 49.6, "price": 11.35, "signal_type": "THE_CHE_GOM", "stop_loss": 10.74, "tp1": 12.31, "tp2": 12.92, "rr_ratio": 2.5, "adtv20_billion": 72.3}
+{"timestamp": "2026-11-17 10:46:09", "symbol": "PDR", "rank": 1, "score": 49.6, "price": 11.25, "signal_type": "THE_CHE_GOM", "stop_loss": 10.74, "tp1": 12.31, "tp2": 12.92, "rr_ratio": 2.5, "adtv20_billion": 72.3}
