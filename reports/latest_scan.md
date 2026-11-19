@@ -19,7 +19,7 @@
 
 ### 🎯 Kế Hoạch Tác Chiến, Điểm Thoát Lệnh T+2.5 & Catalysts:
 - **IDC (34.20)** `=` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `34.57 - 34.92` | Cắt lỗ cấu trúc: `32.30` | TP1 (Net 1.5R): `37.19` | TP2 (Net 2.5R): `39.09` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +5.4 tỷ | Tự doanh: Chưa công bố EOD (N/A))
+  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +5.4 tỷ | Tự doanh thực tế: -1.4 tỷ)
   - *Động lực:* RRG(r=100.2, m=100.1), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ | POC=35.56 (-1.1 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `28.2 tỷ` (Điểm TK: `73/100`) | Sức chứa tối đa: `82,400 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 500 cp (~17.1tr, 17.1% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
