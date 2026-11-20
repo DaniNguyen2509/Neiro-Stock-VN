@@ -1,9 +1,9 @@
 # 🛡️ Bảng Đối Chiếu Tín Hiệu & Rada Chống Mua Đuổi (Anti-FOMO Scorecard)
-*Cập nhật tự động ngầm trên GitHub lúc: `2026-11-20 14:46:07` (Giờ VN UTC+7)*
+*Cập nhật tự động ngầm trên GitHub lúc: `2026-11-20 15:16:06` (Giờ VN UTC+7)*
 
 | Mã CP | Ngày Bùng Nổ | Giá Entry Gốc | Giá Hiện Tại | Lãi/Lỗ (%) | Nắm Giữ | Stop Loss | TP1 / TP2 | Quyết Nghị Mua Mới |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **PHP** | 2026-11-12 | 44.50 | 45.10 | **+1.4%** | 6 phiên (8d) | 42.06 | 48.34 / 50.78 | ⛔ CẦU CHÌ T+2.5: NGỪNG MUA |
+| **PHP** | 2026-11-12 | 44.50 | 45.40 | **+2.0%** | 6 phiên (8d) | 42.06 | 48.34 / 50.78 | ⛔ CẦU CHÌ T+2.5: NGỪNG MUA |
 | **NAB** | 2026-11-11 | 12.85 | 12.90 | **+0.4%** | 7 phiên (9d) | 12.14 | 13.97 / 14.68 | 🟠 QUÁ HẠN T+9 (NGỪNG MUA) |
 | **VTZ** | 2026-11-11 | 20.30 | 20.30 | **+0.0%** | 7 phiên (9d) | 19.39 | 21.75 / 22.66 | 🟠 QUÁ HẠN T+9 (NGỪNG MUA) |
 | **BAF** | 2026-11-13 | 30.95 | 30.80 | **-0.5%** | 5 phiên (7d) | 29.34 | 33.49 / 35.10 | ⛔ CẦU CHÌ T+2.5: NGỪNG MUA |
