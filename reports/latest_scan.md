@@ -10,49 +10,49 @@
 | **3** | **VJC** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **137.30** | `135.24 - 139.36` | **131.12** | **147.12** / **153.30** | **134.4t** | `SIÊU TK` | 102/100 | **8** | `E` | -3.4 tỷ | **40.5** | #3 (=) |
 | **4** | **KDH** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **15.40** | `15.17 - 15.63` | **14.29** | **17.13** / **18.24** | **168.5t** | `SIÊU TK` | 103/101 | **61** | `E` | -8.4 tỷ | **26.5** | #4 (=) |
 | **5** | **PDR** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **11.15** | `11.18 - 11.52` | **10.74** | **12.31** / **12.92** | **62.6t** | `CHUẨN QUỸ` | 100/100 | **99** | `D` | -4.3 tỷ | **24.6** | #5 (=) |
-| **6** | **DXG** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **10.95** | `10.79 - 11.11` | **10.16** | **12.18** / **12.97** | **137.2t** | `SIÊU TK` | 103/100 | **65** | `E` | +5.0 tỷ | **21.6** | #7 (+1) |
-| **7** | **CII** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **13.25** | `13.05 - 13.45` | **12.44** | **14.52** / **15.33** | **155.7t** | `SIÊU TK` | 101/99 | **51** | `E` | +4.3 tỷ | **17.4** | #9 (+2) |
-| **8** | **HPG** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **20.45** | `20.14 - 20.76` | **19.53** | **21.91** / **22.83** | **401.6t** | `SIÊU TK` | 100/100 | **57** | `E` | +7.2 tỷ | **10.0** | #10 (+2) |
+| **6** | **DXG** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **10.95** | `10.79 - 11.11` | **10.16** | **12.18** / **12.97** | **137.2t** | `SIÊU TK` | 103/100 | **65** | `E` | +5.0 tỷ | **21.6** | #6 (=) |
+| **7** | **CII** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **13.25** | `13.05 - 13.45` | **12.44** | **14.52** / **15.33** | **155.7t** | `SIÊU TK` | 101/99 | **51** | `E` | +4.3 tỷ | **17.4** | #7 (=) |
+| **8** | **HPG** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **20.45** | `20.14 - 20.76` | **19.53** | **21.91** / **22.83** | **401.6t** | `SIÊU TK` | 100/100 | **57** | `E` | +7.2 tỷ | **10.0** | #8 (=) |
 
 ### 🎯 Kế Hoạch Tác Chiến, Điểm Thoát Lệnh T+2.5 & Catalysts:
 - **IDC (34.20)** `=` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `34.57 - 34.92` | Cắt lỗ cấu trúc: `32.42` | TP1 (Net 1.5R): `37.01` | TP2 (Net 2.5R): `38.79` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +11.2 tỷ | Tự doanh thực tế: -1.4 tỷ)
+  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +11.2 tỷ | Tự doanh: Chưa công bố EOD (N/A))
   - *Động lực:* RRG(r=100.1, m=99.9), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ | POC=35.56 (-1.2 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `27.3 tỷ` (Điểm TK: `72/100`) | Sức chứa tối đa: `79,700 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 500 cp (~17.1tr, 17.1% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
 - **TCH (13.90)** `=` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `13.29 - 13.69` | Cắt lỗ cấu trúc: `12.86` | TP1 (Net 1.5R): `15.52` | TP2 (Net 2.5R): `16.56` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +35.0 tỷ | Tự doanh thực tế: -0.7 tỷ)
+  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +35.0 tỷ | Tự doanh thực tế: -2.0 tỷ)
   - *Động lực:* RRG(r=103.9, m=99.3), IBD=82, Acc/Diss=E | 🔵 NGOẠI ĐỠ GIÁ | POC=13.49 (+0.7 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `128.1 tỷ` (Điểm TK: `95/100`) | Sức chứa tối đa: `921,800 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,200 cp (~16.7tr, 16.7% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
 - **VJC (137.30)** `=` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `135.24 - 139.36` | Cắt lỗ cấu trúc: `131.12` | TP1 (Net 1.5R): `147.12` | TP2 (Net 2.5R): `153.30` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: -3.4 tỷ | Tự doanh thực tế: -2.3 tỷ)
+  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: -3.4 tỷ | Tự doanh thực tế: -82.5 tỷ)
   - *Động lực:* RRG(r=102.0, m=100.2), IBD=8, Acc/Diss=E | 🔴 NGUY HIỂM XẢ | POC=138.24 (-0.3 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `134.4 tỷ` (Điểm TK: `96/100`) | Sức chứa tối đa: `97,800 cp` (Trượt giá ~`0.88%`). ℹ️ Vốn 100tr mua tối đa 100 cp (~13.7tr, 13.7% NAV) — 1 lô chẵn HOSE duy nhất: Chốt gọn 1 lần tại TP1/Trailing, không chia 50/50
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
 - **KDH (15.40)** `=` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `15.17 - 15.63` | Cắt lỗ cấu trúc: `14.29` | TP1 (Net 1.5R): `17.13` | TP2 (Net 2.5R): `18.24` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: -8.4 tỷ | Tự doanh thực tế: -7.9 tỷ)
+  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: -8.4 tỷ | Tự doanh thực tế: +18.0 tỷ)
   - *Động lực:* RRG(r=103.2, m=100.6), IBD=61, Acc/Diss=E | 🔴 NGUY HIỂM XẢ | POC=15.60 (-0.3 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `168.5 tỷ` (Điểm TK: `97/100`) | Sức chứa tối đa: `1,094,200 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,100 cp (~16.9tr, 16.9% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
 - **PDR (11.15)** `=` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `11.18 - 11.52` | Cắt lỗ cấu trúc: `10.74` | TP1 (Net 1.5R): `12.31` | TP2 (Net 2.5R): `12.92` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: -4.3 tỷ | Tự doanh thực tế: -0.2 tỷ)
+  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: -4.3 tỷ | Tự doanh: Chưa công bố EOD (N/A))
   - *Động lực:* RRG(r=100.0, m=99.6), IBD=99, Acc/Diss=D | 🔴 NGUY HIỂM XẢ | POC=11.88 (-2.0 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `62.6 tỷ` (Điểm TK: `87/100`) | Sức chứa tối đa: `561,800 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,700 cp (~19.0tr, 19.0% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **DXG (10.95)** `↗ +1` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `10.79 - 11.11` | Cắt lỗ cấu trúc: `10.16` | TP1 (Net 1.5R): `12.18` | TP2 (Net 2.5R): `12.97` (R:R `1:2.5`)
+- **DXG (10.95)** `=` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `10.79 - 11.11` | Cắt lỗ cấu trúc: `10.16` | TP1 (Net 1.5R): `12.18` | TP2 (Net 2.5R): `12.97` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +5.0 tỷ | Tự doanh thực tế: +0.0 tỷ)
   - *Động lực:* RRG(r=102.7, m=99.9), IBD=65, Acc/Diss=E | 🔵 NGOẠI ĐỠ GIÁ | POC=10.36 (+1.6 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `137.2 tỷ` (Điểm TK: `96/100`) | Sức chứa tối đa: `1,253,300 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,500 cp (~16.4tr, 16.4% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **CII (13.25)** `↗ +2` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `13.05 - 13.45` | Cắt lỗ cấu trúc: `12.44` | TP1 (Net 1.5R): `14.52` | TP2 (Net 2.5R): `15.33` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +4.3 tỷ | Tự doanh thực tế: -0.4 tỷ)
+- **CII (13.25)** `=` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `13.05 - 13.45` | Cắt lỗ cấu trúc: `12.44` | TP1 (Net 1.5R): `14.52` | TP2 (Net 2.5R): `15.33` (R:R `1:2.5`)
+  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +4.3 tỷ | Tự doanh thực tế: +0.0 tỷ)
   - *Động lực:* RRG(r=100.8, m=99.1), IBD=51, Acc/Diss=E | 🔵 NGOẠI ĐỠ GIÁ | POC=13.85 (-1.2 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `155.7 tỷ` (Điểm TK: `97/100`) | Sức chứa tối đa: `1,174,900 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,500 cp (~19.9tr, 19.9% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **HPG (20.45)** `↗ +2` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `20.14 - 20.76` | Cắt lỗ cấu trúc: `19.53` | TP1 (Net 1.5R): `21.91` | TP2 (Net 2.5R): `22.83` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +7.2 tỷ | Tự doanh thực tế: -9.4 tỷ)
-  - *Động lực:* RRG(r=99.9, m=99.5), IBD=57, Acc/Diss=E | 🔵 NGOẠI ĐỠ GIÁ | POC=21.02 (-1.3 ATR)
+- **HPG (20.45)** `=` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `20.14 - 20.76` | Cắt lỗ cấu trúc: `19.53` | TP1 (Net 1.5R): `21.91` | TP2 (Net 2.5R): `22.83` (R:R `1:2.5`)
+  - *Ma trận Dòng tiền:* 🟢🟢 ĐỒNG THUẬN GOM (Khối ngoại: +7.2 tỷ | Tự doanh thực tế: +11.9 tỷ)
+  - *Động lực:* RRG(r=99.9, m=99.5), IBD=57, Acc/Diss=E | 🟢🟢 ĐỒNG THUẬN GOM | POC=21.02 (-1.3 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `401.6 tỷ` (Điểm TK: `100/100`) | Sức chứa tối đa: `1,963,900 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 900 cp (~18.4tr, 18.4% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
 
