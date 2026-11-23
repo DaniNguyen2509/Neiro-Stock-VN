@@ -1,30 +1,30 @@
 ## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 3 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)
-> **Trạng thái Thị trường:** VN-Index Tăng **164** / Giảm **136** (Độ rộng A/D: **54.7%**) | Giá trị GD: **12,365 tỷ VND** | P/E: **10.93**
+> **Trạng thái Thị trường:** VN-Index Tăng **164** / Giảm **136** (Độ rộng A/D: **54.7%**) | Giá trị GD: **12,691 tỷ VND** | P/E: **10.93**
 > ⚠️ THỊ TRƯỜNG PHÂN HÓA (54.7% — Tăng 164 / Giảm 136): Chỉ giải ngân chọn lọc tại nền POC/VAL, giới hạn tổng cổ phiếu <= 40% NAV.
 > 🟢 **Trạng Thái Dữ Liệu:** `REAL-TIME FIALDA PRO API` (Dữ liệu khớp lệnh trực tiếp từ sàn)
 
 | STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua | Cắt Lỗ | Chốt Lời (TP1 / TP2) | Thanh Khoản | Chuẩn Quỹ | RRG | Điểm IBD | Tích Luỹ | Ngoại Ròng | Điểm AI | Kỳ Trước |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1** | **HAG** | `CHÂN SÓNG` 🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN) | **13.85** | `13.54 - 13.96` | **13.13** | **14.73** / **15.35** | **26.7t** | `ĐẠT BIÊN` | 99/101 | **97** | `D` | +3.2 tỷ | **72.0** | #2 (+1) |
-| **2** | **NAB** | `ĐỘT BIẾN GT` 🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN) | **13.20** | `12.64 - 13.02` | **12.36** | **14.51** / **15.35** | **35.6t** | `CHUẨN QUỸ` | 102/100 | **50** | `C` | +4.2 tỷ | **69.8** | #1 (-1) |
-| **3** | **IDC** | `ĐỘT BIẾN GT` 🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN) | **34.80** | `34.57 - 35.32` | **33.02** | **37.61** / **39.39** | **27.3t** | `ĐẠT BIÊN` | 100/100 | **50** | `C` | +13.0 tỷ | **62.5** | #1 (-2) |
+| **1** | **NAB** | `ĐỘT BIẾN GT` | **13.20** | `12.90 - 13.30` | **12.49** | **14.32** / **15.03** | **36.7t** | `CHUẨN QUỸ` | 102/100 | **50** | `C` | +4.2 tỷ | **72.5** | #2 (+1) |
+| **2** | **HAG** | `CHÂN SÓNG` | **13.85** | `13.54 - 13.96` | **13.13** | **14.73** / **15.35** | **30.1t** | `CHUẨN QUỸ` | 99/101 | **97** | `D` | +3.2 tỷ | **72.0** | #1 (-1) |
+| **3** | **IDC** | `ĐỘT BIẾN GT` | **34.80** | `34.28 - 35.32` | **33.02** | **37.61** / **39.39** | **26.3t** | `ĐẠT BIÊN` | 100/100 | **50** | `C` | +13.0 tỷ | **62.5** | #3 (=) |
 
 ### 🎯 Kế Hoạch Tác Chiến, Điểm Thoát Lệnh T+2.5 & Catalysts:
-- **HAG (13.85)** `↗ +1` | **🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN)**: Vùng gom T0 `13.54 - 13.96` | Cắt lỗ cấu trúc: `13.13` | TP1 (Net 1.5R): `14.73` | TP2 (Net 2.5R): `15.35` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +3.2 tỷ | Tự doanh: Chưa công bố EOD (N/A))
-  - *Động lực:* RRG(r=99.0, m=100.6), IBD=97, Acc/Diss=D | 🔵 NGOẠI ĐỠ GIÁ | POC=13.82 (+0.1 ATR)
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `26.7 tỷ` (Điểm TK: `72/100`) | Sức chứa tối đa: `192,800 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,400 cp (~19.4tr, 19.4% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
-  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⚠️ THẬN TRỌNG CAO (T+2.5 HIGH)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **NAB (13.20)** `↘ -1` | **🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN)**: Vùng gom T0 `12.64 - 13.02` | Cắt lỗ cấu trúc: `12.36` | TP1 (Net 1.5R): `14.51` | TP2 (Net 2.5R): `15.35` (R:R `1:2.5`)
+- **NAB (13.20)** `↗ +1` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `12.90 - 13.30` | Cắt lỗ cấu trúc: `12.49` | TP1 (Net 1.5R): `14.32` | TP2 (Net 2.5R): `15.03` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +4.2 tỷ | Tự doanh thực tế: -0.0 tỷ)
-  - *Động lực:* RRG(r=101.6, m=100.4), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ | POC=12.62 (+2.1 ATR)
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `35.6 tỷ` (Điểm TK: `77/100`) | Sức chứa tối đa: `269,900 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,400 cp (~18.5tr, 18.5% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
-  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⚠️ THẬN TRỌNG CAO (T+2.5 HIGH)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **IDC (34.80)** `↘ -2` | **🟡 THẬN TRỌNG T+2.5 (<=30% • 0% MARGIN)**: Vùng gom T0 `34.57 - 35.32` | Cắt lỗ cấu trúc: `33.02` | TP1 (Net 1.5R): `37.61` | TP2 (Net 2.5R): `39.39` (R:R `1:2.5`)
+  - *Động lực:* RRG(r=101.6, m=100.4), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ | POC=13.10 (+0.4 ATR)
+  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `36.7 tỷ` (Điểm TK: `78/100`) | Sức chứa tối đa: `277,700 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,500 cp (~19.8tr, 19.8% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
+  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `🟡 THĂM DÒ <=30% (T+2.5 MODERATE)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
+- **HAG (13.85)** `↘ -1` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `13.54 - 13.96` | Cắt lỗ cấu trúc: `13.13` | TP1 (Net 1.5R): `14.73` | TP2 (Net 2.5R): `15.35` (R:R `1:2.5`)
+  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +3.2 tỷ | Tự doanh: Chưa công bố EOD (N/A))
+  - *Động lực:* RRG(r=99.0, m=100.6), IBD=97, Acc/Diss=D | 🔵 NGOẠI ĐỠ GIÁ | POC=13.67 (+0.7 ATR)
+  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `30.1 tỷ` (Điểm TK: `75/100`) | Sức chứa tối đa: `217,100 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,400 cp (~19.4tr, 19.4% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
+  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `🟡 THĂM DÒ <=30% (T+2.5 MODERATE)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
+- **IDC (34.80)** `=` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `34.28 - 35.32` | Cắt lỗ cấu trúc: `33.02` | TP1 (Net 1.5R): `37.61` | TP2 (Net 2.5R): `39.39` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +13.0 tỷ | Tự doanh thực tế: -1.7 tỷ)
-  - *Động lực:* RRG(r=100.0, m=99.8), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ | POC=35.56 (-0.7 ATR)
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `27.3 tỷ` (Điểm TK: `72/100`) | Sức chứa tối đa: `78,300 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 500 cp (~17.4tr, 17.4% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
-  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⚠️ THẬN TRỌNG CAO (T+2.5 HIGH)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
+  - *Động lực:* RRG(r=100.0, m=99.8), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ | POC=34.63 (+0.2 ATR)
+  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `26.3 tỷ` (Điểm TK: `71/100`) | Sức chứa tối đa: `75,500 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 500 cp (~17.4tr, 17.4% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
+  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `🟡 THĂM DÒ <=30% (T+2.5 MODERATE)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
 
 ### 📊 BẢNG XẾP HẠNG ĐỊNH LƯỢNG CƠ BẢN (PIOTROSKI F-SCORE & P/E)
 > *Nguồn: Báo cáo tài chính chuẩn hóa & Bảng giá Real-time Fialda VIP*
@@ -65,19 +65,19 @@
 
 | Mã CP | Kỳ BCTC | DTT Quý N-2 | DTT Quý N-1 | DTT Quý N (Mới) | LNST Quý N-2 | LNST Quý N-1 | LNST Quý N (Mới) | Tăng Trưởng QoQ | Biên Gộp | Xu Hướng Động Lượng |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **HAG** | `Q3/2026` | 1,784.1 tỷ | 1,255.0 tỷ | **1,908.9 tỷ** | 1,172.7 tỷ | 1,031.3 tỷ | **470.3 tỷ** | `-54.4%` | 45.6% | `↘ CHẬM LẠI` |
 | **NAB** | `Q3/2026` | 2,290.2 tỷ | 2,836.4 tỷ | **3,014.0 tỷ** | 1,308.5 tỷ | 1,209.8 tỷ | **1,268.9 tỷ** | `+4.9%` ↗ | 64.5% | `↗ TĂNG TRƯỞNG DƯƠNG` |
+| **HAG** | `Q3/2026` | 1,784.1 tỷ | 1,255.0 tỷ | **1,908.9 tỷ** | 1,172.7 tỷ | 1,031.3 tỷ | **470.3 tỷ** | `-54.4%` | 45.6% | `↘ CHẬM LẠI` |
 | **IDC** | `Q3/2026` | 1,485.5 tỷ | 2,270.5 tỷ | **2,075.6 tỷ** | 337.9 tỷ | 663.3 tỷ | **540.4 tỷ** | `-18.5%` | 32.4% | `↘ CHẬM LẠI` |
 
 ### 📰 TIN TỨC DOANH NGHIỆP & LỊCH SỰ KIỆN MỚI NHẤT (SPOTLIGHT)
 > *Nguồn: Cổng công bố thông tin Fialda Real-time*
 
-- **[HAG] HAG: Dự kiến đầu tư 3.050 tỷ đồng trồng thêm cà phê, lập công ty con mảng hạ tầng cụm công nghiệp** (2026-11-20 • *Nhà báo & Công luận*)
-  > HAGL dự kiến đầu tư 3.050 tỷ đồng trồng thêm 5.000 ha cà phê năm 2027 và thành lập công ty con 60 tỷ đồng về hạ tầng cụm công nghiệp tại Gia Lai. Lợi nhuận 9 tháng tăng mạnh nhờ khoản thu nhập khác lớn.
-- 📅 **[HAG - SỰ KIỆN]** Ngày: `Gần đây` — *Giao dịch bổ sung - 210,000,000 CP*
 - **[NAB] NAB: Công văn của UBCKNN về hồ sơ đăng ký chào bán cổ phiếu riêng lẻ và Nghị quyết HĐQT số 2398/2026 ngày 19/11/2026** (2026-11-20 • *HOSE*)
   > Ngân hàng Nam Á (NAB) công bố công văn của UBCKNN liên quan hồ sơ đăng ký chào bán cổ phiếu riêng lẻ, kèm Nghị quyết HĐQT số 2398/2026 ngày 19/11/2026.
 - 📅 **[NAB - SỰ KIỆN]** Ngày: `Gần đây` — *Niêm yết cổ phiếu bổ sung - 100,000,000 CP*
+- **[HAG] HAG: Dự kiến đầu tư 3.050 tỷ đồng trồng thêm cà phê, lập công ty con mảng hạ tầng cụm công nghiệp** (2026-11-20 • *Nhà báo & Công luận*)
+  > HAGL dự kiến đầu tư 3.050 tỷ đồng trồng thêm 5.000 ha cà phê năm 2027 và thành lập công ty con 60 tỷ đồng về hạ tầng cụm công nghiệp tại Gia Lai. Lợi nhuận 9 tháng tăng mạnh nhờ khoản thu nhập khác lớn.
+- 📅 **[HAG - SỰ KIỆN]** Ngày: `Gần đây` — *Giao dịch bổ sung - 210,000,000 CP*
 - **[IDC] Becamex IDC (BCM) góp 300 tỷ đồng thành lập công ty trong lĩnh vực bất động sản** (2026-11-17 • *Tin nhanh CK*)
   > Becamex IDC (BCM) thành lập công ty con kinh doanh bất động sản với vốn điều lệ 300 tỷ đồng, trong bối cảnh lợi nhuận 9 tháng đầu năm giảm mạnh 60,9% so với cùng kỳ.
 - 📅 **[IDC - SỰ KIỆN]** Ngày: `2026-11-10` — *IDC: Đặng Việt Dũng - người có liên quan đến Tổng Giám đốc; Ủy viên HĐQT - đăng ký mua 4.400.000 CP*
