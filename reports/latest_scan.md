@@ -78,8 +78,8 @@
 - **[HAG] HAG: Trích lục Nghị quyết HĐQT về phương án phát hành trái phiếu riêng lẻ lần 2 năm 2026** (2026-11-23 • *HOSE*)
   > Hoàng Anh Gia Lai (HAG) vừa công bố trích lục Nghị quyết HĐQT thông qua phương án phát hành trái phiếu riêng lẻ lần 2 năm 2026.
 - 📅 **[HAG - SỰ KIỆN]** Ngày: `Gần đây` — *Giao dịch bổ sung - 210,000,000 CP*
-- **[IDC] Becamex IDC (BCM) góp 300 tỷ đồng thành lập công ty trong lĩnh vực bất động sản** (2026-11-17 • *Tin nhanh CK*)
-  > Becamex IDC (BCM) thành lập công ty con kinh doanh bất động sản với vốn điều lệ 300 tỷ đồng, trong bối cảnh lợi nhuận 9 tháng đầu năm giảm mạnh 60,9% so với cùng kỳ.
+- **[IDC] IDC: Đặng Việt Dũng - người có liên quan đến Tổng Giám đốc; Ủy viên HĐQT - đã mua 4.400.000 CP** (2026-11-23 • *HNX*)
+  > Ông Đặng Việt Dũng, con của Tổng Giám đốc Đặng Chính Trung, đã mua 4,4 triệu cổ phiếu IDC từ 10/11 đến 18/11/2026, nâng tỷ lệ nắm giữ lên 3,59%.
 - 📅 **[IDC - SỰ KIỆN]** Ngày: `2026-11-10` — *IDC: Đặng Việt Dũng - người có liên quan đến Tổng Giám đốc; Ủy viên HĐQT - đăng ký mua 4.400.000 CP*
 
 ---
