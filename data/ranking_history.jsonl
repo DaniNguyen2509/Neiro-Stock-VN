@@ -1,6 +1,3 @@
-{"timestamp": "2026-11-18 11:16:07", "symbol": "TPB", "rank": 12, "score": 14.5, "price": 12.6, "signal_type": "THE_CHE_GOM", "stop_loss": 12.03, "tp1": 13.51, "tp2": 14.08, "rr_ratio": 2.5, "adtv20_billion": 235.3}
-{"timestamp": "2026-11-18 11:16:07", "symbol": "NVL", "rank": 13, "score": 12.3, "price": 10.35, "signal_type": "THE_CHE_GOM", "stop_loss": 9.85, "tp1": 11.14, "tp2": 11.64, "rr_ratio": 2.5, "adtv20_billion": 179.4}
-{"timestamp": "2026-11-18 11:16:07", "symbol": "VHM", "rank": 14, "score": 10.0, "price": 61.5, "signal_type": "THE_CHE_GOM", "stop_loss": 58.67, "tp1": 65.99, "tp2": 68.82, "rr_ratio": 2.5, "adtv20_billion": 403.2}
 {"timestamp": "2026-11-18 11:16:07", "symbol": "CTG", "rank": 15, "score": 10.0, "price": 30.55, "signal_type": "THE_CHE_GOM", "stop_loss": 29.18, "tp1": 32.73, "tp2": 34.1, "rr_ratio": 2.5, "adtv20_billion": 228.8}
 {"timestamp": "2026-11-18 11:46:14", "symbol": "PHP", "rank": 1, "score": 62.5, "price": 44.8, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 42.06, "tp1": 48.34, "tp2": 50.78, "rr_ratio": 2.5, "adtv20_billion": 22.3}
 {"timestamp": "2026-11-18 11:46:14", "symbol": "DBC", "rank": 2, "score": 42.2, "price": 16.95, "signal_type": "THE_CHE_GOM", "stop_loss": 15.66, "tp1": 17.83, "tp2": 18.67, "rr_ratio": 2.5, "adtv20_billion": 32.2}
@@ -498,3 +495,6 @@
 {"timestamp": "2026-11-24 03:06:38", "symbol": "NAB", "rank": 1, "score": 72.5, "price": 13.2, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 12.49, "tp1": 14.32, "tp2": 15.03, "rr_ratio": 2.5, "adtv20_billion": 36.7}
 {"timestamp": "2026-11-24 03:06:38", "symbol": "HAG", "rank": 2, "score": 72.0, "price": 13.85, "signal_type": "CHO_MUA_CHAN_SONG", "stop_loss": 13.13, "tp1": 14.73, "tp2": 15.35, "rr_ratio": 2.5, "adtv20_billion": 30.1}
 {"timestamp": "2026-11-24 03:06:38", "symbol": "IDC", "rank": 3, "score": 62.5, "price": 34.8, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 33.02, "tp1": 37.61, "tp2": 39.39, "rr_ratio": 2.5, "adtv20_billion": 26.3}
+{"timestamp": "2026-11-24 05:13:11", "symbol": "NAB", "rank": 1, "score": 72.5, "price": 13.2, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 12.49, "tp1": 14.32, "tp2": 15.03, "rr_ratio": 2.5, "adtv20_billion": 36.7}
+{"timestamp": "2026-11-24 05:13:11", "symbol": "HAG", "rank": 2, "score": 72.0, "price": 13.85, "signal_type": "CHO_MUA_CHAN_SONG", "stop_loss": 13.13, "tp1": 14.73, "tp2": 15.35, "rr_ratio": 2.5, "adtv20_billion": 30.1}
+{"timestamp": "2026-11-24 05:13:11", "symbol": "IDC", "rank": 3, "score": 62.5, "price": 34.8, "signal_type": "DOT_BIEN_GIA_TRI", "stop_loss": 33.02, "tp1": 37.61, "tp2": 39.39, "rr_ratio": 2.5, "adtv20_billion": 26.3}
