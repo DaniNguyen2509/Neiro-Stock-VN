@@ -6,7 +6,7 @@
 | STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua | Cắt Lỗ | Chốt Lời (TP1 / TP2) | Thanh Khoản | Chuẩn Quỹ | RRG | Điểm IBD | Tích Luỹ | Ngoại Ròng | Điểm AI | Kỳ Trước |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **1** | **NAB** | `ĐỘT BIẾN GT` | **13.20** | `12.90 - 13.30` | **12.49** | **14.32** / **15.03** | **36.7t** | `CHUẨN QUỸ` | 102/100 | **50** | `C` | +4.2 tỷ | **72.5** | #1 (=) |
-| **2** | **HAG** | `CHÂN SÓNG` | **13.85** | `13.54 - 13.96` | **13.13** | **14.73** / **15.35** | **30.1t** | `CHUẨN QUỸ` | 99/101 | **97** | `D` | +3.2 tỷ | **72.0** | #2 (=) |
+| **2** | **HAG** | `CHÂN SÓNG` | **13.85** | `13.54 - 13.96` | **13.13** | **14.73** / **15.35** | **30.1t** | `CHUẨN QUỸ` | 99/101 | **97** | `D` | +3.7 tỷ | **72.0** | #2 (=) |
 | **3** | **IDC** | `ĐỘT BIẾN GT` | **34.80** | `34.28 - 35.32` | **33.02** | **37.61** / **39.39** | **26.3t** | `ĐẠT BIÊN` | 100/100 | **50** | `C` | +13.0 tỷ | **62.5** | #3 (=) |
 
 ### 🎯 Kế Hoạch Tác Chiến, Điểm Thoát Lệnh T+2.5 & Catalysts:
@@ -16,7 +16,7 @@
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `36.7 tỷ` (Điểm TK: `78/100`) | Sức chứa tối đa: `277,700 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,500 cp (~19.8tr, 19.8% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `🟡 THĂM DÒ <=30% (T+2.5 MODERATE)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
 - **HAG (13.85)** `=` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `13.54 - 13.96` | Cắt lỗ cấu trúc: `13.13` | TP1 (Net 1.5R): `14.73` | TP2 (Net 2.5R): `15.35` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +3.2 tỷ | Tự doanh: Chưa công bố EOD (N/A))
+  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +3.7 tỷ | Tự doanh: Chưa công bố EOD (N/A))
   - *Động lực:* RRG(r=99.0, m=100.6), IBD=97, Acc/Diss=D | 🔵 NGOẠI ĐỠ GIÁ | POC=13.67 (+0.7 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `30.1 tỷ` (Điểm TK: `75/100`) | Sức chứa tối đa: `217,100 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,400 cp (~19.4tr, 19.4% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `🟡 THĂM DÒ <=30% (T+2.5 MODERATE)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
@@ -72,11 +72,11 @@
 ### 📰 TIN TỨC DOANH NGHIỆP & LỊCH SỰ KIỆN MỚI NHẤT (SPOTLIGHT)
 > *Nguồn: Cổng công bố thông tin Fialda Real-time*
 
-- **[NAB] NAB: Công văn của UBCKNN về hồ sơ đăng ký chào bán cổ phiếu riêng lẻ và Nghị quyết HĐQT số 2398/2026 ngày 19/11/2026** (2026-11-20 • *HOSE*)
-  > Ngân hàng Nam Á (NAB) công bố công văn của UBCKNN liên quan hồ sơ đăng ký chào bán cổ phiếu riêng lẻ, kèm Nghị quyết HĐQT số 2398/2026 ngày 19/11/2026.
+- **[NAB] NAB: Nghị quyết HĐQT về việc thông qua ngày đăng ký giao dịch bổ sung ESOP 2026** (2026-11-23 • *HOSE*)
+  > Nam Á Bank (NAB) vừa công bố nghị quyết Hội đồng quản trị thông qua ngày đăng ký giao dịch bổ sung cho chương trình ESOP năm 2026.
 - 📅 **[NAB - SỰ KIỆN]** Ngày: `Gần đây` — *Niêm yết cổ phiếu bổ sung - 100,000,000 CP*
-- **[HAG] HAG: Dự kiến đầu tư 3.050 tỷ đồng trồng thêm cà phê, lập công ty con mảng hạ tầng cụm công nghiệp** (2026-11-20 • *Nhà báo & Công luận*)
-  > HAGL dự kiến đầu tư 3.050 tỷ đồng trồng thêm 5.000 ha cà phê năm 2027 và thành lập công ty con 60 tỷ đồng về hạ tầng cụm công nghiệp tại Gia Lai. Lợi nhuận 9 tháng tăng mạnh nhờ khoản thu nhập khác lớn.
+- **[HAG] HAG: Trích lục Nghị quyết HĐQT về phương án phát hành trái phiếu riêng lẻ lần 2 năm 2026** (2026-11-23 • *HOSE*)
+  > Hoàng Anh Gia Lai (HAG) vừa công bố trích lục Nghị quyết HĐQT thông qua phương án phát hành trái phiếu riêng lẻ lần 2 năm 2026.
 - 📅 **[HAG - SỰ KIỆN]** Ngày: `Gần đây` — *Giao dịch bổ sung - 210,000,000 CP*
 - **[IDC] Becamex IDC (BCM) góp 300 tỷ đồng thành lập công ty trong lĩnh vực bất động sản** (2026-11-17 • *Tin nhanh CK*)
   > Becamex IDC (BCM) thành lập công ty con kinh doanh bất động sản với vốn điều lệ 300 tỷ đồng, trong bối cảnh lợi nhuận 9 tháng đầu năm giảm mạnh 60,9% so với cùng kỳ.
