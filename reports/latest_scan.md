@@ -78,8 +78,8 @@
 - **[HAG] HAG: Trích lục Nghị quyết HĐQT về phương án phát hành trái phiếu riêng lẻ lần 2 năm 2026** (2026-11-23 • *HOSE*)
   > Hoàng Anh Gia Lai (HAG) vừa công bố trích lục Nghị quyết HĐQT thông qua phương án phát hành trái phiếu riêng lẻ lần 2 năm 2026.
 - 📅 **[HAG - SỰ KIỆN]** Ngày: `Gần đây` — *Giao dịch bổ sung - 210,000,000 CP*
-- **[IDC] Con trai Tổng Giám đốc IDC gom thành công 4.4 triệu cp** (2026-11-24 • *FILI*)
-  > Ông Đặng Việt Dũng, Phó Tổng Giám đốc IDC và là con trai Tổng Giám đốc IDICO, vừa mua thành công 4,4 triệu cổ phiếu IDC, nâng tỷ lệ sở hữu lên 3,59% vốn điều lệ.
+- **[IDC] IDC: Phó Tổng Giám đốc Idico gom thành công 4,4 triệu cổ phiếu IDC** (2026-11-24 • *An ninh tiền tệ*)
+  > Phó Tổng Giám đốc Idico Đặng Việt Dũng đã mua thành công 4,4 triệu cổ phiếu IDC, nâng tỷ lệ sở hữu từ 2,53% lên 3,59%, trong khi lợi nhuận quý III/2026 của công ty giảm gần 45%.
 - 📅 **[IDC - SỰ KIỆN]** Ngày: `2026-11-10` — *IDC: Đặng Việt Dũng - người có liên quan đến Tổng Giám đốc; Ủy viên HĐQT - đăng ký mua 4.400.000 CP*
 
 ---
