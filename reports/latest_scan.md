@@ -5,17 +5,17 @@
 
 | STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua | Cắt Lỗ | Chốt Lời (TP1 / TP2) | Thanh Khoản | Chuẩn Quỹ | RRG | Điểm IBD | Tích Luỹ | Ngoại Ròng | Điểm AI | Kỳ Trước |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1** | **NAB** | `ĐỘT BIẾN GT` | **13.20** | `12.90 - 13.30` | **12.49** | **14.32** / **15.03** | **36.7t** | `CHUẨN QUỸ` | 102/100 | **50** | `C` | +4.2 tỷ | **72.5** | #2 (+1) |
-| **2** | **HAG** | `CHÂN SÓNG` | **13.85** | `13.54 - 13.96` | **13.13** | **14.73** / **15.35** | **30.1t** | `CHUẨN QUỸ` | 99/101 | **97** | `D` | +3.7 tỷ | **72.0** | #1 (-1) |
+| **1** | **NAB** | `ĐỘT BIẾN GT` | **13.20** | `12.90 - 13.30` | **12.49** | **14.32** / **15.03** | **36.7t** | `CHUẨN QUỸ` | 102/100 | **50** | `C` | +4.2 tỷ | **72.5** | #1 (=) |
+| **2** | **HAG** | `CHÂN SÓNG` | **13.85** | `13.54 - 13.96` | **13.13** | **14.73** / **15.35** | **30.1t** | `CHUẨN QUỸ` | 99/101 | **97** | `D` | +3.7 tỷ | **72.0** | #2 (=) |
 | **3** | **IDC** | `ĐỘT BIẾN GT` | **34.80** | `34.28 - 35.32` | **33.02** | **37.61** / **39.39** | **26.3t** | `ĐẠT BIÊN` | 100/100 | **50** | `C` | +13.0 tỷ | **62.5** | #3 (=) |
 
 ### 🎯 Kế Hoạch Tác Chiến, Điểm Thoát Lệnh T+2.5 & Catalysts:
-- **NAB (13.20)** `↗ +1` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `12.90 - 13.30` | Cắt lỗ cấu trúc: `12.49` | TP1 (Net 1.5R): `14.32` | TP2 (Net 2.5R): `15.03` (R:R `1:2.5`)
+- **NAB (13.20)** `=` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `12.90 - 13.30` | Cắt lỗ cấu trúc: `12.49` | TP1 (Net 1.5R): `14.32` | TP2 (Net 2.5R): `15.03` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +4.2 tỷ | Tự doanh thực tế: +0.2 tỷ)
   - *Động lực:* RRG(r=101.6, m=100.4), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ | POC=13.10 (+0.4 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `36.7 tỷ` (Điểm TK: `78/100`) | Sức chứa tối đa: `277,700 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,500 cp (~19.8tr, 19.8% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `🟡 THĂM DÒ <=30% (T+2.5 MODERATE)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **HAG (13.85)** `↘ -1` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `13.54 - 13.96` | Cắt lỗ cấu trúc: `13.13` | TP1 (Net 1.5R): `14.73` | TP2 (Net 2.5R): `15.35` (R:R `1:2.5`)
+- **HAG (13.85)** `=` | **🟢 VÙNG MUA CHUẨN**: Vùng gom T0 `13.54 - 13.96` | Cắt lỗ cấu trúc: `13.13` | TP1 (Net 1.5R): `14.73` | TP2 (Net 2.5R): `15.35` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +3.7 tỷ | Tự doanh thực tế: +0.3 tỷ)
   - *Động lực:* RRG(r=99.0, m=100.6), IBD=97, Acc/Diss=D | 🔵 NGOẠI ĐỠ GIÁ | POC=13.67 (+0.7 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `30.1 tỷ` (Điểm TK: `75/100`) | Sức chứa tối đa: `217,100 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,400 cp (~19.4tr, 19.4% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
@@ -78,8 +78,8 @@
 - **[HAG] HAG: Trích lục Nghị quyết HĐQT về phương án phát hành trái phiếu riêng lẻ lần 2 năm 2026** (2026-11-23 • *HOSE*)
   > Hoàng Anh Gia Lai (HAG) vừa công bố trích lục Nghị quyết HĐQT thông qua phương án phát hành trái phiếu riêng lẻ lần 2 năm 2026.
 - 📅 **[HAG - SỰ KIỆN]** Ngày: `Gần đây` — *Giao dịch bổ sung - 210,000,000 CP*
-- **[IDC] IDC: Đặng Việt Dũng - người có liên quan đến Tổng Giám đốc; Ủy viên HĐQT - đã mua 4.400.000 CP** (2026-11-23 • *HNX*)
-  > Ông Đặng Việt Dũng, con của Tổng Giám đốc Đặng Chính Trung, đã mua 4,4 triệu cổ phiếu IDC từ 10/11 đến 18/11/2026, nâng tỷ lệ nắm giữ lên 3,59%.
+- **[IDC] Con trai Tổng Giám đốc IDC gom thành công 4.4 triệu cp** (2026-11-24 • *FILI*)
+  > Ông Đặng Việt Dũng, Phó Tổng Giám đốc IDC và là con trai Tổng Giám đốc IDICO, vừa mua thành công 4,4 triệu cổ phiếu IDC, nâng tỷ lệ sở hữu lên 3,59% vốn điều lệ.
 - 📅 **[IDC - SỰ KIỆN]** Ngày: `2026-11-10` — *IDC: Đặng Việt Dũng - người có liên quan đến Tổng Giám đốc; Ủy viên HĐQT - đăng ký mua 4.400.000 CP*
 
 ---
