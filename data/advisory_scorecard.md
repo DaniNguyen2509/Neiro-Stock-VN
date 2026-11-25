@@ -1,5 +1,5 @@
 # 🛡️ Bảng Đối Chiếu Tín Hiệu & Rada Chống Mua Đuổi (Anti-FOMO Scorecard)
-*Cập nhật tự động ngầm trên GitHub lúc: `2026-11-25 11:16:05` (Giờ VN UTC+7)*
+*Cập nhật tự động ngầm trên GitHub lúc: `2026-11-25 11:46:02` (Giờ VN UTC+7)*
 
 | Mã CP | Ngày Bùng Nổ | Giá Entry Gốc | Giá Hiện Tại | Lãi/Lỗ (%) | Nắm Giữ | Stop Loss | TP1 / TP2 | Quyết Nghị Mua Mới |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -12,7 +12,7 @@
 | **BVS** | 2026-11-25 | 26.20 | 26.20 | **+0.0%** | 0 phiên (0d) | 24.78 | 28.43 / 29.85 | 🟢 VÙNG MUA CHUẨN |
 | **BAF** | 2026-11-13 | 30.95 | 30.80 | **-0.5%** | 8 phiên (12d) | 29.34 | 33.49 / 35.10 | 🟠 QUÁ HẠN T+12 (NGỪNG MUA) |
 | **DBC** | 2026-11-16 | 16.50 | 16.40 | **-0.6%** | 7 phiên (9d) | 15.66 | 17.83 / 18.67 | 🟠 QUÁ HẠN T+9 (NGỪNG MUA) |
-| **PDR** | 2026-11-17 | 11.35 | 11.20 | **-1.3%** | 6 phiên (8d) | 10.74 | 12.31 / 12.92 | 🟠 QUÁ HẠN T+8 (NGỪNG MUA) |
+| **PDR** | 2026-11-17 | 11.35 | 11.10 | **-2.2%** | 6 phiên (8d) | 10.74 | 12.31 / 12.92 | 🟠 QUÁ HẠN T+8 (NGỪNG MUA) |
 | **EVF** | 2026-11-11 | 11.90 | 11.50 | **-3.4%** | 10 phiên (14d) | 11.36 | 12.76 / 13.30 | 🟠 QUÁ HẠN T+14 (NGỪNG MUA) |
 
 ---
