@@ -1,4 +1,4 @@
-## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 11 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)
+## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 9 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)
 > **Trạng thái Thị trường:** VN-Index Tăng **87** / Giảm **241** (Độ rộng A/D: **26.5%**) | Giá trị GD: **16,091 tỷ VND** | P/E: **10.86**
 > ⛔ CẦU CHÌ T+2.5 KÍCH HOẠT: ĐỘ RỘNG THỊ TRƯỜNG SUY YẾU (26.5% — Tăng 87 / Giảm 241). TẠM NGỪNG MUA MỚI ĐỂ TRÁNH KẸP HÀNG T+2.5!
 > 🟢 **Trạng Thái Dữ Liệu:** `REAL-TIME FIALDA PRO API` (Dữ liệu khớp lệnh trực tiếp từ sàn)
@@ -14,8 +14,6 @@
 | **7** | **CII** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **13.55** | `13.55 - 13.75` | **12.79** | **14.74** / **15.50** | **152.5t** | `SIÊU TK` | 100/99 | **51** | `E` | -0.2 tỷ | **17.4** | #7 (=) |
 | **8** | **KDH** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **14.95** | `14.88 - 15.17` | **13.91** | **16.57** / **17.61** | **172.9t** | `SIÊU TK` | 103/100 | **61** | `E` | +9.1 tỷ | **16.5** | #8 (=) |
 | **9** | **VHM** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **61.10** | `61.91 - 62.53` | **58.35** | **65.47** / **68.22** | **328.6t** | `SIÊU TK` | 100/100 | **37** | `E` | +3.8 tỷ | **12.7** | #9 (=) |
-| **10** | **DHC** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **35.30** | `34.77 - 35.83` | **33.71** | **37.83** / **39.42** | **16.4t** | `ĐẠT BIÊN` | 99/100 | **50** | `C` | +0.0 tỷ | **57.5** | Mới |
-| **11** | **BVS** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **26.20** | `25.81 - 26.59` | **24.78** | **28.43** / **29.85** | **17.6t** | `ĐẠT BIÊN` | 99/99 | **50** | `C` | +0.1 tỷ | **42.5** | Mới |
 
 ### 🎯 Kế Hoạch Tác Chiến, Điểm Thoát Lệnh T+2.5 & Catalysts:
 - **OCB (10.65)** `=` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `10.61 - 10.81` | Cắt lỗ cấu trúc: `10.17` | TP1 (Net 1.5R): `11.41` | TP2 (Net 2.5R): `11.89` (R:R `1:2.5`)
@@ -63,16 +61,6 @@
   - *Động lực:* RRG(r=100.0, m=100.2), IBD=37, Acc/Diss=E | 🔵 NGOẠI ĐỠ GIÁ | POC=62.30 (-0.8 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `328.6 tỷ` (Điểm TK: `99/100`) | Sức chứa tối đa: `537,700 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 300 cp (~18.3tr, 18.3% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **DHC (35.30)** `T0 KHUYẾN NGHỊ` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `34.77 - 35.83` | Cắt lỗ cấu trúc: `33.71` | TP1 (Net 1.5R): `37.83` | TP2 (Net 2.5R): `39.42` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: +0.0 tỷ | Tự doanh: Chưa công bố EOD (N/A))
-  - *Động lực:* RRG(r=99.4, m=100.1), IBD=50, Acc/Diss=C | 🔴 NGUY HIỂM XẢ | POC=36.23 (-1.1 ATR) | ⏱️ Phiên sáng: Thăm dò <= 30%, chờ sau 13:45 xác nhận cung T+2.5
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `16.4 tỷ` (Điểm TK: `61/100`) | Sức chứa tối đa: `100,000 cp` (Trượt giá ~`0.50%`). ✅ Vốn 100tr: Tối đa 500 cp (~17.6tr, 17.6% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
-  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `T+0 (Khuyến nghị hôm nay)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **BVS (26.20)** `T0 KHUYẾN NGHỊ` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `25.81 - 26.59` | Cắt lỗ cấu trúc: `24.78` | TP1 (Net 1.5R): `28.43` | TP2 (Net 2.5R): `29.85` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: +0.1 tỷ | Tự doanh: Chưa công bố EOD (N/A))
-  - *Động lực:* RRG(r=99.4, m=99.0), IBD=50, Acc/Diss=C | 🔴 NGUY HIỂM XẢ | POC=27.81 (-1.8 ATR) | ⏱️ Phiên sáng: Thăm dò <= 30%, chờ sau 13:45 xác nhận cung T+2.5
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `17.6 tỷ` (Điểm TK: `63/100`) | Sức chứa tối đa: `100,000 cp` (Trượt giá ~`0.50%`). ✅ Vốn 100tr: Tối đa 700 cp (~18.3tr, 18.3% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
-  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `T+0 (Khuyến nghị hôm nay)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
 
 ### 📊 BẢNG XẾP HẠNG ĐỊNH LƯỢNG CƠ BẢN (PIOTROSKI F-SCORE & P/E)
 > *Nguồn: Báo cáo tài chính chuẩn hóa & Bảng giá Real-time Fialda VIP*
