@@ -5,25 +5,25 @@
 
 | STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua | Cắt Lỗ | Chốt Lời (TP1 / TP2) | Thanh Khoản | Chuẩn Quỹ | RRG | Điểm IBD | Tích Luỹ | Ngoại Ròng | Điểm AI | Kỳ Trước |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1** | **MCH** | `CHÂN SÓNG` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **132.00** | `132.14 - 135.03` | **125.65** | **142.05** / **148.40** | **44.1t** | `CHUẨN QUỸ` | 100/102 | **50** | `C` | -27.2 tỷ | **77.5** | #1 (=) |
-| **2** | **MSB** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **16.40** | `16.15 - 16.65` | **15.66** | **17.58** / **18.32** | **134.0t** | `SIÊU TK` | 102/100 | **37** | `E` | +28.5 tỷ | **47.0** | #2 (=) |
-| **3** | **DXG** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **10.15** | `10.29 - 10.39` | **9.57** | **11.06** / **11.64** | **134.8t** | `SIÊU TK` | 102/99 | **65** | `E` | +30.6 tỷ | **21.6** | #3 (=) |
+| **1** | **MCH** | `CHÂN SÓNG` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **132.00** | `132.14 - 135.03` | **125.65** | **142.05** / **148.40** | **44.1t** | `CHUẨN QUỸ` | 100/102 | **50** | `C` | -32.1 tỷ | **77.5** | #1 (=) |
+| **2** | **MSB** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **16.40** | `16.15 - 16.65` | **15.66** | **17.58** / **18.32** | **134.0t** | `SIÊU TK` | 102/100 | **37** | `E` | +28.4 tỷ | **47.0** | #2 (=) |
+| **3** | **DXG** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **10.15** | `10.29 - 10.39` | **9.57** | **11.06** / **11.64** | **134.8t** | `SIÊU TK` | 102/99 | **65** | `E` | +32.0 tỷ | **21.6** | #3 (=) |
 | **4** | **HHP** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **9.14** | `9.00 - 9.28` | **8.45** | **10.21** / **10.90** | **29.3t** | `ĐẠT BIÊN` | 89/96 | **50** | `C` | -0.3 tỷ | **17.5** | #4 (=) |
 | **5** | **POW** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **13.20** | `13.00 - 13.40` | **12.48** | **14.33** / **15.05** | **116.2t** | `SIÊU TK` | 103/101 | **26** | `E` | +23.3 tỷ | **16.6** | #5 (=) |
 
 ### 🎯 Kế Hoạch Tác Chiến, Điểm Thoát Lệnh T+2.5 & Catalysts:
 - **MCH (132.00)** `=` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `132.14 - 135.03` | Cắt lỗ cấu trúc: `125.65` | TP1 (Net 1.5R): `142.05` | TP2 (Net 2.5R): `148.40` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: -27.2 tỷ | Tự doanh thực tế: -3.0 tỷ)
+  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: -32.1 tỷ | Tự doanh thực tế: +6.3 tỷ)
   - *Động lực:* RRG(r=100.3, m=102.3), IBD=50, Acc/Diss=C | 🔴 NGUY HIỂM XẢ | POC=131.18 (+0.2 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `44.1 tỷ` (Điểm TK: `80/100`) | Sức chứa tối đa: `33,400 cp` (Trượt giá ~`0.88%`). ℹ️ Vốn 100tr mua tối đa 100 cp (~13.2tr, 13.2% NAV) — 1 lô chẵn HOSE duy nhất: Chốt gọn 1 lần tại TP1/Trailing, không chia 50/50
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
 - **MSB (16.40)** `=` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `16.15 - 16.65` | Cắt lỗ cấu trúc: `15.66` | TP1 (Net 1.5R): `17.58` | TP2 (Net 2.5R): `18.32` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🟢🟢 ĐỒNG THUẬN GOM (Khối ngoại: +28.5 tỷ | Tự doanh thực tế: +2.7 tỷ)
-  - *Động lực:* RRG(r=101.9, m=100.0), IBD=37, Acc/Diss=E | 🟢🟢 ĐỒNG THUẬN GOM | POC=16.31 (+0.3 ATR)
+  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +28.4 tỷ | Tự doanh thực tế: -3.7 tỷ)
+  - *Động lực:* RRG(r=101.9, m=100.0), IBD=37, Acc/Diss=E | 🔵 NGOẠI ĐỠ GIÁ | POC=16.31 (+0.3 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `134.0 tỷ` (Điểm TK: `96/100`) | Sức chứa tối đa: `817,000 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,200 cp (~19.7tr, 19.7% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
 - **DXG (10.15)** `=` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `10.29 - 10.39` | Cắt lỗ cấu trúc: `9.57` | TP1 (Net 1.5R): `11.06` | TP2 (Net 2.5R): `11.64` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +30.6 tỷ | Tự doanh thực tế: +0.0 tỷ)
+  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +32.0 tỷ | Tự doanh: Chưa công bố EOD (N/A))
   - *Động lực:* RRG(r=102.0, m=99.3), IBD=65, Acc/Diss=E | 🔵 NGOẠI ĐỠ GIÁ | POC=10.36 (-0.6 ATR)
   - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `134.8 tỷ` (Điểm TK: `96/100`) | Sức chứa tối đa: `1,327,700 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,900 cp (~19.3tr, 19.3% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
@@ -89,8 +89,8 @@
 - **[MCH] Cổ phiếu MCH, PVD, BSR: Ba triển vọng, ba mức định giá** (2026-11-10 • *Vietnam+*)
   > Yuanta giữ khuyến nghị nắm giữ MCH với giá mục tiêu 151.900 đồng, trong khi Vietcap và SHS đều khuyến nghị khả quan cho PVD (21.000 đồng) và BSR (30.200 đồng) nhờ triển vọng lợi nhuận tăng mạnh.
 - 📅 **[MCH - SỰ KIỆN]** Ngày: `2026-10-09` — *MCH: Thông báo giao dịch cổ phiếu của tổ chức có liên quan của Người nội bộ Công ty Cổ phần Đầu tư Lepus*
-- **[MSB] MSB: Sau khi mua lại 1.000 tỷ đồng trái phiếu, MSB tiếp tục kế hoạch huy động vốn mới** (2026-11-25 • *Người đưa tin*)
-  > MSB vừa thông qua phương án phát hành trái phiếu riêng lẻ lần 2 năm 2026 tối đa 1.800 tỷ đồng, kỳ hạn 5 năm, được ADB bảo lãnh. Ngân hàng cũng đã mua lại trước hạn lô trái phiếu 1.000 tỷ đồng.
+- **[MSB] MSB: Thông báo về ngày đăng ký cuối cùng thực hiện quyền đề cử, ứng cử nhân sự dự kiến bầu thành viên HĐQT, BKS nhiệm kỳ VIII (2027-2031)** (2026-11-26 • *HOSE*)
+  > MSB thông báo ngày đăng ký cuối cùng để cổ đông thực hiện quyền đề cử, ứng cử nhân sự dự kiến bầu HĐQT và BKS nhiệm kỳ VIII (2027-2031).
 - 📅 **[MSB - SỰ KIỆN]** Ngày: `Gần đây` — *Giao dịch bổ sung - 624,000,000 CP*
 - **[DXG] DXG: Bluemarq Group cho 1 cá nhân vay gần 983 tỷ đồng** (2026-11-18 • *An ninh Thủ đô*)
   > Báo cáo quý III/2026 của Bluemarq Group (DXG) ghi nhận doanh thu và lợi nhuận giảm mạnh, trong khi dư nợ cho vay ngắn hạn tăng vọt, trong đó khoản vay gần 983,5 tỷ đồng dành cho một cá nhân chưa được giải thích rõ.
