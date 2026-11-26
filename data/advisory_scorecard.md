@@ -1,5 +1,5 @@
 # 🛡️ Bảng Đối Chiếu Tín Hiệu & Rada Chống Mua Đuổi (Anti-FOMO Scorecard)
-*Cập nhật tự động ngầm trên GitHub lúc: `2026-11-26 09:16:06` (Giờ VN UTC+7)*
+*Cập nhật tự động ngầm trên GitHub lúc: `2026-11-26 09:46:00` (Giờ VN UTC+7)*
 
 | Mã CP | Ngày Bùng Nổ | Giá Entry Gốc | Giá Hiện Tại | Lãi/Lỗ (%) | Nắm Giữ | Stop Loss | TP1 / TP2 | Quyết Nghị Mua Mới |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -8,9 +8,9 @@
 | **BAF** | 2026-11-13 | 30.95 | 30.80 | **-0.5%** | 9 phiên (13d) | 29.34 | 33.49 / 35.10 | 🟠 QUÁ HẠN T+13 (NGỪNG MUA) |
 | **IDC** | 2026-11-23 | 34.80 | 34.60 | **-0.6%** | 3 phiên (3d) | 33.02 | 37.61 / 39.39 | ⛔ CẦU CHÌ T+2.5: NGỪNG MUA |
 | **DBC** | 2026-11-16 | 16.50 | 16.40 | **-0.6%** | 8 phiên (10d) | 15.66 | 17.83 / 18.67 | 🟠 QUÁ HẠN T+10 (NGỪNG MUA) |
-| **DHC** | 2026-11-25 | 35.30 | 34.65 | **-1.8%** | 1 phiên (1d) | 33.71 | 37.83 / 39.42 | ⛔ CẦU CHÌ T+2.5: NGỪNG MUA |
+| **DHC** | 2026-11-25 | 35.30 | 34.95 | **-1.0%** | 1 phiên (1d) | 33.71 | 37.83 / 39.42 | ⛔ CẦU CHÌ T+2.5: NGỪNG MUA |
 | **PDR** | 2026-11-17 | 11.35 | 11.00 | **-3.1%** | 7 phiên (9d) | 10.74 | 12.31 / 12.92 | 🟠 QUÁ HẠN T+9 (NGỪNG MUA) |
-| **BVS** | 2026-11-25 | 26.20 | 24.90 | **-5.0%** | 1 phiên (1d) | 24.78 | 28.43 / 29.85 | ⛔ CẦU CHÌ T+2.5: NGỪNG MUA |
+| **BVS** | 2026-11-25 | 26.20 | 25.10 | **-4.2%** | 1 phiên (1d) | 24.78 | 28.43 / 29.85 | ⛔ CẦU CHÌ T+2.5: NGỪNG MUA |
 
 ---
 💡 **Nguyên Tắc Định Chế Sống Còn Tại TTCK Việt Nam (Chu Kỳ T+2.5):**
