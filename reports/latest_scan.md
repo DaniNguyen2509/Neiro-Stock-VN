@@ -1,41 +1,41 @@
 ## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 5 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)
-> **Trạng thái Thị trường:** VN-Index Tăng **47** / Giảm **291** (Độ rộng A/D: **13.9%**) | Giá trị GD: **15,772 tỷ VND** | P/E: **10.48**
+> **Trạng thái Thị trường:** VN-Index Tăng **47** / Giảm **291** (Độ rộng A/D: **13.9%**) | Giá trị GD: **16,044 tỷ VND** | P/E: **10.48**
 > ⛔ CẦU CHÌ T+2.5 KÍCH HOẠT: ĐỘ RỘNG THỊ TRƯỜNG SUY YẾU (13.9% — Tăng 47 / Giảm 291). TẠM NGỪNG MUA MỚI ĐỂ TRÁNH KẸP HÀNG T+2.5!
 > 🟢 **Trạng Thái Dữ Liệu:** `REAL-TIME FIALDA PRO API` (Dữ liệu khớp lệnh trực tiếp từ sàn)
 
 | STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua | Cắt Lỗ | Chốt Lời (TP1 / TP2) | Thanh Khoản | Chuẩn Quỹ | RRG | Điểm IBD | Tích Luỹ | Ngoại Ròng | Điểm AI | Kỳ Trước |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1** | **MCH** | `CHÂN SÓNG` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **132.00** | `132.14 - 135.03` | **126.06** | **141.44** / **147.38** | **41.5t** | `CHUẨN QUỸ` | 100/102 | **50** | `C` | -27.2 tỷ | **77.5** | Mới |
-| **2** | **MSB** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **16.40** | `16.15 - 16.65` | **15.66** | **17.58** / **18.32** | **135.3t** | `SIÊU TK` | 102/100 | **37** | `E` | +28.5 tỷ | **47.0** | #6 (+4) |
-| **3** | **DXG** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **10.15** | `10.00 - 10.30` | **9.57** | **11.06** / **11.64** | **133.0t** | `SIÊU TK` | 102/99 | **65** | `E` | +30.6 tỷ | **21.6** | #2 (-1) |
-| **4** | **POW** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **13.20** | `13.00 - 13.40` | **12.42** | **14.42** / **15.20** | **112.9t** | `SIÊU TK` | 103/101 | **26** | `E` | +23.3 tỷ | **16.6** | #5 (+1) |
-| **5** | **MSN** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **68.00** | `69.03 - 69.72` | **64.94** | **72.86** / **75.92** | **273.5t** | `SIÊU TK` | 100/100 | **21** | `E` | +43.0 tỷ | **10.0** | #7 (+2) |
+| **1** | **MCH** | `CHÂN SÓNG` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **132.00** | `132.14 - 135.03` | **125.65** | **142.05** / **148.40** | **44.1t** | `CHUẨN QUỸ` | 100/102 | **50** | `C` | -27.2 tỷ | **77.5** | #1 (=) |
+| **2** | **MSB** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **16.40** | `16.15 - 16.65` | **15.66** | **17.58** / **18.32** | **134.0t** | `SIÊU TK` | 102/100 | **37** | `E` | +28.5 tỷ | **47.0** | #2 (=) |
+| **3** | **DXG** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **10.15** | `10.29 - 10.39` | **9.57** | **11.06** / **11.64** | **134.8t** | `SIÊU TK` | 102/99 | **65** | `E` | +30.6 tỷ | **21.6** | #3 (=) |
+| **4** | **HHP** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **9.14** | `9.00 - 9.28` | **8.45** | **10.21** / **10.90** | **29.3t** | `ĐẠT BIÊN` | 89/96 | **50** | `C` | -0.3 tỷ | **17.5** | Mới |
+| **5** | **POW** | `ĐỘT BIẾN GT` ⛔ CẦU CHÌ T+2.5: NGỪNG MUA | **13.20** | `13.00 - 13.40` | **12.48** | **14.33** / **15.05** | **116.2t** | `SIÊU TK` | 103/101 | **26** | `E` | +23.3 tỷ | **16.6** | #4 (-1) |
 
 ### 🎯 Kế Hoạch Tác Chiến, Điểm Thoát Lệnh T+2.5 & Catalysts:
-- **MCH (132.00)** `🆕 MỚI` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `132.14 - 135.03` | Cắt lỗ cấu trúc: `126.06` | TP1 (Net 1.5R): `141.44` | TP2 (Net 2.5R): `147.38` (R:R `1:2.5`)
+- **MCH (132.00)** `=` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `132.14 - 135.03` | Cắt lỗ cấu trúc: `125.65` | TP1 (Net 1.5R): `142.05` | TP2 (Net 2.5R): `148.40` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: -27.2 tỷ | Tự doanh thực tế: -3.0 tỷ)
-  - *Động lực:* RRG(r=100.3, m=102.3), IBD=50, Acc/Diss=C | 🔴 NGUY HIỂM XẢ | POC=130.71 (+0.4 ATR)
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `41.5 tỷ` (Điểm TK: `79/100`) | Sức chứa tối đa: `31,400 cp` (Trượt giá ~`0.88%`). ℹ️ Vốn 100tr mua tối đa 100 cp (~13.2tr, 13.2% NAV) — 1 lô chẵn HOSE duy nhất: Chốt gọn 1 lần tại TP1/Trailing, không chia 50/50
+  - *Động lực:* RRG(r=100.3, m=102.3), IBD=50, Acc/Diss=C | 🔴 NGUY HIỂM XẢ | POC=131.18 (+0.2 ATR)
+  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `44.1 tỷ` (Điểm TK: `80/100`) | Sức chứa tối đa: `33,400 cp` (Trượt giá ~`0.88%`). ℹ️ Vốn 100tr mua tối đa 100 cp (~13.2tr, 13.2% NAV) — 1 lô chẵn HOSE duy nhất: Chốt gọn 1 lần tại TP1/Trailing, không chia 50/50
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **MSB (16.40)** `↗ +4` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `16.15 - 16.65` | Cắt lỗ cấu trúc: `15.66` | TP1 (Net 1.5R): `17.58` | TP2 (Net 2.5R): `18.32` (R:R `1:2.5`)
+- **MSB (16.40)** `=` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `16.15 - 16.65` | Cắt lỗ cấu trúc: `15.66` | TP1 (Net 1.5R): `17.58` | TP2 (Net 2.5R): `18.32` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🟢🟢 ĐỒNG THUẬN GOM (Khối ngoại: +28.5 tỷ | Tự doanh thực tế: +2.7 tỷ)
   - *Động lực:* RRG(r=101.9, m=100.0), IBD=37, Acc/Diss=E | 🟢🟢 ĐỒNG THUẬN GOM | POC=16.31 (+0.3 ATR)
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `135.3 tỷ` (Điểm TK: `96/100`) | Sức chứa tối đa: `824,700 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,200 cp (~19.7tr, 19.7% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
+  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `134.0 tỷ` (Điểm TK: `96/100`) | Sức chứa tối đa: `817,000 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,200 cp (~19.7tr, 19.7% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **DXG (10.15)** `↘ -1` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `10.00 - 10.30` | Cắt lỗ cấu trúc: `9.57` | TP1 (Net 1.5R): `11.06` | TP2 (Net 2.5R): `11.64` (R:R `1:2.5`)
+- **DXG (10.15)** `=` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `10.29 - 10.39` | Cắt lỗ cấu trúc: `9.57` | TP1 (Net 1.5R): `11.06` | TP2 (Net 2.5R): `11.64` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +30.6 tỷ | Tự doanh thực tế: +0.0 tỷ)
   - *Động lực:* RRG(r=102.0, m=99.3), IBD=65, Acc/Diss=E | 🔵 NGOẠI ĐỠ GIÁ | POC=10.36 (-0.6 ATR)
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `133.0 tỷ` (Điểm TK: `96/100`) | Sức chứa tối đa: `1,310,200 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,900 cp (~19.3tr, 19.3% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
+  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `134.8 tỷ` (Điểm TK: `96/100`) | Sức chứa tối đa: `1,327,700 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,900 cp (~19.3tr, 19.3% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **POW (13.20)** `↗ +1` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `13.00 - 13.40` | Cắt lỗ cấu trúc: `12.42` | TP1 (Net 1.5R): `14.42` | TP2 (Net 2.5R): `15.20` (R:R `1:2.5`)
+- **HHP (9.14)** `🆕 MỚI` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `9.00 - 9.28` | Cắt lỗ cấu trúc: `8.45` | TP1 (Net 1.5R): `10.21` | TP2 (Net 2.5R): `10.90` (R:R `1:2.5`)
+  - *Ma trận Dòng tiền:* 🔴 NGUY HIỂM XẢ (Khối ngoại: -0.3 tỷ | Tự doanh: Chưa công bố EOD (N/A))
+  - *Động lực:* RRG(r=89.1, m=95.8), IBD=50, Acc/Diss=C | 🔴 NGUY HIỂM XẢ | POC=9.50 (-0.4 ATR)
+  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `29.3 tỷ` (Điểm TK: `74/100`) | Sức chứa tối đa: `320,100 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,800 cp (~16.5tr, 16.5% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
+  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
+- **POW (13.20)** `↘ -1` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `13.00 - 13.40` | Cắt lỗ cấu trúc: `12.48` | TP1 (Net 1.5R): `14.33` | TP2 (Net 2.5R): `15.05` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +23.3 tỷ | Tự doanh: Chưa công bố EOD (N/A))
-  - *Động lực:* RRG(r=103.3, m=101.4), IBD=26, Acc/Diss=E | 🔵 NGOẠI ĐỠ GIÁ | POC=12.92 (+0.8 ATR)
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `112.9 tỷ` (Điểm TK: `94/100`) | Sức chứa tối đa: `855,500 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,500 cp (~19.8tr, 19.8% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
-  - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
-- **MSN (68.00)** `↗ +2` | **⛔ CẦU CHÌ T+2.5: NGỪNG MUA**: Vùng gom T0 `69.03 - 69.72` | Cắt lỗ cấu trúc: `64.94` | TP1 (Net 1.5R): `72.86` | TP2 (Net 2.5R): `75.92` (R:R `1:2.5`)
-  - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +43.0 tỷ | Tự doanh thực tế: -3.4 tỷ)
-  - *Động lực:* RRG(r=99.8, m=100.1), IBD=21, Acc/Diss=E | 🔵 NGOẠI ĐỠ GIÁ | POC=69.28 (-0.9 ATR)
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `273.5 tỷ` (Điểm TK: `98/100`) | Sức chứa tối đa: `402,100 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 200 cp (~13.6tr, 13.6% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
+  - *Động lực:* RRG(r=103.3, m=101.4), IBD=26, Acc/Diss=E | 🔵 NGOẠI ĐỠ GIÁ | POC=13.16 (+0.1 ATR)
+  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `116.2 tỷ` (Điểm TK: `94/100`) | Sức chứa tối đa: `880,000 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 1,500 cp (~19.8tr, 19.8% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `⛔ NGỪNG MUA MỚI (T+2.5 CRITICAL)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
 
 ### 📊 BẢNG XẾP HẠNG ĐỊNH LƯỢNG CƠ BẢN (PIOTROSKI F-SCORE & P/E)
@@ -80,8 +80,8 @@
 | **MCH** | `Q3/2026` | 8,472.2 tỷ | 7,165.0 tỷ | **8,743.1 tỷ** | 1,800.1 tỷ | 1,484.3 tỷ | **1,938.0 tỷ** | `+30.6%` ↗ | 45.4% | `↗ TĂNG TRƯỞNG DƯƠNG` |
 | **MSB** | `Q3/2026` | 3,649.5 tỷ | 3,395.0 tỷ | **3,985.1 tỷ** | 1,514.2 tỷ | 1,250.6 tỷ | **1,649.2 tỷ** | `+31.9%` ↗ | 61.4% | `↗ TĂNG TRƯỞNG DƯƠNG` |
 | **DXG** | `Q3/2026` | 1,352.6 tỷ | 787.6 tỷ | **682.6 tỷ** | 214.4 tỷ | 34.9 tỷ | **3.2 tỷ** | `-90.8%` | 48.1% | `↘ CHẬM LẠI` |
+| **HHP** | `Q3/2026` | 838.5 tỷ | 764.6 tỷ | **839.4 tỷ** | 13.0 tỷ | 18.9 tỷ | **13.5 tỷ** | `-28.6%` | 7.8% | `↘ CHẬM LẠI` |
 | **POW** | `Q3/2026` | 12,327.0 tỷ | 20,306.3 tỷ | **16,772.2 tỷ** | 1,300.1 tỷ | 3,525.4 tỷ | **2,073.1 tỷ** | `-41.2%` | 13.8% | `↘ CHẬM LẠI` |
-| **MSN** | `Q3/2026` | 24,019.8 tỷ | 28,117.7 tỷ | **36,981.0 tỷ** | 1,973.6 tỷ | 3,799.9 tỷ | **4,552.0 tỷ** | `+19.8%` ↗ | 28.2% | `🚀 TĂNG TỐC 3 QUÝ` |
 
 ### 📰 TIN TỨC DOANH NGHIỆP & LỊCH SỰ KIỆN MỚI NHẤT (SPOTLIGHT)
 > *Nguồn: Cổng công bố thông tin Fialda Real-time*
@@ -95,9 +95,9 @@
 - **[DXG] DXG: Bluemarq Group cho 1 cá nhân vay gần 983 tỷ đồng** (2026-11-18 • *An ninh Thủ đô*)
   > Báo cáo quý III/2026 của Bluemarq Group (DXG) ghi nhận doanh thu và lợi nhuận giảm mạnh, trong khi dư nợ cho vay ngắn hạn tăng vọt, trong đó khoản vay gần 983,5 tỷ đồng dành cho một cá nhân chưa được giải thích rõ.
 - 📅 **[DXG - SỰ KIỆN]** Ngày: `Sắp tới` — *Giao dịch bổ sung - 93,500,000 CP*
-- **[POW] Cổ phiếu đáng chú ý ngày 25/11: FPT, HDG, POW** (2026-11-25 • *Vietnam+*)
-  > Các công ty chứng khoán khuyến nghị trung lập với FPT, khả quan với HDG và tăng tỷ trọng với POW, với giá mục tiêu lần lượt 51.600, 22.500 và 18.000 đồng/cổ phiếu.
-- 📅 **[POW - SỰ KIỆN]** Ngày: `2026-04-20` — *Họp ĐHĐCĐ thường niên năm 2026*
+- **[HHP] HHP: HHP Global phải khắc phục vi phạm sử dụng vốn chào bán, tiền mặt còn chưa đầy 28 tỷ đồng** (2026-11-21 • *Nhà báo & Công luận*)
+  > HHP Global bị phạt tổng 242,5 triệu đồng vì ba hành vi vi phạm công bố thông tin, và phải khắc phục việc dùng vốn chào bán riêng lẻ sai phương án dù đã hết thời hiệu xử phạt.
+- 📅 **[HHP - SỰ KIỆN]** Ngày: `Gần đây` — *Giao dịch bổ sung - 5,625,342 CP*
 
 ---
 *Báo cáo được tạo tự động bởi Neiro-Stock-VN Fialda VIP Expert Harvester trên GitHub Actions.*
