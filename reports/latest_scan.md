@@ -95,8 +95,8 @@
 - **[DXG] DXG: Bluemarq Group cho 1 cá nhân vay gần 983 tỷ đồng** (2026-11-18 • *An ninh Thủ đô*)
   > Báo cáo quý III/2026 của Bluemarq Group (DXG) ghi nhận doanh thu và lợi nhuận giảm mạnh, trong khi dư nợ cho vay ngắn hạn tăng vọt, trong đó khoản vay gần 983,5 tỷ đồng dành cho một cá nhân chưa được giải thích rõ.
 - 📅 **[DXG - SỰ KIỆN]** Ngày: `Sắp tới` — *Giao dịch bổ sung - 93,500,000 CP*
-- **[HHP] HHP: HHP Global phải khắc phục vi phạm sử dụng vốn chào bán, tiền mặt còn chưa đầy 28 tỷ đồng** (2026-11-21 • *Nhà báo & Công luận*)
-  > HHP Global bị phạt tổng 242,5 triệu đồng vì ba hành vi vi phạm công bố thông tin, và phải khắc phục việc dùng vốn chào bán riêng lẻ sai phương án dù đã hết thời hiệu xử phạt.
+- **[HHP] Cổ phiếu HHP “lau sàn” 6 phiên liên tiếp, bốc hơi gần 50% thị giá trong 3 tuần** (2026-11-26 • *FILI*)
+  > Cổ phiếu HHP giảm sàn sáu phiên liên tiếp, mất hơn 50% giá trị từ đầu tháng 11/2026 sau khi bị xử phạt 242,5 triệu đồng, dù kết quả kinh doanh quý 3 vẫn tăng trưởng.
 - 📅 **[HHP - SỰ KIỆN]** Ngày: `Gần đây` — *Giao dịch bổ sung - 5,625,342 CP*
 
 ---
