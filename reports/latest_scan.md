@@ -1,16 +1,16 @@
 ## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 1 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)
-> **Trạng thái Thị trường:** VN-Index Tăng **217** / Giảm **93** (Độ rộng A/D: **70.0%**) | Giá trị GD: **11,192 tỷ VND** | P/E: **10.63**
+> **Trạng thái Thị trường:** VN-Index Tăng **217** / Giảm **93** (Độ rộng A/D: **70.0%**) | Giá trị GD: **11,269 tỷ VND** | P/E: **10.63**
 > 🟢 **Trạng Thái Dữ Liệu:** `REAL-TIME FIALDA PRO API` (Dữ liệu khớp lệnh trực tiếp từ sàn)
 
 | STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua | Cắt Lỗ | Chốt Lời (TP1 / TP2) | Thanh Khoản | Chuẩn Quỹ | RRG | Điểm IBD | Tích Luỹ | Ngoại Ròng | Điểm AI | Kỳ Trước |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1** | **IDC** | `ĐỘT BIẾN GT` 🟠 QUÁ HẠN T+4 (NGỪNG MUA) | **35.10** | `34.28 - 35.32` | **33.02** | **37.61** / **39.39** | **26.8t** | `ĐẠT BIÊN` | 100/100 | **50** | `C` | +17.1 tỷ | **72.5** | #3 (+2) |
+| **1** | **IDC** | `ĐỘT BIẾN GT` 🟠 QUÁ HẠN T+4 (NGỪNG MUA) | **35.10** | `34.28 - 35.32` | **33.02** | **37.61** / **39.39** | **27.3t** | `ĐẠT BIÊN` | 100/100 | **50** | `C` | +17.1 tỷ | **72.5** | #1 (=) |
 
 ### 🎯 Kế Hoạch Tác Chiến, Điểm Thoát Lệnh T+2.5 & Catalysts:
-- **IDC (35.10)** `↗ +2` | **🟠 QUÁ HẠN T+4 (NGỪNG MUA)**: Vùng gom T0 `34.28 - 35.32` | Cắt lỗ cấu trúc: `33.02` | TP1 (Net 1.5R): `37.61` | TP2 (Net 2.5R): `39.39` (R:R `1:2.5`)
+- **IDC (35.10)** `=` | **🟠 QUÁ HẠN T+4 (NGỪNG MUA)**: Vùng gom T0 `34.28 - 35.32` | Cắt lỗ cấu trúc: `33.02` | TP1 (Net 1.5R): `37.61` | TP2 (Net 2.5R): `39.39` (R:R `1:2.5`)
   - *Ma trận Dòng tiền:* 🔵 NGOẠI ĐỠ GIÁ (Khối ngoại: +17.1 tỷ | Tự doanh thực tế: -0.3 tỷ)
-  - *Động lực:* RRG(r=100.5, m=100.2), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ | POC=35.60 (-0.5 ATR)
-  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `26.8 tỷ` (Điểm TK: `72/100`) | Sức chứa tối đa: `76,400 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 500 cp (~17.6tr, 17.5% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
+  - *Động lực:* RRG(r=100.5, m=100.3), IBD=50, Acc/Diss=C | 🔵 NGOẠI ĐỠ GIÁ | POC=35.60 (-0.5 ATR)
+  - *Sức chứa Quỹ & Lô 100 HOSE:* ADTV20 `27.3 tỷ` (Điểm TK: `72/100`) | Sức chứa tối đa: `77,600 cp` (Trượt giá ~`0.88%`). ✅ Vốn 100tr: Tối đa 500 cp (~17.6tr, 17.5% NAV <= 20% NAV, chia 2 lô chốt TP1/TP2)
   - *Quản trị Nhỏ lẻ T+2.5 (Cold-Start 0% T+0):* Trạng thái `T+0 (SAFE)`. Tài khoản chưa có sẵn hàng T+0 chỉ giải ngân tối đa **<= 20% NAV/mã**, **0% Margin**, ưu tiên đặt lệnh sau **13:45** để tránh bẫy kéo xả phiên sáng.
 
 ### 📊 BẢNG XẾP HẠNG ĐỊNH LƯỢNG CƠ BẢN (PIOTROSKI F-SCORE & P/E)
