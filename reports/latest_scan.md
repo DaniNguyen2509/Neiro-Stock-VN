@@ -1,5 +1,5 @@
 ## 🚀 NEIRO-STOCK-VN | BÁO CÁO TOP 0 SIÊU CỔ PHIẾU BẮT TẠI CHÂN SÓNG (1 THÁNG)
-> **Trạng thái Thị trường:** VN-Index Tăng **159** / Giảm **115** (Độ rộng A/D: **58.0%**) | Giá trị GD: **4,487 tỷ VND** | P/E: **10.58**
+> **Trạng thái Thị trường:** VN-Index Tăng **160** / Giảm **117** (Độ rộng A/D: **57.8%**) | Giá trị GD: **4,890 tỷ VND** | P/E: **10.57**
 > 🟢 **Trạng Thái Dữ Liệu:** `REAL-TIME FIALDA PRO API` (Dữ liệu khớp lệnh trực tiếp từ sàn)
 
 | STT | Mã CP | Tín Hiệu AI | Giá HT | Vùng Mua | Cắt Lỗ | Chốt Lời (TP1 / TP2) | Thanh Khoản | Chuẩn Quỹ | RRG | Điểm IBD | Tích Luỹ | Ngoại Ròng | Điểm AI | Kỳ Trước |
@@ -15,11 +15,11 @@
 | **VHM** | Vinhomes | Bất động sản dân cư | **59.50** | **8/9** | 5.7 | 1.8 | 4.00 | `ĐỊNH CHẾ GOM` |
 | **HPG** | Tập đoàn Hòa Phát | Thép & Vật liệu xây dựng | **19.80** | **8/9** | 6.2 | 1.1 | 1.01 | `ĐỊNH CHẾ GOM` |
 | **SSI** | Chứng khoán SSI | Dịch vụ tài chính & CK | **18.95** | **8/9** | 13.6 | 1.5 | 4.64 | `ĐỊNH CHẾ GOM` |
-| **GEX** | Tập đoàn GELEX | Thiết bị điện & KCN | **18.70** | **7/9** | 31.6 | 0.9 | 9.67 | `ĐỊNH CHẾ GOM` |
-| **PTB** | Phú Tài | Gỗ & Đá xuất khẩu | **28.70** | **5/9** | 5.5 | 0.8 | 0.73 | `THEO DÕI` |
+| **GEX** | Tập đoàn GELEX | Thiết bị điện & KCN | **18.80** | **7/9** | 31.6 | 0.9 | 9.67 | `ĐỊNH CHẾ GOM` |
+| **PTB** | Phú Tài | Gỗ & Đá xuất khẩu | **28.65** | **5/9** | 5.5 | 0.8 | 0.73 | `THEO DÕI` |
 | **DBC** | Dabaco Việt Nam | Nông nghiệp & Chăn nuôi | **15.55** | **5/9** | 6.5 | 0.8 | 5.94 | `ĐỊNH CHẾ GOM` |
-| **FPT** | Tập đoàn FPT | Công nghệ thông tin | **44.60** | **5/9** | 11.6 | 2.7 | 0.77 | `THEO DÕI` |
-| **CTS** | Chứng khoán VietinBank | Dịch vụ tài chính & CK | **21.80** | **4/9** | 49.9 | 1.9 | 76.27 | `THEO DÕI` |
+| **FPT** | Tập đoàn FPT | Công nghệ thông tin | **44.95** | **5/9** | 11.6 | 2.7 | 0.77 | `THEO DÕI` |
+| **CTS** | Chứng khoán VietinBank | Dịch vụ tài chính & CK | **21.85** | **4/9** | 49.9 | 1.9 | 76.27 | `THEO DÕI` |
 | **MBB** | Ngân hàng Quân Đội | Ngân hàng thương mại | **17.85** | **N/A (Ngân hàng)** | 6.1 | 1.2 | -1.50 | `THEO DÕI` |
 | **VCB** | Vietcombank | Ngân hàng thương mại | **49.10** | **N/A (Ngân hàng)** | 11.6 | 1.9 | -5.49 | `THEO DÕI` |
 
@@ -31,15 +31,15 @@
 | Mã CP | Tên Ngân Hàng | Giá Khớp | Điểm CAMEL | CASA (%) | NIM (%) | NPL Nợ Xấu | LLR Bao Phủ | CIR (%) | ROE (%) | P/B | Xếp Hạng CAMEL |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **VCB** | Vietcombank | **49.10** | **88/100** | **34.2%** | 3.2% | 0.98% | **230%** | 31.5% | 21.5% | **1.6** | `HẠNG A (TINH HOA)` |
-| **MBB** | Ngân hàng Quân Đội | **17.90** | **88/100** | **39.5%** | 4.6% | 1.42% | **160%** | 29.8% | 22.8% | **1.1** | `HẠNG A (TINH HOA)` |
-| **TCB** | Techcombank | **19.80** | **83/100** | **40.2%** | 4.4% | 1.35% | **110%** | 33.5% | 16.8% | **1.1** | `HẠNG A (TINH HOA)` |
-| **ACB** | Ngân hàng Á Châu | **19.50** | **81/100** | **24.1%** | 4.1% | 1.21% | **135%** | 32.0% | 23.1% | **1.1** | `HẠNG A (TINH HOA)` |
-| **HDB** | HDBank | **21.30** | **70/100** | **14.8%** | 5.1% | 1.65% | **95%** | 35.2% | 24.2% | **1.5** | `HẠNG B (TĂNG TRƯỞNG)` |
+| **MBB** | Ngân hàng Quân Đội | **17.85** | **88/100** | **39.5%** | 4.6% | 1.42% | **160%** | 29.8% | 22.8% | **1.1** | `HẠNG A (TINH HOA)` |
+| **TCB** | Techcombank | **19.75** | **83/100** | **40.2%** | 4.4% | 1.35% | **110%** | 33.5% | 16.8% | **1.1** | `HẠNG A (TINH HOA)` |
+| **ACB** | Ngân hàng Á Châu | **19.55** | **81/100** | **24.1%** | 4.1% | 1.21% | **135%** | 32.0% | 23.1% | **1.1** | `HẠNG A (TINH HOA)` |
+| **HDB** | HDBank | **21.40** | **70/100** | **14.8%** | 5.1% | 1.65% | **95%** | 35.2% | 24.2% | **1.5** | `HẠNG B (TĂNG TRƯỞNG)` |
 | **CTG** | VietinBank | **29.35** | **63/100** | **22.8%** | 3.0% | 1.45% | **165%** | 32.8% | 17.9% | **1.1** | `HẠNG C (TÁI CƠ CẤU)` |
-| **VPB** | VPBank | **19.80** | **61/100** | **18.2%** | 5.6% | 4.20% | **52%** | 28.5% | 12.5% | **1.0** | `HẠNG C (TÁI CƠ CẤU)` |
-| **BID** | BIDV | **29.15** | **58/100** | **21.5%** | 2.8% | 1.52% | **158%** | 34.2% | 18.5% | **1.1** | `HẠNG C (TÁI CƠ CẤU)` |
+| **VPB** | VPBank | **19.75** | **61/100** | **18.2%** | 5.6% | 4.20% | **52%** | 28.5% | 12.5% | **1.0** | `HẠNG C (TÁI CƠ CẤU)` |
+| **BID** | BIDV | **29.10** | **58/100** | **21.5%** | 2.8% | 1.52% | **158%** | 34.2% | 18.5% | **1.1** | `HẠNG C (TÁI CƠ CẤU)` |
 | **STB** | Sacombank | **69.50** | **39/100** | **19.5%** | 3.6% | 2.10% | **72%** | 42.5% | 15.2% | **2.0** | `HẠNG C (TÁI CƠ CẤU)` |
-| **EIB** | Eximbank | **14.75** | **39/100** | **15.2%** | 2.8% | 2.45% | **62%** | 46.2% | 10.5% | **1.0** | `HẠNG C (TÁI CƠ CẤU)` |
+| **EIB** | Eximbank | **14.70** | **39/100** | **15.2%** | 2.8% | 2.45% | **62%** | 46.2% | 10.5% | **1.0** | `HẠNG C (TÁI CƠ CẤU)` |
 
 ---
 *Báo cáo được tạo tự động bởi Neiro-Stock-VN Fialda VIP Expert Harvester trên GitHub Actions.*
